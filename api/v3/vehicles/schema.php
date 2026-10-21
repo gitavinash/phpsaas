@@ -23,7 +23,8 @@ if (!function_exists('ensureTransporterVehiclesSchema')) {
             'vehicle_type'                    => "VARCHAR(100) NULL DEFAULT 'other'",
             'vehicle_per_km_rate_with_tax'    => "DECIMAL(10,2) NULL DEFAULT 0.00",
             'vehicle_per_km_rate_without_tax' => "DECIMAL(10,2) NULL DEFAULT 0.00",
-            'vehicle_is_deletable'            => "TINYINT(1) NULL DEFAULT 1"
+            'vehicle_is_deletable'            => "TINYINT(1) NULL DEFAULT 1",
+            'vehicle_site_id'                 => "INT(11) NOT NULL DEFAULT 0"
         ];
 
         // 1. Verify and auto-add missing columns to vehicles table
@@ -32,6 +33,12 @@ if (!function_exists('ensureTransporterVehiclesSchema')) {
             if ($chk && mysqli_num_rows($chk) === 0) {
                 @mysqli_query($connection, "ALTER TABLE `{$vehiclesTable}` ADD COLUMN `{$colName}` {$colDef}");
             }
+        }
+
+        // Ensure index on vehicle_site_id
+        $chkIdx = @mysqli_query($connection, "SHOW INDEX FROM `{$vehiclesTable}` WHERE Key_name = 'idx_vehicle_site'");
+        if ($chkIdx && mysqli_num_rows($chkIdx) === 0) {
+            @mysqli_query($connection, "ALTER TABLE `{$vehiclesTable}` ADD INDEX `idx_vehicle_site` (`vehicle_site_id`)");
         }
 
         // 2. Verify and auto-add missing columns to enquiry_notes table

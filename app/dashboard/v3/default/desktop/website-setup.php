@@ -299,7 +299,7 @@ $jsVer = file_exists($docRoot . $jsRelPath) ? filemtime($docRoot . $jsRelPath) :
                         <div class="tour-copy-info">
                             <div class="tour-copy-title-row">
                                 <h3 class="tour-copy-title">Copy Master Tour Package Catalog to My Site</h3>
-                                <span class="tour-copy-badge">122+ Itineraries Ready</span>
+                                <span class="tour-copy-badge">155+ Itineraries Ready</span>
                             </div>
                             <p class="tour-copy-sub">Instantly clone popular domestic and international itineraries, sightseeing points, and rates into your workspace.</p>
                             <div class="tour-features-row">

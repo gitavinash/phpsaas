@@ -14,6 +14,13 @@ if (!isset($connection)) {
 
 $tblPrefix = defined('TABLE_PREFIX') ? TABLE_PREFIX : 'isw_';
 $siteId    = defined('SITE_ID')      ? (int) SITE_ID : (int)($_SESSION['site_id'] ?? 0);
+if ($siteId <= 0 && !empty($_SERVER['HTTP_HOST'])) {
+    $host = mysqli_real_escape_string($connection, strtolower(trim($_SERVER['HTTP_HOST'])));
+    $siteQuery = mysqli_query($connection, "SELECT site_id FROM {$tblPrefix}site WHERE LOWER(site_domain) = '{$host}' OR LOWER(site_url) = '{$host}' LIMIT 1");
+    if ($siteQuery && ($siteRow = mysqli_fetch_assoc($siteQuery))) {
+        $siteId = (int) $siteRow['site_id'];
+    }
+}
 $userId    = defined('USER_ID')      ? (int) USER_ID : (int)($_SESSION['user_id'] ?? 0);
 
 $search = isset($_GET['search']) ? mysqli_real_escape_string($connection, trim($_GET['search'])) : '';
@@ -36,8 +43,8 @@ if (is_numeric($rawId) && (int)$rawId > 0) {
 $bySpecificId = $transporterId > 0;
 
 $whereConditions = [];
-// Only apply site filter when listing all transporters, not when fetching one by ID
-if ($siteId > 0 && !$bySpecificId) {
+// Apply site filter when listing all transporters
+if (!$bySpecificId) {
     $whereConditions[] = "t.transporter_site_id = {$siteId}";
 }
 

@@ -20,13 +20,17 @@ if (!isset($connection)) {
 
 $siteId = defined('SITE_ID') ? (int)SITE_ID : 0;
 if ($siteId <= 0) {
-    $host = $_SERVER['HTTP_HOST'] ?? '';
-    $host = preg_replace('/:\d+$/', '', $host);
-    $escapedHost = mysqli_real_escape_string($connection, $host);
-    $siteQuery = mysqli_query($connection, "SELECT site_id FROM " . TABLE_PREFIX . "site WHERE site_domain = '{$escapedHost}' OR site_url LIKE '%{$escapedHost}%' LIMIT 1");
-    if ($siteQuery && mysqli_num_rows($siteQuery) > 0) {
-        $row = mysqli_fetch_assoc($siteQuery);
-        $siteId = (int)$row['site_id'];
+    if (isset($connection) && $connection instanceof mysqli) {
+        $host = $_SERVER['HTTP_HOST'] ?? '';
+        $host = preg_replace('/:\d+$/', '', $host);
+        $escapedHost = mysqli_real_escape_string($connection, $host);
+        $siteQuery = mysqli_query($connection, "SELECT site_id FROM " . TABLE_PREFIX . "site WHERE site_domain = '{$escapedHost}' OR site_url LIKE '%{$escapedHost}%' LIMIT 1");
+        if ($siteQuery && mysqli_num_rows($siteQuery) > 0) {
+            $row = mysqli_fetch_assoc($siteQuery);
+            $siteId = (int)$row['site_id'];
+        } else {
+            $siteId = 1;
+        }
     } else {
         $siteId = 1;
     }
@@ -639,6 +643,191 @@ function getWorkflowPipelineStages()
     ];
 }
 
+/**
+ * Master Catalog of all available triggers, actions, and logic modules
+ */
+function getWorkflowModuleCatalog()
+{
+    return [
+        'triggers' => [
+            [
+                'id' => 'lead_created',
+                'category' => 'trigger',
+                'title' => 'New Lead Ingested',
+                'subtitle' => 'Facebook Ads, Web Forms & Website',
+                'icon' => 'fi-rr-bullseye-arrow',
+                'color' => '#8b5cf6',
+                'badge' => 'Lead Ingestion',
+                'description' => 'Fires immediately when a traveler submits an inquiry across any connected channel.'
+            ],
+            [
+                'id' => 'whatsapp_incoming',
+                'category' => 'trigger',
+                'title' => 'WhatsApp Chat Inbound',
+                'subtitle' => 'Keyword match or incoming chat',
+                'icon' => 'fi-rr-comment-dots',
+                'color' => '#8b5cf6',
+                'badge' => 'Messaging',
+                'description' => 'Triggers on incoming customer WhatsApp messages with smart keyword or 24/7 night bot rules.'
+            ],
+            [
+                'id' => 'payment_received',
+                'category' => 'trigger',
+                'title' => 'Payment Captured',
+                'subtitle' => 'Advance deposit or full fee',
+                'icon' => 'fi-rr-badge-percent',
+                'color' => '#8b5cf6',
+                'badge' => 'Finance',
+                'description' => 'Executes when Razorpay, UPI, PhonePe, or gateway confirms advance deposit funds.'
+            ],
+            [
+                'id' => 'lead_stage_changed',
+                'category' => 'trigger',
+                'title' => 'Pipeline Stage Update',
+                'subtitle' => 'Lead status milestone moved',
+                'icon' => 'fi-rr-refresh',
+                'color' => '#8b5cf6',
+                'badge' => 'CRM Pipeline',
+                'description' => 'Triggers when a lead transitions between stages in the 20-stage CRM pipeline.'
+            ],
+            [
+                'id' => 'itinerary_viewed',
+                'category' => 'trigger',
+                'title' => 'Itinerary Viewed Online',
+                'subtitle' => 'Customer opens proposal brochure',
+                'icon' => 'fi-rr-eye',
+                'color' => '#8b5cf6',
+                'badge' => 'Engagement',
+                'description' => 'Fires the moment a traveler clicks and reads their web quotation or PDF proposal.'
+            ],
+            [
+                'id' => 'webhook_received',
+                'category' => 'trigger',
+                'title' => 'Inbound Webhook',
+                'subtitle' => 'External system JSON POST payload',
+                'icon' => 'fi-rr-network-cloud',
+                'color' => '#8b5cf6',
+                'badge' => 'Developer',
+                'description' => 'Listen for custom webhooks from Zapier, Make.com, n8n, or external landing pages.'
+            ]
+        ],
+        'actions' => [
+            [
+                'id' => 'send_whatsapp',
+                'category' => 'action',
+                'title' => 'Send WhatsApp Message',
+                'subtitle' => 'Personalized greeting with smart tokens',
+                'icon' => 'fi-rr-comment-alt',
+                'color' => '#10b981',
+                'badge' => 'WhatsApp',
+                'description' => 'Dispatches WhatsApp template or custom text with dynamic variables.'
+            ],
+            [
+                'id' => 'send_itinerary',
+                'category' => 'action',
+                'title' => 'Dispatch Tour Itinerary',
+                'subtitle' => 'Destination PDF brochure & resort highlights',
+                'icon' => 'fi-rr-document-signed',
+                'color' => '#10b981',
+                'badge' => 'Tour Ops',
+                'description' => 'Shares tailored tour package PDF brochure with day-wise inclusions.'
+            ],
+            [
+                'id' => 'assign_agent',
+                'category' => 'action',
+                'title' => 'Assign Agent (Round-Robin)',
+                'subtitle' => 'Equal distribution across active team',
+                'icon' => 'fi-rr-users-alt',
+                'color' => '#0ea5e9',
+                'badge' => 'CRM Routing',
+                'description' => 'Allots lead to next available sales specialist or dedicated destination expert.'
+            ],
+            [
+                'id' => 'update_lead_stage',
+                'category' => 'action',
+                'title' => 'Update CRM Stage',
+                'subtitle' => 'Advance lead in sales pipeline',
+                'icon' => 'fi-rr-refresh',
+                'color' => '#3b82f6',
+                'badge' => 'Sales Pipeline',
+                'description' => 'Moves traveler lead to target CRM milestone and records an audit note.'
+            ],
+            [
+                'id' => 'add_tags',
+                'category' => 'action',
+                'title' => 'Tag / Untag Lead',
+                'subtitle' => 'Apply high intent, source, VIP tags',
+                'icon' => 'fi-rr-tags',
+                'color' => '#f59e0b',
+                'badge' => 'CRM Tags',
+                'description' => 'Labels lead with tags like Honeymoon, High-Intent, or VIP.'
+            ],
+            [
+                'id' => 'create_task',
+                'category' => 'action',
+                'title' => 'Create Follow-up Task',
+                'subtitle' => 'Discovery call, quotation due reminder',
+                'icon' => 'fi-rr-calendar-clock',
+                'color' => '#ec4899',
+                'badge' => 'Tasks',
+                'description' => 'Adds a scheduled follow-up call or meeting reminder with due hours.'
+            ],
+            [
+                'id' => 'payment_link',
+                'category' => 'action',
+                'title' => 'Generate Payment Link',
+                'subtitle' => 'Token booking deposit or package payment',
+                'icon' => 'fi-rr-credit-card',
+                'color' => '#0ea5e9',
+                'badge' => 'Finance',
+                'description' => 'Creates instant Razorpay/UPI token booking advance deposit checkout.'
+            ],
+            [
+                'id' => 'internal_note',
+                'category' => 'action',
+                'title' => 'Add Internal Note',
+                'subtitle' => 'Audit log on traveler timeline',
+                'icon' => 'fi-rr-note',
+                'color' => '#6366f1',
+                'badge' => 'CRM Notes',
+                'description' => 'Logs internal notes on lead file for team coordination.'
+            ],
+            [
+                'id' => 'webhook_call',
+                'category' => 'action',
+                'title' => 'Outbound Webhook / API',
+                'subtitle' => 'POST data to external endpoint',
+                'icon' => 'fi-rr-plug',
+                'color' => '#6366f1',
+                'badge' => 'Integrations',
+                'description' => 'Transmits customer and workflow data to Zapier, Google Sheets, or custom API.'
+            ]
+        ],
+        'logic' => [
+            [
+                'id' => 'condition_branch',
+                'category' => 'logic',
+                'title' => 'If / Else Condition',
+                'subtitle' => 'Route travelers by preference / budget',
+                'icon' => 'fi-rr-code-fork',
+                'color' => '#f59e0b',
+                'badge' => 'Smart Route',
+                'description' => 'Branches flowchart based on destination, source, budget, or inquiry text.'
+            ],
+            [
+                'id' => 'delay',
+                'category' => 'action',
+                'title' => 'Delay / Wait Cadence',
+                'subtitle' => 'Realistic cadence (seconds, minutes, hours)',
+                'icon' => 'fi-rr-hourglass-end',
+                'color' => '#64748b',
+                'badge' => 'Timing',
+                'description' => 'Pauses workflow execution before executing subsequent follow-up steps.'
+            ]
+        ]
+    ];
+}
+
 // Initialize tables
 initAutomationWorkflowTables($connection, $prefix, $siteId);
 
@@ -1025,41 +1214,201 @@ switch ($action) {
             $stepStatus = 'success';
             $stepMessage = '';
             $stepDetails = [];
+            $friendlyHeadline = $nodeTitle;
+            $friendlySummary = '';
+            $friendlyIcon = $node['icon'] ?? 'fi-rr-apps';
+            $friendlyColor = $node['color'] ?? '#7c3aed';
+            $friendlyPill = '';
 
             if ($nodeCategory === 'trigger') {
-                $stepMessage = 'Simulated event received: Ingestion verified with 7 attributes for traveler ' . ($context['name'] ?? 'Guest');
-                $stepDetails = [
-                    'trigger_event' => $node['trigger_event'] ?? 'event',
-                    'lead_id' => $context['lead_id'] ?? 101,
-                    'name' => $context['name'] ?? 'Traveler',
-                    'phone' => $context['phone'] ?? '+91 98765 43210',
-                    'email' => $context['email'] ?? 'guest@example.com',
-                    'destination' => $context['destination'] ?? 'Custom Tour',
-                    'budget' => $context['budget'] ?? '₹50,000',
-                    'source' => $context['source'] ?? 'Facebook Ads',
-                    'message' => $context['message'] ?? 'Travel Inquiry'
-                ];
-            } elseif ($nodeCategory === 'logic') {
-                $field = $config['field'] ?? 'message';
-                $valToCheck = $context[$field] ?? $context['message'] ?? '';
-                $match = true;
-                $operator = $config['operator'] ?? 'contains';
-                $expected = $config['value'] ?? '';
+                $triggerEvent = $node['trigger_event'] ?? ($node['action_type'] ?? 'lead_created');
+                $friendlyColor = '#8b5cf6';
 
-                if (!empty($expected) && $operator === 'contains') {
-                    $terms = array_map('trim', explode(',', strtolower($expected)));
-                    $found = false;
-                    foreach ($terms as $t) {
-                        if ($t !== '' && strpos(strtolower($valToCheck), $t) !== false) {
-                            $found = true;
-                            break;
+                switch ($triggerEvent) {
+                    case 'whatsapp_incoming':
+                        $rule = $config['trigger_rule'] ?? 'keywords';
+                        $matchType = $config['match_type'] ?? 'contains';
+                        $keywords = $config['keywords'] ?? 'itinerary, package, trip';
+                        $incomingMsg = $context['message'] ?? 'Travel Inquiry';
+
+                        $matched = true;
+                        if ($rule === 'keywords' && !empty($keywords)) {
+                            $terms = array_map('trim', explode(',', strtolower($keywords)));
+                            $matched = false;
+                            $lowerMsg = strtolower($incomingMsg);
+                            foreach ($terms as $kw) {
+                                if ($kw !== '' && ($matchType === 'exact' ? ($lowerMsg === $kw) : (strpos($lowerMsg, $kw) !== false))) {
+                                    $matched = true;
+                                    break;
+                                }
+                            }
                         }
-                    }
-                    $match = $found;
+
+                        $friendlyHeadline = 'WhatsApp Inbound Message';
+                        $friendlySummary = 'Received from ' . ($context['phone'] ?? '+91 98765 43210') . ': "' . ($incomingMsg) . '"';
+                        $friendlyIcon = 'fi-rr-comment-dots';
+                        $friendlyPill = 'WhatsApp Chat';
+                        $stepMessage = 'Simulated WhatsApp inbound message received and verified keyword triggers.';
+                        $stepDetails = [
+                            'sender' => $context['phone'] ?? '+91 98765 43210',
+                            'sender_name' => $context['name'] ?? 'Traveler',
+                            'message' => $incomingMsg,
+                            'rule' => $rule,
+                            'matched' => $matched
+                        ];
+                        break;
+
+                    case 'payment_received':
+                        $minAmt = floatval(preg_replace('/[^\d.]/', '', $config['min_amount'] ?? '1'));
+                        $payType = $config['payment_type'] ?? 'all';
+                        $amountVal = floatval(preg_replace('/[^\d.]/', '', $context['budget'] ?? '5000')) ?: 5000;
+
+                        $friendlyHeadline = 'Payment Verified (₹' . number_format($amountVal) . ')';
+                        $friendlySummary = 'Advance deposit captured via Razorpay / UPI for ' . ($context['name'] ?? 'Traveler');
+                        $friendlyIcon = 'fi-rr-badge-percent';
+                        $friendlyPill = '₹' . number_format($amountVal) . ' Received';
+                        $stepMessage = 'Simulated payment webhook received: Confirmed transaction for ₹' . number_format($amountVal);
+                        $stepDetails = [
+                            'amount' => $amountVal,
+                            'payer' => $context['name'] ?? 'Traveler',
+                            'payment_type' => $payType,
+                            'gateway' => 'Razorpay / Instant UPI',
+                            'status' => 'authorized'
+                        ];
+                        break;
+
+                    case 'lead_stage_changed':
+                        $fromStage = $config['from_stage'] ?? 'any';
+                        $toStage = $config['to_stage'] ?? 'any';
+                        $friendlyHeadline = 'Lead Stage Transition';
+                        $friendlySummary = 'Status milestone shifted to active qualification in CRM pipeline';
+                        $friendlyIcon = 'fi-rr-refresh';
+                        $friendlyPill = 'Stage Changed';
+                        $stepMessage = 'Simulated CRM pipeline event: Lead moved from ' . $fromStage . ' to ' . $toStage;
+                        $stepDetails = [
+                            'lead_id' => $context['lead_id'] ?? 101,
+                            'from_stage' => $fromStage,
+                            'to_stage' => $toStage
+                        ];
+                        break;
+
+                    case 'itinerary_viewed':
+                        $friendlyHeadline = ($context['name'] ?? 'Traveler') . ' Opened Itinerary';
+                        $friendlySummary = 'Customer opened digital tour brochure for ' . ($context['destination'] ?? 'Holiday');
+                        $friendlyIcon = 'fi-rr-eye';
+                        $friendlyPill = 'Proposal Viewed';
+                        $stepMessage = 'Traveler opened and engaged with the digital itinerary proposal.';
+                        $stepDetails = [
+                            'lead_id' => $context['lead_id'] ?? 101,
+                            'destination' => $context['destination'] ?? 'Tour',
+                            'read_time_seconds' => 45
+                        ];
+                        break;
+
+                    case 'webhook_received':
+                        $friendlyHeadline = 'Inbound Webhook Payload';
+                        $friendlySummary = 'External JSON POST payload ingested into automation workflow';
+                        $friendlyIcon = 'fi-rr-network-cloud';
+                        $friendlyPill = 'Webhook Ingested';
+                        $stepMessage = 'Inbound HTTP webhook payload verified and parsed.';
+                        $stepDetails = [
+                            'payload' => $context
+                        ];
+                        break;
+
+                    case 'lead_created':
+                    default:
+                        $source = $context['source'] ?? 'Facebook Lead Ads';
+                        $destination = $context['destination'] ?? 'Himachal Vacation';
+                        $friendlyHeadline = ($context['name'] ?? 'Traveler') . ' Inquired';
+                        $friendlySummary = 'Received inquiry from ' . $source . ' for ' . $destination;
+                        $friendlyIcon = 'fi-rr-bullseye-arrow';
+                        $friendlyPill = $destination;
+                        $stepMessage = 'Simulated event received: Ingestion verified with 7 attributes for traveler ' . ($context['name'] ?? 'Guest');
+                        $stepDetails = [
+                            'trigger_event' => 'lead_created',
+                            'lead_id' => $context['lead_id'] ?? 101,
+                            'name' => $context['name'] ?? 'Traveler',
+                            'phone' => $context['phone'] ?? '+91 98765 43210',
+                            'email' => $context['email'] ?? 'guest@example.com',
+                            'destination' => $destination,
+                            'budget' => $context['budget'] ?? '₹50,000',
+                            'source' => $source,
+                            'message' => $context['message'] ?? 'Travel Inquiry'
+                        ];
+                        break;
+                }
+            } elseif ($nodeCategory === 'logic') {
+                $field = $config['field'] ?? 'destination';
+                $operator = $config['operator'] ?? 'contains';
+                $expected = trim($config['value'] ?? '');
+
+                // Resolve target value from context
+                $valToCheck = '';
+                if ($field === 'destination') {
+                    $valToCheck = $context['destination'] ?? '';
+                } elseif ($field === 'source') {
+                    $valToCheck = $context['source'] ?? '';
+                } elseif ($field === 'budget') {
+                    $valToCheck = $context['budget'] ?? '';
+                } elseif ($field === 'pax') {
+                    $valToCheck = $context['pax'] ?? '2';
+                } elseif ($field === 'message_content' || $field === 'message') {
+                    $valToCheck = $context['message'] ?? '';
+                } else {
+                    $valToCheck = $context[$field] ?? '';
                 }
 
-                $stepMessage = $match ? 'Condition passed: Evaluated to TRUE (Branch Yes active)' : 'Condition evaluated to FALSE (Branch No active)';
-                $stepDetails = ['evaluated_field' => $field, 'condition_met' => $match, 'target_val' => $valToCheck];
+                $match = false;
+
+                if ($operator === 'contains') {
+                    if ($expected === '') {
+                        $match = true;
+                    } else {
+                        $terms = array_map('trim', explode(',', strtolower($expected)));
+                        $targetLower = strtolower($valToCheck);
+                        foreach ($terms as $t) {
+                            if ($t !== '' && strpos($targetLower, $t) !== false) {
+                                $match = true;
+                                break;
+                            }
+                        }
+                    }
+                } elseif ($operator === 'equals') {
+                    $match = (strcasecmp(trim($valToCheck), $expected) === 0);
+                } elseif ($operator === 'gt' || $operator === 'lt') {
+                    $numVal = floatval(preg_replace('/[^\d.]/', '', (string)$valToCheck));
+                    $numExpected = floatval(preg_replace('/[^\d.]/', '', (string)$expected));
+                    $match = ($operator === 'gt') ? ($numVal > $numExpected) : ($numVal < $numExpected);
+                } elseif ($operator === 'not_empty') {
+                    $match = !empty(trim((string)$valToCheck));
+                } else {
+                    $match = true;
+                }
+
+                $stepStatus = $match ? 'success' : 'condition_false';
+                $friendlyColor = '#f59e0b';
+                $friendlyIcon = 'fi-rr-code-fork';
+
+                if ($match) {
+                    $friendlyHeadline = 'Condition Met: ' . ($config['branch_yes_label'] ?? 'Branch YES');
+                    $friendlySummary = 'Field "' . $field . '" (' . $valToCheck . ') matched: ' . $operator . ' "' . $expected . '"';
+                    $friendlyPill = 'Branch YES Active';
+                    $stepMessage = 'Condition evaluated to TRUE. Routing flow along YES branch.';
+                } else {
+                    $friendlyHeadline = 'Condition Unmet: ' . ($config['branch_no_label'] ?? 'Branch NO');
+                    $friendlySummary = 'Field "' . $field . '" (' . $valToCheck . ') did not match: ' . $operator . ' "' . $expected . '"';
+                    $friendlyPill = 'Branch NO Active';
+                    $stepMessage = 'Condition evaluated to FALSE. Routing flow along NO branch.';
+                }
+
+                $stepDetails = [
+                    'evaluated_field' => $field,
+                    'condition_met' => $match,
+                    'actual_value' => $valToCheck,
+                    'operator' => $operator,
+                    'expected_value' => $expected
+                ];
             } else {
                 // Action node
                 $actionType = $node['action_type'] ?? 'action';
@@ -1075,23 +1424,31 @@ switch ($action) {
                             foreach ($waTpls as $wt) {
                                 if ((string)$wt['id'] === (string)$config['template_id']) {
                                     $tplTitle = $wt['name'];
-                                    if (!empty($wt['body'])) $rawTpl = $wt['body'];
+                                    if (!empty($wt['content'])) $rawTpl = $wt['content'];
                                     break;
                                 }
                             }
                         }
                         $renderedBody = str_replace(
-                            ['{name}', '{destination}', '{budget}', '{source}', '{phone}'],
+                            ['{name}', '{first_name}', '{destination}', '{budget}', '{source}', '{phone}', '{company}', '{agent_name}'],
                             [
                                 $context['name'] ?? 'Traveler',
+                                explode(' ', $context['name'] ?? 'Traveler')[0],
                                 $context['destination'] ?? 'Holiday Destination',
                                 $context['budget'] ?? 'Best Price',
                                 $context['source'] ?? 'Web Lead',
-                                $context['phone'] ?? '+91 98765 43210'
+                                $context['phone'] ?? '+91 98765 43210',
+                                defined('SITE_NAME') ? SITE_NAME : 'Aleya Support',
+                                'Destination Specialist'
                             ],
                             $rawTpl
                         );
                         $stepMessage = 'WhatsApp message dispatched successfully (' . $tplTitle . ') to ' . ($context['phone'] ?? '+91 98765 43210') . ' (HTTP 200 OK)';
+                        $friendlyHeadline = 'WhatsApp Delivered';
+                        $friendlySummary = 'Sent message ("' . $tplTitle . '") to ' . ($context['phone'] ?? '+91 98765 43210');
+                        $friendlyIcon = 'fi-rr-comment-alt';
+                        $friendlyColor = '#10b981';
+                        $friendlyPill = $tplTitle;
                         $stepDetails = [
                             'recipient' => ($context['phone'] ?? '+91 98765 43210'),
                             'recipient_name' => ($context['name'] ?? 'Traveler'),
@@ -1101,50 +1458,71 @@ switch ($action) {
                             'attach_brochure' => !empty($config['attach_brochure'])
                         ];
                         break;
+
                     case 'send_itinerary':
                         $pkgName = $config['itinerary_title'] ?? ($context['destination'] . ' Verified Package');
+                        $pkgDur = '5N/6D';
                         if (!empty($config['package_id']) && $config['package_id'] !== '0') {
                             $sitePkgs = getWorkflowPackages($connection, $prefix, $siteId);
                             foreach ($sitePkgs as $sp) {
                                 if ((string)$sp['id'] === (string)$config['package_id']) {
                                     $pkgName = $sp['name'];
+                                    if (!empty($sp['duration'])) $pkgDur = $sp['duration'];
                                     break;
                                 }
                             }
                         }
                         $stepMessage = 'Tour itinerary brochure PDF attached & delivered for: "' . $pkgName . '" via instant cloud link';
+                        $friendlyHeadline = 'Tour Itinerary Dispatched';
+                        $friendlySummary = 'Verified brochure PDF shared: "' . $pkgName . '"';
+                        $friendlyIcon = 'fi-rr-document-signed';
+                        $friendlyColor = '#10b981';
+                        $friendlyPill = $pkgDur;
                         $stepDetails = [
                             'itinerary' => $pkgName,
+                            'duration' => $pkgDur,
                             'pages' => 6,
                             'recipient' => $context['name'] ?? 'Traveler',
                             'download_url' => 'https://aleya.in/itinerary/preview/' . substr(md5($pkgName), 0, 8) . '.pdf'
                         ];
                         break;
+
                     case 'assign_agent':
                         $siteAgents = getWorkflowAgents($connection, $prefix, $siteId);
                         $agentName = !empty($siteAgents) ? $siteAgents[0]['name'] : 'Rohit Verma';
+                        $agentRole = !empty($siteAgents) ? ($siteAgents[0]['role'] ?? 'Senior Consultant') : 'Senior Consultant';
                         $assignMode = $config['mode'] ?? 'round_robin';
                         if ($assignMode === 'specific_agent' && !empty($config['assigned_agent_id'])) {
                             foreach ($siteAgents as $sa) {
                                 if ((string)$sa['id'] === (string)$config['assigned_agent_id']) {
                                     $agentName = $sa['name'];
+                                    $agentRole = $sa['role'] ?? 'Specialist';
                                     break;
                                 }
                             }
                             $stepMessage = 'Direct Assignment: Lead allotted to Team Specialist ' . $agentName . ' (ID #' . $config['assigned_agent_id'] . ')';
-                            $stepDetails = ['assigned_agent' => $agentName, 'method' => 'specific_agent', 'designation' => 'Destination Specialist'];
+                            $friendlyHeadline = 'Assigned: ' . $agentName;
+                            $friendlySummary = 'Directly assigned to ' . $agentName . ' (' . $agentRole . ')';
+                            $stepDetails = ['assigned_agent' => $agentName, 'method' => 'specific_agent', 'designation' => $agentRole];
                         } else {
                             if (!empty($siteAgents)) {
                                 $agentCount = count($siteAgents);
                                 $randomAgent = $siteAgents[array_rand($siteAgents)];
                                 $agentName = $randomAgent['name'];
+                                $agentRole = $randomAgent['role'] ?? 'Travel Consultant';
                                 $stepMessage = 'Round-Robin Engine distributed lead equally across ' . $agentCount . ' active site team members (Assigned: ' . $agentName . ')';
                             } else {
                                 $stepMessage = 'Round-Robin Engine assigned lead to Specialist ' . $agentName;
                             }
-                            $stepDetails = ['assigned_agent' => $agentName, 'method' => 'round_robin', 'designation' => 'Senior Travel Consultant'];
+                            $friendlyHeadline = 'Assigned: ' . $agentName;
+                            $friendlySummary = 'Round-Robin Engine allotted lead to ' . $agentName;
+                            $stepDetails = ['assigned_agent' => $agentName, 'method' => 'round_robin', 'designation' => $agentRole];
                         }
+                        $friendlyIcon = 'fi-rr-users-alt';
+                        $friendlyColor = '#0ea5e9';
+                        $friendlyPill = $agentName;
                         break;
+
                     case 'update_lead_stage':
                         $stageLabel = 'Updated Status';
                         $stageColor = '#10b981';
@@ -1158,16 +1536,29 @@ switch ($action) {
                             }
                         }
                         $stepMessage = 'CRM Pipeline updated: Lead stage moved to "' . $stageLabel . '"';
+                        $friendlyHeadline = 'Pipeline: ' . $stageLabel;
+                        $friendlySummary = 'Traveler milestone advanced to "' . $stageLabel . '"';
+                        $friendlyIcon = 'fi-rr-refresh';
+                        $friendlyColor = '#3b82f6';
+                        $friendlyPill = $stageLabel;
                         $stepDetails = [
                             'new_stage' => $stageLabel,
                             'stage_color' => $stageColor,
                             'note' => $config['status_note'] ?? 'Automated workflow transition'
                         ];
                         break;
+
                     case 'add_tags':
-                        $stepMessage = 'Applied tags: ' . ($config['tags'] ?? 'new_lead, high_intent');
-                        $stepDetails = ['tags_added' => explode(',', $config['tags'] ?? 'new_lead')];
+                        $tagsVal = $config['tags'] ?? 'new_lead, high_intent';
+                        $stepMessage = 'Applied tags: ' . $tagsVal;
+                        $friendlyHeadline = 'Tags Applied';
+                        $friendlySummary = 'Applied CRM tags: ' . $tagsVal;
+                        $friendlyIcon = 'fi-rr-tags';
+                        $friendlyColor = '#f59e0b';
+                        $friendlyPill = $tagsVal;
+                        $stepDetails = ['tags_added' => array_map('trim', explode(',', $tagsVal))];
                         break;
+
                     case 'create_task':
                         $siteAgents = getWorkflowAgents($connection, $prefix, $siteId);
                         $assignedTo = !empty($siteAgents) ? $siteAgents[0]['name'] : 'Rohit Verma';
@@ -1180,28 +1571,68 @@ switch ($action) {
                             }
                         }
                         $taskType = $config['task_type'] ?? 'Discovery Call';
-                        $stepMessage = 'Created CRM Task: "' . $taskType . '" assigned to ' . $assignedTo . ' due in ' . ($config['due_hours'] ?? 2) . ' hours';
-                        $stepDetails = ['priority' => 'High', 'task_type' => $taskType, 'assigned_to' => $assignedTo, 'due_hours' => $config['due_hours'] ?? 2];
+                        $dueH = (int)($config['due_hours'] ?? 2);
+                        $stepMessage = 'Created CRM Task: "' . $taskType . '" assigned to ' . $assignedTo . ' due in ' . $dueH . ' hours';
+                        $friendlyHeadline = 'Task: ' . $taskType;
+                        $friendlySummary = 'Assigned to ' . $assignedTo . ' • Due in ' . $dueH . 'h';
+                        $friendlyIcon = 'fi-rr-calendar-clock';
+                        $friendlyColor = '#ec4899';
+                        $friendlyPill = 'Due ' . $dueH . 'h';
+                        $stepDetails = ['priority' => 'High', 'task_type' => $taskType, 'assigned_to' => $assignedTo, 'due_hours' => $dueH];
                         break;
+
                     case 'delay':
-                        $stepMessage = 'Simulated delay cadence of ' . ($config['delay_seconds'] ?? 3) . ' seconds completed.';
-                        $stepDetails = ['cadence_seconds' => $config['delay_seconds'] ?? 3];
+                        $sec = (int)($config['delay_seconds'] ?? 3);
+                        $stepMessage = 'Simulated cadence delay of ' . $sec . ' seconds completed.';
+                        $friendlyHeadline = 'Cadence Delay';
+                        $friendlySummary = 'Wait pause of ' . $sec . 's completed before next step';
+                        $friendlyIcon = 'fi-rr-hourglass-end';
+                        $friendlyColor = '#64748b';
+                        $friendlyPill = $sec . 's Delay';
+                        $stepDetails = ['cadence_seconds' => $sec];
                         break;
+
                     case 'payment_link':
                         $amount = $config['amount'] ?? 5000;
-                        $stepMessage = 'Generated Razorpay / UPI Instant Deposit Link: ₹' . $amount;
+                        $stepMessage = 'Generated Razorpay / UPI Instant Deposit Link: ₹' . number_format($amount);
+                        $friendlyHeadline = 'Payment Link: ₹' . number_format($amount);
+                        $friendlySummary = 'Generated instant deposit checkout link for ' . ($context['name'] ?? 'Traveler');
+                        $friendlyIcon = 'fi-rr-credit-card';
+                        $friendlyColor = '#0ea5e9';
+                        $friendlyPill = '₹' . number_format($amount);
                         $stepDetails = [
                             'link' => 'https://pay.isw.one/token/' . substr(md5(time()), 0, 8),
                             'amount' => $amount,
                             'currency' => 'INR'
                         ];
                         break;
-                    case 'webhook_call':
-                        $stepMessage = 'Outbound webhook payload transmitted to ' . ($config['url'] ?? 'external endpoint') . ' (200 OK)';
-                        $stepDetails = ['response_code' => 200, 'time_ms' => 124];
+
+                    case 'internal_note':
+                        $noteText = $config['note'] ?? 'Traveler inquired for vacation package';
+                        $stepMessage = 'Internal timeline note logged: "' . $noteText . '"';
+                        $friendlyHeadline = 'Internal Note Added';
+                        $friendlySummary = 'Logged on lead timeline: "' . $noteText . '"';
+                        $friendlyIcon = 'fi-rr-note';
+                        $friendlyColor = '#6366f1';
+                        $friendlyPill = 'CRM Note';
+                        $stepDetails = ['note' => $noteText];
                         break;
+
+                    case 'webhook_call':
+                        $url = $config['url'] ?? 'https://hooks.zapier.com/hooks/catch/custom/';
+                        $stepMessage = 'Outbound webhook payload transmitted to ' . $url . ' (200 OK)';
+                        $friendlyHeadline = 'Webhook Dispatched';
+                        $friendlySummary = 'Transmitted JSON data to ' . $url . ' (HTTP 200)';
+                        $friendlyIcon = 'fi-rr-plug';
+                        $friendlyColor = '#6366f1';
+                        $friendlyPill = 'HTTP 200';
+                        $stepDetails = ['response_code' => 200, 'time_ms' => 124, 'url' => $url];
+                        break;
+
                     default:
                         $stepMessage = 'Action executed successfully.';
+                        $friendlyHeadline = $nodeTitle;
+                        $friendlySummary = 'Action executed successfully';
                         $stepDetails = ['status' => 'completed'];
                         break;
                 }
@@ -1213,6 +1644,11 @@ switch ($action) {
                 'category' => $nodeCategory,
                 'status' => $stepStatus,
                 'message' => $stepMessage,
+                'friendly_headline' => $friendlyHeadline,
+                'friendly_summary' => $friendlySummary,
+                'friendly_icon' => $friendlyIcon,
+                'friendly_color' => $friendlyColor,
+                'friendly_pill' => $friendlyPill,
                 'details' => $stepDetails,
                 'timestamp' => date('H:i:s')
             ];
@@ -1354,6 +1790,7 @@ switch ($action) {
         echo json_encode([
             'status' => 'success',
             'data' => [
+                'catalog' => getWorkflowModuleCatalog(),
                 'lead_sources' => $leadSourcesData['sources'],
                 'web_forms' => $leadSourcesData['web_forms'],
                 'fb_forms' => $leadSourcesData['fb_forms'],

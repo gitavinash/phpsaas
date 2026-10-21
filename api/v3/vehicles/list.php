@@ -22,6 +22,13 @@ if (!isset($connection)) {
 
 $tblPrefix = defined('TABLE_PREFIX') ? TABLE_PREFIX : 'isw_';
 $siteId    = defined('SITE_ID')      ? (int) SITE_ID : (int)($_SESSION['site_id'] ?? 0);
+if ($siteId <= 0 && !empty($_SERVER['HTTP_HOST'])) {
+    $host = mysqli_real_escape_string($connection, strtolower(trim($_SERVER['HTTP_HOST'])));
+    $siteQuery = mysqli_query($connection, "SELECT site_id FROM {$tblPrefix}site WHERE LOWER(site_domain) = '{$host}' OR LOWER(site_url) = '{$host}' LIMIT 1");
+    if ($siteQuery && ($siteRow = mysqli_fetch_assoc($siteQuery))) {
+        $siteId = (int) $siteRow['site_id'];
+    }
+}
 $userId    = defined('USER_ID')      ? (int) USER_ID : (int)($_SESSION['user_id'] ?? 0);
 
 require_once __DIR__ . '/schema.php';
@@ -49,7 +56,7 @@ if (is_numeric($rawId) && (int)$rawId > 0) {
     }
 }
 
-$whereConditions = [];
+$whereConditions = ["v.vehicle_site_id = {$siteId}"];
 
 if ($transporterId > 0) {
     $transporterQuery = mysqli_query($connection, "SELECT transporter_description FROM {$tblPrefix}transporter WHERE transporter_id = {$transporterId} LIMIT 1");
@@ -169,7 +176,7 @@ if ($res && mysqli_num_rows($res) > 0) {
 
 $masterVehicles = $vehicles;
 if ($transporterId > 0) {
-    $masterRes = mysqli_query($connection, "SELECT vehicle_id, vehicle_thumbnail, vehicle_gallery, vehicle_title, vehicle_description, vehicle_seating, vehicle_per_km_rate_with_tax, vehicle_per_km_rate_without_tax, vehicle_luggage, vehicle_fuel_type, vehicle_is_deletable, vehicle_type, vehicle_time FROM {$tblPrefix}vehicles ORDER BY vehicle_id DESC");
+    $masterRes = mysqli_query($connection, "SELECT vehicle_id, vehicle_thumbnail, vehicle_gallery, vehicle_title, vehicle_description, vehicle_seating, vehicle_per_km_rate_with_tax, vehicle_per_km_rate_without_tax, vehicle_luggage, vehicle_fuel_type, vehicle_is_deletable, vehicle_type, vehicle_time FROM {$tblPrefix}vehicles WHERE vehicle_site_id = {$siteId} ORDER BY vehicle_id DESC");
     $masterVehicles = [];
     if ($masterRes) {
         while ($masterRow = mysqli_fetch_assoc($masterRes)) {
@@ -185,7 +192,8 @@ $metricsSql = "SELECT
                 SUM(CASE WHEN vehicle_type IN ('bus', 'traveller', 'light_commercial_vehicle') THEN 1 ELSE 0 END) as tempo_bus,
                 SUM(CASE WHEN vehicle_type = 'sedan' THEN 1 ELSE 0 END) as sedan,
                 SUM(CASE WHEN vehicle_type IN ('micro', 'hatchback') THEN 1 ELSE 0 END) as micro_hatch
-               FROM {$tblPrefix}vehicles";
+               FROM {$tblPrefix}vehicles
+               WHERE vehicle_site_id = {$siteId}";
 
 $metricsRes = mysqli_query($connection, $metricsSql);
 $metricsRow = $metricsRes ? mysqli_fetch_assoc($metricsRes) : [];

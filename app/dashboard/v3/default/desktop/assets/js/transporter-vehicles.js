@@ -883,7 +883,7 @@
       });
       if (!this.masterVehicles.length) {
         $list.html(
-          '<span class="v3-field-hint">No master vehicles available. Use Create New Master Vehicle below.</span>',
+          '<span class="v3-field-hint">No vehicles available in your fleet. Add vehicles first.</span>',
         );
         return;
       }
@@ -1219,7 +1219,7 @@
       if (this.transporterId) {
         $("#vehicleModalTitle").text("Choose Fleet Vehicles");
         $("#vehicleModalSubtitle").text(
-          "Select the master vehicles available to this transporter",
+          "Select the vehicles available to this transporter",
         );
         $("#btnSaveVehicleText").text("Save Fleet Selection");
       } else {
@@ -1475,7 +1475,7 @@
       if (typeof swal === "function") {
         swal({
           title: "Delete Vehicle?",
-          text: `Are you sure you want to delete '${title}' from the fleet master directory?`,
+          text: `Are you sure you want to delete '${title}' from your fleet?`,
           type: "warning",
           icon: "warning",
           showCancelButton: true,

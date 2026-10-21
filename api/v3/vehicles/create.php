@@ -21,6 +21,13 @@ if (!isset($connection)) {
 
 $tblPrefix = defined('TABLE_PREFIX') ? TABLE_PREFIX : 'isw_';
 $siteId    = defined('SITE_ID')      ? (int) SITE_ID : (int)($_SESSION['site_id'] ?? 0);
+if ($siteId <= 0 && !empty($_SERVER['HTTP_HOST'])) {
+    $host = mysqli_real_escape_string($connection, strtolower(trim($_SERVER['HTTP_HOST'])));
+    $siteQuery = mysqli_query($connection, "SELECT site_id FROM {$tblPrefix}site WHERE LOWER(site_domain) = '{$host}' OR LOWER(site_url) = '{$host}' LIMIT 1");
+    if ($siteQuery && ($siteRow = mysqli_fetch_assoc($siteQuery))) {
+        $siteId = (int) $siteRow['site_id'];
+    }
+}
 $userId    = defined('USER_ID')      ? (int) USER_ID : (int)($_SESSION['user_id'] ?? 0);
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -137,7 +144,7 @@ $galleryEsc     = mysqli_real_escape_string($connection, $galleryJson);
 $fuelTypeEsc    = mysqli_real_escape_string($connection, $fuelType);
 
 $checkSql = "SELECT vehicle_id FROM {$tblPrefix}vehicles 
-             WHERE vehicle_title = '{$titleEsc}' AND vehicle_type = '{$categoryEsc}' 
+             WHERE vehicle_title = '{$titleEsc}' AND vehicle_type = '{$categoryEsc}' AND vehicle_site_id = {$siteId}
              LIMIT 1";
 $checkRes = mysqli_query($connection, $checkSql);
 
@@ -145,15 +152,15 @@ if ($checkRes && mysqli_num_rows($checkRes) > 0) {
     http_response_code(409);
     echo json_encode([
         'status' => 'error',
-        'msg'    => "Vehicle '{$title}' already exists under the selected category."
+        'msg'    => "Vehicle '{$title}' already exists in your fleet under the selected category."
     ]);
     exit;
 }
 
 // Insert new vehicle
 $insertSql = "INSERT INTO {$tblPrefix}vehicles 
-              (vehicle_thumbnail, vehicle_gallery, vehicle_title, vehicle_description, vehicle_seating, vehicle_per_km_rate_with_tax, vehicle_per_km_rate_without_tax, vehicle_luggage, vehicle_fuel_type, vehicle_type, vehicle_is_deletable) 
-              VALUES ('{$thumbnailEsc}', '{$galleryEsc}', '{$titleEsc}', '{$descEsc}', {$seating}, {$rateWithTax}, {$rateWithoutTax}, {$luggage}, '{$fuelTypeEsc}', '{$categoryEsc}', 1)";
+              (vehicle_thumbnail, vehicle_gallery, vehicle_title, vehicle_description, vehicle_seating, vehicle_per_km_rate_with_tax, vehicle_per_km_rate_without_tax, vehicle_luggage, vehicle_fuel_type, vehicle_type, vehicle_is_deletable, vehicle_site_id) 
+              VALUES ('{$thumbnailEsc}', '{$galleryEsc}', '{$titleEsc}', '{$descEsc}', {$seating}, {$rateWithTax}, {$rateWithoutTax}, {$luggage}, '{$fuelTypeEsc}', '{$categoryEsc}', 1, {$siteId})";
 
 if (mysqli_query($connection, $insertSql)) {
     $newId = mysqli_insert_id($connection);

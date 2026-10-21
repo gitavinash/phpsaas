@@ -9,7 +9,7 @@ $fleetTransporterId = $_GET['id'] ?? ($_GET['transporter_id'] ?? '');
                 <i class="fi fi-rr-car-alt"></i>
             </div>
             <div class="package-header-titles">
-                <h2>Fleet &amp; Vehicles Master</h2>
+                <h2>Fleet &amp; Vehicles</h2>
                 <p>Manage fleet categories, vehicle models, photo galleries, per KM tariff rates, and seating capacities.</p>
             </div>
         </div>
@@ -369,11 +369,11 @@ $fleetTransporterId = $_GET['id'] ?? ($_GET['transporter_id'] ?? '');
 
                     <?php if (!empty($fleetTransporterScoped)) { ?>
                         <div class="v3-form-group">
-                            <label class="v3-form-label">Assign Master Fleet Models</label>
+                            <label class="v3-form-label">Assign Fleet Models</label>
                             <div id="transporterFleetChecklist" class="transporter-fleet-checklist">
-                                <span class="v3-field-hint">Loading master fleet options...</span>
+                                <span class="v3-field-hint">Loading fleet options...</span>
                             </div>
-                            <span class="v3-field-hint">Select every master vehicle this transporter can operate.</span>
+                            <span class="v3-field-hint">Select every vehicle this transporter can operate.</span>
                         </div>
                     <?php } ?>
                 </div>
@@ -382,7 +382,7 @@ $fleetTransporterId = $_GET['id'] ?? ($_GET['transporter_id'] ?? '');
                     <button type="button" class="v3-btn-secondary" id="btnCancelVehicleModal">Cancel</button>
                     <?php if (!empty($fleetTransporterScoped)) { ?>
                         <button type="button" class="v3-btn-secondary" id="btnCreateMasterVehicle">
-                            <i class="fi fi-rr-plus"></i> Create New Master Vehicle
+                            <i class="fi fi-rr-plus"></i> Create New Vehicle
                         </button>
                     <?php } ?>
                     <button type="submit" class="v3-btn-primary" id="btnSaveVehicleModal">

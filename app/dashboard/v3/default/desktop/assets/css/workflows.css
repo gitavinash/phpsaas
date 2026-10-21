@@ -3227,3 +3227,306 @@ select.drawer-select.select2-hidden-accessible {
         justify-content: flex-end;
     }
 }
+
+/* ==========================================================================
+   14. QUICK ADD STEP POPOVER & NODE MANAGEMENT ENHANCEMENTS
+   ========================================================================== */
+.btn-topbar-add-step {
+    background: #f5f3ff !important;
+    color: #7c3aed !important;
+    font-weight: 700 !important;
+    border: 1px solid #ddd6fe !important;
+}
+
+.btn-topbar-add-step:hover {
+    background: #7c3aed !important;
+    color: #ffffff !important;
+    border-color: #7c3aed !important;
+}
+
+.btn-node-tool.btn-node-duplicate:hover {
+    background: #e0e7ff;
+    color: #4338ca;
+}
+
+.btn-drawer-duplicate {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+    background: #ffffff;
+    color: #475569;
+    font-size: 12.5px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-drawer-duplicate:hover {
+    background: #f1f5f9;
+    color: #0f172a;
+    border-color: #cbd5e1;
+}
+
+/* Node Card Live Config Summary Badges */
+.flow-node-config-pills {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    flex-wrap: wrap;
+    margin-top: 6px;
+}
+
+.flow-config-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2.5px 7px;
+    border-radius: 5px;
+    background: #f1f5f9;
+    color: #475569;
+    font-size: 10.5px;
+    font-weight: 600;
+    line-height: 1.3;
+    max-width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    border: 1px solid #e2e8f0;
+}
+
+.flow-config-pill i {
+    font-size: 10px;
+}
+
+.flow-config-pill.accent {
+    background: #f5f3ff;
+    color: #6d28d9;
+    border-color: #ede9fe;
+}
+
+.flow-config-pill.emerald {
+    background: #ecfdf5;
+    color: #059669;
+    border-color: #d1fae5;
+}
+
+.flow-config-pill.amber {
+    background: #fffbeb;
+    color: #b45309;
+    border-color: #fef3c7;
+}
+
+.flow-config-pill.blue {
+    background: #eff6ff;
+    color: #1d4ed8;
+    border-color: #dbeafe;
+}
+
+/* Quick Add Step Floating Popover */
+.quick-add-popover {
+    position: absolute;
+    width: 380px;
+    max-height: 490px;
+    background: #ffffff;
+    border: 1px solid #cbd5e1;
+    border-radius: 16px;
+    box-shadow: 0 20px 45px rgba(15, 23, 42, 0.2), 0 6px 16px rgba(15, 23, 42, 0.08);
+    display: flex;
+    flex-direction: column;
+    z-index: 999;
+    overflow: hidden;
+    pointer-events: all;
+    animation: popoverFadeIn 0.18s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes popoverFadeIn {
+    from { opacity: 0; transform: scale(0.95) translateY(-6px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.quick-add-popover.is-hidden {
+    display: none !important;
+}
+
+.popover-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 14px;
+    background: #f8fafc;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.popover-search-wrap {
+    position: relative;
+    flex: 1;
+}
+
+.popover-search-wrap i {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #94a3b8;
+    font-size: 13px;
+    pointer-events: none;
+}
+
+.popover-search-input {
+    width: 100%;
+    padding: 7px 10px 7px 32px;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 12.5px;
+    background: #ffffff;
+    outline: none;
+    box-sizing: border-box;
+    transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.popover-search-input:focus {
+    border-color: #7c3aed;
+    box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.12);
+}
+
+.popover-close-btn {
+    width: 28px;
+    height: 28px;
+    border-radius: 7px;
+    border: none;
+    background: transparent;
+    color: #94a3b8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 12px;
+    transition: all 0.15s ease;
+}
+
+.popover-close-btn:hover {
+    background: #e2e8f0;
+    color: #0f172a;
+}
+
+.popover-categories-bar {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 8px 12px;
+    background: #ffffff;
+    border-bottom: 1px solid #f1f5f9;
+    overflow-x: auto;
+}
+
+.popover-cat-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 10px;
+    border-radius: 6px;
+    border: 1px solid #e2e8f0;
+    background: #f8fafc;
+    color: #64748b;
+    font-size: 11.5px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.15s ease;
+}
+
+.popover-cat-btn:hover {
+    color: #0f172a;
+    background: #f1f5f9;
+}
+
+.popover-cat-btn.active {
+    background: #f5f3ff;
+    color: #7c3aed;
+    border-color: #ddd6fe;
+    font-weight: 700;
+}
+
+.popover-items-list {
+    flex: 1 1 auto;
+    overflow-y: auto;
+    max-height: 350px;
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.popover-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 9px 12px;
+    border-radius: 10px;
+    border: 1px solid transparent;
+    background: #ffffff;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.popover-item:hover {
+    background: #f8fafc;
+    border-color: #e2e8f0;
+    transform: translateX(3px);
+}
+
+.popover-item-icon {
+    width: 34px;
+    height: 34px;
+    border-radius: 9px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    color: #ffffff;
+    flex-shrink: 0;
+}
+
+.popover-item-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.popover-item-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.popover-item-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: #0f172a;
+    line-height: 1.3;
+}
+
+.popover-item-badge {
+    font-size: 9.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding: 2px 6px;
+    border-radius: 4px;
+    background: #f1f5f9;
+    color: #64748b;
+}
+
+.popover-item-desc {
+    font-size: 11.5px;
+    color: #64748b;
+    margin: 2px 0 0 0;
+    line-height: 1.3;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+

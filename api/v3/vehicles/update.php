@@ -21,6 +21,13 @@ if (!isset($connection)) {
 
 $tblPrefix = defined('TABLE_PREFIX') ? TABLE_PREFIX : 'isw_';
 $siteId    = defined('SITE_ID')      ? (int) SITE_ID : (int)($_SESSION['site_id'] ?? 0);
+if ($siteId <= 0 && !empty($_SERVER['HTTP_HOST'])) {
+    $host = mysqli_real_escape_string($connection, strtolower(trim($_SERVER['HTTP_HOST'])));
+    $siteQuery = mysqli_query($connection, "SELECT site_id FROM {$tblPrefix}site WHERE LOWER(site_domain) = '{$host}' OR LOWER(site_url) = '{$host}' LIMIT 1");
+    if ($siteQuery && ($siteRow = mysqli_fetch_assoc($siteQuery))) {
+        $siteId = (int) $siteRow['site_id'];
+    }
+}
 $userId    = defined('USER_ID')      ? (int) USER_ID : (int)($_SESSION['user_id'] ?? 0);
 
 $method = strtoupper($_SERVER['REQUEST_METHOD'] ?? 'POST');
@@ -142,11 +149,11 @@ if (!empty($errors)) {
 }
 
 // Check vehicle existence
-$checkSql = "SELECT * FROM {$tblPrefix}vehicles WHERE vehicle_id = {$vehicleId} LIMIT 1";
+$checkSql = "SELECT * FROM {$tblPrefix}vehicles WHERE vehicle_id = {$vehicleId} AND vehicle_site_id = {$siteId} LIMIT 1";
 $checkRes = mysqli_query($connection, $checkSql);
 if (!$checkRes || mysqli_num_rows($checkRes) === 0) {
     http_response_code(404);
-    echo json_encode(['status' => 'error', 'msg' => 'Vehicle record not found.']);
+    echo json_encode(['status' => 'error', 'msg' => 'Vehicle record not found in your fleet.']);
     exit;
 }
 
@@ -179,14 +186,14 @@ $fuelTypeEsc    = mysqli_real_escape_string($connection, $fuelType);
 
 // Check duplicate title in same category for different vehicle
 $dupSql = "SELECT vehicle_id FROM {$tblPrefix}vehicles 
-           WHERE vehicle_title = '{$titleEsc}' AND vehicle_type = '{$categoryEsc}' AND vehicle_id != {$vehicleId} 
+           WHERE vehicle_title = '{$titleEsc}' AND vehicle_type = '{$categoryEsc}' AND vehicle_id != {$vehicleId} AND vehicle_site_id = {$siteId}
            LIMIT 1";
 $dupRes = mysqli_query($connection, $dupSql);
 if ($dupRes && mysqli_num_rows($dupRes) > 0) {
     http_response_code(409);
     echo json_encode([
         'status' => 'error',
-        'msg'    => "Another vehicle named '{$title}' already exists in this category."
+        'msg'    => "Another vehicle named '{$title}' already exists in your fleet under this category."
     ]);
     exit;
 }
@@ -202,7 +209,7 @@ $updateSql = "UPDATE {$tblPrefix}vehicles SET
                 vehicle_description = '{$descEsc}',
                 vehicle_thumbnail = '{$thumbnailEsc}',
                 vehicle_gallery = '{$galleryEsc}'
-              WHERE vehicle_id = {$vehicleId}";
+              WHERE vehicle_id = {$vehicleId} AND vehicle_site_id = {$siteId}";
 
 if (mysqli_query($connection, $updateSql)) {
     echo json_encode([

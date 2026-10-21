@@ -133,6 +133,10 @@ $appName = !empty($app_title) ? $app_title : (defined('SITE_APP_NAME') ? SITE_AP
             <!-- Canvas Controls Center -->
             <div class="editor-topbar-center">
                 <div class="editor-canvas-toolset">
+                    <button type="button" class="canvas-tool-btn btn-topbar-add-step" id="btnTopbarAddStep" title="Add Trigger, Action or Logic to Canvas">
+                        <i class="fi fi-rr-plus"></i> <span>Add Step</span>
+                    </button>
+                    <span class="tool-divider"></span>
                     <button type="button" class="canvas-tool-btn" id="btnAutoAlignFlowchart" title="Auto-Organize Flowchart (Tidy Layout)">
                         <i class="fi fi-rr-align-center"></i> <span>Auto Align</span>
                     </button>
@@ -416,6 +420,15 @@ $appName = !empty($app_title) ? $app_title : (defined('SITE_APP_NAME') ? SITE_AP
                 <!-- Drawer Scrollable Form -->
                 <div class="drawer-body">
                     
+                    <!-- Module Type Switcher (Change step type easily) -->
+                    <div class="drawer-form-group module-type-switcher-group">
+                        <label class="drawer-label" for="drawerModuleTypeSelect">Step Module Type</label>
+                        <select id="drawerModuleTypeSelect" class="drawer-select selectjs2 selectJS2">
+                            <!-- Populated dynamically via JS with all triggers, actions, and logic -->
+                        </select>
+                        <span class="drawer-help-text">Switch module type without losing flowchart connections.</span>
+                    </div>
+
                     <!-- Common Fields: Step Name & Summary -->
                     <div class="drawer-form-group">
                         <label class="drawer-label" for="drawerInputTitle">Step Label</label>
@@ -436,8 +449,11 @@ $appName = !empty($app_title) ? $app_title : (defined('SITE_APP_NAME') ? SITE_AP
 
                 <!-- Drawer Footer Actions -->
                 <div class="drawer-footer">
-                    <button type="button" class="btn-drawer-delete" id="btnDeleteCurrentNode">
-                        <i class="fi fi-rr-trash"></i> <span>Delete Step</span>
+                    <button type="button" class="btn-drawer-delete" id="btnDeleteCurrentNode" title="Delete Step (Del)">
+                        <i class="fi fi-rr-trash"></i> <span>Delete</span>
+                    </button>
+                    <button type="button" class="btn-drawer-duplicate" id="btnDuplicateCurrentNode" title="Duplicate this step">
+                        <i class="fi fi-rr-copy"></i> <span>Duplicate</span>
                     </button>
                     <button type="button" class="btn-drawer-apply" id="btnApplyNodeChanges">
                         <i class="fi fi-rr-check"></i> <span>Apply Changes</span>
@@ -445,6 +461,28 @@ $appName = !empty($app_title) ? $app_title : (defined('SITE_APP_NAME') ? SITE_AP
                 </div>
             </div>
 
+        </div>
+
+        <!-- ============================================================== -->
+        <!-- FLOATING QUICK ADD STEP POPOVER (INTERACTIVE MODULE CHOOSER)   -->
+        <!-- ============================================================== -->
+        <div class="quick-add-popover is-hidden" id="quickAddPopover">
+            <div class="popover-header">
+                <div class="popover-search-wrap">
+                    <i class="fi fi-rr-search"></i>
+                    <input type="text" id="quickAddSearchInput" class="popover-search-input" placeholder="Search triggers, actions, conditions..." autocomplete="off">
+                </div>
+                <button type="button" class="popover-close-btn" id="btnCloseQuickAddPopover" title="Close"><i class="fi fi-rr-cross"></i></button>
+            </div>
+            <div class="popover-categories-bar">
+                <button type="button" class="popover-cat-btn active" data-cat="all">All Modules</button>
+                <button type="button" class="popover-cat-btn" data-cat="trigger"><i class="fi fi-rr-bolt"></i> Triggers</button>
+                <button type="button" class="popover-cat-btn" data-cat="action"><i class="fi fi-rr-play-alt"></i> Actions</button>
+                <button type="button" class="popover-cat-btn" data-cat="logic"><i class="fi fi-rr-code-fork"></i> Logic</button>
+            </div>
+            <div class="popover-items-list" id="quickAddItemsList">
+                <!-- Dynamically populated from module catalog -->
+            </div>
         </div>
 
         <!-- Simulation / Test Run Console (Slide-up footer drawer) -->
@@ -576,6 +614,9 @@ $appName = !empty($app_title) ? $app_title : (defined('SITE_APP_NAME') ? SITE_AP
                     </table>
                 </div>
             </div>
+        </div>
+    </div>
+
     <!-- ============================================================== -->
     <!-- MODAL: LIVE SIMULATION INTERACTION & DUMMY DATA INSPECTOR      -->
     <!-- ============================================================== -->

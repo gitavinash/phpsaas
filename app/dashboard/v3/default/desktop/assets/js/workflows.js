@@ -27,6 +27,7 @@
             this.agentsList = [];
             this.packagesList = [];
             this.pipelineStagesList = [];
+            this.moduleCatalog = null;
 
             // Canvas & Editor State
             this.nodes = [];
@@ -80,12 +81,26 @@
             this.editorStatusTextEl = document.getElementById('editorStatusText');
             this.editorSaveStateEl = document.getElementById('editorSaveState');
 
+            // Topbar tools
+            this.btnTopbarAddStepEl = document.getElementById('btnTopbarAddStep');
+
             // Drawer
             this.nodeConfigDrawerEl = document.getElementById('nodeConfigDrawer');
+            this.drawerModuleTypeSelectEl = document.getElementById('drawerModuleTypeSelect');
             this.drawerInputTitleEl = document.getElementById('drawerInputTitle');
             this.drawerInputSubtitleEl = document.getElementById('drawerInputSubtitle');
             this.drawerDynamicFieldsEl = document.getElementById('drawerDynamicFields');
             this.drawerNodeTypeBadgeEl = document.getElementById('drawerNodeTypeBadge');
+            this.btnDuplicateCurrentNodeEl = document.getElementById('btnDuplicateCurrentNode');
+
+            // Quick Add Popover
+            this.quickAddPopoverEl = document.getElementById('quickAddPopover');
+            this.quickAddSearchInputEl = document.getElementById('quickAddSearchInput');
+            this.quickAddCategoryTabsEl = document.getElementById('quickAddCategoryTabs');
+            this.quickAddItemsListEl = document.getElementById('quickAddItemsList');
+            this.btnCloseQuickAddPopoverEl = document.getElementById('btnCloseQuickAddPopover');
+            this.activeQuickAddSourceNodeId = null;
+            this.quickAddFilterCategory = 'all';
 
             // Simulation Console
             this.testRunConsoleEl = document.getElementById('testRunConsole');
@@ -257,6 +272,44 @@
             // Canvas Pan & Zoom Interactions
             this.bindCanvasInteraction();
 
+            // Topbar Add Step Button
+            if (this.btnTopbarAddStepEl) {
+                this.btnTopbarAddStepEl.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const rect = this.btnTopbarAddStepEl.getBoundingClientRect();
+                    this.openQuickAddPopover(null, rect.left, rect.bottom + 8);
+                });
+            }
+
+            // Quick Add Popover Controls
+            if (this.btnCloseQuickAddPopoverEl) {
+                this.btnCloseQuickAddPopoverEl.addEventListener('click', () => this.closeQuickAddPopover());
+            }
+
+            if (this.quickAddSearchInputEl) {
+                this.quickAddSearchInputEl.addEventListener('input', () => this.renderQuickAddItems());
+            }
+
+            if (this.quickAddCategoryTabsEl) {
+                this.quickAddCategoryTabsEl.addEventListener('click', (e) => {
+                    const tab = e.target.closest('.quick-add-cat-btn');
+                    if (!tab) return;
+                    this.quickAddCategoryTabsEl.querySelectorAll('.quick-add-cat-btn').forEach(b => b.classList.remove('is-active'));
+                    tab.classList.add('is-active');
+                    this.quickAddFilterCategory = tab.dataset.cat || 'all';
+                    this.renderQuickAddItems();
+                });
+            }
+
+            // Close popover when clicking outside
+            document.addEventListener('click', (e) => {
+                if (this.quickAddPopoverEl && !this.quickAddPopoverEl.classList.contains('is-hidden')) {
+                    if (!this.quickAddPopoverEl.contains(e.target) && !e.target.closest('#btnTopbarAddStep, .flow-node-quick-add')) {
+                        this.closeQuickAddPopover();
+                    }
+                }
+            });
+
             // Drawer Controls
             const btnCloseDrawer = document.getElementById('btnCloseNodeDrawer');
             if (btnCloseDrawer) btnCloseDrawer.addEventListener('click', () => this.closeNodeDrawer());
@@ -266,6 +319,24 @@
 
             const btnDeleteNode = document.getElementById('btnDeleteCurrentNode');
             if (btnDeleteNode) btnDeleteNode.addEventListener('click', () => this.deleteSelectedNode());
+
+            // Drawer Duplicate Button
+            if (this.btnDuplicateCurrentNodeEl) {
+                this.btnDuplicateCurrentNodeEl.addEventListener('click', () => {
+                    if (this.selectedNodeId) {
+                        this.duplicateNode(this.selectedNodeId);
+                    }
+                });
+            }
+
+            // Drawer Module Type Switcher Dropdown
+            if (this.drawerModuleTypeSelectEl) {
+                this.drawerModuleTypeSelectEl.addEventListener('change', (e) => {
+                    if (this.selectedNodeId && e.target.value) {
+                        this.switchNodeModuleType(this.selectedNodeId, e.target.value);
+                    }
+                });
+            }
 
             // Smart Token Pills Click Insertion & Focus Tracking
             if (this.nodeConfigDrawerEl) {
@@ -359,9 +430,15 @@
                 btnCloseLogs.onclick = () => this.executionLogsModalEl.classList.add('is-hidden');
             }
 
-            // Global Keydown (Escape cancels active connection draft)
+            // Global Keydown (Escape cancels active connection draft / popovers, Del deletes, Ctrl+D duplicates)
             const onKeyDown = (e) => {
                 if (e.key === 'Escape') {
+                    if (this.quickAddPopoverEl && !this.quickAddPopoverEl.classList.contains('is-hidden')) {
+                        this.closeQuickAddPopover();
+                    }
+                    if (this.nodeConfigDrawerEl && !this.nodeConfigDrawerEl.classList.contains('is-closed')) {
+                        this.closeNodeDrawer();
+                    }
                     if (this.activePortDrag) {
                         this.cancelDraftConnection();
                     }
@@ -373,6 +450,27 @@
                     }
                     if (this.executionLogsModalEl && !this.executionLogsModalEl.classList.contains('is-hidden')) {
                         this.executionLogsModalEl.classList.add('is-hidden');
+                    }
+                    if (this.simulationModalEl && !this.simulationModalEl.classList.contains('is-hidden')) {
+                        this.closeSimulationInteractionModal();
+                    }
+                }
+
+                // Delete selected node with Delete or Backspace (only if not typing in text field)
+                if ((e.key === 'Delete' || e.key === 'Backspace') && this.selectedNodeId && this.currentView === 'editor') {
+                    const tag = document.activeElement ? document.activeElement.tagName : '';
+                    if (tag !== 'INPUT' && tag !== 'TEXTAREA' && tag !== 'SELECT') {
+                        e.preventDefault();
+                        this.deleteSelectedNode();
+                    }
+                }
+
+                // Duplicate selected node with Ctrl+D / Cmd+D
+                if ((e.key === 'd' || e.key === 'D') && (e.ctrlKey || e.metaKey) && this.selectedNodeId && this.currentView === 'editor') {
+                    const tag = document.activeElement ? document.activeElement.tagName : '';
+                    if (tag !== 'INPUT' && tag !== 'TEXTAREA') {
+                        e.preventDefault();
+                        this.duplicateNode(this.selectedNodeId);
                     }
                 }
 
@@ -616,6 +714,9 @@
                     this.agentsList = d.agents || [];
                     this.packagesList = d.packages || [];
                     this.pipelineStagesList = d.pipeline_stages || [];
+                    if (d.catalog) {
+                        this.moduleCatalog = d.catalog;
+                    }
                 }
                 const tplJson = await tplRes.json();
                 if (tplJson.status === 'success') {
@@ -625,6 +726,49 @@
             } catch (err) {
                 console.warn('Failed to load auxiliary meta dependencies:', err);
             }
+        }
+
+        getModuleCatalog() {
+            if (this.moduleCatalog) return this.moduleCatalog;
+            return this.getDefaultModuleCatalog();
+        }
+
+        getDefaultModuleCatalog() {
+            return {
+                triggers: [
+                    { type: 'lead_created', category: 'trigger', title: 'New Lead Ingested', subtitle: 'Facebook Ads, Web Forms & Website', icon: 'fi-rr-bullseye-arrow', color: '#8b5cf6', badge: 'Trigger' },
+                    { type: 'whatsapp_incoming', category: 'trigger', title: 'Inbound WhatsApp Message', subtitle: 'Traveler incoming chat or keyword', icon: 'fi-rr-comment-alt', color: '#10b981', badge: 'Trigger' },
+                    { type: 'payment_received', category: 'trigger', title: 'Payment Received', subtitle: 'Token advance or full balance captured', icon: 'fi-rr-badge-percent', color: '#f59e0b', badge: 'Trigger' },
+                    { type: 'lead_stage_changed', category: 'trigger', title: 'Lead Stage Changed', subtitle: 'CRM Pipeline stage transition', icon: 'fi-rr-exchange', color: '#06b6d4', badge: 'Trigger' },
+                    { type: 'itinerary_viewed', category: 'trigger', title: 'Itinerary Link Viewed', subtitle: 'Client opened live proposal link', icon: 'fi-rr-eye', color: '#ec4899', badge: 'Trigger' },
+                    { type: 'webhook_received', category: 'trigger', title: 'Webhook Received', subtitle: 'External CRM or Zapier ping', icon: 'fi-rr-network', color: '#6366f1', badge: 'Trigger' }
+                ],
+                actions: [
+                    { type: 'send_whatsapp', category: 'action', title: 'Send WhatsApp Message', subtitle: 'Automated notification to lead', icon: 'fi-rr-comment-alt', color: '#10b981', badge: 'Action' },
+                    { type: 'send_itinerary', category: 'action', title: 'Send Tour Itinerary', subtitle: 'Verified PDF proposal with rates', icon: 'fi-rr-plane-departure', color: '#3b82f6', badge: 'Action' },
+                    { type: 'assign_agent', category: 'action', title: 'Assign Sales Specialist', subtitle: 'Round-Robin or specific agent', icon: 'fi-rr-user-add', color: '#6366f1', badge: 'Action' },
+                    { type: 'update_lead_stage', category: 'action', title: 'Update Pipeline Stage', subtitle: 'Progress stage in CRM pipeline', icon: 'fi-rr-checkbox', color: '#ec4899', badge: 'Action' },
+                    { type: 'add_tags', category: 'action', title: 'Apply CRM Tags', subtitle: 'Add or remove tags on traveler record', icon: 'fi-rr-tags', color: '#f97316', badge: 'Action' },
+                    { type: 'create_task', category: 'action', title: 'Create Agent Task', subtitle: 'Urgent discovery call or follow-up', icon: 'fi-rr-calendar-check', color: '#0ea5e9', badge: 'Action' },
+                    { type: 'payment_link', category: 'action', title: 'Generate Payment Link', subtitle: 'Instant deposit payment link', icon: 'fi-rr-credit-card', color: '#14b8a6', badge: 'Action' },
+                    { type: 'internal_note', category: 'action', title: 'Add Internal Timeline Note', subtitle: 'Log audit trail entry in CRM', icon: 'fi-rr-document', color: '#64748b', badge: 'Action' },
+                    { type: 'webhook_call', category: 'action', title: 'Outbound Webhook Call', subtitle: 'POST payload to Zapier/Make/Slack', icon: 'fi-rr-cloud-share', color: '#84cc16', badge: 'Action' }
+                ],
+                logic: [
+                    { type: 'condition_branch', category: 'logic', title: 'Condition Branch (If/Else)', subtitle: 'Evaluate budget, destination, or tags', icon: 'fi-rr-code-branch', color: '#f59e0b', badge: 'Logic' },
+                    { type: 'delay', category: 'logic', title: 'Wait / Delay Time', subtitle: 'Pause workflow execution for N seconds/hours', icon: 'fi-rr-hourglass', color: '#64748b', badge: 'Logic' }
+                ]
+            };
+        }
+
+        getModuleCatalogItem(type) {
+            const catalog = this.getModuleCatalog();
+            const allItems = [
+                ...(catalog.triggers || []),
+                ...(catalog.actions || []),
+                ...(catalog.logic || [])
+            ];
+            return allItems.find(item => item.type === type) || null;
         }
 
         updateStats(stats) {
@@ -1479,6 +1623,21 @@
                         url: 'https://hooks.zapier.com/hooks/catch/custom/',
                         method: 'POST'
                     };
+                case 'internal_note':
+                    return {
+                        note_text: 'Automation executed: customer engaged via workflow.',
+                        is_pinned: '0'
+                    };
+                case 'itinerary_viewed':
+                    return {
+                        package_id: '0',
+                        min_view_seconds: '15'
+                    };
+                case 'webhook_received':
+                    return {
+                        event_name: 'external_lead',
+                        secret_token: ''
+                    };
                 default:
                     return {};
             }
@@ -1538,10 +1697,13 @@
                     <div class="flow-node-header" data-handle="drag">
                         <span class="flow-node-category-tag ${node.category}">${node.category.toUpperCase()}</span>
                         <div class="flow-node-header-actions">
+                            <button type="button" class="btn-node-tool btn-node-duplicate" data-node-id="${node.id}" title="Duplicate Step (Cmd/Ctrl+D)">
+                                <i class="fi fi-rr-copy"></i>
+                            </button>
                             <button type="button" class="btn-node-tool btn-node-config" data-node-id="${node.id}" title="Configure Step">
                                 <i class="fi fi-rr-settings"></i>
                             </button>
-                            <button type="button" class="btn-node-tool btn-node-delete" data-node-id="${node.id}" title="Delete Step">
+                            <button type="button" class="btn-node-tool btn-node-delete" data-node-id="${node.id}" title="Delete Step (Del/Backspace)">
                                 <i class="fi fi-rr-cross-small"></i>
                             </button>
                         </div>
@@ -1554,6 +1716,7 @@
                         <div class="flow-node-content">
                             <h4 class="flow-node-title">${this.escapeHtml(node.title)}</h4>
                             <p class="flow-node-subtitle">${this.escapeHtml(node.subtitle || 'Step configured')}</p>
+                            ${this.renderNodeConfigPillsHtml(node)}
                         </div>
                     </div>
                 `;
@@ -1632,6 +1795,14 @@
             cardEl.addEventListener('pointerdown', onCardPointerDown);
 
             // Button actions inside card
+            const btnDuplicate = cardEl.querySelector('.btn-node-duplicate');
+            if (btnDuplicate) {
+                btnDuplicate.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    this.duplicateNode(node.id);
+                });
+            }
+
             const btnDelete = cardEl.querySelector('.btn-node-delete');
             if (btnDelete) {
                 btnDelete.addEventListener('click', (e) => {
@@ -1653,7 +1824,8 @@
             if (btnQuickAdd) {
                 btnQuickAdd.addEventListener('click', (e) => {
                     e.stopPropagation();
-                    this.quickAddNextStep(node.id);
+                    const rect = btnQuickAdd.getBoundingClientRect();
+                    this.openQuickAddPopover(node.id, rect.right + 10, rect.top - 20);
                 });
             }
 
@@ -1875,31 +2047,349 @@
             this.showToast('Connection removed', 'info');
         }
 
-        quickAddNextStep(sourceNodeId) {
+        renderNodeConfigPillsHtml(node) {
+            const cfg = node.config || {};
+            const type = node.action_type || node.trigger_event || '';
+            const pills = [];
+
+            if (type === 'lead_created') {
+                if (cfg.source && cfg.source !== 'all') {
+                    pills.push({ icon: 'fi-rr-bullseye', text: cfg.source.replace(/^webform_|^fbform_/, '') });
+                }
+                if (cfg.min_budget && cfg.min_budget !== '0') {
+                    pills.push({ icon: 'fi-rr-badge-percent', text: `₹${parseInt(cfg.min_budget).toLocaleString('en-IN')}+` });
+                }
+            } else if (type === 'whatsapp_incoming') {
+                if (cfg.keywords) {
+                    const firstKw = cfg.keywords.split(',')[0].trim();
+                    pills.push({ icon: 'fi-rr-search', text: `"${firstKw}"` });
+                }
+            } else if (type === 'payment_received') {
+                if (cfg.min_amount) {
+                    pills.push({ icon: 'fi-rr-bank', text: `Min ₹${parseInt(cfg.min_amount).toLocaleString('en-IN')}` });
+                }
+            } else if (type === 'lead_stage_changed') {
+                if (cfg.to_stage && cfg.to_stage !== 'any') {
+                    pills.push({ icon: 'fi-rr-exchange', text: `Stage: ${cfg.to_stage}` });
+                }
+            } else if (type === 'send_whatsapp') {
+                if (cfg.template_id && cfg.template_id !== '0') {
+                    const tpl = this.whatsappTemplatesList.find(t => String(t.id) === String(cfg.template_id));
+                    pills.push({ icon: 'fi-rr-document-signed', text: tpl ? tpl.name : 'Template' });
+                }
+                if (cfg.attach_brochure !== '0') {
+                    pills.push({ icon: 'fi-rr-file-pdf', text: 'PDF Brochure' });
+                }
+            } else if (type === 'send_itinerary') {
+                if (cfg.package_id && cfg.package_id !== '0') {
+                    const pkg = this.packagesList.find(p => String(p.id) === String(cfg.package_id));
+                    pills.push({ icon: 'fi-rr-plane', text: pkg ? pkg.name.substring(0, 16) + '...' : 'Package' });
+                } else {
+                    pills.push({ icon: 'fi-rr-magic-wand', text: 'Auto Package' });
+                }
+            } else if (type === 'assign_agent') {
+                if (cfg.mode === 'round_robin' || !cfg.assigned_agent_id || cfg.assigned_agent_id === '0') {
+                    pills.push({ icon: 'fi-rr-refresh', text: 'Round-Robin' });
+                } else {
+                    const agent = this.agentsList.find(a => String(a.id) === String(cfg.assigned_agent_id));
+                    pills.push({ icon: 'fi-rr-user', text: agent ? agent.name : 'Specialist' });
+                }
+            } else if (type === 'update_lead_stage') {
+                if (cfg.stage_code) {
+                    pills.push({ icon: 'fi-rr-checkbox', text: cfg.stage_code });
+                }
+            } else if (type === 'add_tags') {
+                if (cfg.tags) {
+                    const firstTag = cfg.tags.split(',')[0].trim();
+                    pills.push({ icon: 'fi-rr-tag', text: `#${firstTag}` });
+                }
+            } else if (type === 'create_task') {
+                pills.push({ icon: 'fi-rr-alarm-clock', text: `${cfg.task_type || 'Call'} in ${cfg.due_hours || 2}h` });
+            } else if (type === 'condition_branch') {
+                pills.push({ icon: 'fi-rr-code-branch', text: `${cfg.field || 'budget'} ${cfg.operator || '='} ${cfg.value || ''}` });
+            } else if (type === 'delay') {
+                const sec = parseInt(cfg.delay_seconds || 3);
+                const label = sec >= 3600 ? `${Math.round(sec / 3600)}h` : (sec >= 60 ? `${Math.round(sec / 60)}m` : `${sec}s`);
+                pills.push({ icon: 'fi-rr-hourglass', text: `Wait ${label}` });
+            } else if (type === 'payment_link') {
+                pills.push({ icon: 'fi-rr-credit-card', text: `₹${parseInt(cfg.amount || 5000).toLocaleString('en-IN')}` });
+            } else if (type === 'internal_note') {
+                pills.push({ icon: 'fi-rr-document', text: 'Internal Note' });
+            } else if (type === 'itinerary_viewed') {
+                pills.push({ icon: 'fi-rr-eye', text: `${cfg.min_view_seconds || 15}s view` });
+            } else if (type === 'webhook_call') {
+                pills.push({ icon: 'fi-rr-cloud-share', text: cfg.method || 'POST' });
+            } else if (type === 'webhook_received') {
+                pills.push({ icon: 'fi-rr-network', text: cfg.event_name || 'Webhook' });
+            }
+
+            if (pills.length === 0) return '';
+            return `<div class="flow-node-config-pills">${pills.map(p => `<span class="flow-config-pill"><i class="fi ${p.icon}"></i> ${this.escapeHtml(p.text)}</span>`).join('')}</div>`;
+        }
+
+        duplicateNode(nodeId) {
+            const node = this.nodes.find(n => n.id === nodeId);
+            if (!node) return null;
+
+            const newId = 'node_' + Date.now() + '_' + Math.floor(Math.random() * 1000);
+            const newNode = {
+                ...JSON.parse(JSON.stringify(node)),
+                id: newId,
+                title: `${node.title} (Copy)`,
+                x: node.x + 40,
+                y: node.y + 40
+            };
+
+            this.nodes.push(newNode);
+            this.renderCanvas();
+            this.selectNode(newId);
+            this.openNodeDrawer(newId);
+            this.showToast(`Duplicated "${node.title}"`, 'success');
+            return newNode;
+        }
+
+        populateDrawerModuleSelect(node) {
+            if (!this.drawerModuleTypeSelectEl) return;
+            const $ = window.jQuery || window.$;
+            if ($ && $(this.drawerModuleTypeSelectEl).data('select2')) {
+                try {
+                    $(this.drawerModuleTypeSelectEl).select2('destroy');
+                } catch (e) {}
+            }
+            const catalog = this.getModuleCatalog();
+            const currentType = node.action_type || node.trigger_event || '';
+
+            let html = '';
+            const categories = [
+                { key: 'triggers', label: 'Triggers (Flow Starters)' },
+                { key: 'actions', label: 'Actions (Automated Steps)' },
+                { key: 'logic', label: 'Logic & Control Flow' }
+            ];
+
+            categories.forEach(cat => {
+                const items = catalog[cat.key] || [];
+                if (items.length > 0) {
+                    html += `<optgroup label="${cat.label}">`;
+                    items.forEach(item => {
+                        const isSelected = (item.type === currentType) ? 'selected' : '';
+                        html += `<option value="${item.type}" ${isSelected}>${this.escapeHtml(item.title)}</option>`;
+                    });
+                    html += `</optgroup>`;
+                }
+            });
+
+            this.drawerModuleTypeSelectEl.innerHTML = html;
+        }
+
+        switchNodeModuleType(nodeId, newType) {
+            const node = this.nodes.find(n => n.id === nodeId);
+            if (!node) return;
+            const module = this.getModuleCatalogItem(newType);
+            if (!module) return;
+
+            const oldCategory = node.category;
+            node.type = module.category;
+            node.category = module.category;
+            node.action_type = module.type;
+            node.trigger_event = (module.category === 'trigger') ? module.type : undefined;
+            node.title = module.title;
+            node.subtitle = module.subtitle;
+            node.icon = module.icon;
+            node.color = module.color;
+            node.config = this.getDefaultConfigForModule(module.type);
+
+            if (oldCategory === 'logic' && module.category !== 'logic') {
+                this.connections = this.connections.filter(c => c.from !== node.id && c.to !== node.id);
+            }
+
+            if (this.drawerInputTitleEl) this.drawerInputTitleEl.value = node.title;
+            if (this.drawerInputSubtitleEl) this.drawerInputSubtitleEl.value = node.subtitle;
+            if (this.drawerNodeTypeBadgeEl) {
+                this.drawerNodeTypeBadgeEl.textContent = (node.category || 'action').toUpperCase() + ' CONFIG';
+            }
+            const iconEl = document.getElementById('drawerNodeIcon');
+            if (iconEl) {
+                iconEl.innerHTML = `<i class="${node.icon || 'fi fi-rr-settings'}"></i>`;
+                iconEl.style.color = node.color || '#7c3aed';
+            }
+
+            this.renderDynamicFieldsForNode(node);
+            this.renderCanvas();
+            this.showToast(`Switched step to "${module.title}"`, 'success');
+        }
+
+        quickAddNextStep(sourceNodeId, clientX = null, clientY = null) {
             const sourceNode = this.nodes.find(n => n.id === sourceNodeId);
             if (!sourceNode) return;
+            if (clientX === null || clientY === null) {
+                const cardEl = document.getElementById(`flowNode_${sourceNodeId}`);
+                if (cardEl) {
+                    const rect = cardEl.getBoundingClientRect();
+                    clientX = rect.right + 12;
+                    clientY = rect.top + 20;
+                }
+            }
+            this.openQuickAddPopover(sourceNodeId, clientX, clientY);
+        }
 
-            const nextX = sourceNode.x + 320;
-            const nextY = sourceNode.y;
+        openQuickAddPopover(sourceNodeId = null, clientX = null, clientY = null) {
+            if (!this.quickAddPopoverEl) return;
+            this.activeQuickAddSourceNodeId = sourceNodeId;
+            this.quickAddFilterCategory = 'all';
+
+            if (this.quickAddSearchInputEl) {
+                this.quickAddSearchInputEl.value = '';
+            }
+            if (this.quickAddCategoryTabsEl) {
+                this.quickAddCategoryTabsEl.querySelectorAll('.quick-add-cat-btn').forEach((b, idx) => {
+                    b.classList.toggle('is-active', idx === 0);
+                });
+            }
+
+            this.renderQuickAddItems();
+            this.quickAddPopoverEl.classList.remove('is-hidden');
+
+            const popoverW = 340;
+            const popoverH = 430;
+            const winW = window.innerWidth;
+            const winH = window.innerHeight;
+
+            let posX = clientX !== null ? clientX : (winW - popoverW) / 2;
+            let posY = clientY !== null ? clientY : (winH - popoverH) / 2;
+
+            if (posX + popoverW > winW - 20) {
+                posX = winW - popoverW - 20;
+            }
+            if (posX < 20) posX = 20;
+
+            if (posY + popoverH > winH - 20) {
+                posY = winH - popoverH - 20;
+            }
+            if (posY < 20) posY = 20;
+
+            this.quickAddPopoverEl.style.left = `${posX}px`;
+            this.quickAddPopoverEl.style.top = `${posY}px`;
+
+            setTimeout(() => {
+                if (this.quickAddSearchInputEl) this.quickAddSearchInputEl.focus();
+            }, 60);
+        }
+
+        closeQuickAddPopover() {
+            if (this.quickAddPopoverEl) {
+                this.quickAddPopoverEl.classList.add('is-hidden');
+            }
+            this.activeQuickAddSourceNodeId = null;
+        }
+
+        renderQuickAddItems() {
+            if (!this.quickAddItemsListEl) return;
+            const catalog = this.getModuleCatalog();
+            const searchTerm = this.quickAddSearchInputEl ? this.quickAddSearchInputEl.value.trim().toLowerCase() : '';
+            const activeCat = this.quickAddFilterCategory || 'all';
+
+            let items = [];
+            if (activeCat === 'all') {
+                items = [
+                    ...(catalog.triggers || []),
+                    ...(catalog.actions || []),
+                    ...(catalog.logic || [])
+                ];
+            } else if (activeCat === 'triggers') {
+                items = catalog.triggers || [];
+            } else if (activeCat === 'actions') {
+                items = catalog.actions || [];
+            } else if (activeCat === 'logic') {
+                items = catalog.logic || [];
+            }
+
+            if (searchTerm) {
+                items = items.filter(item => {
+                    const text = `${item.title} ${item.subtitle} ${item.type} ${item.category}`.toLowerCase();
+                    return text.includes(searchTerm);
+                });
+            }
+
+            if (items.length === 0) {
+                this.quickAddItemsListEl.innerHTML = `
+                    <div style="padding: 24px 12px; text-align: center; color: #94a3b8; font-size: 13px;">
+                        <i class="fi fi-rr-search" style="font-size: 20px; display: block; margin-bottom: 6px; opacity: 0.6;"></i>
+                        No matching steps found
+                    </div>
+                `;
+                return;
+            }
+
+            this.quickAddItemsListEl.innerHTML = items.map(item => `
+                <div class="quick-add-item" data-module-type="${item.type}">
+                    <div class="quick-add-item-icon" style="background: ${item.color || '#7c3aed'};">
+                        <i class="${item.icon || 'fi fi-rr-apps'}"></i>
+                    </div>
+                    <div class="quick-add-item-content">
+                        <div class="quick-add-item-title">${this.escapeHtml(item.title)}</div>
+                        <div class="quick-add-item-sub">${this.escapeHtml(item.subtitle)}</div>
+                    </div>
+                    <span class="quick-add-item-badge ${item.category}">${item.category.toUpperCase()}</span>
+                </div>
+            `).join('');
+
+            this.quickAddItemsListEl.querySelectorAll('.quick-add-item').forEach(itemEl => {
+                itemEl.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const moduleType = itemEl.dataset.moduleType;
+                    this.addStepFromQuickAdd(moduleType, this.activeQuickAddSourceNodeId);
+                    this.closeQuickAddPopover();
+                });
+            });
+        }
+
+        addStepFromQuickAdd(moduleType, sourceNodeId = null) {
+            const module = this.getModuleCatalogItem(moduleType);
+            if (!module) return;
+
+            let posX = 120;
+            let posY = 160;
+            let sourceNode = null;
+
+            if (sourceNodeId) {
+                sourceNode = this.nodes.find(n => n.id === sourceNodeId);
+                if (sourceNode) {
+                    posX = sourceNode.x + 320;
+                    posY = sourceNode.y;
+                }
+            } else {
+                if (this.canvasContainerEl) {
+                    const rect = this.canvasContainerEl.getBoundingClientRect();
+                    posX = Math.round((-this.panX + (rect.width / 2) - 130) / this.zoomLevel);
+                    posY = Math.round((-this.panY + (rect.height / 2) - 60) / this.zoomLevel);
+                }
+            }
 
             const newNode = this.addNodeToCanvas(
-                'action',
-                'send_whatsapp',
-                'Send WhatsApp Notification',
-                'Next follow-up message to traveler',
-                'fi-rr-comment-alt',
-                '#10b981',
-                nextX,
-                nextY
+                module.category,
+                module.type,
+                module.title,
+                module.subtitle,
+                module.icon,
+                module.color,
+                posX,
+                posY
             );
 
-            this.connections.push({
-                id: `conn_${sourceNode.id}_${newNode.id}`,
-                from: sourceNode.id,
-                to: newNode.id,
-                label: 'Next Step'
-            });
-            this.renderConnections();
+            if (sourceNode && newNode) {
+                const connId = `conn_${sourceNode.id}_${newNode.id}`;
+                if (!this.connections.some(c => c.from === sourceNode.id && c.to === newNode.id)) {
+                    this.connections.push({
+                        id: connId,
+                        from: sourceNode.id,
+                        to: newNode.id,
+                        label: 'Next Step'
+                    });
+                    this.renderConnections();
+                }
+            }
+
+            this.showToast(`Added ${module.title}`, 'success');
         }
 
         /* ==========================================================================
@@ -1996,6 +2486,7 @@
                 iconEl.style.color = node.color || '#7c3aed';
             }
 
+            this.populateDrawerModuleSelect(node);
             this.renderDynamicFieldsForNode(node);
             this.nodeConfigDrawerEl.classList.remove('is-closed');
             setTimeout(() => {
@@ -2411,6 +2902,64 @@
                         </select>
                     </div>
                 `;
+            } else if (actionType === 'internal_note') {
+                html = `
+                    <div class="drawer-form-group">
+                        <label class="drawer-label">Internal CRM Timeline Note</label>
+                        <textarea class="drawer-textarea" id="cfgNoteText" rows="4" placeholder="Enter note logged to lead timeline...">${this.escapeHtml(cfg.note_text || 'Workflow milestone executed: customer engaged via workflow.')}</textarea>
+                        <div class="token-pills-list" style="margin-top: 6px;">
+                            <button type="button" class="token-pill" data-token="{name}">+ {name}</button>
+                            <button type="button" class="token-pill" data-token="{destination}">+ {destination}</button>
+                            <button type="button" class="token-pill" data-token="{budget}">+ {budget}</button>
+                            <button type="button" class="token-pill" data-token="{agent_name}">+ {agent_name}</button>
+                        </div>
+                        <span class="drawer-help-text">Logs directly into the traveler's CRM audit timeline, visible to all agents.</span>
+                    </div>
+                    <div class="drawer-form-group">
+                        <label class="drawer-label">Pin Note to Top of Lead Record?</label>
+                        <select class="drawer-select selectjs2 selectJS2" id="cfgNotePinned" data-placeholder="Pin to Top">
+                            <option value="0" ${cfg.is_pinned !== '1' ? 'selected' : ''}>No, normal chronological entry</option>
+                            <option value="1" ${cfg.is_pinned === '1' ? 'selected' : ''}>Yes, pin note to top of CRM profile</option>
+                        </select>
+                    </div>
+                `;
+            } else if (actionType === 'itinerary_viewed') {
+                let pkgOptions = `<option value="0" ${(!cfg.package_id || cfg.package_id === '0') ? 'selected' : ''}>Any Itinerary Proposal Link</option>`;
+                if (this.packagesList && this.packagesList.length > 0) {
+                    pkgOptions += `<optgroup label="Specific Proposal Package">`;
+                    this.packagesList.forEach(p => {
+                        pkgOptions += `<option value="${p.id}" ${cfg.package_id == p.id ? 'selected' : ''}>${this.escapeHtml(p.name)}</option>`;
+                    });
+                    pkgOptions += `</optgroup>`;
+                }
+                html = `
+                    <div class="drawer-form-group">
+                        <label class="drawer-label">Target Proposal / Itinerary Package</label>
+                        <select class="drawer-select selectjs2 selectJS2" id="cfgItinViewPackage" data-placeholder="Select Package">${pkgOptions}</select>
+                        <span class="drawer-help-text">Fires when client opens or reviews their dynamic itinerary link.</span>
+                    </div>
+                    <div class="drawer-form-group">
+                        <label class="drawer-label">Minimum Dwell / View Duration</label>
+                        <select class="drawer-select selectjs2 selectJS2" id="cfgItinMinSeconds" data-placeholder="Select View Duration">
+                            <option value="5" ${cfg.min_view_seconds == 5 ? 'selected' : ''}>5 Seconds (Initial Glance)</option>
+                            <option value="15" ${(!cfg.min_view_seconds || cfg.min_view_seconds == 15) ? 'selected' : ''}>15 Seconds (Reading Details)</option>
+                            <option value="30" ${cfg.min_view_seconds == 30 ? 'selected' : ''}>30 Seconds (Engaged Prospect)</option>
+                            <option value="60" ${cfg.min_view_seconds == 60 ? 'selected' : ''}>60 Seconds (High-Intent Hot Lead)</option>
+                        </select>
+                    </div>
+                `;
+            } else if (actionType === 'webhook_received') {
+                html = `
+                    <div class="drawer-form-group">
+                        <label class="drawer-label">Webhook Trigger Event Name</label>
+                        <input type="text" class="drawer-input" id="cfgWebhookEvent" value="${this.escapeHtml(cfg.event_name || 'external_lead')}" placeholder="e.g. form_submit, call_completed">
+                        <span class="drawer-help-text">Custom identifier for inbound webhooks received from Zapier, Make, or custom API.</span>
+                    </div>
+                    <div class="drawer-form-group">
+                        <label class="drawer-label">Secret Security Token (Optional)</label>
+                        <input type="text" class="drawer-input" id="cfgWebhookSecret" value="${this.escapeHtml(cfg.secret_token || '')}" placeholder="Optional Bearer token or secret">
+                    </div>
+                `;
             }
 
             this.drawerDynamicFieldsEl.innerHTML = html;
@@ -2599,6 +3148,28 @@
                     generatedSubtitle = `POST ${cfg.url}`;
                 }
                 if (mEl) cfg.method = mEl.value;
+            } else if (actionType === 'internal_note') {
+                const ntEl = document.getElementById('cfgNoteText');
+                const npEl = document.getElementById('cfgNotePinned');
+                if (ntEl) {
+                    cfg.note_text = ntEl.value.trim();
+                    generatedSubtitle = `Note: ${cfg.note_text.substring(0, 32)}...`;
+                }
+                if (npEl) cfg.is_pinned = npEl.value;
+            } else if (actionType === 'itinerary_viewed') {
+                const ivpEl = document.getElementById('cfgItinViewPackage');
+                const ivsEl = document.getElementById('cfgItinMinSeconds');
+                if (ivpEl) cfg.package_id = ivpEl.value;
+                if (ivsEl) cfg.min_view_seconds = ivsEl.value;
+                generatedSubtitle = `Client views proposal for ${cfg.min_view_seconds || 15}s`;
+            } else if (actionType === 'webhook_received') {
+                const weEl = document.getElementById('cfgWebhookEvent');
+                const wsEl = document.getElementById('cfgWebhookSecret');
+                if (weEl) {
+                    cfg.event_name = weEl.value.trim();
+                    generatedSubtitle = `Event: ${cfg.event_name}`;
+                }
+                if (wsEl) cfg.secret_token = wsEl.value.trim();
             }
 
             node.subtitle = customSubtitle || generatedSubtitle || node.subtitle;
@@ -3059,15 +3630,24 @@
 
             let html = '';
             steps.forEach((step, idx) => {
+                const icon = step.friendly_icon || (step.status === 'success' ? 'fi-rr-check-circle' : 'fi-rr-info');
+                const color = step.friendly_color || (step.status === 'success' ? '#10b981' : '#f59e0b');
+                const headline = step.friendly_headline || step.title;
+                const summary = step.friendly_summary || step.message;
+                const pill = step.friendly_pill ? `<span class="sim-preview-badge" style="background:#f1f5f9;color:#475569;font-size:11px;padding:3px 8px;border-radius:6px;"><i class="fi ${icon}"></i> ${this.escapeHtml(step.friendly_pill)}</span>` : '';
+
                 html += `
-                    <div class="sim-trace-card">
-                        <div class="sim-trace-step-number">${idx + 1}</div>
+                    <div class="sim-trace-card" style="border-left: 3px solid ${color};">
+                        <div class="sim-trace-step-number" style="background:${color};color:#ffffff;">${idx + 1}</div>
                         <div class="sim-trace-content">
                             <div class="sim-trace-head">
-                                <span class="sim-trace-title">${this.escapeHtml(step.title)}</span>
-                                <span class="sim-trace-time">${this.escapeHtml(step.timestamp)}</span>
+                                <span class="sim-trace-title">${this.escapeHtml(headline)}</span>
+                                <div style="display:flex;align-items:center;gap:8px;">
+                                    ${pill}
+                                    <span class="sim-trace-time">${this.escapeHtml(step.timestamp)}</span>
+                                </div>
                             </div>
-                            <div class="sim-trace-msg">${this.escapeHtml(step.message)}</div>
+                            <div class="sim-trace-msg">${this.escapeHtml(summary)}</div>
                         </div>
                     </div>
                 `;

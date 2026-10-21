@@ -239,7 +239,7 @@ $pkgItinerary = trim($pkgRow['tour_package_itinerary'] ?? '');
 
 // 2. Fetch Available Vehicles
 $vehiclesList = [];
-$vRes = mysqli_query($connection, "SELECT vehicle_title, vehicle_type FROM {$tblPrefix}vehicles ORDER BY vehicle_title ASC");
+$vRes = mysqli_query($connection, "SELECT vehicle_title, vehicle_type FROM {$tblPrefix}vehicles WHERE vehicle_site_id = {$siteId} ORDER BY vehicle_title ASC");
 if ($vRes && mysqli_num_rows($vRes) > 0) {
     while ($vRow = mysqli_fetch_assoc($vRes)) {
         $vehiclesList[] = [

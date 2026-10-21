@@ -20,11 +20,20 @@ if (!isset($connection)) {
 require_once __DIR__ . '/destination-helper.php';
 
 $tblPrefix = defined('TABLE_PREFIX') ? TABLE_PREFIX : 'isw_';
+$siteId    = defined('SITE_ID') ? (int) SITE_ID : (int) ($_SESSION['site_id'] ?? 0);
+if ($siteId <= 0 && !empty($_SERVER['HTTP_HOST'])) {
+    $host = mysqli_real_escape_string($connection, strtolower(trim($_SERVER['HTTP_HOST'])));
+    $siteQuery = mysqli_query($connection, "SELECT site_id FROM {$tblPrefix}site WHERE LOWER(site_domain) = '{$host}' OR LOWER(site_url) = '{$host}' LIMIT 1");
+    if ($siteQuery && ($siteRow = mysqli_fetch_assoc($siteQuery))) {
+        $siteId = (int) $siteRow['site_id'];
+    }
+}
 
 $destQuery = mysqli_query($connection, "
     SELECT tour_package_id, tour_package_title, tour_package_type, tour_package_country, tour_package_state, tour_package_city
     FROM {$tblPrefix}tour_package
-    WHERE (tour_package_status = 1 OR tour_package_status IS NULL)
+    WHERE tour_package_site_id = {$siteId}
+      AND (tour_package_status = 1 OR tour_package_status IS NULL)
     ORDER BY tour_package_id ASC
 ");
 

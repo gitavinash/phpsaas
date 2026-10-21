@@ -10,7 +10,14 @@ if (!isset($connection)) {
 }
 
 $tblPrefix = defined('TABLE_PREFIX') ? TABLE_PREFIX : '';
-$siteId = defined('SITE_ID') ? (int)SITE_ID : 0;
+$siteId = defined('SITE_ID') ? (int)SITE_ID : (int)($_SESSION['site_id'] ?? 0);
+if ($siteId <= 0 && !empty($_SERVER['HTTP_HOST'])) {
+    $host = mysqli_real_escape_string($connection, strtolower(trim($_SERVER['HTTP_HOST'])));
+    $siteQuery = mysqli_query($connection, "SELECT site_id FROM {$tblPrefix}site WHERE LOWER(site_domain) = '{$host}' OR LOWER(site_url) = '{$host}' LIMIT 1");
+    if ($siteQuery && ($siteRow = mysqli_fetch_assoc($siteQuery))) {
+        $siteId = (int) $siteRow['site_id'];
+    }
+}
 
 $type = isset($_GET['type']) ? strtolower(trim($_GET['type'])) : 'domestic';
 if (!in_array($type, ['domestic', 'international', 'all'])) {

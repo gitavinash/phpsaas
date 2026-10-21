@@ -11,7 +11,7 @@ $fleetTransporterId = $_GET['id'] ?? ($_GET['transporter_id'] ?? '');
             </div>
             <div class="package-header-titles">
                 <h2>Transporter Fleet</h2>
-                <p>Choose the master vehicle models available to this transporter.</p>
+                <p>Choose the vehicle models available to this transporter.</p>
             </div>
         </div>
         <div class="package-header-actions">
@@ -100,7 +100,7 @@ $fleetTransporterId = $_GET['id'] ?? ($_GET['transporter_id'] ?? '');
     <div id="vehiclesEmptyState" class="transporter-fleet-empty-state is-hidden">
         <div class="transporter-fleet-empty-icon"><i class="fi fi-rr-car-alt"></i></div>
         <h3>No fleet vehicles assigned</h3>
-        <p id="vehicleEmptyStateMsg">Choose the master vehicle models this transporter can operate.</p>
+        <p id="vehicleEmptyStateMsg">Choose the vehicle models this transporter can operate.</p>
         <button type="button" class="btn-add-pkg-v3 btn-add-vehicle-v3">
             <i class="fi fi-rr-plus"></i> Assign Vehicle
         </button>
@@ -113,7 +113,7 @@ $fleetTransporterId = $_GET['id'] ?? ($_GET['transporter_id'] ?? '');
                     <div class="modal-icon-wrap"><i class="fi fi-rr-car" id="modalHeaderIcon"></i></div>
                     <div>
                         <h3 id="vehicleModalTitle">Choose Fleet Vehicles</h3>
-                        <p id="vehicleModalSubtitle">Select the master vehicles available to this transporter</p>
+                        <p id="vehicleModalSubtitle">Select the vehicles available to this transporter</p>
                     </div>
                 </div>
                 <button type="button" class="v3-modal-close-btn" id="btnCloseVehicleModal" title="Close">✕</button>
@@ -121,14 +121,14 @@ $fleetTransporterId = $_GET['id'] ?? ($_GET['transporter_id'] ?? '');
             <form id="vehicleForm" novalidate>
                 <div class="v3-modal-body">
                     <div class="v3-form-group">
-                        <label class="v3-form-label">Master Fleet Models</label>
+                        <label class="v3-form-label">Fleet Models</label>
                         <div class="transporter-fleet-selector-toolbar">
-                            <input type="search" id="transporterFleetSearch" class="filter-search-input" placeholder="Search master vehicles...">
+                            <input type="search" id="transporterFleetSearch" class="filter-search-input" placeholder="Search vehicles...">
                             <button type="button" class="v3-btn-secondary" id="btnSelectAllFleet">Select All</button>
                             <button type="button" class="v3-btn-secondary" id="btnClearAllFleet">Clear</button>
                             <span id="transporterFleetSelectedCount" class="transporter-fleet-selected-count">0 selected</span>
                         </div>
-                        <div id="transporterFleetChecklist" class="transporter-fleet-checklist"><span class="v3-field-hint">Loading master fleet options...</span></div>
+                        <div id="transporterFleetChecklist" class="transporter-fleet-checklist"><span class="v3-field-hint">Loading fleet options...</span></div>
                     </div>
                 </div>
                 <div class="v3-modal-footer">

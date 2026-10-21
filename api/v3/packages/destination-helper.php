@@ -107,13 +107,24 @@ if (!function_exists('getMasterPackagesCatalog')) {
     function getMasterPackagesCatalog($connection, string $tblPrefix): array {
         if (!$connection) return [];
 
+        // Check if master_tour_package table exists
+        $hasMaster = false;
+        $chkMaster = @mysqli_query($connection, "SHOW TABLES LIKE '{$tblPrefix}master_tour_package'");
+        if ($chkMaster && mysqli_num_rows($chkMaster) > 0) {
+            $hasMaster = true;
+        }
+
+        $sourcePkgTable = $hasMaster ? "{$tblPrefix}master_tour_package" : "{$tblPrefix}tour_package";
+        $sourcePriceTable = $hasMaster ? "{$tblPrefix}master_tour_package_price" : "{$tblPrefix}tour_package_price";
+        $sourceHotelTable = $hasMaster ? "{$tblPrefix}master_tour_package_hotel" : "{$tblPrefix}tour_package_hotel";
+
         $q = mysqli_query($connection, "
             SELECT p.*,
-                   (SELECT COUNT(*) FROM {$tblPrefix}tour_package_price WHERE tour_package_price_parent_id = p.tour_package_id) as price_count,
-                   (SELECT COUNT(*) FROM {$tblPrefix}tour_package_hotel WHERE tph_package_id = p.tour_package_id) as hotel_count,
+                   (SELECT COUNT(*) FROM {$sourcePriceTable} WHERE tour_package_price_parent_id = p.tour_package_id) as price_count,
+                   (SELECT COUNT(*) FROM {$sourceHotelTable} WHERE tph_package_id = p.tour_package_id) as hotel_count,
                    (SELECT COUNT(*) FROM {$tblPrefix}link WHERE link_relation_id = p.tour_package_id AND link_type = 'tour_package') as link_count,
                    LENGTH(COALESCE(p.tour_package_itinerary, '')) as itin_length
-            FROM {$tblPrefix}tour_package p
+            FROM {$sourcePkgTable} p
             WHERE (p.tour_package_status = 1 OR p.tour_package_status IS NULL)
             ORDER BY price_count DESC, hotel_count DESC, itin_length DESC, p.tour_package_id DESC
         ");
@@ -179,6 +190,11 @@ if (!function_exists('migrateMasterPackagesToSite')) {
                 'maldives'         => true
             ];
         }
+
+        $chkMaster = @mysqli_query($connection, "SHOW TABLES LIKE '{$tblPrefix}master_tour_package'");
+        $hasMaster = ($chkMaster && mysqli_num_rows($chkMaster) > 0);
+        $sourcePriceTable = $hasMaster ? "{$tblPrefix}master_tour_package_price" : "{$tblPrefix}tour_package_price";
+        $sourceHotelTable = $hasMaster ? "{$tblPrefix}master_tour_package_hotel" : "{$tblPrefix}tour_package_hotel";
 
         $allMaster = getMasterPackagesCatalog($connection, $tblPrefix);
         $migratedCount = 0;
@@ -269,7 +285,7 @@ if (!function_exists('migrateMasterPackagesToSite')) {
                             tour_package_price_net_child, tour_package_price_mrp_adult, tour_package_price_mrp_child,
                             tour_package_price_selling_adult, tour_package_price_selling_child, tour_package_price_agent_adult,
                             tour_package_price_agent_child, tour_package_price_type, 1, NOW()
-                        FROM {$tblPrefix}tour_package_price
+                        FROM {$sourcePriceTable}
                         WHERE tour_package_price_parent_id = {$masterPkgId}
                     ");
 
@@ -280,7 +296,7 @@ if (!function_exists('migrateMasterPackagesToSite')) {
                         )
                         SELECT 
                             tph_hotel_id, {$newPkgId}, tph_room_type_id, tph_room_type, tph_night, {$siteId}, 1
-                        FROM {$tblPrefix}tour_package_hotel
+                        FROM {$sourceHotelTable}
                         WHERE tph_package_id = {$masterPkgId}
                     ");
 
