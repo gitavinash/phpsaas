@@ -517,14 +517,13 @@ if (!empty($leadsList)) {
         $conds[] = "chat_lead_id IN (" . implode(',', array_map('intval', $leadIds)) . ")";
     }
     if (!empty($leadPhones)) {
-        $escPhones = array_map(function($p) use ($connection) {
-            return "'" . mysqli_real_escape_string($connection, $p) . "'";
-        }, $leadPhones);
-        $conds[] = "chat_phone IN (" . implode(',', $escPhones) . ")";
-        $plusPhones = array_map(function($p) use ($connection) {
-            return "'+' . '" . mysqli_real_escape_string($connection, $p) . "'";
-        }, $leadPhones);
-        $conds[] = "chat_phone IN (" . implode(',', $plusPhones) . ")";
+        $phoneVariants = [];
+        foreach ($leadPhones as $p) {
+            $escP = mysqli_real_escape_string($connection, $p);
+            $phoneVariants[] = "'{$escP}'";
+            $phoneVariants[] = "'+{$escP}'";
+        }
+        $conds[] = "chat_phone IN (" . implode(',', $phoneVariants) . ")";
     }
     if (!empty($conds)) {
         $cQ = @mysqli_query($connection, "SELECT chat_id, chat_phone, chat_lead_id FROM {$tblPrefix}whatsapp_chat WHERE (chat_site_id = {$siteId} OR chat_site_id = 0) AND (" . implode(' OR ', $conds) . ")");
