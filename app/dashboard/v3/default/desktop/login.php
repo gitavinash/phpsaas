@@ -31,6 +31,21 @@ $siteLogo = defined('SITE_LOGO') && !empty(SITE_LOGO) ? SITE_LOGO : '';
 $siteIcon = defined('SITE_ICON') && !empty(SITE_ICON) ? SITE_ICON : '';
 $jqueryJs = defined('JS_LIBRARY') ? JS_LIBRARY . 'jquery.min.js' : 'https://code.jquery.com/jquery-3.7.1.min.js';
 
+// Authentication Method: OTP or PASSWORD (defaults to OTP if not defined or empty)
+if (!defined('SITE_AUTH_METHOD')) {
+    define('SITE_AUTH_METHOD', 'OTP');
+}
+$siteAuthMethod = defined('SITE_AUTH_METHOD') && !empty(SITE_AUTH_METHOD) ? strtoupper(trim((string)SITE_AUTH_METHOD)) : 'OTP';
+
+// In development or testing, query param can override if provided
+if (isset($_GET['auth_method']) && in_array(strtoupper(trim($_GET['auth_method'])), ['PASSWORD', 'OTP'])) {
+    $siteAuthMethod = strtoupper(trim($_GET['auth_method']));
+}
+
+if ($siteAuthMethod !== 'PASSWORD') {
+    $siteAuthMethod = 'OTP';
+}
+
 // Default Aleya Brand Assets
 $aleyaLogo = '/app/aleya/visitor/aleya/desktop/assets/images/aleya_logo.png';
 $aleyaWhiteLogo = '/app/aleya/visitor/aleya/desktop/assets/images/aleya_white_logo.png';
@@ -187,7 +202,7 @@ $activeShowcase = $appShowcaseData[$appKey] ?? $appShowcaseData['aleya'];
                     <!-- Heading -->
                     <div class="form-heading">
                         <strong>Sign In</strong>
-                        <span>Enter your work email to access your workspace</span>
+                        <span><?php echo ($siteAuthMethod === 'PASSWORD') ? 'Enter your credentials to access your workspace' : 'Enter your work email to access your workspace'; ?></span>
                     </div>
 
                     <!-- Dynamic Live Alert Banner -->
@@ -196,84 +211,135 @@ $activeShowcase = $appShowcaseData[$appKey] ?? $appShowcaseData['aleya'];
                         <span id="authAlertText"></span>
                     </div>
 
-                    <!-- Passwordless Email OTP Workflow -->
-                    <div id="authOtpSection" class="auth-section">
-                        <!-- Step A: Enter Email Address -->
-                        <div id="paneOtpStepEmail" class="otp-pane">
-                            <form id="formSendOtp" autocomplete="off">
+                    <?php if ($siteAuthMethod === 'PASSWORD'): ?>
+                        <!-- Password Login Workflow -->
+                        <div id="authPasswordSection" class="auth-section">
+                            <form id="formPasswordLogin" autocomplete="on">
                                 <div class="form-group">
-                                    <label class="auth-label" for="otpEmail">Email Address</label>
+                                    <label class="auth-label" for="loginIdentifier">Email or Username</label>
                                     <div class="input-icon-wrap">
                                         <i class="fi fi-rr-envelope input-icon"></i>
                                         <input
-                                            type="email"
+                                            type="text"
                                             class="form-control input-with-label"
-                                            name="email"
-                                            id="otpEmail"
-                                            placeholder="name@company.com"
+                                            name="identifier"
+                                            id="loginIdentifier"
+                                            placeholder="name@company.com or username"
                                             required
                                             autofocus>
                                     </div>
                                 </div>
 
+                                <div class="form-group">
+                                    <div class="label-link-row">
+                                        <label class="auth-label" for="loginPassword">Password</label>
+                                        <a href="/forgot-password/" class="auth-forgot-link" tabindex="-1">Forgot password?</a>
+                                    </div>
+                                    <div class="input-icon-wrap">
+                                        <i class="fi fi-rr-lock input-icon"></i>
+                                        <input
+                                            type="password"
+                                            class="form-control input-with-label input-with-toggle"
+                                            name="password"
+                                            id="loginPassword"
+                                            placeholder="Enter your password"
+                                            required
+                                            autocomplete="current-password">
+                                        <button type="button" class="btn-toggle-password" id="btnTogglePassword" aria-label="Toggle password visibility">
+                                            <i class="fi fi-rr-eye" id="togglePasswordIcon"></i>
+                                        </button>
+                                    </div>
+                                </div>
+
                                 <input type="hidden" name="redirect_url" value="<?php echo htmlspecialchars($redirect_url); ?>">
 
-                                <button type="submit" id="btnSendOtp" class="button theme-button">
+                                <button type="submit" id="btnLoginPassword" class="button theme-button">
                                     <span class="btn-spinner"></span>
-                                    <span class="btn-text">Continue with Email</span>
+                                    <span class="btn-text">Sign In</span>
                                     <i class="fi fi-rr-arrow-right btn-arrow"></i>
                                 </button>
                             </form>
                         </div>
+                    <?php else: ?>
+                        <!-- Passwordless Email OTP Workflow -->
+                        <div id="authOtpSection" class="auth-section">
+                            <!-- Step A: Enter Email Address -->
+                            <div id="paneOtpStepEmail" class="otp-pane">
+                                <form id="formSendOtp" autocomplete="off">
+                                    <div class="form-group">
+                                        <label class="auth-label" for="otpEmail">Email Address</label>
+                                        <div class="input-icon-wrap">
+                                            <i class="fi fi-rr-envelope input-icon"></i>
+                                            <input
+                                                type="email"
+                                                class="form-control input-with-label"
+                                                name="email"
+                                                id="otpEmail"
+                                                placeholder="name@company.com"
+                                                required
+                                                autofocus>
+                                        </div>
+                                    </div>
 
-                        <!-- Step B: Verify 6-Digit OTP Code -->
-                        <div id="paneOtpStepVerify" class="otp-pane">
-                            <div class="otp-sent-info">
-                                <div class="otp-sent-meta">
-                                    <span class="otp-sent-label">Code sent to</span>
-                                    <strong id="displayOtpTarget" class="otp-sent-email"></strong>
-                                </div>
-                                <a href="#" id="btnChangeOtpEmail" class="otp-edit-link">
-                                    <i class="fi fi-rr-edit"></i> Edit
-                                </a>
+                                    <input type="hidden" name="redirect_url" value="<?php echo htmlspecialchars($redirect_url); ?>">
+
+                                    <button type="submit" id="btnSendOtp" class="button theme-button">
+                                        <span class="btn-spinner"></span>
+                                        <span class="btn-text">Continue with Email</span>
+                                        <i class="fi fi-rr-arrow-right btn-arrow"></i>
+                                    </button>
+                                </form>
                             </div>
 
-                            <form id="formVerifyOtp" autocomplete="off">
-                                <div class="form-group">
-                                    <label class="auth-label" for="otpCodeInput">6-Digit Verification Code</label>
-                                    <div class="input-icon-wrap">
-                                        <i class="fi fi-rr-shield-check input-icon"></i>
-                                        <input
-                                            type="text"
-                                            class="form-control input-with-label otp-input-field"
-                                            name="otp_code"
-                                            id="otpCodeInput"
-                                            placeholder="&bull; &bull; &bull; &bull; &bull; &bull;"
-                                            maxlength="6"
-                                            pattern="\d{6}"
-                                            inputmode="numeric"
-                                            autocomplete="one-time-code"
-                                            required>
+                            <!-- Step B: Verify 6-Digit OTP Code -->
+                            <div id="paneOtpStepVerify" class="otp-pane">
+                                <div class="otp-sent-info">
+                                    <div class="otp-sent-meta">
+                                        <span class="otp-sent-label">Code sent to</span>
+                                        <strong id="displayOtpTarget" class="otp-sent-email"></strong>
                                     </div>
+                                    <a href="#" id="btnChangeOtpEmail" class="otp-edit-link">
+                                        <i class="fi fi-rr-edit"></i> Edit
+                                    </a>
                                 </div>
 
-                                <div class="form-group form-link-row">
-                                    <span class="otp-countdown-text">
-                                        Didn't receive code?
-                                        <a href="#" id="btnResendOtp" class="resend-link is-disabled">Resend in <span id="resendTimer">30</span>s</a>
-                                    </span>
-                                </div>
+                                <form id="formVerifyOtp" autocomplete="off">
+                                    <div class="form-group">
+                                        <label class="auth-label" for="otpCodeInput">6-Digit Verification Code</label>
+                                        <div class="input-icon-wrap">
+                                            <i class="fi fi-rr-shield-check input-icon"></i>
+                                            <input
+                                                type="text"
+                                                class="form-control input-with-label otp-input-field"
+                                                name="otp_code"
+                                                id="otpCodeInput"
+                                                placeholder="&bull; &bull; &bull; &bull; &bull; &bull;"
+                                                maxlength="6"
+                                                pattern="\d{6}"
+                                                inputmode="numeric"
+                                                autocomplete="one-time-code"
+                                                required>
+                                        </div>
+                                    </div>
 
-                                <input type="hidden" name="redirect_url" value="<?php echo htmlspecialchars($redirect_url); ?>">
+                                    <div class="form-group form-link-row">
+                                        <span class="otp-countdown-text">
+                                            Didn't receive code?
+                                            <a href="#" id="btnResendOtp" class="resend-link is-disabled">Resend in <span id="resendTimer">30</span>s</a>
+                                        </span>
+                                    </div>
 
-                                <button type="submit" id="btnVerifyOtp" class="button theme-button">
-                                    <span class="btn-spinner"></span>
-                                    <span class="btn-text">Verify & Continue</span>
-                                    <i class="fi fi-rr-check btn-arrow"></i>
-                                </button>
-                            </form>
+                                    <input type="hidden" name="redirect_url" value="<?php echo htmlspecialchars($redirect_url); ?>">
+
+                                    <button type="submit" id="btnVerifyOtp" class="button theme-button">
+                                        <span class="btn-spinner"></span>
+                                        <span class="btn-text">Verify & Continue</span>
+                                        <i class="fi fi-rr-check btn-arrow"></i>
+                                    </button>
+                                </form>
+                            </div>
                         </div>
-                    </div>
+                    <?php endif; ?>
                 </div>
 
                 <!-- Footer Legal & Version -->

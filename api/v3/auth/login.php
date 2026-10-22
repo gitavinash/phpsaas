@@ -9,6 +9,9 @@ header('Content-Type: application/json; charset=utf-8');
 
 if (!isset($connection)) {
     $docRoot = !empty($_SERVER['DOCUMENT_ROOT']) ? $_SERVER['DOCUMENT_ROOT'] : dirname(__DIR__, 3);
+    if (empty($_SERVER['DOCUMENT_ROOT'])) {
+        $_SERVER['DOCUMENT_ROOT'] = $docRoot;
+    }
     if (file_exists($docRoot . '/config.php')) {
         require_once $docRoot . '/config.php';
     }
@@ -153,6 +156,18 @@ if ((int)$user['user_status'] !== 1) {
 }
 
 // Check Site Access Permission
+if (empty($user['site_access_id'])) {
+    $anyAccessQuery = mysqli_query($connection, "SELECT site_access_id, site_access_type, site_access_status FROM {$tblPrefix}site_access WHERE site_access_user_id = {$userId} LIMIT 1");
+    if ($anyAccessQuery && mysqli_num_rows($anyAccessQuery) > 0) {
+        $anyRow = mysqli_fetch_assoc($anyAccessQuery);
+        $userRole = strtolower(trim($anyRow['site_access_type'] ?? 'administrator'));
+        mysqli_query($connection, "INSERT INTO {$tblPrefix}site_access (site_access_site_id, site_access_user_id, site_access_type, site_access_status, site_access_meta) VALUES ({$siteId}, {$userId}, '{$userRole}', 1, '')");
+        $user['site_access_id'] = mysqli_insert_id($connection);
+        $user['site_access_status'] = 1;
+        $user['site_access_type'] = $userRole;
+    }
+}
+
 if (empty($user['site_access_id']) || (int)$user['site_access_status'] !== 1) {
     http_response_code(403);
     echo json_encode([

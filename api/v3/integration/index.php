@@ -383,6 +383,25 @@ if ($method === 'GET') {
         ],
         // Developer & Automation
         [
+            'id'            => 'workflows',
+            'slug'          => 'workflows',
+            'title'         => 'Automation Workflows',
+            'category'      => 'developer',
+            'category_name' => 'Visual Automation & Flowcharts',
+            'description'   => 'Build visual drag-and-drop automation pipelines like Make.com: connect multi-channel triggers, lead routing, smart WhatsApp concierges, and instant quotes.',
+            'icon'          => 'workflows',
+            'config_url'    => '/dashboard/integration/workflows/',
+            'toggle_key'    => 'enable_workflows',
+            'is_active'     => ($configMap['enable_workflows'] ?? '1') === '1',
+            'status_label'  => 'Active',
+            'is_connected'  => true,
+            'features'      => [
+                'Make.com-style visual flowchart builder',
+                'Multi-channel triggers, actions & conditional branching',
+                'Instant customer simulation & execution logs'
+            ]
+        ],
+        [
             'id'            => 'webhooks',
             'slug'          => 'webhooks',
             'title'         => 'Custom CRM Webhooks',
@@ -436,7 +455,8 @@ if ($method === 'POST' || $method === 'PUT') {
             'web_forms'           => 'enable_web_forms',
             'smtp'                => 'enable_smtp_email',
             'upi'                 => 'enable_upi',
-            'webhooks'            => 'enable_webhooks'
+            'webhooks'            => 'enable_webhooks',
+            'workflows'           => 'enable_workflows'
         ], $paymentGateways);
         $toggleKey = $slugMap[$pluginSlug] ?? '';
     }

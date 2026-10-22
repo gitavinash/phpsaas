@@ -27,6 +27,7 @@ $isWaActive       = (defined('ENABLE_WHATSAPP_WEB_API') && ENABLE_WHATSAPP_WEB_A
 $isSmtpActive     = (!defined('ENABLE_SMTP_EMAIL') || ENABLE_SMTP_EMAIL == '1');
 $isWhActive       = (!defined('ENABLE_WEBHOOKS') || ENABLE_WEBHOOKS == '1');
 $isUpiActive      = (!defined('ENABLE_UPI') || ENABLE_UPI == '1');
+$isWorkflowsActive = (!defined('ENABLE_WORKFLOWS') || ENABLE_WORKFLOWS == '1');
 ?>
 <div class="package-page-wrapper integration-page-wrapper" id="integrationApp">
     <!-- Sticky Top Toolbar Area (Scoped only for integration page) -->
@@ -54,7 +55,7 @@ $isUpiActive      = (!defined('ENABLE_UPI') || ENABLE_UPI == '1');
         <div class="integration-toolbar-row">
             <div class="integration-category-tabs">
                 <button type="button" class="integration-cat-tab active" data-category="all">
-                    <i class="fi fi-rr-apps"></i> All Channels <span class="tab-count" id="countAll"><?php echo ($site_access_type === 'digital_marketing' ? '8' : '17'); ?></span>
+                    <i class="fi fi-rr-apps"></i> All Channels <span class="tab-count" id="countAll"><?php echo ($site_access_type === 'digital_marketing' ? '9' : '18'); ?></span>
                 </button>
                 <button type="button" class="integration-cat-tab" data-category="leadgen">
                     <i class="fi fi-rr-bullseye-arrow"></i> Lead Gen &amp; Ads <span class="tab-count" id="countLeadgen">4</span>
@@ -68,7 +69,7 @@ $isUpiActive      = (!defined('ENABLE_UPI') || ENABLE_UPI == '1');
                     </button>
                 <?php } ?>
                 <button type="button" class="integration-cat-tab" data-category="developer">
-                    <i class="fi fi-rr-plug-connection"></i> Developer &amp; Webhooks <span class="tab-count" id="countDeveloper">1</span>
+                    <i class="fi fi-rr-plug-connection"></i> Developer &amp; Automation <span class="tab-count" id="countDeveloper">2</span>
                 </button>
             </div>
         </div>
@@ -300,7 +301,7 @@ $isUpiActive      = (!defined('ENABLE_UPI') || ENABLE_UPI == '1');
         </div>
 
         <!-- 6. Automation Workflows (Make.com-style Visual Flowcharts) -->
-        <div class="integration-card is-active-card" data-category="developer" data-slug="workflows">
+        <div class="integration-card <?php echo ($isWorkflowsActive ? 'is-active-card' : 'is-disabled'); ?>" data-category="developer" data-slug="workflows">
             <div class="integration-card-header">
                 <div class="integration-brand-logo brand-workflows">
                     <i class="fi fi-rr-workflow"></i>
@@ -311,7 +312,7 @@ $isUpiActive      = (!defined('ENABLE_UPI') || ENABLE_UPI == '1');
                 </div>
                 <div class="integration-header-toggle">
                     <label class="v3-toggle-switch" title="Toggle Automation Workflows">
-                        <input type="checkbox" class="integration-active-toggle" data-slug="workflows" data-key="enable_workflows" checked>
+                        <input type="checkbox" class="integration-active-toggle" data-slug="workflows" data-key="enable_workflows" <?php echo ($isWorkflowsActive ? 'checked' : ''); ?>>
                         <span class="v3-toggle-slider violet"></span>
                     </label>
                 </div>
@@ -325,12 +326,12 @@ $isUpiActive      = (!defined('ENABLE_UPI') || ENABLE_UPI == '1');
                 </div>
             </div>
             <div class="integration-card-footer">
-                <div class="integration-status-pill is-active">
+                <div class="integration-status-pill <?php echo ($isWorkflowsActive ? 'is-active' : 'is-idle'); ?>">
                     <span class="status-pulse-dot"></span>
-                    <span class="status-text">Active</span>
+                    <span class="status-text"><?php echo ($isWorkflowsActive ? 'Active' : 'Disabled'); ?></span>
                 </div>
                 <div class="integration-card-actions">
-                    <a href="/dashboard/integration/workflows/" class="btn-integration-primary">
+                    <a href="/dashboard/integration/workflows/" class="<?php echo ($isWorkflowsActive ? 'btn-integration-primary' : 'btn-integration-outline'); ?>">
                         <span>Open Studio</span> <i class="fi fi-rr-arrow-small-right"></i>
                     </a>
                 </div>

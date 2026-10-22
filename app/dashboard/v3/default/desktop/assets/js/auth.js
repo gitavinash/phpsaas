@@ -121,13 +121,33 @@
         $("form#formOnboarding").trigger("submit");
       });
 
-      // 3. Email OTP: Step A - Send Code
+      // 3. Password Login Submit
+      $(document).on("submit", "#formPasswordLogin", function (e) {
+        e.preventDefault();
+        self.handlePasswordLogin();
+      });
+
+      // Toggle Password Visibility
+      $(document).on("click", "#btnTogglePassword", function (e) {
+        e.preventDefault();
+        const $pwd = $("#loginPassword");
+        const $icon = $("#togglePasswordIcon");
+        if ($pwd.attr("type") === "password") {
+          $pwd.attr("type", "text");
+          $icon.removeClass("fi-rr-eye").addClass("fi-rr-eye-crossed");
+        } else {
+          $pwd.attr("type", "password");
+          $icon.removeClass("fi-rr-eye-crossed").addClass("fi-rr-eye");
+        }
+      });
+
+      // 4. Email OTP: Step A - Send Code
       $(document).on("submit", "#formSendOtp", function (e) {
         e.preventDefault();
         self.handleSendOtp();
       });
 
-      // 3. Email OTP: Step B - Verify Code
+      // 4. Email OTP: Step B - Verify Code
       $(document).on("submit", "#formVerifyOtp", function (e) {
         e.preventDefault();
         self.handleVerifyOtp();
@@ -148,7 +168,7 @@
       });
 
       // Clear alert on typing
-      $(document).on("input", "#otpEmail, #otpCodeInput, #business_name, #first_name, #last_name, #email, #mobile, #onboardingBizName, #onboardingSubdomain", function () {
+      $(document).on("input", "#loginIdentifier, #loginPassword, #otpEmail, #otpCodeInput, #business_name, #first_name, #last_name, #email, #mobile, #onboardingBizName, #onboardingSubdomain", function () {
         self.hideAlert();
       });
     },
@@ -228,7 +248,9 @@
     },
 
     autoFocus: function () {
-      if ($("#business_name").is(":visible") && !$("#business_name").val()) {
+      if ($("#loginIdentifier").is(":visible") && !$("#loginIdentifier").val()) {
+        $("#loginIdentifier").trigger("focus");
+      } else if ($("#business_name").is(":visible") && !$("#business_name").val()) {
         $("#business_name").trigger("focus");
       } else if ($("#onboardingBizName").is(":visible") && !$("#onboardingBizName").val()) {
         $("#onboardingBizName").trigger("focus");
@@ -469,6 +491,81 @@
 
           const errorMsg = (xhr.responseJSON && xhr.responseJSON.msg) ? xhr.responseJSON.msg : "Error completing onboarding.";
           self.showAlert("error", errorMsg);
+        }
+      });
+    },
+
+    // -----------------------------------------------------------------------
+    // PASSWORD LOGIN WORKFLOW
+    // -----------------------------------------------------------------------
+    handlePasswordLogin: function () {
+      const self = this;
+      if (self.isSubmitting) return;
+
+      const identifier = $.trim($("#loginIdentifier").val());
+      const password = $("#loginPassword").val();
+      const redirectUrl = $.trim($("input[name='redirect_url']").val()) || "/dashboard/";
+
+      if (!identifier) {
+        self.showAlert("warning", "Please enter your email or username.");
+        $("#loginIdentifier").trigger("focus");
+        return;
+      }
+
+      if (!password) {
+        self.showAlert("warning", "Please enter your password.");
+        $("#loginPassword").trigger("focus");
+        return;
+      }
+
+      const $btn = $("#btnLoginPassword");
+      const $btnText = $btn.find(".btn-text");
+      const origText = $btnText.text();
+
+      self.isSubmitting = true;
+      $btn.prop("disabled", true).addClass("is-loading");
+      $btnText.text("Signing In...");
+      self.hideAlert();
+
+      const payload = {
+        identifier: identifier,
+        password: password,
+        redirect_url: redirectUrl
+      };
+
+      $.ajax({
+        url: "/api/v3/auth/login/",
+        type: "POST",
+        dataType: "json",
+        contentType: "application/json",
+        data: JSON.stringify(payload),
+        success: function (res) {
+          if (res && res.status === "success") {
+            self.showAlert("success", res.msg || "Login successful!");
+            $btnText.text("Redirecting...");
+
+            const destUrl = self.cleanRedirectUrl(res.url || res.redirect_url || "/dashboard/");
+            setTimeout(function () {
+              window.location.href = destUrl;
+            }, 400);
+          } else {
+            self.isSubmitting = false;
+            $btn.prop("disabled", false).removeClass("is-loading");
+            $btnText.text(origText);
+
+            const msg = (res && res.msg) ? res.msg : "Invalid login credentials.";
+            self.showAlert("error", msg);
+            $("#loginPassword").trigger("focus");
+          }
+        },
+        error: function (xhr) {
+          self.isSubmitting = false;
+          $btn.prop("disabled", false).removeClass("is-loading");
+          $btnText.text(origText);
+
+          const errorMsg = (xhr.responseJSON && xhr.responseJSON.msg) ? xhr.responseJSON.msg : "Invalid username or password.";
+          self.showAlert("error", errorMsg);
+          $("#loginPassword").trigger("focus");
         }
       });
     },

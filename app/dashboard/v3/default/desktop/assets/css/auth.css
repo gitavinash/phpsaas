@@ -578,6 +578,64 @@ html, body {
   color: var(--brand-700);
 }
 
+.label-link-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 7px;
+}
+
+.label-link-row .auth-label {
+  margin-bottom: 0;
+}
+
+.auth-forgot-link {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--brand-700);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.auth-forgot-link:hover {
+  color: var(--brand-800);
+  text-decoration: underline;
+}
+
+.auth-form-panel .form-control.input-with-label.input-with-toggle {
+  padding-right: 44px !important;
+}
+
+.btn-toggle-password {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  color: var(--slate-400);
+  font-size: 16px;
+  cursor: pointer;
+  padding: 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+  transition: color 0.15s ease, background-color 0.15s ease;
+  z-index: 2;
+  line-height: 1;
+}
+
+.btn-toggle-password:hover {
+  color: var(--slate-700);
+  background-color: var(--slate-100);
+}
+
+.btn-toggle-password:focus {
+  outline: none;
+  color: var(--brand-700);
+}
+
 select.form-control.input-with-label {
   appearance: none;
   -webkit-appearance: none;

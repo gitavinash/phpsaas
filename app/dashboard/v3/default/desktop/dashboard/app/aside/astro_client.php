@@ -44,6 +44,7 @@ if (defined('PG_NAME') && !empty(PG_NAME)) {
 } elseif (defined('ENABLE_RAZORPAY') && ENABLE_RAZORPAY == '1') {
     $activeAsidePg = 'razorpay';
 }
+$isWorkflowsActive = (!defined('ENABLE_WORKFLOWS') || ENABLE_WORKFLOWS == '1');
 ?>
 <li <?php echo ((strpos(ADMIN_BASE_URL, '/integration/') !== false) ? 'class="active"' : '') ?>>
     <a href="/dashboard/integration/"><i class="fi fi-rr-plug-connection"></i> Plugins</a>
@@ -56,6 +57,7 @@ if (defined('PG_NAME') && !empty(PG_NAME)) {
             <li data-aside-plugin="google_ads" <?php echo ((defined('ENABLE_GOOGLE_ADS') && ENABLE_GOOGLE_ADS == '1') ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/google_ads/"><i class="fi-rr-search-alt"></i> Google Ads</a></li>
             <li data-aside-plugin="web_forms" <?php echo ((!defined('ENABLE_WEB_FORMS') || ENABLE_WEB_FORMS == '1') ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/web_forms/"><i class="fi-rr-browser"></i> Web Forms</a></li>
             <li data-aside-plugin="webhooks" <?php echo ((!defined('ENABLE_WEBHOOKS') || ENABLE_WEBHOOKS == '1') ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/webhooks/"><i class="fi-rr-code-compare"></i> Webhooks</a></li>
+            <li data-aside-plugin="workflows" <?php echo ($isWorkflowsActive ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/workflows/"><i class="fi fi-rr-workflow"></i> Workflows</a></li>
             <li data-aside-plugin="razorpay" <?php echo ($activeAsidePg === 'razorpay' ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/razorpay/"><i class="fi-rr-credit-card"></i> Razorpay</a></li>
             <li data-aside-plugin="instamojo" <?php echo ($activeAsidePg === 'instamojo' ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/instamojo/"><i class="fi-rr-credit-card"></i> Instamojo</a></li>
             <li data-aside-plugin="sabpaisa" <?php echo ($activeAsidePg === 'sabpaisa' ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/sabpaisa/"><i class="fi-rr-credit-card"></i> SabPaisa</a></li>
@@ -76,6 +78,7 @@ if (defined('PG_NAME') && !empty(PG_NAME)) {
             <li data-aside-plugin="google_ads" <?php echo ((defined('ENABLE_GOOGLE_ADS') && ENABLE_GOOGLE_ADS == '1') ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/google_ads/"><i class="fi-rr-search-alt"></i> Google Ads</a></li>
             <li data-aside-plugin="web_forms" <?php echo ((!defined('ENABLE_WEB_FORMS') || ENABLE_WEB_FORMS == '1') ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/web_forms/"><i class="fi-rr-browser"></i> Web Forms</a></li>
             <li data-aside-plugin="webhooks" <?php echo ((!defined('ENABLE_WEBHOOKS') || ENABLE_WEBHOOKS == '1') ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/webhooks/"><i class="fi-rr-code-compare"></i> Webhooks</a></li>
+            <li data-aside-plugin="workflows" <?php echo ($isWorkflowsActive ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/workflows/"><i class="fi fi-rr-workflow"></i> Workflows</a></li>
             <li data-aside-plugin="razorpay" <?php echo ($activeAsidePg === 'razorpay' ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/razorpay/"><i class="fi-rr-credit-card"></i> Razorpay</a></li>
             <li data-aside-plugin="instamojo" <?php echo ($activeAsidePg === 'instamojo' ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/instamojo/"><i class="fi-rr-credit-card"></i> Instamojo</a></li>
             <li data-aside-plugin="sabpaisa" <?php echo ($activeAsidePg === 'sabpaisa' ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/sabpaisa/"><i class="fi-rr-credit-card"></i> SabPaisa</a></li>

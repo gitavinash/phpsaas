@@ -307,7 +307,7 @@ if ($site_access_type == 'administrator' || $site_access_type == 'digital_market
     $isSmtpActive  = (!defined('ENABLE_SMTP_EMAIL') || ENABLE_SMTP_EMAIL == '1' || ENABLE_SMTP_EMAIL === 1);
     $isUpiActive   = (!defined('ENABLE_UPI') || ENABLE_UPI == '1' || ENABLE_UPI === 1);
     $isWhActive    = (!defined('ENABLE_WEBHOOKS') || ENABLE_WEBHOOKS == '1' || ENABLE_WEBHOOKS === 1);
-    $isWorkflowsActive = true;
+    $isWorkflowsActive = (!defined('ENABLE_WORKFLOWS') || ENABLE_WORKFLOWS == '1' || ENABLE_WORKFLOWS === 1);
 
     $activePluginCount = 0;
     if ($isWorkflowsActive) $activePluginCount++;
@@ -464,7 +464,7 @@ if ($site_access_type == 'administrator' || $site_access_type == 'digital_market
                                 <span class="aside-plugin-setting-pill" title="Configure Settings"><i class="fi fi-rr-settings"></i></span>
                             </a>
                         </li>
-                        <li data-aside-plugin="workflows" class="aside-plugin-item plugin-item-active" data-plugin-name="automation workflows flowchart make visual studio pipelines lead distribution">
+                        <li data-aside-plugin="workflows" class="aside-plugin-item <?php echo ($isWorkflowsActive ? 'plugin-item-active' : 'plugin-item-disabled is-hidden'); ?>" data-plugin-name="automation workflows flowchart make visual studio pipelines lead distribution">
                             <a href="/dashboard/integration/workflows/" class="aside-plugin-link">
                                 <span class="aside-plugin-icon-wrap brand-workflows"><i class="fi fi-rr-workflow"></i></span>
                                 <span class="aside-plugin-name">Workflows</span>
