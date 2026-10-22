@@ -82,7 +82,7 @@ $siteCounts = [
     'tour_packages' => 0,
     'hotels'        => 0,
     'transporters'  => 0,
-    'vehicles'      => $masterCounts['vehicles'],
+    'vehicles'      => 0,
     'destinations'  => $masterCounts['destinations']
 ];
 
@@ -95,6 +95,9 @@ if ($siteId > 0) {
 
     $qSiteTrans = mysqli_query($connection, "SELECT COUNT(*) as c FROM `{$tblPrefix}transporter` WHERE transporter_site_id = {$siteId}");
     if ($qSiteTrans && $row = mysqli_fetch_assoc($qSiteTrans)) $siteCounts['transporters'] = (int)$row['c'];
+
+    $qSiteVeh = mysqli_query($connection, "SELECT COUNT(*) as c FROM `{$tblPrefix}vehicles` WHERE vehicle_site_id = {$siteId}");
+    if ($qSiteVeh && $row = mysqli_fetch_assoc($qSiteVeh)) $siteCounts['vehicles'] = (int)$row['c'];
 }
 
 // 3. Destination Breakdown from Master Tour Packages

@@ -77,6 +77,9 @@ if ($siteId <= 0) {
 if ($userId <= 0 && !empty($_SESSION['user_id'])) {
     $userId = (int)$_SESSION['user_id'];
 }
+if ($userId <= 0) {
+    $userId = 1;
+}
 
 // Ensure master schema exists
 require_once __DIR__ . '/schema.php';
@@ -86,6 +89,17 @@ ensureMasterDataTables($connection, $tblPrefix, false);
 $rawBody = file_get_contents('php://input');
 $jsonInput = json_decode($rawBody, true);
 $input = is_array($jsonInput) ? $jsonInput : $_POST;
+
+$migrationMode = strtolower(trim($input['migration_mode'] ?? ''));
+$skipExistingParam = $input['skip_existing'] ?? 1;
+
+if ($migrationMode === 'overwrite') {
+    $skipExisting = 0;
+} elseif ($migrationMode === 'safe') {
+    $skipExisting = 1;
+} else {
+    $skipExisting = ($skipExistingParam === 0 || $skipExistingParam === '0' || $skipExistingParam === false) ? 0 : 1;
+}
 
 $rawTypes = $input['data_types'] ?? ($input['types'] ?? 'all');
 if (is_string($rawTypes)) {
@@ -146,9 +160,11 @@ $copiedCounts = [
     'rooms'               => 0,
     'transporters'        => 0,
     'skipped'             => [
-        'tour_packages' => 0,
-        'hotels'        => 0,
-        'transporters'  => 0
+        'tour_packages'       => 0,
+        'hotels'              => 0,
+        'transporters'        => 0,
+        'vehicles'            => 0,
+        'travel_destinations' => 0
     ]
 ];
 
@@ -176,13 +192,6 @@ if (isset($selectedTypes['hotels'])) {
             $cleanCity  = strtolower(trim($mH['property_city'] ?? ''));
             $key = $cleanTitle . '|' . $cleanCity;
 
-            if (isset($existingHotels[$key])) {
-                $masterHotelToSiteHotelMap[$mId] = $existingHotels[$key];
-                $copiedCounts['skipped']['hotels']++;
-                continue;
-            }
-
-            // Insert into property
             $thumb = mysqli_real_escape_string($connection, $mH['property_thumbnail'] ?? '');
             $gall  = mysqli_real_escape_string($connection, $mH['property_gallery'] ?? '');
             $title = mysqli_real_escape_string($connection, $mH['property_title'] ?? '');
@@ -202,51 +211,105 @@ if (isset($selectedTypes['hotels'])) {
             $sEmail = mysqli_real_escape_string($connection, $mH['property_support_email'] ?? '');
             $sMob  = mysqli_real_escape_string($connection, $mH['property_support_mobile'] ?? '');
 
-            $inPropSql = "
-                INSERT INTO `{$tblPrefix}property` (
-                    property_site_id, property_thumbnail, property_gallery, property_title,
-                    property_email, property_mobile, property_description, property_address,
-                    property_city, property_state, property_country, property_pincode,
-                    property_map_url, property_starting_mrp, property_starting_price, property_total_rooms,
-                    property_type, property_support_email, property_support_mobile, property_created_by,
-                    property_time, property_status
-                ) VALUES (
-                    {$siteId}, '{$thumb}', '{$gall}', '{$title}',
-                    '{$email}', '{$mobile}', '{$desc}', '{$addr}',
-                    '{$city}', '{$state}', '{$country}', '{$pin}',
-                    '{$mapUrl}', {$mrp}, {$price}, {$rooms},
-                    '{$type}', '{$sEmail}', '{$sMob}', {$userId},
-                    NOW(), 1
-                )
-            ";
+            if (isset($existingHotels[$key])) {
+                $siteHotelId = $existingHotels[$key];
+                $masterHotelToSiteHotelMap[$mId] = $siteHotelId;
 
-            if (mysqli_query($connection, $inPropSql)) {
-                $newHotelId = (int)mysqli_insert_id($connection);
-                $existingHotels[$key] = $newHotelId;
-                $masterHotelToSiteHotelMap[$mId] = $newHotelId;
-                $copiedCounts['hotels']++;
+                if ($skipExisting == 1) {
+                    $copiedCounts['skipped']['hotels']++;
+                    continue;
+                } else {
+                    // Overwrite mode: Update existing property
+                    mysqli_query($connection, "
+                        UPDATE `{$tblPrefix}property` SET
+                            property_thumbnail = '{$thumb}',
+                            property_gallery = '{$gall}',
+                            property_starting_mrp = {$mrp},
+                            property_starting_price = {$price},
+                            property_total_rooms = {$rooms},
+                            property_description = '{$desc}',
+                            property_address = '{$addr}',
+                            property_type = '{$type}',
+                            property_status = 1
+                        WHERE property_id = {$siteHotelId} AND property_site_id = {$siteId}
+                    ");
+                    $copiedCounts['hotels']++;
+                    $targetHotelId = $siteHotelId;
+                }
+            } else {
+                // Insert into property
+                $inPropSql = "
+                    INSERT INTO `{$tblPrefix}property` (
+                        property_site_id, property_thumbnail, property_gallery, property_title,
+                        property_email, property_mobile, property_description, property_address,
+                        property_city, property_state, property_country, property_pincode,
+                        property_map_url, property_starting_mrp, property_starting_price, property_total_rooms,
+                        property_type, property_support_email, property_support_mobile, property_created_by,
+                        property_time, property_status
+                    ) VALUES (
+                        {$siteId}, '{$thumb}', '{$gall}', '{$title}',
+                        '{$email}', '{$mobile}', '{$desc}', '{$addr}',
+                        '{$city}', '{$state}', '{$country}', '{$pin}',
+                        '{$mapUrl}', {$mrp}, {$price}, {$rooms},
+                        '{$type}', '{$sEmail}', '{$sMob}', {$userId},
+                        NOW(), 1
+                    )
+                ";
 
-                // Copy Rooms for this hotel
-                $mRoomsQ = mysqli_query($connection, "SELECT * FROM `{$tblPrefix}master_rooms` WHERE room_property_id = {$mId}");
-                if ($mRoomsQ && mysqli_num_rows($mRoomsQ) > 0) {
-                    while ($mR = mysqli_fetch_assoc($mRoomsQ)) {
-                        $rfImg = mysqli_real_escape_string($connection, $mR['room_feature_image'] ?? '');
-                        $rGall = mysqli_real_escape_string($connection, $mR['room_gallery'] ?? '');
-                        $rDesc = mysqli_real_escape_string($connection, $mR['room_description'] ?? '');
-                        $rType = mysqli_real_escape_string($connection, $mR['room_type'] ?? 'deluxe');
-                        $epMrp = (int)($mR['room_ep_mrp'] ?? 0);
-                        $epB2c = (int)($mR['room_ep_b2c'] ?? 0);
-                        $epB2b = (int)($mR['room_ep_b2b'] ?? 0);
-                        $cpMrp = (int)($mR['room_cp_mrp'] ?? 0);
-                        $cpB2c = (int)($mR['room_cp_b2c'] ?? 0);
-                        $cpB2b = (int)($mR['room_cp_b2b'] ?? 0);
-                        $mapMrp = (int)($mR['room_map_mrp'] ?? 0);
-                        $mapB2c = (int)($mR['room_map_b2c'] ?? 0);
-                        $mapB2b = (int)($mR['room_map_b2b'] ?? 0);
-                        $apMrp = (int)($mR['room_ap_mrp'] ?? 0);
-                        $apB2c = (int)($mR['room_ap_b2c'] ?? 0);
-                        $apB2b = (int)($mR['room_ap_b2b'] ?? 0);
+                if (mysqli_query($connection, $inPropSql)) {
+                    $newHotelId = (int)mysqli_insert_id($connection);
+                    $existingHotels[$key] = $newHotelId;
+                    $masterHotelToSiteHotelMap[$mId] = $newHotelId;
+                    $copiedCounts['hotels']++;
+                    $targetHotelId = $newHotelId;
+                } else {
+                    continue;
+                }
+            }
 
+            // Copy / Refresh Rooms for this hotel
+            $mRoomsQ = mysqli_query($connection, "SELECT * FROM `{$tblPrefix}master_rooms` WHERE room_property_id = {$mId}");
+            if ($mRoomsQ && mysqli_num_rows($mRoomsQ) > 0) {
+                while ($mR = mysqli_fetch_assoc($mRoomsQ)) {
+                    $rfImg = mysqli_real_escape_string($connection, $mR['room_feature_image'] ?? '');
+                    $rGall = mysqli_real_escape_string($connection, $mR['room_gallery'] ?? '');
+                    $rDesc = mysqli_real_escape_string($connection, $mR['room_description'] ?? '');
+                    $rType = mysqli_real_escape_string($connection, $mR['room_type'] ?? 'deluxe');
+                    $epMrp = (int)($mR['room_ep_mrp'] ?? 0);
+                    $epB2c = (int)($mR['room_ep_b2c'] ?? 0);
+                    $epB2b = (int)($mR['room_ep_b2b'] ?? 0);
+                    $cpMrp = (int)($mR['room_cp_mrp'] ?? 0);
+                    $cpB2c = (int)($mR['room_cp_b2c'] ?? 0);
+                    $cpB2b = (int)($mR['room_cp_b2b'] ?? 0);
+                    $mapMrp = (int)($mR['room_map_mrp'] ?? 0);
+                    $mapB2c = (int)($mR['room_map_b2c'] ?? 0);
+                    $mapB2b = (int)($mR['room_map_b2b'] ?? 0);
+                    $apMrp = (int)($mR['room_ap_mrp'] ?? 0);
+                    $apB2c = (int)($mR['room_ap_b2c'] ?? 0);
+                    $apB2b = (int)($mR['room_ap_b2b'] ?? 0);
+
+                    // If hotel already existed and in overwrite mode, check if room type exists
+                    $existingRoomId = 0;
+                    if (isset($existingHotels[$key]) && $skipExisting == 0) {
+                        $chkRoomQ = mysqli_query($connection, "SELECT room_id FROM `{$tblPrefix}room` WHERE room_property_id = {$targetHotelId} AND room_site_id = {$siteId} AND room_type = '{$rType}' LIMIT 1");
+                        if ($chkRoomQ && ($rRow = mysqli_fetch_assoc($chkRoomQ))) {
+                            $existingRoomId = (int)$rRow['room_id'];
+                        }
+                    }
+
+                    if ($existingRoomId > 0) {
+                        mysqli_query($connection, "
+                            UPDATE `{$tblPrefix}room` SET
+                                room_feature_image = '{$rfImg}', room_gallery = '{$rGall}',
+                                room_description = '{$rDesc}', room_ep_mrp = {$epMrp}, room_ep_b2c = {$epB2c},
+                                room_ep_b2b = {$epB2b}, room_cp_mrp = {$cpMrp}, room_cp_b2c = {$cpB2c},
+                                room_cp_b2b = {$cpB2b}, room_map_mrp = {$mapMrp}, room_map_b2c = {$mapB2c},
+                                room_map_b2b = {$mapB2b}, room_ap_mrp = {$apMrp}, room_ap_b2b = {$apB2b},
+                                room_ap_b2c = {$apB2c}, room_status = 1, room_update = NOW()
+                            WHERE room_id = {$existingRoomId}
+                        ");
+                        $copiedCounts['rooms']++;
+                    } else {
                         $inRoomSql = "
                             INSERT INTO `{$tblPrefix}room` (
                                 room_property_id, room_site_id, room_feature_image, room_gallery,
@@ -255,7 +318,7 @@ if (isset($selectedTypes['hotels'])) {
                                 room_map_b2b, room_ap_mrp, room_ap_b2b, room_ap_b2c, room_status,
                                 room_create, room_update
                             ) VALUES (
-                                {$newHotelId}, {$siteId}, '{$rfImg}', '{$rGall}',
+                                {$targetHotelId}, {$siteId}, '{$rfImg}', '{$rGall}',
                                 '{$rDesc}', '{$rType}', {$epMrp}, {$epB2c}, {$epB2b},
                                 {$cpMrp}, {$cpB2c}, {$cpB2b}, {$mapMrp}, {$mapB2c},
                                 {$mapB2b}, {$apMrp}, {$apB2b}, {$apB2c}, 1,
@@ -278,10 +341,10 @@ if (isset($selectedTypes['hotels'])) {
 if (isset($selectedTypes['tour_package'])) {
     // Check existing packages on this site
     $existingPackages = [];
-    $ePQuery = mysqli_query($connection, "SELECT LOWER(TRIM(tour_package_title)) as t FROM `{$tblPrefix}tour_package` WHERE tour_package_site_id = {$siteId}");
+    $ePQuery = mysqli_query($connection, "SELECT LOWER(TRIM(tour_package_title)) as t, tour_package_id FROM `{$tblPrefix}tour_package` WHERE tour_package_site_id = {$siteId}");
     if ($ePQuery) {
         while ($ep = mysqli_fetch_assoc($ePQuery)) {
-            $existingPackages[$ep['t']] = true;
+            $existingPackages[$ep['t']] = (int)$ep['tour_package_id'];
         }
     }
 
@@ -311,31 +374,112 @@ if (isset($selectedTypes['tour_package'])) {
                 }
             }
 
-            if (isset($existingPackages[$cleanTitle])) {
-                $copiedCounts['skipped']['tour_packages']++;
-                continue;
-            }
-
-            // Insert tour package
-            $img   = mysqli_real_escape_string($connection, $pkg['tour_package_image'] ?? '');
-            $title = mysqli_real_escape_string($connection, $pkg['tour_package_title'] ?? '');
-            $theme = mysqli_real_escape_string($connection, $pkg['tour_package_theme'] ?? 'standard');
-            $tmpl  = mysqli_real_escape_string($connection, $pkg['tour_package_template'] ?? 'mit');
-            $start = mysqli_real_escape_string($connection, $pkg['tour_package_start_from'] ?? '');
-            $end   = mysqli_real_escape_string($connection, $pkg['tour_package_end_to'] ?? '');
-            $city  = mysqli_real_escape_string($connection, $pkg['tour_package_city'] ?? '');
-            $dur   = (int)($pkg['tour_package_duration'] ?? 1);
-            $over  = mysqli_real_escape_string($connection, $pkg['tour_package_overview'] ?? '');
-            $itin  = mysqli_real_escape_string($connection, $pkg['tour_package_itinerary'] ?? '');
-            $inc   = mysqli_real_escape_string($connection, $pkg['tour_package_inclusions'] ?? '');
-            $exc   = mysqli_real_escape_string($connection, $pkg['tour_package_exclusions'] ?? '');
-            $price = mysqli_real_escape_string($connection, $pkg['tour_package_price'] ?? '');
-            $hotel = mysqli_real_escape_string($connection, $pkg['tour_package_hotel'] ?? '');
-            $state = mysqli_real_escape_string($connection, $pkg['tour_package_state'] ?? '');
-            $cntry = mysqli_real_escape_string($connection, $pkg['tour_package_country'] ?? '');
-            $type  = mysqli_real_escape_string($connection, $pkg['tour_package_type'] ?? 'domestic');
+            // Extract and sanitize package fields for both update and insert
+            $img    = mysqli_real_escape_string($connection, $pkg['tour_package_image'] ?? '');
+            $title  = mysqli_real_escape_string($connection, $pkg['tour_package_title'] ?? '');
+            $theme  = mysqli_real_escape_string($connection, $pkg['tour_package_theme'] ?? 'standard');
+            $tmpl   = mysqli_real_escape_string($connection, $pkg['tour_package_template'] ?? 'mit');
+            $start  = mysqli_real_escape_string($connection, $pkg['tour_package_start_from'] ?? '');
+            $end    = mysqli_real_escape_string($connection, $pkg['tour_package_end_to'] ?? '');
+            $city   = mysqli_real_escape_string($connection, $pkg['tour_package_city'] ?? '');
+            $dur    = (int)($pkg['tour_package_duration'] ?? 1);
+            $over   = mysqli_real_escape_string($connection, $pkg['tour_package_overview'] ?? '');
+            $itin   = mysqli_real_escape_string($connection, $pkg['tour_package_itinerary'] ?? '');
+            $inc    = mysqli_real_escape_string($connection, $pkg['tour_package_inclusions'] ?? '');
+            $exc    = mysqli_real_escape_string($connection, $pkg['tour_package_exclusions'] ?? '');
+            $price  = mysqli_real_escape_string($connection, $pkg['tour_package_price'] ?? '');
+            $hotel  = mysqli_real_escape_string($connection, $pkg['tour_package_hotel'] ?? '');
+            $state  = mysqli_real_escape_string($connection, $pkg['tour_package_state'] ?? '');
+            $cntry  = mysqli_real_escape_string($connection, $pkg['tour_package_country'] ?? '');
+            $type   = mysqli_real_escape_string($connection, $pkg['tour_package_type'] ?? 'domestic');
             $outVeh = mysqli_real_escape_string($connection, $pkg['tour_package_outstation_vehicle'] ?? '');
             $locVeh = mysqli_real_escape_string($connection, $pkg['tour_package_localsightseen_vehicle'] ?? '');
+
+            if (isset($existingPackages[$cleanTitle])) {
+                if ($skipExisting == 1) {
+                    $copiedCounts['skipped']['tour_packages']++;
+                    continue;
+                } else {
+                    // Overwrite / Refresh existing package
+                    $sitePkgId = $existingPackages[$cleanTitle];
+                    if ($sitePkgId > 0) {
+                        mysqli_query($connection, "
+                            UPDATE `{$tblPrefix}tour_package` SET
+                                tour_package_image = '{$img}',
+                                tour_package_theme = '{$theme}',
+                                tour_package_template = '{$tmpl}',
+                                tour_package_start_from = '{$start}',
+                                tour_package_end_to = '{$end}',
+                                tour_package_city = '{$city}',
+                                tour_package_state = '{$state}',
+                                tour_package_country = '{$cntry}',
+                                tour_package_type = '{$type}',
+                                tour_package_duration = {$dur},
+                                tour_package_overview = '{$over}',
+                                tour_package_itinerary = '{$itin}',
+                                tour_package_inclusions = '{$inc}',
+                                tour_package_exclusions = '{$exc}',
+                                tour_package_price = '{$price}',
+                                tour_package_hotel = '{$hotel}',
+                                tour_package_outstation_vehicle = '{$outVeh}',
+                                tour_package_localsightseen_vehicle = '{$locVeh}',
+                                tour_package_status = 1,
+                                tour_package_updated_at = NOW()
+                            WHERE tour_package_id = {$sitePkgId} AND tour_package_site_id = {$siteId}
+                        ");
+                        $newPkgId = $sitePkgId;
+                        $copiedCounts['tour_packages']++;
+
+                        // Refresh prices
+                        mysqli_query($connection, "DELETE FROM `{$tblPrefix}tour_package_price` WHERE tour_package_price_parent_id = {$newPkgId} AND tour_package_price_site_id = {$siteId}");
+                        $inPriceSql = "
+                            INSERT INTO `{$tblPrefix}tour_package_price` (
+                                tour_package_price_parent_id, tour_package_price_site_id, tour_package_price_user_id,
+                                tour_package_price_date_start, tour_package_price_date_end, tour_package_price_net_adult,
+                                tour_package_price_net_child, tour_package_price_mrp_adult, tour_package_price_mrp_child,
+                                tour_package_price_selling_adult, tour_package_price_selling_child, tour_package_price_agent_adult,
+                                tour_package_price_agent_child, tour_package_price_type, tour_package_price_status,
+                                tour_package_price_created_at, tour_package_price_updated_at
+                            )
+                            SELECT 
+                                {$newPkgId}, {$siteId}, {$userId},
+                                tour_package_price_date_start, tour_package_price_date_end, tour_package_price_net_adult,
+                                tour_package_price_net_child, tour_package_price_mrp_adult, tour_package_price_mrp_child,
+                                tour_package_price_selling_adult, tour_package_price_selling_child, tour_package_price_agent_adult,
+                                tour_package_price_agent_child, tour_package_price_type, 1,
+                                NOW(), NOW()
+                            FROM `{$tblPrefix}master_tour_package_price`
+                            WHERE tour_package_price_parent_id = {$mPkgId}
+                        ";
+                        if (mysqli_query($connection, $inPriceSql)) {
+                            $copiedCounts['tour_package_prices'] += (int)mysqli_affected_rows($connection);
+                        }
+
+                        // Refresh hotel nights
+                        mysqli_query($connection, "DELETE FROM `{$tblPrefix}tour_package_hotel` WHERE tph_package_id = {$newPkgId} AND tph_site_id = {$siteId}");
+                        $mPkgHotelQ = mysqli_query($connection, "SELECT * FROM `{$tblPrefix}master_tour_package_hotel` WHERE tph_package_id = {$mPkgId}");
+                        if ($mPkgHotelQ) {
+                            while ($mph = mysqli_fetch_assoc($mPkgHotelQ)) {
+                                $origHotelId = (int)$mph['tph_hotel_id'];
+                                $targetHotelId = $masterHotelToSiteHotelMap[$origHotelId] ?? $origHotelId;
+                                $rtId = (int)$mph['tph_room_type_id'];
+                                $rType = mysqli_real_escape_string($connection, $mph['tph_room_type'] ?? 'deluxe');
+                                $night = (int)$mph['tph_night'];
+
+                                mysqli_query($connection, "
+                                    INSERT INTO `{$tblPrefix}tour_package_hotel` (
+                                        tph_hotel_id, tph_package_id, tph_room_type_id, tph_room_type, tph_night, tph_site_id, tph_status
+                                    ) VALUES (
+                                        {$targetHotelId}, {$newPkgId}, {$rtId}, '{$rType}', {$night}, {$siteId}, 1
+                                    )
+                                ");
+                                $copiedCounts['tour_package_hotels']++;
+                            }
+                        }
+                        continue;
+                    }
+                }
+            }
 
             $inPkgSql = "
                 INSERT INTO `{$tblPrefix}tour_package` (
@@ -429,10 +573,10 @@ if (isset($selectedTypes['tour_package'])) {
 // =========================================================================
 if (isset($selectedTypes['transporter'])) {
     $existingTrans = [];
-    $eTQ = mysqli_query($connection, "SELECT LOWER(TRIM(transporter_title)) as t FROM `{$tblPrefix}transporter` WHERE transporter_site_id = {$siteId}");
+    $eTQ = mysqli_query($connection, "SELECT LOWER(TRIM(transporter_title)) as t, transporter_id FROM `{$tblPrefix}transporter` WHERE transporter_site_id = {$siteId}");
     if ($eTQ) {
         while ($et = mysqli_fetch_assoc($eTQ)) {
-            $existingTrans[$et['t']] = true;
+            $existingTrans[$et['t']] = (int)$et['transporter_id'];
         }
     }
 
@@ -441,11 +585,6 @@ if (isset($selectedTypes['transporter'])) {
         while ($mt = mysqli_fetch_assoc($mTransQ)) {
             $cleanTitle = strtolower(trim($mt['transporter_title'] ?? ''));
             if (empty($cleanTitle)) continue;
-
-            if (isset($existingTrans[$cleanTitle])) {
-                $copiedCounts['skipped']['transporters']++;
-                continue;
-            }
 
             $thumb = mysqli_real_escape_string($connection, $mt['transporter_thumbnail'] ?? '');
             $title = mysqli_real_escape_string($connection, $mt['transporter_title'] ?? '');
@@ -456,6 +595,29 @@ if (isset($selectedTypes['transporter'])) {
             $city  = mysqli_real_escape_string($connection, $mt['transporter_city'] ?? '');
             $pin   = mysqli_real_escape_string($connection, $mt['transporter_pincode'] ?? '');
             $sState = mysqli_real_escape_string($connection, $mt['transporter_service_state'] ?? '');
+
+            if (isset($existingTrans[$cleanTitle])) {
+                if ($skipExisting == 1) {
+                    $copiedCounts['skipped']['transporters']++;
+                    continue;
+                } else {
+                    $siteTransId = $existingTrans[$cleanTitle];
+                    mysqli_query($connection, "
+                        UPDATE `{$tblPrefix}transporter` SET
+                            transporter_thumbnail = '{$thumb}',
+                            transporter_email = '{$email}',
+                            transporter_mobile = '{$mobile}',
+                            transporter_description = '{$desc}',
+                            transporter_address = '{$addr}',
+                            transporter_city = '{$city}',
+                            transporter_pincode = '{$pin}',
+                            transporter_service_state = '{$sState}'
+                        WHERE transporter_id = {$siteTransId} AND transporter_site_id = {$siteId}
+                    ");
+                    $copiedCounts['transporters']++;
+                    continue;
+                }
+            }
 
             $inTransSql = "
                 INSERT INTO `{$tblPrefix}transporter` (
@@ -470,7 +632,7 @@ if (isset($selectedTypes['transporter'])) {
             ";
 
             if (mysqli_query($connection, $inTransSql)) {
-                $existingTrans[$cleanTitle] = true;
+                $existingTrans[$cleanTitle] = (int)mysqli_insert_id($connection);
                 $copiedCounts['transporters']++;
             }
         }
@@ -482,10 +644,10 @@ if (isset($selectedTypes['transporter'])) {
 // =========================================================================
 if (isset($selectedTypes['travel_destinations'])) {
     $existingDests = [];
-    $eDQ = mysqli_query($connection, "SELECT LOWER(TRIM(location_title)) as t FROM `{$tblPrefix}locations`");
+    $eDQ = mysqli_query($connection, "SELECT LOWER(TRIM(location_title)) as t, location_id FROM `{$tblPrefix}locations`");
     if ($eDQ) {
         while ($ed = mysqli_fetch_assoc($eDQ)) {
-            $existingDests[$ed['t']] = true;
+            $existingDests[$ed['t']] = (int)$ed['location_id'];
         }
     }
 
@@ -493,7 +655,7 @@ if (isset($selectedTypes['travel_destinations'])) {
     if ($mDestQ) {
         while ($md = mysqli_fetch_assoc($mDestQ)) {
             $t = strtolower(trim($md['location_title'] ?? ''));
-            if (!empty($t) && !isset($existingDests[$t])) {
+            if (!empty($t)) {
                 $title = mysqli_real_escape_string($connection, $md['location_title']);
                 $thumb = mysqli_real_escape_string($connection, $md['location_thumbnail'] ?? '');
                 $gall  = mysqli_real_escape_string($connection, $md['location_gallery'] ?? '');
@@ -503,31 +665,51 @@ if (isset($selectedTypes['travel_destinations'])) {
                 $bFrom = mysqli_real_escape_string($connection, $md['location_best_from'] ?? '');
                 $bTo   = mysqli_real_escape_string($connection, $md['location_best_to'] ?? '');
 
-                mysqli_query($connection, "
-                    INSERT INTO `{$tblPrefix}locations` (
-                        location_title, location_thumbnail, location_gallery, location_description,
-                        location_is_deletable, location_state, location_country, location_best_from, location_best_to, location_time
-                    ) VALUES (
-                        '{$title}', '{$thumb}', '{$gall}', '{$desc}',
-                        1, '{$state}', '{$cntry}', '{$bFrom}', '{$bTo}', NOW()
-                    )
-                ");
-                $existingDests[$t] = true;
-                $copiedCounts['travel_destinations']++;
+                if (isset($existingDests[$t])) {
+                    if ($migrationMode === 'overwrite') {
+                        $exLocId = $existingDests[$t];
+                        mysqli_query($connection, "
+                            UPDATE `{$tblPrefix}locations` SET
+                                location_thumbnail = '{$thumb}',
+                                location_gallery = '{$gall}',
+                                location_description = '{$desc}',
+                                location_state = '{$state}',
+                                location_country = '{$cntry}',
+                                location_best_from = '{$bFrom}',
+                                location_best_to = '{$bTo}'
+                            WHERE location_id = {$exLocId}
+                        ");
+                        $copiedCounts['travel_destinations']++;
+                    } else {
+                        $copiedCounts['skipped']['travel_destinations']++;
+                    }
+                } else {
+                    mysqli_query($connection, "
+                        INSERT INTO `{$tblPrefix}locations` (
+                            location_title, location_thumbnail, location_gallery, location_description,
+                            location_is_deletable, location_state, location_country, location_best_from, location_best_to, location_time
+                        ) VALUES (
+                            '{$title}', '{$thumb}', '{$gall}', '{$desc}',
+                            1, '{$state}', '{$cntry}', '{$bFrom}', '{$bTo}', NOW()
+                        )
+                    ");
+                    $existingDests[$t] = (int)mysqli_insert_id($connection);
+                    $copiedCounts['travel_destinations']++;
+                }
             }
         }
     }
 }
 
 // =========================================================================
-// 5. ENSURE VEHICLES (Global Master)
+// 5. ENSURE VEHICLES (Workspace Scoped)
 // =========================================================================
 if (isset($selectedTypes['vehicles'])) {
     $existingVehs = [];
-    $eVQ = mysqli_query($connection, "SELECT LOWER(TRIM(vehicle_title)) as t FROM `{$tblPrefix}vehicles`");
+    $eVQ = mysqli_query($connection, "SELECT LOWER(TRIM(vehicle_title)) as t, vehicle_id FROM `{$tblPrefix}vehicles` WHERE vehicle_site_id = {$siteId}");
     if ($eVQ) {
         while ($ev = mysqli_fetch_assoc($eVQ)) {
-            $existingVehs[$ev['t']] = true;
+            $existingVehs[$ev['t']] = (int)$ev['vehicle_id'];
         }
     }
 
@@ -535,7 +717,7 @@ if (isset($selectedTypes['vehicles'])) {
     if ($mVehQ) {
         while ($mv = mysqli_fetch_assoc($mVehQ)) {
             $t = strtolower(trim($mv['vehicle_title'] ?? ''));
-            if (!empty($t) && !isset($existingVehs[$t])) {
+            if (!empty($t)) {
                 $title = mysqli_real_escape_string($connection, $mv['vehicle_title']);
                 $thumb = mysqli_real_escape_string($connection, $mv['vehicle_thumbnail'] ?? '');
                 $desc  = mysqli_real_escape_string($connection, $mv['vehicle_description'] ?? '');
@@ -547,29 +729,80 @@ if (isset($selectedTypes['vehicles'])) {
                 $rTax  = (float)($mv['vehicle_per_km_rate_with_tax'] ?? 0);
                 $rNoTax = (float)($mv['vehicle_per_km_rate_without_tax'] ?? 0);
 
-                mysqli_query($connection, "
-                    INSERT INTO `{$tblPrefix}vehicles` (
-                        vehicle_thumbnail, vehicle_title, vehicle_description, vehicle_seating,
-                        vehicle_is_deletable, vehicle_type, vehicle_gallery, vehicle_luggage,
-                        vehicle_fuel_type, vehicle_per_km_rate_with_tax, vehicle_per_km_rate_without_tax, vehicle_time
-                    ) VALUES (
-                        '{$thumb}', '{$title}', '{$desc}', {$seat},
-                        1, '{$type}', '{$gall}', {$lug},
-                        '{$fuel}', {$rTax}, {$rNoTax}, NOW()
-                    )
-                ");
-                $existingVehs[$t] = true;
-                $copiedCounts['vehicles']++;
+                if (isset($existingVehs[$t])) {
+                    if ($migrationMode === 'overwrite') {
+                        $exVehId = $existingVehs[$t];
+                        mysqli_query($connection, "
+                            UPDATE `{$tblPrefix}vehicles` SET
+                                vehicle_thumbnail = '{$thumb}',
+                                vehicle_description = '{$desc}',
+                                vehicle_seating = {$seat},
+                                vehicle_type = '{$type}',
+                                vehicle_gallery = '{$gall}',
+                                vehicle_luggage = {$lug},
+                                vehicle_fuel_type = '{$fuel}',
+                                vehicle_per_km_rate_with_tax = {$rTax},
+                                vehicle_per_km_rate_without_tax = {$rNoTax}
+                            WHERE vehicle_id = {$exVehId} AND vehicle_site_id = {$siteId}
+                        ");
+                        $copiedCounts['vehicles']++;
+                    } else {
+                        $copiedCounts['skipped']['vehicles']++;
+                    }
+                } else {
+                    mysqli_query($connection, "
+                        INSERT INTO `{$tblPrefix}vehicles` (
+                            vehicle_thumbnail, vehicle_title, vehicle_description, vehicle_seating,
+                            vehicle_is_deletable, vehicle_type, vehicle_gallery, vehicle_luggage,
+                            vehicle_fuel_type, vehicle_per_km_rate_with_tax, vehicle_per_km_rate_without_tax,
+                            vehicle_site_id, vehicle_time
+                        ) VALUES (
+                            '{$thumb}', '{$title}', '{$desc}', {$seat},
+                            1, '{$type}', '{$gall}', {$lug},
+                            '{$fuel}', {$rTax}, {$rNoTax},
+                            {$siteId}, NOW()
+                        )
+                    ");
+                    $existingVehs[$t] = (int)mysqli_insert_id($connection);
+                    $copiedCounts['vehicles']++;
+                }
             }
         }
     }
 }
 
 $totalCopied = $copiedCounts['tour_packages'] + $copiedCounts['hotels'] + $copiedCounts['transporters'] + $copiedCounts['travel_destinations'] + $copiedCounts['vehicles'];
+$totalSkipped = $copiedCounts['skipped']['tour_packages'] + $copiedCounts['skipped']['hotels'] + $copiedCounts['skipped']['transporters'] + ($copiedCounts['skipped']['vehicles'] ?? 0) + ($copiedCounts['skipped']['travel_destinations'] ?? 0);
+
+$msg = "";
+if ($totalCopied > 0 && $totalSkipped > 0) {
+    $msg = "Successfully copied {$totalCopied} master items into your workspace ({$totalSkipped} duplicates skipped).";
+} elseif ($totalCopied > 0) {
+    $msg = "Successfully copied {$totalCopied} master items into your workspace.";
+} else {
+    $msg = "Your workspace is already synchronized with master data ({$totalSkipped} existing items kept safe).";
+}
 
 echo json_encode([
-    'status'        => 'success',
-    'msg'           => "Successfully copied {$totalCopied} master items into your dashboard.",
-    'copied'        => $copiedCounts,
-    'site_id'       => $siteId
+    'status'  => 'success',
+    'msg'     => $msg,
+    'summary' => [
+        'packages_copied'      => $copiedCounts['tour_packages'],
+        'destinations_copied'  => $copiedCounts['travel_destinations'],
+        'vehicles_copied'      => $copiedCounts['vehicles'],
+        'hotels_copied'        => $copiedCounts['hotels'],
+        'transporters_copied'  => $copiedCounts['transporters'],
+        'rooms_copied'         => $copiedCounts['rooms'],
+        'prices_copied'        => $copiedCounts['tour_package_prices'],
+        'packages_skipped'     => $copiedCounts['skipped']['tour_packages'],
+        'hotels_skipped'       => $copiedCounts['skipped']['hotels'],
+        'transporters_skipped' => $copiedCounts['skipped']['transporters'],
+        'vehicles_skipped'     => $copiedCounts['skipped']['vehicles'] ?? 0,
+        'destinations_skipped' => $copiedCounts['skipped']['travel_destinations'] ?? 0,
+        'total_copied'         => $totalCopied,
+        'total_skipped'        => $totalSkipped,
+        'mode'                 => $migrationMode
+    ],
+    'copied'  => $copiedCounts,
+    'site_id' => $siteId
 ]);

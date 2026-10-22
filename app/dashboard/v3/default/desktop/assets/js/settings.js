@@ -1780,12 +1780,201 @@
     },
 
     // ------------------------------------------------------------------------
-    // DEFAULT DATA MIGRATION
+    // DEFAULT DATA MIGRATION WIZARD
     // ------------------------------------------------------------------------
+    migrationStep: 1,
+    migrationMode: "safe",
+
     initMigration: function () {
       const self = this;
+      self.migrationStep = 1;
+      self.migrationMode = "safe";
       self.bindMigrationEvents();
+      self.updateMigrationSidebar();
       self.loadMigrationCatalog();
+    },
+
+    goToMigrationStep: function (stepNum) {
+      const self = this;
+      stepNum = parseInt(stepNum, 10);
+      if (isNaN(stepNum) || stepNum < 1 || stepNum > 4) return;
+
+      // Validation before advancing beyond Step 2
+      if (stepNum > 2) {
+        const checkedCount = $(".master-dataset-checkbox:checked").length;
+        if (checkedCount === 0) {
+          self.showAlert("warning", "Please select at least one dataset to proceed.");
+          return;
+        }
+      }
+
+      self.migrationStep = stepNum;
+
+      // Update Stepper Bar
+      $(".migration-stepper .v3-step-item").each(function () {
+        const step = parseInt($(this).data("step"), 10);
+        const $num = $(this).find(".v3-step-number");
+        if (step < stepNum) {
+          $(this).addClass("completed").removeClass("active");
+          $num.html('<i class="fi fi-rr-check"></i>');
+        } else if (step === stepNum) {
+          $(this).addClass("active").removeClass("completed");
+          $num.text(step);
+        } else {
+          $(this).removeClass("active completed");
+          $num.text(step);
+        }
+      });
+
+      // Update Step Panels
+      $(".migration-step-panel").removeClass("active").hide();
+      $("#migrationStep" + stepNum).addClass("active").fadeIn(200);
+
+      // Preflight preparation for Step 4
+      if (stepNum === 4) {
+        self.updateMigrationPreflight();
+      }
+
+      // Update Sidebar Summary
+      self.updateMigrationSidebar();
+
+      // Smooth scroll to top of wizard container
+      const $container = $("#settingMigrationApp");
+      if ($container.length > 0) {
+        const containerTop = $container.offset().top - 80;
+        if ($(window).scrollTop() > containerTop + 200) {
+          $("html, body").animate({ scrollTop: containerTop }, 250);
+        }
+      }
+    },
+
+    updateMigrationPreflight: function () {
+      const self = this;
+      const $list = $("#preflightItemsList");
+      $list.empty();
+
+      const datasetMeta = {
+        tour_packages: {
+          title: "Tour Packages",
+          icon: "fi-rr-plane-alt",
+          color: "indigo",
+          badge: $("#badgeCountPackages").text() || "155 Packages",
+          desc: "Complete tour itineraries, sightseeing, and pricing slabs"
+        },
+        destinations: {
+          title: "Travel Destinations",
+          icon: "fi-rr-map-marker",
+          color: "teal",
+          badge: $("#badgeCountDestinations").text() || "17 Hubs",
+          desc: "Popular tourist hubs across Himachal, Kashmir, Goa, etc."
+        },
+        vehicles: {
+          title: "Fleet Vehicles",
+          icon: "fi-rr-car-alt",
+          color: "purple",
+          badge: $("#badgeCountVehicles").text() || "11 Models",
+          desc: "Sedans, SUVs, and luxury coaches (Dzire, Crysta, Urbania)"
+        },
+        hotels: {
+          title: "Hotels & Tariffs",
+          icon: "fi-rr-building",
+          color: "amber",
+          badge: $("#badgeCountHotels").text() || "315 Hotels",
+          desc: "Classified budget to luxury hotels with room tariff slabs"
+        },
+        transporters: {
+          title: "Transporters & Operators",
+          icon: "fi-rr-shipping-fast",
+          color: "rose",
+          badge: $("#badgeCountTransporters").text() || "1 Operator",
+          desc: "Verified fleet operator and union profiles for quotes"
+        }
+      };
+
+      const selectedTypes = [];
+      $(".master-dataset-checkbox:checked").each(function () {
+        selectedTypes.push($(this).val());
+      });
+
+      const count = selectedTypes.length;
+      const badgeText = count + " " + (count === 1 ? "Dataset" : "Datasets") + " Selected";
+      $("#preflightSummaryBadge").html('<i class="fi fi-rr-layers"></i> ' + badgeText);
+
+      selectedTypes.forEach(function (type) {
+        const meta = datasetMeta[type];
+        if (!meta) return;
+        const itemHtml = [
+          '<div class="migration-preflight-item">',
+          '  <div class="migration-preflight-item-left">',
+          '    <div class="migration-preflight-item-icon ' + meta.color + '">',
+          '      <i class="fi ' + meta.icon + '"></i>',
+          '    </div>',
+          '    <div class="migration-preflight-item-text">',
+          '      <div class="migration-preflight-item-title-row">',
+          '        <h5 class="migration-preflight-item-title">' + selfEscapeHTML(meta.title) + '</h5>',
+          '      </div>',
+          '      <p class="migration-preflight-item-desc">' + selfEscapeHTML(meta.desc) + '</p>',
+          '    </div>',
+          '  </div>',
+          '  <div class="migration-preflight-item-right">',
+          '    <span class="migration-preflight-item-badge"><i class="fi fi-rr-check"></i> ' + selfEscapeHTML(meta.badge) + '</span>',
+          '  </div>',
+          '</div>'
+        ].join("");
+        $list.append(itemHtml);
+      });
+
+      // Update Preflight Strategy Note
+      const $modeInfo = $("#preflightModeInfo");
+      if (self.migrationMode === "safe") {
+        $modeInfo.attr("class", "migration-preflight-mode-info mode-safe");
+        $modeInfo.html([
+          '<div class="migration-preflight-mode-icon safe">',
+          '  <i class="fi fi-rr-shield-check"></i>',
+          '</div>',
+          '<div class="migration-preflight-mode-text">',
+          '  <div class="migration-preflight-mode-title">Strategy: Safe Sync (Duplicate Protection Active)</div>',
+          '  <p class="migration-preflight-mode-desc">Existing customized packages, hotels, and tariffs in your workspace are preserved. Only new or missing master records will be imported.</p>',
+          '</div>'
+        ].join(""));
+      } else {
+        $modeInfo.attr("class", "migration-preflight-mode-info mode-overwrite");
+        $modeInfo.html([
+          '<div class="migration-preflight-mode-icon overwrite">',
+          '  <i class="fi fi-rr-refresh"></i>',
+          '</div>',
+          '<div class="migration-preflight-mode-text">',
+          '  <div class="migration-preflight-mode-title">Strategy: Full Sync &amp; Overwrite Active</div>',
+          '  <p class="migration-preflight-mode-desc">Existing matching records in this workspace will be refreshed with the latest master catalog data and tariff slabs.</p>',
+          '</div>'
+        ].join(""));
+      }
+    },
+
+    updateMigrationSidebar: function () {
+      const self = this;
+      const stepNames = {
+        1: "Workspace Status",
+        2: "Select Datasets",
+        3: "Sync Options",
+        4: "Review & Run"
+      };
+
+      $("#sidebarStepText").text("Step " + self.migrationStep + " of 4: " + (stepNames[self.migrationStep] || ""));
+      const checkedCount = $(".master-dataset-checkbox:checked").length;
+      $("#sidebarDatasetsText").text(checkedCount + " of 5 Selected");
+      $("#sidebarModeText").text(self.migrationMode === "overwrite" ? "Full Sync & Overwrite" : "Safe Sync (Skip Existing)");
+    },
+
+    resetMigrationWizard: function () {
+      const self = this;
+      $("#migrationResultBanner").removeClass("active").hide();
+      $("#migrationProgressCard").removeClass("active").hide();
+      $("#migrationProgressBar").css("width", "0%");
+      $("#migrationProgressPct").text("0%");
+      $("#migrationPreflightCard").show();
+      $("#step4ActionsBar").show();
+      self.goToMigrationStep(1);
     },
 
     loadMigrationCatalog: function () {
@@ -1799,7 +1988,7 @@
             const master = res.master_counts || {};
             const site = res.site_counts || {};
 
-            // Update stats cards
+            // Update stats cards in Step 1
             if (site.tour_packages !== undefined) $("#statInstalledPackages").text(site.tour_packages);
             if (master.tour_packages !== undefined) {
               $("#statTotalPackages").text(master.tour_packages + " Master");
@@ -1840,6 +2029,26 @@
     bindMigrationEvents: function () {
       const self = this;
 
+      // Wizard Next Step Buttons
+      $(document).off("click", ".btn-wizard-next").on("click", ".btn-wizard-next", function (e) {
+        e.preventDefault();
+        const next = parseInt($(this).data("next"), 10);
+        if (next) self.goToMigrationStep(next);
+      });
+
+      // Wizard Previous Step Buttons
+      $(document).off("click", ".btn-wizard-prev").on("click", ".btn-wizard-prev", function (e) {
+        e.preventDefault();
+        const prev = parseInt($(this).data("prev"), 10);
+        if (prev) self.goToMigrationStep(prev);
+      });
+
+      // Stepper Header direct tab click
+      $(document).off("click", ".migration-stepper .v3-step-item").on("click", ".migration-stepper .v3-step-item", function () {
+        const step = parseInt($(this).data("step"), 10);
+        if (step) self.goToMigrationStep(step);
+      });
+
       // Dataset card click toggles selection
       $(document).off("click", ".v3-dataset-card").on("click", ".v3-dataset-card", function (e) {
         if ($(e.target).is("input[type='checkbox']") || $(e.target).closest(".v3-switch-label").length) return;
@@ -1847,7 +2056,7 @@
         $chk.prop("checked", !$chk.is(":checked")).trigger("change");
       });
 
-      // Dataset checkbox change updates card is-selected class
+      // Dataset checkbox change updates card is-selected class and sidebar
       $(document).off("change", ".master-dataset-checkbox").on("change", ".master-dataset-checkbox", function () {
         const $card = $(this).closest(".v3-dataset-card");
         if ($(this).is(":checked")) {
@@ -1855,6 +2064,7 @@
         } else {
           $card.removeClass("is-selected");
         }
+        self.updateMigrationSidebar();
       });
 
       // Quick links: Select All / Deselect All
@@ -1868,7 +2078,23 @@
         $(".master-dataset-checkbox").prop("checked", false).trigger("change");
       });
 
-      // Start Migration Button
+      // Migration Sync Strategy Mode Selection Card Click
+      $(document).off("click", ".v3-sync-mode-card").on("click", ".v3-sync-mode-card", function () {
+        const mode = $(this).data("mode") || "safe";
+        self.migrationMode = mode;
+        $(".v3-sync-mode-card").removeClass("is-selected");
+        $(this).addClass("is-selected");
+        $(this).find("input[name='migration_mode']").prop("checked", true);
+        self.updateMigrationSidebar();
+      });
+
+      // Restart Wizard Button
+      $(document).off("click", "#btnRestartWizard").on("click", "#btnRestartWizard", function (e) {
+        e.preventDefault();
+        self.resetMigrationWizard();
+      });
+
+      // Start Migration Button in Step 4
       $(document).off("click", "#btnStartMigration").on("click", "#btnStartMigration", function (e) {
         e.preventDefault();
         if (self.isSubmitting) return;
@@ -1883,26 +2109,24 @@
           return;
         }
 
-        const destination = "";
-        const skipExisting = $("#chkSkipExisting").is(":checked") ? 1 : 0;
+        const modeLabel = self.migrationMode === "overwrite" ? "Full Sync & Overwrite" : "Safe Sync (Skip Existing)";
+        const confirmMsg = "Are you sure you want to run the default data migration using '" + modeLabel + "'?";
 
         const swalFn = window.swal || window.Swal;
-        const confirmMsg = "Are you sure you want to import the selected default master datasets into your workspace?";
-
         const proceedImport = function () {
-          self.executeMigration(selectedTypes, destination, skipExisting);
+          self.executeMigration(selectedTypes);
         };
 
         if (swalFn) {
           if (typeof swalFn.fire === "function") {
             swalFn.fire({
-              title: "Import Default Data?",
+              title: "Start Default Data Migration?",
               text: confirmMsg,
               icon: "question",
               showCancelButton: true,
               confirmButtonColor: "#4f46e5",
               cancelButtonColor: "#94a3b8",
-              confirmButtonText: "Yes, start import",
+              confirmButtonText: "Yes, start migration",
               cancelButtonText: "Cancel"
             }).then(function (result) {
               if (result && (result.isConfirmed || result.value)) {
@@ -1911,13 +2135,13 @@
             });
           } else {
             swalFn({
-              title: "Import Default Data?",
+              title: "Start Default Data Migration?",
               text: confirmMsg,
               type: "info",
               showCancelButton: true,
               confirmButtonColor: "#4f46e5",
               cancelButtonColor: "#94a3b8",
-              confirmButtonText: "Yes, start import",
+              confirmButtonText: "Yes, start migration",
               cancelButtonText: "Cancel"
             }, function (isConfirm) {
               if (isConfirm) {
@@ -1933,7 +2157,7 @@
       });
     },
 
-    executeMigration: function (types, destination, skipExisting) {
+    executeMigration: function (types) {
       const self = this;
       self.isSubmitting = true;
 
@@ -1950,23 +2174,29 @@
       const $progressPct = $("#migrationProgressPct");
       const $progressMsg = $("#migrationProgressMsg");
       const $resultBanner = $("#migrationResultBanner");
+      const $preflightCard = $("#migrationPreflightCard");
+      const $step4Actions = $("#step4ActionsBar");
 
+      $preflightCard.hide();
       $resultBanner.removeClass("active").hide();
-      $progressCard.addClass("active").slideDown(200);
-      $progressBar.css("width", "25%");
-      $progressPct.text("25%");
+      $step4Actions.hide();
+
+      $progressCard.addClass("active").show();
+      $progressBar.css("width", "20%");
+      $progressPct.text("20%");
       $progressMsg.text("Verifying schema and preparing workspace records...");
 
       // Animated progress indicator during AJAX execution
-      let progressVal = 25;
+      let progressVal = 20;
       const progressTimer = setInterval(function () {
         if (progressVal < 85) {
           progressVal += 15;
           $progressBar.css("width", progressVal + "%");
           $progressPct.text(progressVal + "%");
-          if (progressVal === 40) $progressMsg.text("Copying master tour packages and pricing tiers...");
-          if (progressVal === 55) $progressMsg.text("Cloning classified hotels, rooms, and destinations...");
-          if (progressVal === 70) $progressMsg.text("Configuring transporters and fleet vehicles...");
+          if (progressVal === 35) $progressMsg.text("Copying master tour packages and pricing tiers...");
+          if (progressVal === 50) $progressMsg.text("Cloning classified hotels, rooms, and destinations...");
+          if (progressVal === 65) $progressMsg.text("Configuring transporters and fleet vehicles...");
+          if (progressVal === 80) $progressMsg.text("Finalizing foreign key relations and workspace indexes...");
         }
       }, 400);
 
@@ -1976,8 +2206,9 @@
         dataType: "json",
         data: JSON.stringify({
           data_types: types,
-          destination: destination,
-          skip_existing: skipExisting
+          destination: "",
+          migration_mode: self.migrationMode,
+          skip_existing: self.migrationMode === "safe" ? 1 : 0
         }),
         contentType: "application/json; charset=utf-8",
         success: function (res) {
@@ -1987,32 +2218,64 @@
           $btnText.text(origText);
           $btn.find("i").attr("class", "fi fi-rr-cloud-download");
 
+          // CRITICAL FIX: Hide progress card immediately and remove .active class so it never lingers
+          $progressCard.removeClass("active").hide();
+
           if (res && res.status === "success") {
-            $progressBar.css("width", "100%");
-            $progressPct.text("100%");
-            $progressMsg.text("Migration complete!");
-
-            setTimeout(function () {
-              $progressCard.slideUp(250);
-            }, 800);
-
-            // Display Result Banner
             const summary = res.summary || {};
-            const badgeHtml = [
-              '<span class="migration-result-chip"><i class="fi fi-rr-plane-alt"></i> ' + (summary.packages_copied || 0) + ' Packages</span>',
-              '<span class="migration-result-chip"><i class="fi fi-rr-map-marker"></i> ' + (summary.destinations_copied || 0) + ' Destinations</span>',
-              '<span class="migration-result-chip"><i class="fi fi-rr-car-alt"></i> ' + (summary.vehicles_copied || 0) + ' Vehicles</span>',
-              '<span class="migration-result-chip"><i class="fi fi-rr-building"></i> ' + (summary.hotels_copied || 0) + ' Hotels</span>',
-              '<span class="migration-result-chip"><i class="fi fi-rr-shipping-fast"></i> ' + (summary.transporters_copied || 0) + ' Transporters</span>'
-            ].join("");
+            const copied = res.copied || {};
+            const totalCopied = (summary.total_copied !== undefined) ? summary.total_copied : ((copied.tour_packages || 0) + (copied.destinations || 0) + (copied.vehicles || 0) + (copied.hotels || 0) + (copied.transporters || 0));
+            const totalSkipped = (summary.total_skipped !== undefined) ? summary.total_skipped : 0;
 
-            $("#migrationResultBadges").html(badgeHtml);
+            const pPkg = summary.packages_copied !== undefined ? summary.packages_copied : (copied.tour_packages || 0);
+            const pDest = summary.destinations_copied !== undefined ? summary.destinations_copied : (copied.destinations || 0);
+            const pVeh = summary.vehicles_copied !== undefined ? summary.vehicles_copied : (copied.vehicles || 0);
+            const pHot = summary.hotels_copied !== undefined ? summary.hotels_copied : (copied.hotels || 0);
+            const pTrp = summary.transporters_copied !== undefined ? summary.transporters_copied : (copied.transporters || 0);
+
+            // Display Result Banner with transparent metrics
+            const sPkg = summary.packages_skipped || 0;
+            const sDest = summary.destinations_skipped || 0;
+            const sVeh = summary.vehicles_skipped || 0;
+            const sHot = summary.hotels_skipped || 0;
+            const sTrp = summary.transporters_skipped || 0;
+
+            const badgeItems = [];
+            if (pPkg > 0) badgeItems.push('<span class="migration-result-chip success"><i class="fi fi-rr-plane-alt"></i> ' + pPkg + ' Packages</span>');
+            else if (sPkg > 0) badgeItems.push('<span class="migration-result-chip safe"><i class="fi fi-rr-shield-check"></i> ' + sPkg + ' Packages Safe</span>');
+
+            if (pDest > 0) badgeItems.push('<span class="migration-result-chip success"><i class="fi fi-rr-map-marker"></i> ' + pDest + ' Destinations</span>');
+            else if (sDest > 0) badgeItems.push('<span class="migration-result-chip safe"><i class="fi fi-rr-shield-check"></i> ' + sDest + ' Destinations Safe</span>');
+
+            if (pVeh > 0) badgeItems.push('<span class="migration-result-chip success"><i class="fi fi-rr-car-alt"></i> ' + pVeh + ' Vehicles</span>');
+            else if (sVeh > 0) badgeItems.push('<span class="migration-result-chip safe"><i class="fi fi-rr-shield-check"></i> ' + sVeh + ' Vehicles Safe</span>');
+
+            if (pHot > 0) badgeItems.push('<span class="migration-result-chip success"><i class="fi fi-rr-building"></i> ' + pHot + ' Hotels</span>');
+            else if (sHot > 0) badgeItems.push('<span class="migration-result-chip safe"><i class="fi fi-rr-shield-check"></i> ' + sHot + ' Hotels Safe</span>');
+
+            if (pTrp > 0) badgeItems.push('<span class="migration-result-chip success"><i class="fi fi-rr-shipping-fast"></i> ' + pTrp + ' Transporters</span>');
+            else if (sTrp > 0) badgeItems.push('<span class="migration-result-chip safe"><i class="fi fi-rr-shield-check"></i> ' + sTrp + ' Transporter Safe</span>');
+
+            $("#migrationResultBadges").html(badgeItems.join(""));
+
+            if (totalCopied > 0) {
+              $("#migrationResultTitle").text("Default Data Migration Completed Successfully!");
+              $("#migrationResultText").text("Imported " + totalCopied + " master records into your active workspace. You can now customize packages, adjust tariffs, and build itineraries immediately.");
+            } else if (totalSkipped > 0) {
+              $("#migrationResultTitle").text("Workspace Already Synchronized!");
+              $("#migrationResultText").text("All " + totalSkipped + " selected master records are already active in your workspace. Duplicate protection was applied; your customized packages and tariffs are safely intact.");
+            } else {
+              $("#migrationResultTitle").text("Default Data Synchronized!");
+              $("#migrationResultText").text("Your workspace has been validated and synchronized with master catalogues.");
+            }
+
             $resultBanner.addClass("active").slideDown(250);
 
             self.showAlert("success", res.msg || "Default data imported successfully into your dashboard!");
             self.loadMigrationCatalog();
           } else {
-            $progressCard.slideUp(200);
+            $preflightCard.show();
+            $step4Actions.show();
             self.showAlert("error", (res && res.msg) ? res.msg : "Failed to import default master data.");
           }
         },
@@ -2022,7 +2285,11 @@
           $btn.prop("disabled", false);
           $btnText.text(origText);
           $btn.find("i").attr("class", "fi fi-rr-cloud-download");
-          $progressCard.slideUp(200);
+
+          // CRITICAL FIX: Hide progress card on error as well
+          $progressCard.removeClass("active").hide();
+          $preflightCard.show();
+          $step4Actions.show();
 
           let errorMsg = "Network error while importing master data.";
           try {

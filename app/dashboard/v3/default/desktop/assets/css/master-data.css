@@ -955,7 +955,420 @@
     font-size: 18px !important;
 }
 
-/* Section 4: Progress Card */
+/* =========================================================================
+   Wizard Stepper & Panels
+   ========================================================================= */
+.migration-stepper {
+    margin-bottom: 20px !important;
+    background: #ffffff !important;
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 12px !important;
+    padding: 14px 20px !important;
+}
+
+.migration-stepper .v3-step-item {
+    cursor: pointer !important;
+    transition: all 0.2s ease !important;
+}
+
+.migration-stepper .v3-step-item:hover .v3-step-number {
+    border-color: #6366f1 !important;
+    color: #4f46e5 !important;
+}
+
+.migration-step-panel {
+    display: none;
+}
+
+.migration-step-panel.active {
+    display: block !important;
+    animation: fadeInStep 0.25s ease-out;
+}
+
+@keyframes fadeInStep {
+    from { opacity: 0; transform: translateY(4px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.migration-wizard-nav {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 12px !important;
+    padding: 16px 20px !important;
+    background: #fafafa !important;
+    border-top: 1px solid #f1f5f9 !important;
+}
+
+.migration-wizard-nav .v3-btn-primary,
+.migration-wizard-nav .v3-btn-secondary {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+}
+
+/* Step 3: Sync Strategy Mode Cards */
+.v3-sync-modes-grid {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)) !important;
+    gap: 16px !important;
+}
+
+.v3-sync-mode-card {
+    border: 1.5px solid #e2e8f0 !important;
+    border-radius: 14px !important;
+    padding: 20px !important;
+    background: #ffffff !important;
+    cursor: pointer !important;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    position: relative !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 10px !important;
+}
+
+.v3-sync-mode-card:hover {
+    border-color: #cbd5e1 !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 8px 18px -4px rgba(15, 23, 42, 0.08) !important;
+}
+
+.v3-sync-mode-card.is-selected {
+    border-color: #4f46e5 !important;
+    background: #fdfdff !important;
+    box-shadow: 0 0 0 1px #4f46e5, 0 6px 20px -4px rgba(79, 70, 229, 0.12) !important;
+}
+
+.v3-sync-mode-header {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+}
+
+.v3-sync-mode-icon {
+    width: 42px !important;
+    height: 42px !important;
+    border-radius: 10px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 18px !important;
+}
+
+.v3-sync-mode-icon.indigo { background: #eef2ff !important; color: #4f46e5 !important; border: 1px solid #e0e7ff !important; }
+.v3-sync-mode-icon.amber  { background: #fffbeb !important; color: #d97706 !important; border: 1px solid #fef3c7 !important; }
+
+.v3-sync-mode-radio input[type="radio"] {
+    width: 18px !important;
+    height: 18px !important;
+    accent-color: #4f46e5 !important;
+    cursor: pointer !important;
+}
+
+.v3-sync-mode-title {
+    font-size: 15px !important;
+    font-weight: 700 !important;
+    color: #0f172a !important;
+    margin: 0 !important;
+}
+
+.v3-sync-mode-desc {
+    font-size: 13px !important;
+    color: #64748b !important;
+    margin: 0 !important;
+    line-height: 1.5 !important;
+    flex-grow: 1 !important;
+}
+
+.v3-sync-mode-tag {
+    font-size: 11px !important;
+    font-weight: 700 !important;
+    padding: 4px 10px !important;
+    border-radius: 20px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 5px !important;
+    width: fit-content !important;
+}
+
+.v3-sync-mode-tag.recommended {
+    background: #ecfdf5 !important;
+    color: #059669 !important;
+    border: 1px solid #d1fae5 !important;
+}
+
+.v3-sync-mode-tag.warning {
+    background: #fffbeb !important;
+    color: #d97706 !important;
+    border: 1px solid #fef3c7 !important;
+}
+
+/* Step 4: Pre-flight Summary Card */
+.migration-preflight-card {
+    background: #ffffff !important;
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 14px !important;
+    padding: 24px !important;
+    margin-bottom: 20px !important;
+    box-shadow: 0 4px 14px -3px rgba(15, 23, 42, 0.05) !important;
+}
+
+.migration-preflight-header {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    margin-bottom: 18px !important;
+    padding-bottom: 14px !important;
+    border-bottom: 1px solid #f1f5f9 !important;
+    gap: 16px !important;
+    flex-wrap: wrap !important;
+}
+
+.migration-preflight-header-left h4 {
+    margin: 0 !important;
+    font-size: 16px !important;
+    font-weight: 700 !important;
+    color: #0f172a !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+}
+
+.migration-preflight-header-left h4 i {
+    color: #4f46e5 !important;
+    font-size: 18px !important;
+}
+
+.migration-preflight-subtitle {
+    margin: 4px 0 0 0 !important;
+    font-size: 13px !important;
+    color: #64748b !important;
+}
+
+.v3-preflight-badge {
+    background: #eef2ff !important;
+    color: #4338ca !important;
+    border: 1px solid #c7d2fe !important;
+    padding: 6px 14px !important;
+    border-radius: 20px !important;
+    font-size: 12px !important;
+    font-weight: 700 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+}
+
+.v3-preflight-badge i {
+    font-size: 13px !important;
+}
+
+/* Pre-flight Items Grid */
+.migration-preflight-items {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)) !important;
+    gap: 12px !important;
+    margin-bottom: 18px !important;
+}
+
+.migration-preflight-item {
+    background: #f8fafc !important;
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 12px !important;
+    padding: 14px 16px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 14px !important;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.migration-preflight-item:hover {
+    background: #ffffff !important;
+    border-color: #cbd5e1 !important;
+    box-shadow: 0 4px 12px -2px rgba(15, 23, 42, 0.06) !important;
+    transform: translateY(-1px) !important;
+}
+
+.migration-preflight-item-left {
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+    flex: 1 !important;
+    min-width: 0 !important;
+}
+
+.migration-preflight-item-icon {
+    width: 44px !important;
+    height: 44px !important;
+    min-width: 44px !important;
+    border-radius: 10px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 19px !important;
+}
+
+.migration-preflight-item-icon.indigo {
+    background: #eef2ff !important;
+    color: #4f46e5 !important;
+    border: 1px solid #e0e7ff !important;
+}
+
+.migration-preflight-item-icon.teal {
+    background: #f0fdfa !important;
+    color: #0d9488 !important;
+    border: 1px solid #ccfbf1 !important;
+}
+
+.migration-preflight-item-icon.purple {
+    background: #faf5ff !important;
+    color: #9333ea !important;
+    border: 1px solid #f3e8ff !important;
+}
+
+.migration-preflight-item-icon.amber {
+    background: #fffbeb !important;
+    color: #d97706 !important;
+    border: 1px solid #fef3c7 !important;
+}
+
+.migration-preflight-item-icon.rose {
+    background: #fff1f2 !important;
+    color: #e11d48 !important;
+    border: 1px solid #ffe4e6 !important;
+}
+
+.migration-preflight-item-text {
+    flex: 1 !important;
+    min-width: 0 !important;
+}
+
+.migration-preflight-item-title-row {
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    margin-bottom: 2px !important;
+}
+
+.migration-preflight-item-title {
+    font-size: 14px !important;
+    font-weight: 700 !important;
+    color: #0f172a !important;
+    margin: 0 !important;
+    letter-spacing: -0.01em !important;
+}
+
+.migration-preflight-item-desc {
+    font-size: 12px !important;
+    color: #64748b !important;
+    margin: 0 !important;
+    line-height: 1.4 !important;
+    display: -webkit-box !important;
+    -webkit-line-clamp: 2 !important;
+    -webkit-box-orient: vertical !important;
+    overflow: hidden !important;
+}
+
+.migration-preflight-item-right {
+    flex-shrink: 0 !important;
+}
+
+.migration-preflight-item-badge {
+    background: #ffffff !important;
+    border: 1px solid #e2e8f0 !important;
+    color: #0f172a !important;
+    font-weight: 700 !important;
+    font-size: 12px !important;
+    padding: 6px 12px !important;
+    border-radius: 8px !important;
+    white-space: nowrap !important;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04) !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 5px !important;
+}
+
+.migration-preflight-item-badge i {
+    color: #10b981 !important;
+    font-size: 11px !important;
+}
+
+/* Pre-flight Strategy Mode Callout */
+.migration-preflight-mode-info {
+    display: flex !important;
+    align-items: flex-start !important;
+    gap: 14px !important;
+    border-radius: 12px !important;
+    padding: 16px 18px !important;
+    margin-top: 6px !important;
+}
+
+.migration-preflight-mode-info.mode-safe {
+    background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%) !important;
+    border: 1px solid #bbf7d0 !important;
+}
+
+.migration-preflight-mode-info.mode-overwrite {
+    background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%) !important;
+    border: 1px solid #fde68a !important;
+}
+
+.migration-preflight-mode-icon {
+    width: 38px !important;
+    height: 38px !important;
+    min-width: 38px !important;
+    border-radius: 10px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 18px !important;
+}
+
+.migration-preflight-mode-icon.safe {
+    background: #dcfce7 !important;
+    color: #15803d !important;
+    border: 1px solid #bbf7d0 !important;
+}
+
+.migration-preflight-mode-icon.overwrite {
+    background: #fef3c7 !important;
+    color: #b45309 !important;
+    border: 1px solid #fde68a !important;
+}
+
+.migration-preflight-mode-text {
+    flex: 1 !important;
+}
+
+.migration-preflight-mode-title {
+    font-size: 13.5px !important;
+    font-weight: 700 !important;
+    margin-bottom: 3px !important;
+}
+
+.mode-safe .migration-preflight-mode-title {
+    color: #15803d !important;
+}
+
+.mode-overwrite .migration-preflight-mode-title {
+    color: #b45309 !important;
+}
+
+.migration-preflight-mode-desc {
+    font-size: 12.5px !important;
+    line-height: 1.45 !important;
+    margin: 0 !important;
+}
+
+.mode-safe .migration-preflight-mode-desc {
+    color: #166534 !important;
+}
+
+.mode-overwrite .migration-preflight-mode-desc {
+    color: #92400e !important;
+}
+
+/* Progress Card - Clean Display without blocking hide() */
 .migration-progress-card {
     background: linear-gradient(135deg, #1e1b4b 0%, #0f172a 100%) !important;
     border-radius: 14px !important;
@@ -963,10 +1376,7 @@
     color: #ffffff !important;
     box-shadow: 0 10px 25px -5px rgba(30, 27, 75, 0.4) !important;
     display: none;
-}
-
-.migration-progress-card.active {
-    display: block !important;
+    margin-bottom: 20px !important;
 }
 
 .migration-progress-header {
@@ -1007,7 +1417,7 @@
 }
 
 .migration-progress-bar-fill {
-    width: 0% !important;
+    width: 0%;
     height: 100% !important;
     background: linear-gradient(90deg, #6366f1 0%, #38bdf8 100%) !important;
     border-radius: 999px !important;
@@ -1020,37 +1430,43 @@
     margin: 0 !important;
 }
 
-/* Section 5: Result Summary Banner */
+/* Result Summary Banner */
 .migration-result-banner {
     background: #ecfdf5 !important;
     border: 1px solid #a7f3d0 !important;
     border-radius: 12px !important;
-    padding: 16px 20px !important;
+    padding: 20px !important;
     display: none;
+    margin-bottom: 20px !important;
 }
 
 .migration-result-banner.active {
     display: flex !important;
     align-items: flex-start !important;
-    gap: 14px !important;
+    gap: 16px !important;
 }
 
 .migration-result-icon {
-    width: 36px !important;
-    height: 36px !important;
+    width: 40px !important;
+    height: 40px !important;
     border-radius: 10px !important;
     background: #10b981 !important;
     color: #ffffff !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
-    font-size: 18px !important;
+    font-size: 20px !important;
     flex-shrink: 0 !important;
 }
 
+.migration-result-content {
+    flex: 1 !important;
+    min-width: 0 !important;
+}
+
 .migration-result-content h4 {
-    margin: 0 0 4px !important;
-    font-size: 14px !important;
+    margin: 0 0 6px !important;
+    font-size: 15px !important;
     font-weight: 700 !important;
     color: #065f46 !important;
 }
@@ -1059,27 +1475,59 @@
     margin: 0 !important;
     font-size: 13px !important;
     color: #047857 !important;
-    line-height: 1.45 !important;
+    line-height: 1.5 !important;
 }
 
 .migration-result-badges {
     display: flex !important;
     flex-wrap: wrap !important;
     gap: 8px !important;
-    margin-top: 10px !important;
+    margin-top: 12px !important;
 }
 
 .migration-result-chip {
     display: inline-flex !important;
     align-items: center !important;
-    gap: 4px !important;
+    gap: 5px !important;
     background: #ffffff !important;
     border: 1px solid #6ee7b7 !important;
     color: #065f46 !important;
     font-size: 12px !important;
     font-weight: 700 !important;
-    padding: 3px 10px !important;
+    padding: 4px 11px !important;
     border-radius: 20px !important;
+}
+
+.migration-result-chip.success {
+    background: #ecfdf5 !important;
+    border-color: #a7f3d0 !important;
+    color: #065f46 !important;
+}
+
+.migration-result-chip.safe {
+    background: #eff6ff !important;
+    border-color: #bfdbfe !important;
+    color: #1e40af !important;
+}
+
+.migration-result-actions {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    align-items: center !important;
+    gap: 10px !important;
+    margin-top: 16px !important;
+    padding-top: 14px !important;
+    border-top: 1px solid #d1fae5 !important;
+}
+
+.migration-result-actions .btn-sm {
+    padding: 7px 14px !important;
+    font-size: 12.5px !important;
+    border-radius: 8px !important;
+    text-decoration: none !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 6px !important;
 }
 
 /* Sidebar Quick Nav Links */
