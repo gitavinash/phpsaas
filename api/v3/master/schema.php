@@ -21,19 +21,42 @@ if (!function_exists('ensureMasterDataTables')) {
             return ['status' => 'error', 'msg' => 'Invalid database connection.'];
         }
 
+        $masterTourPkgTable = "{$tblPrefix}master_tour_package";
+
+        // Fast path: if tables already exist and reseed is not requested, return immediately without any DDL
+        if (!$forceReseed) {
+            $chk = @mysqli_query($connection, "SHOW TABLES LIKE '{$masterTourPkgTable}'");
+            if ($chk && mysqli_num_rows($chk) > 0) {
+                return [
+                    'status' => 'success',
+                    'data'   => ['already_initialized' => true]
+                ];
+            }
+        }
+
         $results = [
             'tables_created' => [],
             'views_created'  => [],
             'seeded_counts'  => []
         ];
 
+        // Safe DDL executor to avoid uncaught mysqli_sql_exception on restricted MySQL users
+        $safeDdl = function(string $sql) use ($connection) {
+            try {
+                return @mysqli_query($connection, $sql);
+            } catch (\Throwable $e) {
+                error_log("Master Schema DDL Warning: " . $e->getMessage());
+                return false;
+            }
+        };
+
         // 1. Master Tour Package
-        $masterTourPkgTable = "{$tblPrefix}master_tour_package";
-        $srcTourPkgTable    = "{$tblPrefix}tour_package";
+        $srcTourPkgTable = "{$tblPrefix}tour_package";
         $chk = @mysqli_query($connection, "SHOW TABLES LIKE '{$masterTourPkgTable}'");
         if (!$chk || mysqli_num_rows($chk) === 0) {
-            mysqli_query($connection, "CREATE TABLE `{$masterTourPkgTable}` LIKE `{$srcTourPkgTable}`");
-            $results['tables_created'][] = $masterTourPkgTable;
+            if ($safeDdl("CREATE TABLE IF NOT EXISTS `{$masterTourPkgTable}` LIKE `{$srcTourPkgTable}`")) {
+                $results['tables_created'][] = $masterTourPkgTable;
+            }
         }
 
         // Master Tour Package Price
@@ -41,8 +64,9 @@ if (!function_exists('ensureMasterDataTables')) {
         $srcTourPriceTable    = "{$tblPrefix}tour_package_price";
         $chk = @mysqli_query($connection, "SHOW TABLES LIKE '{$masterTourPriceTable}'");
         if (!$chk || mysqli_num_rows($chk) === 0) {
-            mysqli_query($connection, "CREATE TABLE `{$masterTourPriceTable}` LIKE `{$srcTourPriceTable}`");
-            $results['tables_created'][] = $masterTourPriceTable;
+            if ($safeDdl("CREATE TABLE IF NOT EXISTS `{$masterTourPriceTable}` LIKE `{$srcTourPriceTable}`")) {
+                $results['tables_created'][] = $masterTourPriceTable;
+            }
         }
 
         // Master Tour Package Hotel
@@ -50,8 +74,9 @@ if (!function_exists('ensureMasterDataTables')) {
         $srcTourHotelTable    = "{$tblPrefix}tour_package_hotel";
         $chk = @mysqli_query($connection, "SHOW TABLES LIKE '{$masterTourHotelTable}'");
         if (!$chk || mysqli_num_rows($chk) === 0) {
-            mysqli_query($connection, "CREATE TABLE `{$masterTourHotelTable}` LIKE `{$srcTourHotelTable}`");
-            $results['tables_created'][] = $masterTourHotelTable;
+            if ($safeDdl("CREATE TABLE IF NOT EXISTS `{$masterTourHotelTable}` LIKE `{$srcTourHotelTable}`")) {
+                $results['tables_created'][] = $masterTourHotelTable;
+            }
         }
 
         // 2. Master Travel Destinations
@@ -59,8 +84,9 @@ if (!function_exists('ensureMasterDataTables')) {
         $srcDestTable    = "{$tblPrefix}locations";
         $chk = @mysqli_query($connection, "SHOW TABLES LIKE '{$masterDestTable}'");
         if (!$chk || mysqli_num_rows($chk) === 0) {
-            mysqli_query($connection, "CREATE TABLE `{$masterDestTable}` LIKE `{$srcDestTable}`");
-            $results['tables_created'][] = $masterDestTable;
+            if ($safeDdl("CREATE TABLE IF NOT EXISTS `{$masterDestTable}` LIKE `{$srcDestTable}`")) {
+                $results['tables_created'][] = $masterDestTable;
+            }
         }
 
         // 3. Master Vehicles
@@ -68,8 +94,9 @@ if (!function_exists('ensureMasterDataTables')) {
         $srcVehiclesTable    = "{$tblPrefix}vehicles";
         $chk = @mysqli_query($connection, "SHOW TABLES LIKE '{$masterVehiclesTable}'");
         if (!$chk || mysqli_num_rows($chk) === 0) {
-            mysqli_query($connection, "CREATE TABLE `{$masterVehiclesTable}` LIKE `{$srcVehiclesTable}`");
-            $results['tables_created'][] = $masterVehiclesTable;
+            if ($safeDdl("CREATE TABLE IF NOT EXISTS `{$masterVehiclesTable}` LIKE `{$srcVehiclesTable}`")) {
+                $results['tables_created'][] = $masterVehiclesTable;
+            }
         }
 
         // 4. Master Hotels (Properties & Rooms)
@@ -77,18 +104,19 @@ if (!function_exists('ensureMasterDataTables')) {
         $srcHotelsTable    = "{$tblPrefix}property";
         $chk = @mysqli_query($connection, "SHOW TABLES LIKE '{$masterHotelsTable}'");
         if (!$chk || mysqli_num_rows($chk) === 0) {
-            mysqli_query($connection, "CREATE TABLE `{$masterHotelsTable}` LIKE `{$srcHotelsTable}`");
-            // Remove unique constraint on site_id if present to allow unified master catalog
-            @mysqli_query($connection, "ALTER TABLE `{$masterHotelsTable}` DROP INDEX `property_site_id_2`");
-            $results['tables_created'][] = $masterHotelsTable;
+            if ($safeDdl("CREATE TABLE IF NOT EXISTS `{$masterHotelsTable}` LIKE `{$srcHotelsTable}`")) {
+                $safeDdl("ALTER TABLE `{$masterHotelsTable}` DROP INDEX `property_site_id_2`");
+                $results['tables_created'][] = $masterHotelsTable;
+            }
         }
 
         $masterRoomsTable = "{$tblPrefix}master_rooms";
         $srcRoomsTable    = "{$tblPrefix}room";
         $chk = @mysqli_query($connection, "SHOW TABLES LIKE '{$masterRoomsTable}'");
         if (!$chk || mysqli_num_rows($chk) === 0) {
-            mysqli_query($connection, "CREATE TABLE `{$masterRoomsTable}` LIKE `{$srcRoomsTable}`");
-            $results['tables_created'][] = $masterRoomsTable;
+            if ($safeDdl("CREATE TABLE IF NOT EXISTS `{$masterRoomsTable}` LIKE `{$srcRoomsTable}`")) {
+                $results['tables_created'][] = $masterRoomsTable;
+            }
         }
 
         // 5. Master Transporters
@@ -96,24 +124,8 @@ if (!function_exists('ensureMasterDataTables')) {
         $srcTransportersTable    = "{$tblPrefix}transporter";
         $chk = @mysqli_query($connection, "SHOW TABLES LIKE '{$masterTransportersTable}'");
         if (!$chk || mysqli_num_rows($chk) === 0) {
-            mysqli_query($connection, "CREATE TABLE `{$masterTransportersTable}` LIKE `{$srcTransportersTable}`");
-            $results['tables_created'][] = $masterTransportersTable;
-        }
-
-        // Create standard aliases / views to support both singular and plural forms
-        $views = [
-            "{$tblPrefix}master_tour_packages"   => "SELECT * FROM `{$masterTourPkgTable}`",
-            "{$tblPrefix}master_destinations"    => "SELECT * FROM `{$masterDestTable}`",
-            "{$tblPrefix}master_locations"       => "SELECT * FROM `{$masterDestTable}`",
-            "{$tblPrefix}master_vehicle"         => "SELECT * FROM `{$masterVehiclesTable}`",
-            "{$tblPrefix}master_hotel"           => "SELECT * FROM `{$masterHotelsTable}`",
-            "{$tblPrefix}master_property"        => "SELECT * FROM `{$masterHotelsTable}`",
-            "{$tblPrefix}master_transporter"     => "SELECT * FROM `{$masterTransportersTable}`"
-        ];
-
-        foreach ($views as $vName => $vSql) {
-            if (mysqli_query($connection, "CREATE OR REPLACE VIEW `{$vName}` AS {$vSql}")) {
-                $results['views_created'][] = $vName;
+            if ($safeDdl("CREATE TABLE IF NOT EXISTS `{$masterTransportersTable}` LIKE `{$srcTransportersTable}`")) {
+                $results['tables_created'][] = $masterTransportersTable;
             }
         }
 
@@ -148,14 +160,23 @@ if (!function_exists('seedMasterData')) {
             'transporters'        => 0
         ];
 
+        // Helper to safely clear tables without throwing 'DROP command denied' when TRUNCATE lacks DROP privilege
+        $clearTable = function(string $table) use ($connection) {
+            try {
+                @mysqli_query($connection, "TRUNCATE TABLE `{$table}`");
+            } catch (\Throwable $e) {
+                @mysqli_query($connection, "DELETE FROM `{$table}`");
+            }
+        };
+
         // 1. Seed Master Tour Packages (Deduplicated, most complete version of each title)
         $mPkgTable = "{$tblPrefix}master_tour_package";
         $cntPkg = mysqli_fetch_assoc(mysqli_query($connection, "SELECT COUNT(*) as c FROM `{$mPkgTable}`"))['c'] ?? 0;
         if ($force || (int)$cntPkg === 0) {
             if ($force) {
-                mysqli_query($connection, "TRUNCATE TABLE `{$mPkgTable}`");
-                mysqli_query($connection, "TRUNCATE TABLE `{$tblPrefix}master_tour_package_price`");
-                mysqli_query($connection, "TRUNCATE TABLE `{$tblPrefix}master_tour_package_hotel`");
+                $clearTable($mPkgTable);
+                $clearTable("{$tblPrefix}master_tour_package_price");
+                $clearTable("{$tblPrefix}master_tour_package_hotel");
             }
 
             // Retrieve best packages ordered by completeness
@@ -215,7 +236,7 @@ if (!function_exists('seedMasterData')) {
         $mDestTable = "{$tblPrefix}master_travel_destinations";
         $cntDest = mysqli_fetch_assoc(mysqli_query($connection, "SELECT COUNT(*) as c FROM `{$mDestTable}`"))['c'] ?? 0;
         if ($force || (int)$cntDest === 0) {
-            if ($force) mysqli_query($connection, "TRUNCATE TABLE `{$mDestTable}`");
+            if ($force) $clearTable($mDestTable);
             mysqli_query($connection, "INSERT INTO `{$mDestTable}` SELECT * FROM `{$tblPrefix}locations`");
             $counts['travel_destinations'] = (int)mysqli_affected_rows($connection);
         } else {
@@ -226,7 +247,7 @@ if (!function_exists('seedMasterData')) {
         $mVehTable = "{$tblPrefix}master_vehicles";
         $cntVeh = mysqli_fetch_assoc(mysqli_query($connection, "SELECT COUNT(*) as c FROM `{$mVehTable}`"))['c'] ?? 0;
         if ($force || (int)$cntVeh === 0) {
-            if ($force) mysqli_query($connection, "TRUNCATE TABLE `{$mVehTable}`");
+            if ($force) $clearTable($mVehTable);
             mysqli_query($connection, "INSERT INTO `{$mVehTable}` SELECT * FROM `{$tblPrefix}vehicles`");
             $counts['vehicles'] = (int)mysqli_affected_rows($connection);
         } else {
@@ -238,8 +259,8 @@ if (!function_exists('seedMasterData')) {
         $cntHotels = mysqli_fetch_assoc(mysqli_query($connection, "SELECT COUNT(*) as c FROM `{$mHotelsTable}`"))['c'] ?? 0;
         if ($force || (int)$cntHotels === 0) {
             if ($force) {
-                mysqli_query($connection, "TRUNCATE TABLE `{$mHotelsTable}`");
-                mysqli_query($connection, "TRUNCATE TABLE `{$tblPrefix}master_rooms`");
+                $clearTable($mHotelsTable);
+                $clearTable("{$tblPrefix}master_rooms");
             }
 
             // Retrieve best hotels ordered by room count and details
@@ -290,7 +311,7 @@ if (!function_exists('seedMasterData')) {
         $mTransTable = "{$tblPrefix}master_transporters";
         $cntTrans = mysqli_fetch_assoc(mysqli_query($connection, "SELECT COUNT(*) as c FROM `{$mTransTable}`"))['c'] ?? 0;
         if ($force || (int)$cntTrans === 0) {
-            if ($force) mysqli_query($connection, "TRUNCATE TABLE `{$mTransTable}`");
+            if ($force) $clearTable($mTransTable);
             mysqli_query($connection, "INSERT INTO `{$mTransTable}` SELECT * FROM `{$tblPrefix}transporter`");
             $counts['transporters'] = (int)mysqli_affected_rows($connection);
         } else {
