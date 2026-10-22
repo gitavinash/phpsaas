@@ -31,6 +31,11 @@ $siteLogo = defined('SITE_LOGO') && !empty(SITE_LOGO) ? SITE_LOGO : '';
 $siteIcon = defined('SITE_ICON') && !empty(SITE_ICON) ? SITE_ICON : '';
 $jqueryJs = defined('JS_LIBRARY') ? JS_LIBRARY . 'jquery.min.js' : 'https://code.jquery.com/jquery-3.7.1.min.js';
 
+// Default Aleya Brand Assets
+$aleyaLogo = '/app/aleya/visitor/aleya/desktop/assets/images/aleya_logo.png';
+$aleyaWhiteLogo = '/app/aleya/visitor/aleya/desktop/assets/images/aleya_white_logo.png';
+$aleyaFavicon = '/app/aleya/visitor/aleya/desktop/assets/images/aleya_favicon.png';
+
 // Determine App Model for tailored left promotional showcase
 $rawApp = defined('SITE_APP') ? strtolower(SITE_APP) : 'aleya';
 if (in_array($rawApp, ['ecommerce', 'ecom', 'store', 'shop'])) {
@@ -40,6 +45,11 @@ if (in_array($rawApp, ['ecommerce', 'ecom', 'store', 'shop'])) {
 } else {
     $appKey = 'aleya';
 }
+
+$isAleya = ($appKey === 'aleya');
+$panelLogo = !empty($siteLogo) ? $siteLogo : $aleyaLogo;
+$pageIcon = !empty($siteIcon) ? $siteIcon : ($isAleya ? $aleyaFavicon : '');
+$brandTitle = !empty($siteName) && $siteName !== 'ISW Platform' ? $siteName : ($isAleya ? 'Aleya' : $siteName);
 
 $appShowcaseData = [
     'aleya' => [
@@ -90,16 +100,16 @@ $activeShowcase = $appShowcaseData[$appKey] ?? $appShowcaseData['aleya'];
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Sign In &bull; <?php echo htmlspecialchars($siteName); ?></title>
-    <?php if (!empty($siteIcon)): ?>
-        <link rel="icon" href="<?php echo htmlspecialchars($siteIcon); ?>">
+    <title>Sign In &bull; <?php echo htmlspecialchars($brandTitle); ?></title>
+    <?php if (!empty($pageIcon)): ?>
+        <link rel="icon" href="<?php echo htmlspecialchars($pageIcon); ?>">
     <?php endif; ?>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/3.0.0/uicons-regular-rounded/css/uicons-regular-rounded.css">
-    <link rel="stylesheet" href="/app/dashboard/v3/default/desktop/assets/css/auth.css">
+    <link rel="stylesheet" href="/app/dashboard/v3/default/desktop/assets/css/auth.css?v=<?php echo file_exists(__DIR__ . '/assets/css/auth.css') ? filemtime(__DIR__ . '/assets/css/auth.css') : '3.3'; ?>">
 
     <?php
     if (defined('GOOGLE_RECAPTCHA_GENERATOR') && file_exists(GOOGLE_RECAPTCHA_GENERATOR)) {
@@ -124,8 +134,11 @@ $activeShowcase = $appShowcaseData[$appKey] ?? $appShowcaseData['aleya'];
             <div class="ambient-grid-overlay"></div>
 
             <div class="showcase-content-wrapper">
-                <!-- Top Brand Badge -->
+                <!-- Top Brand Showcase Header with Aleya Logo -->
                 <div class="showcase-header">
+                    <a href="https://aleya.in" class="showcase-brand-link" title="Aleya - Travel ERP Software">
+                        <img src="<?php echo htmlspecialchars($aleyaWhiteLogo); ?>" alt="Aleya" class="showcase-brand-logo" height="28">
+                    </a>
                     <div class="showcase-brand-pill">
                         <span class="live-status-dot"></span>
                         <span class="showcase-badge-text"><?php echo htmlspecialchars($activeShowcase['badge']); ?></span>
@@ -168,17 +181,6 @@ $activeShowcase = $appShowcaseData[$appKey] ?? $appShowcaseData['aleya'];
         <!-- ======================================================= -->
         <main class="auth-form-panel">
             <div class="auth-form-container">
-                <!-- Brand Monogram / Logo -->
-                <div class="logo">
-                    <?php if (!empty($siteLogo)): ?>
-                        <img src="<?php echo htmlspecialchars($siteLogo); ?>" alt="<?php echo htmlspecialchars($siteName); ?>">
-                    <?php else: ?>
-                        <div class="logo-monogram">
-                            <i class="fi fi-rr-shield-check"></i>
-                            <span><?php echo htmlspecialchars($siteName); ?></span>
-                        </div>
-                    <?php endif; ?>
-                </div>
 
                 <!-- Form Card -->
                 <div class="v3-auth-card">
