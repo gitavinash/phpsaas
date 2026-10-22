@@ -1960,10 +1960,25 @@
         4: "Review & Run"
       };
 
-      $("#sidebarStepText").text("Step " + self.migrationStep + " of 4: " + (stepNames[self.migrationStep] || ""));
+      const stepTips = {
+        1: "Review current counts to compare active workspace items against master catalog records.",
+        2: "Choose which master data collections you want to clone into your workspace.",
+        3: "Safe Sync skips already existing items to keep your workspace customizations safe.",
+        4: "Confirm your selection and launch the automated migration process."
+      };
+
+      const currentStep = self.migrationStep || 1;
+      const pct = Math.round((currentStep / 4) * 100);
+
+      $("#sidebarStepBadge").text("Step " + currentStep + " of 4");
+      $("#sidebarStepPct").text(pct + "%");
+      $("#sidebarStepProgressBar").css("width", pct + "%");
+      $("#sidebarStepText").text(stepNames[currentStep] || "Workspace Status");
+
       const checkedCount = $(".master-dataset-checkbox:checked").length;
       $("#sidebarDatasetsText").text(checkedCount + " of 5 Selected");
-      $("#sidebarModeText").text(self.migrationMode === "overwrite" ? "Full Sync & Overwrite" : "Safe Sync (Skip Existing)");
+      $("#sidebarModeText").text(self.migrationMode === "overwrite" ? "Full Overwrite" : "Safe Sync");
+      $("#sidebarStepTip").text(stepTips[currentStep] || "");
     },
 
     resetMigrationWizard: function () {

@@ -530,28 +530,130 @@ if (!$isAdmin) {
         <div class="v3-form-sidebar-col">
             <div class="preview-card-sticky">
                 <!-- Live Wizard Summary Card -->
-                <div class="v3-card-section v3-checklist-card">
-                    <h4 class="v3-checklist-title">
-                        <i class="fi fi-rr-workflow"></i> Migration Assistant
-                    </h4>
-                    <ul class="v3-checklist-list">
-                        <li><strong>Current Stage:</strong> <span id="sidebarStepText">Step 1 of 4: Workspace Status</span></li>
-                        <li><strong>Datasets:</strong> <span id="sidebarDatasetsText">5 of 5 Selected</span></li>
-                        <li><strong>Strategy:</strong> <span id="sidebarModeText">Safe Sync</span></li>
-                    </ul>
+                <div class="v3-card-section v3-assistant-card">
+                    <div class="v3-assistant-header">
+                        <div class="v3-assistant-title-group">
+                            <span class="v3-assistant-icon-badge">
+                                <i class="fi fi-rr-workflow"></i>
+                            </span>
+                            <div>
+                                <h4 class="v3-assistant-title">Migration Assistant</h4>
+                                <p class="v3-assistant-subtitle">Automated Catalog Sync</p>
+                            </div>
+                        </div>
+                        <span class="v3-assistant-live-pill">
+                            <span class="v3-pulse-dot"></span> Live
+                        </span>
+                    </div>
+
+                    <!-- Mini Visual Step Bar -->
+                    <div class="v3-assistant-stepper">
+                        <div class="v3-assistant-stepper-meta">
+                            <span class="v3-stepper-stage-label" id="sidebarStepBadge">Step 1 of 4</span>
+                            <span class="v3-stepper-pct-label" id="sidebarStepPct">25%</span>
+                        </div>
+                        <div class="v3-assistant-progress-track">
+                            <div class="v3-assistant-progress-bar" id="sidebarStepProgressBar"></div>
+                        </div>
+                    </div>
+
+                    <!-- Parameter Rows -->
+                    <div class="v3-assistant-metrics">
+                        <div class="v3-assistant-metric-item">
+                            <div class="v3-metric-label-group">
+                                <span class="v3-metric-icon"><i class="fi fi-rr-flag"></i></span>
+                                <span class="v3-metric-label">Current Stage</span>
+                            </div>
+                            <span class="v3-assistant-badge stage-badge" id="sidebarStepText">Workspace Status</span>
+                        </div>
+
+                        <div class="v3-assistant-metric-item">
+                            <div class="v3-metric-label-group">
+                                <span class="v3-metric-icon"><i class="fi fi-rr-database"></i></span>
+                                <span class="v3-metric-label">Datasets</span>
+                            </div>
+                            <span class="v3-assistant-badge dataset-badge" id="sidebarDatasetsText">5 of 5 Selected</span>
+                        </div>
+
+                        <div class="v3-assistant-metric-item">
+                            <div class="v3-metric-label-group">
+                                <span class="v3-metric-icon"><i class="fi fi-rr-refresh"></i></span>
+                                <span class="v3-metric-label">Strategy</span>
+                            </div>
+                            <span class="v3-assistant-badge mode-badge" id="sidebarModeText">Safe Sync</span>
+                        </div>
+                    </div>
+
+                    <!-- Dynamic Tip Callout -->
+                    <div class="v3-assistant-tip-box">
+                        <i class="fi fi-rr-info"></i>
+                        <span id="sidebarStepTip">Review current counts to compare active workspace items against master catalog records.</span>
+                    </div>
                 </div>
 
-                <!-- Info Card -->
-                <div class="v3-card-section v3-checklist-card">
-                    <h4 class="v3-checklist-title">
-                        <i class="fi fi-rr-shield-check"></i> Workspace Safety
-                    </h4>
-                    <ul class="v3-checklist-list">
-                        <li><strong>Workspace Scoped:</strong> Master data is safely cloned into your active website without altering master templates.</li>
-                        <li><strong>Conflict-Free:</strong> Duplicate detection ensures previously imported packages or hotels are not overwritten.</li>
-                        <li><strong>Instant Readiness:</strong> Imported items are immediately ready for quotation generation and client itineraries.</li>
-                        <li><strong>Fully Editable:</strong> After copying, you can edit prices, itineraries, and descriptions at any time.</li>
-                    </ul>
+                <!-- Info Card: Workspace Safety Guarantees -->
+                <div class="v3-card-section v3-safety-card">
+                    <div class="v3-safety-header">
+                        <div class="v3-safety-title-group">
+                            <span class="v3-safety-icon-badge">
+                                <i class="fi fi-rr-shield-check"></i>
+                            </span>
+                            <div>
+                                <h4 class="v3-safety-title">Workspace Safety</h4>
+                                <p class="v3-safety-subtitle">Non-destructive guarantees</p>
+                            </div>
+                        </div>
+                        <span class="v3-safety-guaranteed-pill">
+                            <i class="fi fi-rr-badge-check"></i> Verified
+                        </span>
+                    </div>
+
+                    <div class="v3-safety-list">
+                        <div class="v3-safety-item">
+                            <span class="v3-safety-item-icon blue">
+                                <i class="fi fi-rr-box-alt"></i>
+                            </span>
+                            <div class="v3-safety-item-content">
+                                <h6>Workspace Scoped</h6>
+                                <p>Master data is safely cloned into your active website without altering master templates.</p>
+                            </div>
+                        </div>
+
+                        <div class="v3-safety-item">
+                            <span class="v3-safety-item-icon emerald">
+                                <i class="fi fi-rr-check-double"></i>
+                            </span>
+                            <div class="v3-safety-item-content">
+                                <h6>Conflict Protection</h6>
+                                <p>Duplicate detection ensures previously imported packages or hotels are not overwritten.</p>
+                            </div>
+                        </div>
+
+                        <div class="v3-safety-item">
+                            <span class="v3-safety-item-icon amber">
+                                <i class="fi fi-rr-bolt"></i>
+                            </span>
+                            <div class="v3-safety-item-content">
+                                <h6>Instant Readiness</h6>
+                                <p>Imported items are immediately available for quotation generation and client itineraries.</p>
+                            </div>
+                        </div>
+
+                        <div class="v3-safety-item">
+                            <span class="v3-safety-item-icon purple">
+                                <i class="fi fi-rr-edit"></i>
+                            </span>
+                            <div class="v3-safety-item-content">
+                                <h6>Fully Editable</h6>
+                                <p>After copying, you can freely edit prices, itineraries, vehicle rates, and descriptions anytime.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="v3-safety-footer-badge">
+                        <i class="fi fi-rr-lock"></i>
+                        <span>Zero Downtime • Isolated Tenant Execution</span>
+                    </div>
                 </div>
 
                 <!-- Post-Migration Navigation Card -->

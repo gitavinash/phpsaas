@@ -62,7 +62,7 @@ $masterCounts = [
     'transporters'        => 0
 ];
 
-$qPkg = mysqli_query($connection, "SELECT COUNT(*) as c FROM `{$tblPrefix}master_tour_package` WHERE tour_package_status = 1 OR tour_package_status IS NULL");
+$qPkg = mysqli_query($connection, "SELECT COUNT(*) as c FROM `{$tblPrefix}master_tour_package`");
 if ($qPkg && $row = mysqli_fetch_assoc($qPkg)) $masterCounts['tour_packages'] = (int)$row['c'];
 
 $qDest = mysqli_query($connection, "SELECT COUNT(*) as c FROM `{$tblPrefix}master_travel_destinations`");
@@ -71,11 +71,31 @@ if ($qDest && $row = mysqli_fetch_assoc($qDest)) $masterCounts['destinations'] =
 $qVeh = mysqli_query($connection, "SELECT COUNT(*) as c FROM `{$tblPrefix}master_vehicles`");
 if ($qVeh && $row = mysqli_fetch_assoc($qVeh)) $masterCounts['vehicles'] = (int)$row['c'];
 
-$qHotel = mysqli_query($connection, "SELECT COUNT(*) as c FROM `{$tblPrefix}master_hotels` WHERE property_status = 1 OR property_status IS NULL");
+$qHotel = mysqli_query($connection, "SELECT COUNT(*) as c FROM `{$tblPrefix}master_hotels`");
 if ($qHotel && $row = mysqli_fetch_assoc($qHotel)) $masterCounts['hotels'] = (int)$row['c'];
 
 $qTrans = mysqli_query($connection, "SELECT COUNT(*) as c FROM `{$tblPrefix}master_transporters`");
 if ($qTrans && $row = mysqli_fetch_assoc($qTrans)) $masterCounts['transporters'] = (int)$row['c'];
+
+// Self-healing check: If master catalog is empty on production, force seed it and refresh counts
+if ($masterCounts['tour_packages'] === 0 && $masterCounts['destinations'] === 0 && $masterCounts['vehicles'] === 0) {
+    seedMasterData($connection, $tblPrefix, true);
+
+    $qPkg = mysqli_query($connection, "SELECT COUNT(*) as c FROM `{$tblPrefix}master_tour_package`");
+    if ($qPkg && $row = mysqli_fetch_assoc($qPkg)) $masterCounts['tour_packages'] = (int)$row['c'];
+
+    $qDest = mysqli_query($connection, "SELECT COUNT(*) as c FROM `{$tblPrefix}master_travel_destinations`");
+    if ($qDest && $row = mysqli_fetch_assoc($qDest)) $masterCounts['destinations'] = (int)$row['c'];
+
+    $qVeh = mysqli_query($connection, "SELECT COUNT(*) as c FROM `{$tblPrefix}master_vehicles`");
+    if ($qVeh && $row = mysqli_fetch_assoc($qVeh)) $masterCounts['vehicles'] = (int)$row['c'];
+
+    $qHotel = mysqli_query($connection, "SELECT COUNT(*) as c FROM `{$tblPrefix}master_hotels`");
+    if ($qHotel && $row = mysqli_fetch_assoc($qHotel)) $masterCounts['hotels'] = (int)$row['c'];
+
+    $qTrans = mysqli_query($connection, "SELECT COUNT(*) as c FROM `{$tblPrefix}master_transporters`");
+    if ($qTrans && $row = mysqli_fetch_assoc($qTrans)) $masterCounts['transporters'] = (int)$row['c'];
+}
 
 // 2. Get Current Site Data Summary Counts (to display what the user already has)
 $siteCounts = [
