@@ -1363,8 +1363,8 @@
       const $stepper = $(".v3-stepper-container");
 
       if (stepNumber === 1) {
-        $("#step2ItineraryContainer").hide();
-        $("#step1ViewContainer").fadeIn(200);
+        $("#step2ItineraryContainer").addClass("is-hidden").hide();
+        $("#step1ViewContainer").removeClass("is-hidden").fadeIn(200);
 
         $stepper.find(".v3-step-item:eq(0)").removeClass("completed").addClass("active");
         $stepper.find(".v3-step-item:eq(1)").removeClass("active completed").addClass("pending");
@@ -1376,8 +1376,8 @@
           $("html, body").animate({ scrollTop: $scrollTarget.offset().top - 20 }, 300);
         }
       } else if (stepNumber === 2) {
-        $("#step1ViewContainer").hide();
-        $("#step2ItineraryContainer").fadeIn(200);
+        $("#step1ViewContainer").addClass("is-hidden").hide();
+        $("#step2ItineraryContainer").removeClass("is-hidden").fadeIn(200);
 
         $stepper.find(".v3-step-item:eq(0)").removeClass("active pending").addClass("completed");
         $stepper.find(".v3-step-item:eq(1)").removeClass("pending completed").addClass("active");
@@ -1398,9 +1398,9 @@
       }
 
       // Show Loading State, Hide others
-      $("#itineraryPreviewContent").hide();
-      $("#itineraryErrorState").hide();
-      $("#itineraryLoadingState").fadeIn(200);
+      $("#itineraryPreviewContent").addClass("is-hidden").hide();
+      $("#itineraryErrorState").addClass("is-hidden").hide();
+      $("#itineraryLoadingState").removeClass("is-hidden").fadeIn(200);
 
       // Start dynamic loading text animation
       const messages = [
@@ -1433,21 +1433,24 @@
           console.log(res);
 
           if (res && res.status === "success" && res.data) {
-            $("#itineraryLoadingState").hide();
+            $("#itineraryLoadingState").addClass("is-hidden").hide();
+            $("#itineraryErrorState").addClass("is-hidden").hide();
             self.renderItineraryPreview(res.data);
           } else {
-            $("#itineraryLoadingState").hide();
+            $("#itineraryLoadingState").addClass("is-hidden").hide();
+            $("#itineraryPreviewContent").addClass("is-hidden").hide();
             $("#aiErrorMessage").text((res && res.msg) || "Could not generate itinerary. Please retry.");
-            $("#itineraryErrorState").fadeIn(200);
+            $("#itineraryErrorState").removeClass("is-hidden").fadeIn(200);
           }
         },
         error: function (xhr) {
           clearInterval(self.loadingInterval);
           console.error("%c[AI Generator Error Response]:", "color: #ef4444; font-weight: bold;", xhr);
-          $("#itineraryLoadingState").hide();
+          $("#itineraryLoadingState").addClass("is-hidden").hide();
+          $("#itineraryPreviewContent").addClass("is-hidden").hide();
           const errText = (xhr.responseJSON && xhr.responseJSON.msg) || "Network or server timeout occurred while generating AI itinerary.";
           $("#aiErrorMessage").text(errText);
-          $("#itineraryErrorState").fadeIn(200);
+          $("#itineraryErrorState").removeClass("is-hidden").fadeIn(200);
         }
       });
     },
@@ -1456,16 +1459,29 @@
       const self = this;
 
       // 1. Populate Hero Header
-      $("#previewHeroTitle").text(data.packageName);
+      $("#previewHeroTitle").text(data.packageName || "Tour Itinerary");
 
       const routePills = [];
-      routePills.push(`<span class="v3-pill-badge duration"><i class="fi fi-rr-moon"></i> ${data.totalNights} Nights / <i class="fi fi-rr-sun"></i> ${data.totalDays} Days</span>`);
-      routePills.push(`<span class="v3-pill-badge style"><i class="fi fi-rr-compass"></i> ${capitalize(data.travelStyle)}</span>`);
+      const totalNights = data.totalNights || 0;
+      const totalDays = data.totalDays || (totalNights + 1);
+      routePills.push(`<span class="v3-pill-badge duration"><i class="fi fi-rr-moon"></i> ${totalNights} Nights / <i class="fi fi-rr-sun"></i> ${totalDays} Days</span>`);
+      if (data.travelStyle) {
+        routePills.push(`<span class="v3-pill-badge style"><i class="fi fi-rr-compass"></i> ${capitalize(data.travelStyle)}</span>`);
+      }
 
-      const routePath = [data.startingCity, ...(data.destinationCity || []), data.endCity].filter(Boolean).join(" → ");
-      routePills.push(`<span class="v3-pill-badge route"><i class="fi fi-rr-route"></i> ${selfEscape(routePath)}</span>`);
-      routePills.push(`<span class="v3-pill-badge vehicle"><i class="fi fi-rr-car-alt"></i> Outstation: ${selfEscape(data.outstationVehicle)}</span>`);
-      routePills.push(`<span class="v3-pill-badge vehicle"><i class="fi fi-rr-taxi"></i> Sightseeing: ${selfEscape(data.localSightseeingVehicle)}</span>`);
+      const destsArr = Array.isArray(data.destinationCity)
+        ? data.destinationCity
+        : (typeof data.destinationCity === "string" && data.destinationCity ? data.destinationCity.split(",").map(function (s) { return s.trim(); }) : []);
+      const routePath = [data.startingCity, ...destsArr, data.endCity].filter(Boolean).join(" → ");
+      if (routePath) {
+        routePills.push(`<span class="v3-pill-badge route"><i class="fi fi-rr-route"></i> ${selfEscape(routePath)}</span>`);
+      }
+      if (data.outstationVehicle) {
+        routePills.push(`<span class="v3-pill-badge vehicle"><i class="fi fi-rr-car-alt"></i> Outstation: ${selfEscape(data.outstationVehicle)}</span>`);
+      }
+      if (data.localSightseeingVehicle) {
+        routePills.push(`<span class="v3-pill-badge vehicle"><i class="fi fi-rr-taxi"></i> Sightseeing: ${selfEscape(data.localSightseeingVehicle)}</span>`);
+      }
 
       const mealPlan = data.mealPlan || (Array.isArray(data.includedMeals) && data.includedMeals.length > 0 ? data.includedMeals.join(" & ") : (self.currentStepData && self.currentStepData.mealPlan ? self.currentStepData.mealPlan : ""));
       if (mealPlan && mealPlan !== "Room Only") {
@@ -1477,10 +1493,10 @@
       // 2. Populate Hidden Backend Form Fields
       $("#itineraryPackageName").val(data.packageName);
       $("#itineraryTravelStyle").val(data.travelStyle);
-      $("#itineraryDuration").val(data.totalNights);
+      $("#itineraryDuration").val(totalNights);
       $("#itineraryOutstationVehicle").val(data.outstationVehicle);
       $("#itineraryLocalVehicle").val(data.localSightseeingVehicle);
-      $("#itineraryLocation").val(Array.isArray(data.destinationCity) ? data.destinationCity.join(",") : data.destinationCity);
+      $("#itineraryLocation").val(destsArr.join(","));
       $("#itineraryStartCity").val(data.startingCity);
       $("#itineraryEndCity").val(data.endCity);
       $("#itineraryMealPlan").val(mealPlan || "Room Only");
@@ -1529,7 +1545,9 @@
       }
 
       // Show Preview Form
-      $("#itineraryPreviewContent").fadeIn(250);
+      $("#itineraryLoadingState").addClass("is-hidden").hide();
+      $("#itineraryErrorState").addClass("is-hidden").hide();
+      $("#itineraryPreviewContent").removeClass("is-hidden").fadeIn(250);
       self.initCitySelect2($("#itineraryPreviewContent"));
     },
 

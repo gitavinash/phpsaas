@@ -34,6 +34,14 @@ if ($siteId <= 0) {
     }
 }
 
+if ($siteId <= 0 && !empty($_COOKIE['user_data'])) {
+    $userSalt = mysqli_real_escape_string($connection, base64_decode($_COOKIE['user_data']));
+    $userSiteQuery = mysqli_query($connection, "SELECT site_access_site_id FROM " . TABLE_PREFIX . "site_access INNER JOIN " . TABLE_PREFIX . "user ON site_access_user_id=user_id WHERE user_salt_key='{$userSalt}' LIMIT 1");
+    if ($userSiteQuery && $userRow = mysqli_fetch_assoc($userSiteQuery)) {
+        $siteId = (int)$userRow['site_access_site_id'];
+    }
+}
+
 if ($siteId <= 0) {
     http_response_code(400);
     echo json_encode(['status' => 'error', 'msg' => 'Active site identifier could not be resolved.']);
