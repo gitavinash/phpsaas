@@ -1,5 +1,65 @@
 <?php
 
+/**
+ * Resolve verification template path with fallback to system default template
+ *
+ * Checks in order:
+ * 1. Local theme dedicated file (USER_PATH)
+ * 2. System theme file (SYSTEM_PATH)
+ * 3. System visitor theme file (SYSTEM_VISITOR_PATH)
+ * 4. Admin theme file (ADMIN_PATH)
+ * 5. Device-specific system default template (DEFAULT_VISITOR_PATH)
+ * 6. Desktop system default template fallback
+ * 7. Default user template (DEFAULT_USER_PATH)
+ *
+ * @param string|array $fileNames Single template filename or list of fallback filenames
+ * @return string|null Absolute file path if found, or null
+ */
+function resolveVerifyTemplate($fileNames)
+{
+    $names = is_array($fileNames) ? $fileNames : [$fileNames];
+
+    foreach ($names as $fileName) {
+        $candidatePaths = [];
+
+        if (defined('USER_PATH')) {
+            $candidatePaths[] = USER_PATH . $fileName;
+        }
+
+        if (defined('SYSTEM_PATH')) {
+            $candidatePaths[] = SYSTEM_PATH . $fileName;
+        }
+
+        if (defined('SYSTEM_VISITOR_PATH')) {
+            $candidatePaths[] = SYSTEM_VISITOR_PATH . $fileName;
+        }
+
+        if (defined('ADMIN_PATH')) {
+            $candidatePaths[] = ADMIN_PATH . $fileName;
+        }
+
+        if (defined('DEFAULT_VISITOR_PATH')) {
+            $candidatePaths[] = DEFAULT_VISITOR_PATH . $fileName;
+        }
+
+        if (defined('ROOT')) {
+            $candidatePaths[] = ROOT . '/app/system/visitor/default/desktop/' . $fileName;
+        }
+
+        if (defined('DEFAULT_USER_PATH')) {
+            $candidatePaths[] = DEFAULT_USER_PATH . $fileName;
+        }
+
+        foreach ($candidatePaths as $path) {
+            if (!empty($path) && file_exists($path)) {
+                return $path;
+            }
+        }
+    }
+
+    return null;
+}
+
 /** User email verification */
 
 function email($connection, $data)
@@ -8,9 +68,13 @@ function email($connection, $data)
     extract($data);
     global $table_prefix;
 
-    $email = base64_decode($email); // decode email variable
+    $rawEmail = isset($email) ? $email : '';
+    $decodedEmail = base64_decode($rawEmail);
+    $userId = isset($user_id) ? $user_id : '';
 
-    if ($selectUser = mysqli_query($connection, "SELECT user_id, user_status FROM " . TABLE_PREFIX . "user WHERE user_email='{$email}' AND user_salt_key='{$user_id}'")) {
+    $message = 'Something went wrong';
+
+    if (!empty($decodedEmail) && !empty($userId) && ($selectUser = mysqli_query($connection, "SELECT user_id, user_status FROM " . TABLE_PREFIX . "user WHERE user_email='{$decodedEmail}' AND user_salt_key='{$userId}'"))) {
         if (mysqli_num_rows($selectUser) != 0) {
 
             extract(mysqli_fetch_assoc($selectUser));
@@ -20,13 +84,6 @@ function email($connection, $data)
                 if (mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "user SET user_status=1, user_act_time=NOW() WHERE user_id='{$user_id}'")) {
 
                     $message = 'Thank you for verifying your email';
-                    if (file_exists(USER_PATH . 'email.php')) {
-
-                        require_once USER_PATH . 'email.php';
-                    } else {
-
-                        require_once DEFAULT_VISITOR_PATH . 'email.php';
-                    }
                 } else {
 
                     $message = 'Something went wrong while verification';
@@ -37,11 +94,17 @@ function email($connection, $data)
             }
         } else {
 
-            $message = '<h1>Invalid request</h1>';
+            $message = 'Invalid verification request';
         }
     } else {
 
-        $message = 'something went wrong';
+        $message = 'Invalid verification request';
+    }
+
+    $template = resolveVerifyTemplate(['email.php', 'verify-account.php', 'verify.php']);
+    if ($template) {
+        require_once $template;
+        exit();
     }
 
     echo $message;
@@ -55,30 +118,53 @@ function password($connection, $data)
     extract($data);
     global $table_prefix;
 
-    $email = base64_decode($email);
+    $rawEmail = isset($email) ? $email : '';
+    $decodedEmail = base64_decode($rawEmail);
+    $transaction = isset($transaction) ? $transaction : '';
 
-    if ($checkUser = mysqli_query($connection, "SELECT user_id FROM " . TABLE_PREFIX . "user WHERE user_salt_key='{$transaction}' AND user_email='{$email}'")) {
+    // Ensure $_GET has transaction & raw base64 email for the template forms
+    if (!isset($_GET['transaction']) && !empty($transaction)) {
+        $_GET['transaction'] = $transaction;
+    }
+    if (!isset($_GET['email']) && !empty($rawEmail)) {
+        $_GET['email'] = $rawEmail;
+    }
+
+    if (!empty($decodedEmail) && !empty($transaction) && ($checkUser = mysqli_query($connection, "SELECT user_id FROM " . TABLE_PREFIX . "user WHERE user_salt_key='{$transaction}' AND user_email='{$decodedEmail}'"))) {
 
         if (mysqli_num_rows($checkUser) != 0) {
 
-            if (file_exists(USER_PATH . 'update-password.php')) {
-
-                require_once USER_PATH . 'update-password.php';
+            $template = resolveVerifyTemplate('update-password.php');
+            if ($template) {
+                require_once $template;
+                exit();
             } else {
-
-                require_once SYSTEM_PATH . 'update-password.php';
+                echo 'Password update template not found.';
+                exit();
             }
         } else {
 
-            $message = 'Something is wrong';
+            $message = 'Invalid or expired password reset link. Please request a new password reset.';
 
-            if (file_exists(USER_PATH . 'verify.php')) {
-
-                require_once USER_PATH . 'verify.php';
+            $template = resolveVerifyTemplate(['verify.php', 'email.php']);
+            if ($template) {
+                require_once $template;
+                exit();
             } else {
-
-                require_once SYSTEM_PATH . 'verify.php';
+                echo $message;
+                exit();
             }
+        }
+    } else {
+        $message = 'Invalid password reset request.';
+
+        $template = resolveVerifyTemplate(['verify.php', 'email.php']);
+        if ($template) {
+            require_once $template;
+            exit();
+        } else {
+            echo $message;
+            exit();
         }
     }
 }

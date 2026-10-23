@@ -1,7 +1,12 @@
 <?php
 
+$secure = [];
 foreach ($_GET as $key => $value) {
-    $secure[$key] = mysqli_real_escape_string($connection, $value);
+    if (is_string($value)) {
+        $secure[$key] = mysqli_real_escape_string($connection, $value);
+    } else {
+        $secure[$key] = $value;
+    }
 }
 
 $urlStructure = explode('/', rtrim(ltrim(BASE_URL, '/'), '/'));
