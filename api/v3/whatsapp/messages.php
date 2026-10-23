@@ -351,9 +351,32 @@ if ($method === 'GET') {
             $rawRows[] = $row;
         }
 
-        $rowCount = count($rawRows);
+        $seenWaIds = [];
+        $seenRecentMsgs = [];
         for ($i = 0; $i < $rowCount; $i++) {
             $row = $rawRows[$i];
+            $waIdVal = trim($row['message_wa_id'] ?? '');
+            $textVal = trim($row['message_text'] ?? '');
+            $dirVal = $row['message_direction'] ?? '';
+            $tsVal = !empty($row['message_created_at']) ? strtotime($row['message_created_at']) : 0;
+
+            // 1. Filter exact wa_id duplicates
+            if (!empty($waIdVal)) {
+                if (isset($seenWaIds[$waIdVal])) {
+                    continue;
+                }
+                $seenWaIds[$waIdVal] = true;
+            }
+
+            // 2. Filter near-instant identical message duplicates in same thread (within 10 seconds)
+            $dupKey = $dirVal . '_' . $textVal;
+            if ($textVal !== '' && isset($seenRecentMsgs[$dupKey]) && abs($tsVal - $seenRecentMsgs[$dupKey]) <= 10) {
+                continue;
+            }
+            if ($textVal !== '') {
+                $seenRecentMsgs[$dupKey] = $tsVal;
+            }
+
             $timeDisplay = '';
             $dateDisplay = '';
             $dateLabel = '';

@@ -1157,7 +1157,14 @@
 
           let html = "";
           let lastDateLabel = "";
+          const seenMsgKeys = new Set();
           res.messages.forEach(function (msg) {
+            const mKey = (msg.wa_id && !msg.wa_id.startsWith("crm_out_"))
+              ? msg.wa_id
+              : (msg.id ? "id_" + msg.id : (msg.direction + "_" + (msg.text || "") + "_" + (msg.created_at || "")));
+            if (seenMsgKeys.has(mKey)) return;
+            seenMsgKeys.add(mKey);
+
             const dateLabel = msg.date_label || msg.date || "";
             if (dateLabel && dateLabel !== lastDateLabel) {
               lastDateLabel = dateLabel;
@@ -1699,14 +1706,14 @@
           self.loadMessages(self.activeChatId, true);
           self.loadThreads();
         } else {
-          alert(res.msg || "Failed to send WhatsApp message.");
+          self.showAlert(res.msg || "Failed to send WhatsApp message.", "Message Error", "error");
         }
       };
 
       ajaxOptions.error = function () {
         self.isSending = false;
         $btn.prop("disabled", false).find("i").attr("class", "fi fi-rr-paper-plane");
-        alert("Network error sending WhatsApp message.");
+        self.showAlert("Network error sending WhatsApp message.", "Connection Error", "error");
       };
 
       $.ajax(ajaxOptions);
@@ -1719,7 +1726,7 @@
       const message = $("#newChatMessage").val().trim();
 
       if (!phone || !message) {
-        alert("Please enter customer phone and message.");
+        self.showAlert("Please enter customer phone and initial message.", "Required Fields", "warning");
         return;
       }
 
@@ -1727,7 +1734,7 @@
       if (digits.startsWith("0")) digits = digits.replace(/^0+/, "");
       if (digits.length === 10) digits = "91" + digits;
       if (digits.length < 8) {
-        alert("Please enter a valid mobile number (at least 8 digits).");
+        self.showAlert("Please enter a valid mobile number (at least 8 digits).", "Invalid Phone Number", "warning");
         return;
       }
       phone = "+" + digits;
@@ -1766,24 +1773,24 @@
                   self.loadThreads();
                   self.selectChat(chatId, targetPhone);
                 } else {
-                  alert(sendRes.msg || "Failed to send WhatsApp message.");
+                  self.showAlert(sendRes.msg || "Failed to send WhatsApp message.", "Message Error", "error");
                 }
               },
               error: function (xhr) {
                 $btn.prop("disabled", false).html('<i class="fi fi-rr-paper-plane"></i> Send &amp; Open Chat');
                 const err = xhr.responseJSON ? (xhr.responseJSON.msg || xhr.responseJSON.message) : "Failed to dispatch message to WhatsApp.";
-                alert(err);
+                self.showAlert(err, "Dispatch Failed", "error");
               }
             });
           } else {
             $btn.prop("disabled", false).html('<i class="fi fi-rr-paper-plane"></i> Send &amp; Open Chat');
-            alert(chatRes.msg || "Failed to initiate chat.");
+            self.showAlert(chatRes.msg || "Failed to initiate chat.", "Conversation Error", "error");
           }
         },
         error: function (xhr) {
           $btn.prop("disabled", false).html('<i class="fi fi-rr-paper-plane"></i> Send &amp; Open Chat');
           const err = xhr.responseJSON ? (xhr.responseJSON.msg || xhr.responseJSON.message) : "Network error initiating chat.";
-          alert(err);
+          self.showAlert(err, "Network Error", "error");
         }
       });
     },
@@ -1848,6 +1855,26 @@
         return (parts[0][0] + parts[1][0]).toUpperCase();
       }
       return clean.substring(0, 2).toUpperCase();
+    },
+
+    showAlert: function (message, title, icon) {
+      title = title || "WhatsApp CRM";
+      icon = icon || "info";
+      const swalInstance = (typeof Swal !== "undefined" && typeof Swal.fire === "function")
+        ? Swal
+        : ((typeof window.Swal !== "undefined" && typeof window.Swal.fire === "function") ? window.Swal : null);
+      if (swalInstance) {
+        swalInstance.fire({
+          title: title,
+          text: message,
+          icon: icon,
+          confirmButtonColor: "#008060"
+        });
+      } else if (typeof swal === "function") {
+        swal(title, message, icon);
+      } else {
+        alert((title ? title + "\n" : "") + message);
+      }
     },
 
     escapeHtml: function (str) {
@@ -2034,11 +2061,11 @@
       const self = this;
       if (!file) return;
       if (!file.type || !file.type.startsWith("image/")) {
-        alert("Please select an image file (JPG, PNG, GIF, WebP).");
+        self.showAlert("Please select an image file (JPG, PNG, GIF, WebP).", "Invalid File", "warning");
         return;
       }
       if (file.size > 20 * 1024 * 1024) {
-        alert("Image size exceeds maximum limit of 20MB.");
+        self.showAlert("Image size exceeds maximum limit of 20MB.", "File Too Large", "warning");
         return;
       }
 
@@ -2194,7 +2221,7 @@
       const $btn = opts.$btn || null;
 
       if (!phone) {
-        alert("No WhatsApp phone number available for this contact.");
+        self.showAlert("No WhatsApp phone number available for this contact.", "Missing Phone", "info");
         return;
       }
 

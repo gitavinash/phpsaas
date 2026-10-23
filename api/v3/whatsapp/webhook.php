@@ -509,6 +509,46 @@ if (!empty($waId)) {
     }
 }
 
+// Deduplicate outgoing message dispatched from CRM:
+// If an outgoing message was inserted recently to the same contact with identical text or crm_out_% wa_id, link the real WhatsApp ID and prevent duplicate insert!
+$escPhoneSearch = mysqli_real_escape_string($connection, $cleanPhone);
+$escTextSearch = mysqli_real_escape_string($connection, $text);
+
+if ($direction === 'outgoing') {
+    $outMatchQ = mysqli_query($connection, "SELECT message_id, message_wa_id FROM " . TABLE_PREFIX . "whatsapp_message 
+        WHERE message_site_id = {$siteId} 
+          AND message_direction = 'outgoing'
+          AND (message_receiver = '{$escPhoneSearch}' OR message_receiver LIKE '%{$last10}')
+          AND (message_wa_id = '{$escWaId}' 
+               OR message_wa_id LIKE 'crm_out_%' 
+               OR (message_text = '{$escTextSearch}' AND message_created_at >= DATE_SUB(NOW(), INTERVAL 5 MINUTE))
+              )
+        ORDER BY message_id DESC LIMIT 1");
+    if ($outMatchQ && mysqli_num_rows($outMatchQ) > 0) {
+        $outRow = mysqli_fetch_assoc($outMatchQ);
+        if ($outRow['message_wa_id'] !== $waId && !empty($waId)) {
+            mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "whatsapp_message SET message_wa_id = '{$escWaId}', message_status = 'delivered' WHERE message_id = {$outRow['message_id']}");
+        }
+        echo json_encode(['status' => 'success', 'msg' => 'Outgoing message matched and updated (duplicate prevented).', 'message_id' => $outRow['message_id']]);
+        exit;
+    }
+}
+
+// Deduplicate incoming message received within last 30 seconds with identical text
+if ($direction === 'incoming' && !empty($text)) {
+    $inMatchQ = mysqli_query($connection, "SELECT message_id FROM " . TABLE_PREFIX . "whatsapp_message 
+        WHERE message_site_id = {$siteId} 
+          AND message_direction = 'incoming'
+          AND (message_sender = '{$escPhoneSearch}' OR message_sender LIKE '%{$last10}')
+          AND message_text = '{$escTextSearch}' 
+          AND message_created_at >= DATE_SUB(NOW(), INTERVAL 30 SECOND)
+        ORDER BY message_id DESC LIMIT 1");
+    if ($inMatchQ && mysqli_num_rows($inMatchQ) > 0) {
+        echo json_encode(['status' => 'success', 'msg' => 'Incoming message already recorded (duplicate prevented).']);
+        exit;
+    }
+}
+
 // Resolve active connected device phone for this session/site
 $connectedDevicePhone = '';
 

@@ -2663,6 +2663,7 @@ app.post("/send-message", async (req, res) => {
     } catch (e) {}
 
     let sendContent;
+    let docFollowUp = "";
     if (type === "text") {
       sendContent = { text: message || "" };
     } else if (media || req.body?.disk_path || req.body?.file_path) {
@@ -2711,7 +2712,6 @@ app.post("/send-message", async (req, res) => {
       const docFileName = req.body?.file_name || req.body?.fileName || req.query?.file_name || "Quotation.pdf";
 
       let docCaption = message || "";
-      let docFollowUp = "";
       if (isDoc && docCaption.length > 950) {
         docFollowUp = docCaption;
         docCaption = docCaption.substring(0, 900) + "...";
