@@ -171,15 +171,30 @@
       });
 
       // Step 2 Navigation: Back to Route Setup
-      $(document).on("click", "#btnTopBackToStep1, #btnBottomBackToStep1, #btnErrorBackToStep1", function (e) {
+      $(document).on("click", "#btnTopBackToStep1, #btnBottomBackToStep1, #btnErrorBackToStep1, #btnBlankBackToStep1, #btnSlowBackToForm, #btnBackToStep1", function (e) {
         e.preventDefault();
         self.goToStep(1);
       });
 
-      // Step 2 Action: Regenerate AI Itinerary
-      $(document).on("click", "#btnRegenerateItinerary, #btnErrorRetry", function (e) {
+      // Step 2 Action: Retry / Regenerate AI Itinerary
+      $(document).on("click", "#btnRegenerateItinerary, #btnErrorRetry, #btnBlankRetry, #btnSlowRetry, #btnPreviewHeroRegenerate", function (e) {
         e.preventDefault();
         self.generateAIItinerary();
+      });
+
+      // Stepper click handler
+      $(document).on("click", ".v3-stepper-container .v3-step-item", function (e) {
+        e.preventDefault();
+        const stepIdx = $(this).index();
+        if (stepIdx === 0) {
+          self.goToStep(1);
+        } else if (stepIdx === 1) {
+          if (self.hasGeneratedPreview) {
+            self.goToStep(2);
+          } else {
+            self.validateAndProceedStep1();
+          }
+        }
       });
 
       // Auto-suggest package title button
@@ -1350,16 +1365,90 @@
           duration: durations,
           meals: includedMeals,
           mealPlan: mealPlanText,
-          days: daySchedule
         })
       };
+
+      try {
+        sessionStorage.setItem("v3_pkg_domestic_step1_data", JSON.stringify(self.currentStepData));
+      } catch (e) {}
 
       // Switch to Step 2 & Trigger In-Page AI generation
       self.goToStep(2);
       self.generateAIItinerary();
     },
 
+    collectStep1Data: function () {
+      const self = this;
+      const $root = $("#packageDomesticAddApp, #packageInternationalAddApp, .package-domestic-add-wrapper, .package-international-add-wrapper").first();
+      const pkgType = $("#packageType").val() || ($root.hasClass("package-international-add-wrapper") || $("#packageInternationalAddApp").length ? "international" : "domestic");
+      const packageName = ($("#packageName").val() || "").trim();
+      const travelStyle = $("#travelStyle").val() || "cultural";
+      const startingCity = ($("#startingCity").val() || "").trim();
+      const isSameAsPickup = $("#sameAsPickupToggle").is(":checked");
+      const endCity = isSameAsPickup ? startingCity : ($("#endCity").val() || "").trim();
+      const outstationVehicle = ($("#outstationVehicle").val() || "").trim() || "Volvo";
+      const localSighseeignVehicle = ($("#localSighseeignVehicle").val() || "").trim() || "Maruti Alto";
+      const countryVal = ($("#destinationCountry").val() || (pkgType === "international" ? "United Arab Emirates" : "India")).trim();
+
+      const destinations = [];
+      const durations = [];
+      $(".v3-destination-row").each(function () {
+        const c = ($(this).find(".v3-dest-city-select").val() || "").trim();
+        const d = parseInt($(this).find(".v3-duration-field").val(), 10) || 1;
+        if (c) {
+          destinations.push(c);
+          durations.push(d);
+        }
+      });
+
+      const daySchedule = [];
+      $(".v3-day-plan-card").each(function (idx) {
+        const dayNum = idx + 1;
+        const city = $(this).find(".v3-day-plan-city-select").val() || destinations[0] || startingCity;
+        const note = $(this).find(".v3-day-note-input").val() || "";
+        daySchedule.push({ day: dayNum, city: city, note: note });
+      });
+
+      const includedMeals = [];
+      $(".v3-meal-checkbox:checked").each(function () {
+        includedMeals.push($(this).val());
+      });
+      const mealPlanText = $("#mealPlanType").val() || "ep";
+
+      return {
+        packageName: packageName,
+        packageType: pkgType,
+        country: countryVal,
+        startingCity: startingCity,
+        endCity: endCity,
+        travelStyle: travelStyle,
+        outstationVehicle: outstationVehicle,
+        localSighseeignVehicle: localSighseeignVehicle,
+        destination: destinations,
+        duration: durations,
+        meals: includedMeals,
+        mealPlan: mealPlanText,
+        days: daySchedule,
+        _json_payload: JSON.stringify({
+          packageName: packageName,
+          packageType: pkgType,
+          country: countryVal,
+          startingCity: startingCity,
+          endCity: endCity,
+          travelStyle: travelStyle,
+          outstationVehicle: outstationVehicle,
+          localSighseeignVehicle: localSighseeignVehicle,
+          destination: destinations,
+          duration: durations,
+          meals: includedMeals,
+          mealPlan: mealPlanText,
+          days: daySchedule
+        })
+      };
+    },
+
     goToStep: function (stepNumber) {
+      const self = this;
       const $stepper = $(".v3-stepper-container");
 
       if (stepNumber === 1) {
@@ -1377,11 +1466,21 @@
         }
       } else if (stepNumber === 2) {
         $("#step1ViewContainer").addClass("is-hidden").hide();
-        $("#step2ItineraryContainer").removeClass("is-hidden").fadeIn(200);
+        $("#step2ItineraryContainer").removeClass("is-hidden").show();
 
         $stepper.find(".v3-step-item:eq(0)").removeClass("active pending").addClass("completed");
         $stepper.find(".v3-step-item:eq(1)").removeClass("pending completed").addClass("active");
         $stepper.find(".v3-step-item:eq(2)").removeClass("active completed").addClass("pending");
+
+        // Watchdog: If preview is not visible and loading is not visible, show blank fallback
+        setTimeout(function () {
+          const isPreviewVisible = $("#itineraryPreviewContent").is(":visible") && !$("#itineraryPreviewContent").hasClass("is-hidden");
+          const isLoadingVisible = $("#itineraryLoadingState").is(":visible") && !$("#itineraryLoadingState").hasClass("is-hidden");
+          const isErrorVisible = $("#itineraryErrorState").is(":visible") && !$("#itineraryErrorState").hasClass("is-hidden");
+          if (!isPreviewVisible && !isLoadingVisible && !isErrorVisible) {
+            $("#itineraryBlankState").removeClass("is-hidden").fadeIn(200);
+          }
+        }, 300);
 
         const $scrollTarget = $("#packageDomesticAddApp, #packageInternationalAddApp").first();
         if ($scrollTarget.length) {
@@ -1393,14 +1492,41 @@
     generateAIItinerary: function () {
       const self = this;
       if (!self.currentStepData) {
-        self.goToStep(1);
+        try {
+          const cached = sessionStorage.getItem("v3_pkg_domestic_step1_data");
+          if (cached) {
+            self.currentStepData = JSON.parse(cached);
+          }
+        } catch (e) {}
+      }
+
+      if (!self.currentStepData) {
+        self.currentStepData = self.collectStep1Data();
+      }
+
+      if (!self.currentStepData || !self.currentStepData.packageName || !self.currentStepData.startingCity) {
+        $("#itineraryLoadingState").addClass("is-hidden").hide();
+        $("#itineraryPreviewContent").addClass("is-hidden").hide();
+        $("#itineraryErrorState").addClass("is-hidden").hide();
+        $("#aiBlankMessage").text("Incomplete route details. Please click Edit Route Form to complete the required fields, then generate.");
+        $("#itineraryBlankState").removeClass("is-hidden").fadeIn(200);
         return;
       }
 
       // Show Loading State, Hide others
       $("#itineraryPreviewContent").addClass("is-hidden").hide();
       $("#itineraryErrorState").addClass("is-hidden").hide();
+      $("#itineraryBlankState").addClass("is-hidden").hide();
+      $("#aiLoadingSlowHint").addClass("is-hidden").hide();
       $("#itineraryLoadingState").removeClass("is-hidden").fadeIn(200);
+
+      // Start slow hint timer (after 12s, show polite retry/back banner)
+      if (self.slowTimer) clearTimeout(self.slowTimer);
+      self.slowTimer = setTimeout(function () {
+        if ($("#itineraryLoadingState").is(":visible") && !$("#itineraryLoadingState").hasClass("is-hidden")) {
+          $("#aiLoadingSlowHint").removeClass("is-hidden").fadeIn(200);
+        }
+      }, 12000);
 
       // Start dynamic loading text animation
       const messages = [
@@ -1429,26 +1555,32 @@
         timeout: 90000,
         success: function (res) {
           clearInterval(self.loadingInterval);
+          if (self.slowTimer) clearTimeout(self.slowTimer);
           console.log("%c=== [V3 Domestic Tour Package AI Generator Response] ===", "color: #047857; font-size: 13px; font-weight: bold;");
           console.log(res);
 
           if (res && res.status === "success" && res.data) {
+            self.hasGeneratedPreview = true;
             $("#itineraryLoadingState").addClass("is-hidden").hide();
             $("#itineraryErrorState").addClass("is-hidden").hide();
+            $("#itineraryBlankState").addClass("is-hidden").hide();
             self.renderItineraryPreview(res.data);
           } else {
             $("#itineraryLoadingState").addClass("is-hidden").hide();
             $("#itineraryPreviewContent").addClass("is-hidden").hide();
-            $("#aiErrorMessage").text((res && res.msg) || "Could not generate itinerary. Please retry.");
+            $("#itineraryBlankState").addClass("is-hidden").hide();
+            $("#aiErrorMessage").text((res && res.msg) || "Could not generate itinerary. Please click Retry Generation to try again without re-entering form data.");
             $("#itineraryErrorState").removeClass("is-hidden").fadeIn(200);
           }
         },
         error: function (xhr) {
           clearInterval(self.loadingInterval);
+          if (self.slowTimer) clearTimeout(self.slowTimer);
           console.error("%c[AI Generator Error Response]:", "color: #ef4444; font-weight: bold;", xhr);
           $("#itineraryLoadingState").addClass("is-hidden").hide();
           $("#itineraryPreviewContent").addClass("is-hidden").hide();
-          const errText = (xhr.responseJSON && xhr.responseJSON.msg) || "Network or server timeout occurred while generating AI itinerary.";
+          $("#itineraryBlankState").addClass("is-hidden").hide();
+          const errText = (xhr.responseJSON && xhr.responseJSON.msg) || "Network or server timeout occurred while generating AI itinerary. Click Retry Generation to retry without re-filling the form.";
           $("#aiErrorMessage").text(errText);
           $("#itineraryErrorState").removeClass("is-hidden").fadeIn(200);
         }

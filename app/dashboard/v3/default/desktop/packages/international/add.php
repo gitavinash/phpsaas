@@ -289,9 +289,12 @@ if ($cRes) {
                                     <div class="v3-form-group">
                                         <div class="v3-form-label-row">
                                             <label class="v3-form-label" for="endCity">Departure / Return Hub <sup class="required">*</sup></label>
-                                            <label class="v3-same-pickup-toggle" title="Auto-match return hub with arrival hub">
+                                            <label class="v3-same-pickup-toggle" for="sameAsPickupToggle" title="Auto-match return hub with arrival hub">
                                                 <input type="checkbox" id="sameAsPickupToggle" checked />
-                                                <span>Same as arrival</span>
+                                                <span class="v3-pickup-track">
+                                                    <span class="v3-pickup-thumb"></span>
+                                                </span>
+                                                <span class="v3-pickup-label">Same as arrival</span>
                                             </label>
                                         </div>
                                         <div class="v3-input-icon-wrap" id="endCityWrap">
@@ -547,6 +550,17 @@ if ($cRes) {
                     <span class="step-tag active"><i class="fi fi-rr-loading spin"></i> AI Day Planner</span>
                     <span class="step-tag"><i class="fi fi-rr-circle"></i> Inclusions & Stays</span>
                 </div>
+                <div class="v3-ai-loading-slow-hint is-hidden" id="aiLoadingSlowHint">
+                    <p><i class="fi fi-rr-hourglass-end"></i> Generating international itinerary is taking a little longer than expected...</p>
+                    <div class="v3-ai-loading-slow-actions">
+                        <button type="button" class="btn-v3-outline-sm" id="btnSlowBackToForm">
+                            <i class="fi fi-rr-arrow-left"></i> Edit Route Form
+                        </button>
+                        <button type="button" class="btn-v3-primary-sm" id="btnSlowRetry">
+                            <i class="fi fi-rr-refresh"></i> Retry Generation
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -569,6 +583,25 @@ if ($cRes) {
             </div>
         </div>
 
+        <!-- Blank / Fallback State Indicator -->
+        <div class="v3-ai-blank-container is-hidden" id="itineraryBlankState">
+            <div class="v3-ai-blank-card">
+                <div class="v3-ai-blank-icon">
+                    <i class="fi fi-rr-sparkles"></i>
+                </div>
+                <h3>Ready to Generate International AI Itinerary</h3>
+                <p id="aiBlankMessage">No itinerary preview is currently available. Click "Retry Generation" to generate your custom itinerary with your saved route details without re-filling the form.</p>
+                <div class="v3-ai-blank-actions">
+                    <button type="button" class="btn-v3-outline" id="btnBlankBackToStep1">
+                        <i class="fi fi-rr-arrow-left"></i> Edit Route Form
+                    </button>
+                    <button type="button" class="btn-v3-primary" id="btnBlankRetry">
+                        <i class="fi fi-rr-refresh"></i> Retry Generation
+                    </button>
+                </div>
+            </div>
+        </div>
+
         <!-- Itinerary Preview & Publish Form -->
         <div class="v3-itinerary-preview-wrap is-hidden" id="itineraryPreviewContent">
             <!-- Hero Summary Bar -->
@@ -581,6 +614,9 @@ if ($cRes) {
                     </div>
                 </div>
                 <div class="v3-preview-hero-right">
+                    <button type="button" class="btn-v3-outline-sm" id="btnPreviewHeroRegenerate" title="Regenerate Itinerary with AI">
+                        <i class="fi fi-rr-refresh"></i> Regenerate AI
+                    </button>
                     <button type="button" class="btn-v3-outline-sm" id="btnTopBackToStep1">
                         <i class="fi fi-rr-arrow-left"></i> Edit Route
                     </button>
