@@ -7,6 +7,21 @@ if (isset($_COOKIE['isLogin'])) {
     exit();
 }
 
+// Check SITE_AUTH_METHOD constant value (defaults to 'OTP' if not defined or empty)
+if (!defined('SITE_AUTH_METHOD')) {
+    define('SITE_AUTH_METHOD', 'OTP');
+}
+$siteAuthMethod = defined('SITE_AUTH_METHOD') && !empty(SITE_AUTH_METHOD) ? strtoupper(trim((string)SITE_AUTH_METHOD)) : 'OTP';
+
+// In development or testing, query param can override if provided
+if (isset($_GET['auth_method']) && in_array(strtoupper(trim($_GET['auth_method'])), ['PASSWORD', 'OTP'])) {
+    $siteAuthMethod = strtoupper(trim($_GET['auth_method']));
+}
+
+if ($siteAuthMethod !== 'PASSWORD') {
+    $siteAuthMethod = 'OTP';
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -36,51 +51,74 @@ if (isset($_COOKIE['isLogin'])) {
         </div>
 
         <h1 class="auth-form-title">Sign In</h1>
-        <p class="auth-form-subtitle">Enter your email to receive a secure one-time verification code.</p>
+        <p class="auth-form-subtitle"><?php echo ($siteAuthMethod === 'PASSWORD') ? 'Enter your email and password to log in.' : 'Enter your email to receive a secure one-time verification code.'; ?></p>
 
         <form id="login" autocomplete="off">
-            <input type="hidden" name="reg_type" value="subscriber">
+            <?php if ($siteAuthMethod === 'PASSWORD'): ?>
+                <div id="passwordLoginSection" class="auth-form-section">
+                    <div class="auth-input-group">
+                        <label for="email">Email Address</label>
+                        <input type="text" id="email" name="email" placeholder="name@company.com" required />
+                    </div>
+                    <div class="auth-input-group">
+                        <label for="pass">Password</label>
+                        <input type="password" id="pass" name="pass" placeholder="Password" required />
+                    </div>
+                    <div style="text-align: right; margin-top: -6px; margin-bottom: 16px;">
+                        <a href="/forgot-password/" style="font-size: 0.85rem; color: #666666; text-decoration: none;">Forgot password?</a>
+                    </div>
+                    <input type="hidden" name="type" value="auth">
+                    <input type="hidden" name="action" value="login">
+                    <input type="hidden" name="redirect_url" value="<?php echo htmlspecialchars($redirect_url); ?>">
+                    <input type="hidden" class="recaptcha_token" name="recaptcha_token">
+                    <button type="submit" id="loginBtn" class="auth-btn-primary">
+                        Sign In &rarr;
+                    </button>
+                </div>
+            <?php else: ?>
+                <input type="hidden" name="reg_type" value="subscriber">
 
-            <!-- Step 1: Email Input -->
-            <div id="enterEmail" class="auth-form-section">
-                <div class="auth-input-group">
-                    <label for="email">Email Address</label>
-                    <input type="email" id="email" name="email" placeholder="name@company.com" required />
+                <!-- Step 1: Email Input -->
+                <div id="enterEmail" class="auth-form-section">
+                    <div class="auth-input-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" name="email" placeholder="name@company.com" required />
+                    </div>
+                    <input type="hidden" class="recaptcha_token" name="recaptcha_token">
+                    <button type="submit" id="emailLoginContinueBtn" class="auth-btn-primary">
+                        Continue &rarr;
+                    </button>
                 </div>
-                <input type="hidden" class="recaptcha_token" name="recaptcha_token">
-                <button type="submit" id="emailLoginContinueBtn" class="auth-btn-primary">
-                    Continue &rarr;
-                </button>
-            </div>
 
-            <!-- Step 2: OTP Verification -->
-            <div id="verifyEmailOTP" class="auth-form-section" style="display: none;">
-                <button type="button" class="auth-back-btn" id="backToEmailBtn" onclick="goBackToEmail(event)">
-                    &larr; Back
-                </button>
-                <div class="auth-input-group">
-                    <label for="otpEmailValue">Enter 6-Digit OTP</label>
-                    <input type="text" inputmode="numeric" pattern="^\d{6}$" maxlength="6" name="otp" id="otpEmailValue" placeholder="123456" disabled autocomplete="one-time-code" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 6);" />
+                <!-- Step 2: OTP Verification -->
+                <div id="verifyEmailOTP" class="auth-form-section" style="display: none;">
+                    <button type="button" class="auth-back-btn" id="backToEmailBtn" onclick="goBackToEmail(event)">
+                        &larr; Back
+                    </button>
+                    <div class="auth-input-group">
+                        <label for="otpEmailValue">Enter 6-Digit OTP</label>
+                        <input type="text" inputmode="numeric" pattern="^\d{6}$" maxlength="6" name="otp" id="otpEmailValue" placeholder="123456" disabled autocomplete="one-time-code" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 6);" />
+                    </div>
+                    <input type="hidden" class="recaptcha_token" name="recaptcha_token">
+                    <div class="otp-resend-wrapper">
+                        <a href="#" id="resendEmailOTPBtn" class="disabled resend-otp-btn">Resend OTP in 30s</a>
+                    </div>
+                    <button type="button" id="verifyEmailOTPBtn" class="auth-btn-primary">Verify OTP &rarr;</button>
                 </div>
-                <input type="hidden" class="recaptcha_token" name="recaptcha_token">
-                <div class="otp-resend-wrapper">
-                    <a href="#" id="resendEmailOTPBtn" class="disabled resend-otp-btn">Resend OTP in 30s</a>
-                </div>
-                <button type="button" id="verifyEmailOTPBtn" class="auth-btn-primary">Verify OTP &rarr;</button>
-            </div>
 
-            <!-- Step 3: User Registration (New Users Only) -->
-            <div id="userRegistration" class="auth-form-section" style="display: none;">
-                <button type="button" class="auth-back-btn" id="backToOTPBtn" onclick="goBackToOTP(event)">
-                    &larr; Back
-                </button>
-                <div class="auth-input-group">
-                    <label for="userName">Full Name</label>
-                    <input type="text" name="name" id="userName" placeholder="Your Name" autocomplete="name" />
+                <!-- Step 3: User Registration (New Users Only) -->
+                <div id="userRegistration" class="auth-form-section" style="display: none;">
+                    <button type="button" class="auth-back-btn" id="backToOTPBtn" onclick="goBackToOTP(event)">
+                        &larr; Back
+                    </button>
+                    <div class="auth-input-group">
+                        <label for="userName">Full Name</label>
+                        <input type="text" name="name" id="userName" placeholder="Your Name" autocomplete="name" />
+                    </div>
+                    <input type="hidden" class="recaptcha_token" name="recaptcha_token">
+                    <button type="button" id="userRegistrationBtn" class="auth-btn-primary">Complete Registration &rarr;</button>
                 </div>
-                <input type="hidden" class="recaptcha_token" name="recaptcha_token">
-                <button type="button" id="userRegistrationBtn" class="auth-btn-primary">Complete Registration &rarr;</button>
-            </div>
+            <?php endif; ?>
         </form>
 
         <div id="socialLoginSection">

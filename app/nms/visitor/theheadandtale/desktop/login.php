@@ -11,6 +11,21 @@ if (isset($_COOKIE['isLogin'])) {
     exit();
 }
 
+// Check SITE_AUTH_METHOD constant value (defaults to 'OTP' if not defined or empty)
+if (!defined('SITE_AUTH_METHOD')) {
+    define('SITE_AUTH_METHOD', 'OTP');
+}
+$siteAuthMethod = defined('SITE_AUTH_METHOD') && !empty(SITE_AUTH_METHOD) ? strtoupper(trim((string)SITE_AUTH_METHOD)) : 'OTP';
+
+// In development or testing, query param can override if provided
+if (isset($_GET['auth_method']) && in_array(strtoupper(trim($_GET['auth_method'])), ['PASSWORD', 'OTP'])) {
+    $siteAuthMethod = strtoupper(trim($_GET['auth_method']));
+}
+
+if ($siteAuthMethod !== 'PASSWORD') {
+    $siteAuthMethod = 'OTP';
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -38,66 +53,92 @@ if (isset($_COOKIE['isLogin'])) {
         <div class="login_content">
             <div class="form_box login">
                 <form id="login" autocomplete="off">
-                    <div id="enterEmail">
+                    <?php if ($siteAuthMethod === 'PASSWORD'): ?>
                         <div class="login_input">
                             <p style="float: left; margin-bottom: 1rem !important;" id="formTitle">
-                                <strong>Enter your email to get started.</strong>
+                                <strong>Log In to Your Account</strong>
                             </p>
                         </div>
                         <div class="login_input">
                             <input type="text" id="email" placeholder="Email" name="email" required>
                         </div>
+                        <div class="login_input">
+                            <input type="password" id="pass" placeholder="Password" name="pass" required>
+                        </div>
+                        <div class="login_input" style="text-align: right; margin-top: 4px; margin-bottom: 12px;">
+                            <a href="/forgot-password/" style="font-size: 0.85rem; text-decoration: none;">Forgot password?</a>
+                        </div>
                         <div class="sign--in_btn">
                             <input type="hidden" class="recaptcha_token" name="recaptcha_token">
-                            <button type="submit" id="emailLoginContinueBtn" class="button theme-button" formnovalidate>
-                                Continue
+                            <input type="hidden" name="type" value="auth">
+                            <input type="hidden" name="action" value="login">
+                            <input type="hidden" name="redirect_url" value="<?php echo htmlspecialchars($redirect_url); ?>">
+                            <button type="submit" id="loginBtn" class="button theme-button">
+                                Log In
                             </button>
                         </div>
-                    </div>
-
-                    <div id="verifyEmailOTP" style="display: none;">
-                        <div class="login_input">
-                            <p style="float: left; margin-bottom: 1rem !important;"><strong>Verify OTP</strong></p>
+                    <?php else: ?>
+                        <div id="enterEmail">
+                            <div class="login_input">
+                                <p style="float: left; margin-bottom: 1rem !important;" id="formTitle">
+                                    <strong>Enter your email to get started.</strong>
+                                </p>
+                            </div>
+                            <div class="login_input">
+                                <input type="text" id="email" placeholder="Email" name="email" required>
+                            </div>
+                            <div class="sign--in_btn">
+                                <input type="hidden" class="recaptcha_token" name="recaptcha_token">
+                                <button type="submit" id="emailLoginContinueBtn" class="button theme-button" formnovalidate>
+                                    Continue
+                                </button>
+                            </div>
                         </div>
 
-                        <!-- No nested form here -->
-                        <div class="form-group">
-                            <input type="text" inputmode="numeric" pattern="^\d{6}$" maxlength="6"
-                                class="form-control input-with-label" name="otp" id="otpEmailValue" placeholder="123456"
-                                disabled>
+                        <div id="verifyEmailOTP" style="display: none;">
+                            <div class="login_input">
+                                <p style="float: left; margin-bottom: 1rem !important;"><strong>Verify OTP</strong></p>
+                            </div>
+
+                            <!-- No nested form here -->
+                            <div class="form-group">
+                                <input type="text" inputmode="numeric" pattern="^\d{6}$" maxlength="6"
+                                    class="form-control input-with-label" name="otp" id="otpEmailValue" placeholder="123456"
+                                    disabled>
+                            </div>
+
+                            <input type="hidden" class="recaptcha_token" name="recaptcha_token">
+
+                            <div class="login_input">
+                                <p style="float: left; margin-bottom: 1rem !important; margin-top: 1rem !important;"><a
+                                        href="#" id="resendEmailOTPBtn" class="disabled"
+                                        style="pointer-events: none; text-decoration: none;">Resend
+                                        OTP
+                                        in
+                                        30s</a></p>
+                                </p>
+                            </div>
+                            <button type="button" id="verifyEmailOTPBtn" class="button theme-button">Verify OTP</button>
                         </div>
 
-                        <input type="hidden" class="recaptcha_token" name="recaptcha_token">
+                        <div id="userRegistration" style="display: none;">
+                            <div class="login_input">
+                                <p style="float: left; margin-bottom: 1rem !important;"><strong>Enter your full
+                                        name</strong></p>
+                            </div>
 
-                        <div class="login_input">
-                            <p style="float: left; margin-bottom: 1rem !important; margin-top: 1rem !important;"><a
-                                    href="#" id="resendEmailOTPBtn" class="disabled"
-                                    style="pointer-events: none; text-decoration: none;">Resend
-                                    OTP
-                                    in
-                                    30s</a></p>
-                            </p>
+                            <!-- No nested form here -->
+                            <div class="form-group">
+                                <input type="text" class="form-control input-with-label" name="name" id="userName"
+                                    placeholder="Avinash Kumar">
+                            </div>
+
+                            <input type="hidden" class="recaptcha_token" name="recaptcha_token">
+
+                            <button type="button" id="userRegistrationBtn" class="button theme-button">Complete
+                                Registration</button>
                         </div>
-                        <button type="button" id="verifyEmailOTPBtn" class="button theme-button">Verify OTP</button>
-                    </div>
-
-                    <div id="userRegistration" style="display: none;">
-                        <div class="login_input">
-                            <p style="float: left; margin-bottom: 1rem !important;"><strong>Enter your full
-                                    name</strong></p>
-                        </div>
-
-                        <!-- No nested form here -->
-                        <div class="form-group">
-                            <input type="text" class="form-control input-with-label" name="name" id="userName"
-                                placeholder="Avinash Kumar">
-                        </div>
-
-                        <input type="hidden" class="recaptcha_token" name="recaptcha_token">
-
-                        <button type="button" id="userRegistrationBtn" class="button theme-button">Complete
-                            Registration</button>
-                    </div>
+                    <?php endif; ?>
                 </form>
 
                 <div class="or">

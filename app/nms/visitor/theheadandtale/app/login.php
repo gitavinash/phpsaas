@@ -11,6 +11,21 @@ if (isset($_COOKIE['isLogin'])) {
     exit();
 }
 
+// Check SITE_AUTH_METHOD constant value (defaults to 'OTP' if not defined or empty)
+if (!defined('SITE_AUTH_METHOD')) {
+    define('SITE_AUTH_METHOD', 'OTP');
+}
+$siteAuthMethod = defined('SITE_AUTH_METHOD') && !empty(SITE_AUTH_METHOD) ? strtoupper(trim((string)SITE_AUTH_METHOD)) : 'OTP';
+
+// In development or testing, query param can override if provided
+if (isset($_GET['auth_method']) && in_array(strtoupper(trim($_GET['auth_method'])), ['PASSWORD', 'OTP'])) {
+    $siteAuthMethod = strtoupper(trim($_GET['auth_method']));
+}
+
+if ($siteAuthMethod !== 'PASSWORD') {
+    $siteAuthMethod = 'OTP';
+}
+
 require_once 'header.php';
 
 ?>
@@ -65,78 +80,119 @@ require_once 'header.php';
         </div>
 
         <form id="login" autocomplete="off" class="auth-form" onsubmit="return false;">
-            <!-- Step 1: Enter Email -->
-            <div id="enterEmail">
-                <p class="auth-subtitle">
-                    Enter your email to get started.
-                </p>
-                <input
-                    type="email"
-                    id="email"
-                    class="auth-input"
-                    name="email"
-                    placeholder="youremail@example.com"
-                    required />
-                <button
-                    type="button"
-                    id="emailLoginContinueBtn"
-                    class="auth-btn primary-btn"
-                    style="border: none; width: 100%; margin-top: 12px; cursor: pointer;">
-                    Continue
-                </button>
-            </div>
-
-            <!-- Step 2: Verify OTP -->
-            <div id="verifyEmailOTP" style="display: none;">
-                <p class="auth-subtitle">
-                    Verify 6-digit OTP sent to your email
-                </p>
-                <input
-                    type="text"
-                    inputmode="numeric"
-                    pattern="^\d{6}$"
-                    maxlength="6"
-                    id="otpEmailValue"
-                    class="auth-input"
-                    name="otp"
-                    placeholder="123456"
-                    disabled />
-
-                <div style="margin: 12px 0 16px; text-align: left;">
-                    <a href="#" id="resendEmailOTPBtn" class="disabled" style="color: var(--accent-primary, #0066cc); text-decoration: none; font-size: 0.9rem; pointer-events: none;">
-                        Resend OTP in 30s
-                    </a>
+            <?php if ($siteAuthMethod === 'PASSWORD'): ?>
+                <div id="passwordLoginSection">
+                    <p class="auth-subtitle">
+                        Enter your email and password to log in.
+                    </p>
+                    <div style="margin-bottom: 12px;">
+                        <input
+                            type="text"
+                            id="email"
+                            class="auth-input"
+                            name="email"
+                            placeholder="Email Address"
+                            required />
+                    </div>
+                    <div style="margin-bottom: 8px;">
+                        <input
+                            type="password"
+                            id="pass"
+                            class="auth-input"
+                            name="pass"
+                            placeholder="Password"
+                            required />
+                    </div>
+                    <div style="margin-bottom: 16px; text-align: right;">
+                        <a href="/forgot-password/" style="color: var(--accent-primary, #0066cc); font-size: 0.85rem; text-decoration: none;">
+                            Forgot Password?
+                        </a>
+                    </div>
+                    <input type="hidden" name="type" value="auth">
+                    <input type="hidden" name="action" value="login">
+                    <input type="hidden" name="redirect_url" value="<?php echo htmlspecialchars($redirect_url); ?>">
+                    <button
+                        type="button"
+                        id="loginBtn"
+                        class="auth-btn primary-btn"
+                        style="border: none; width: 100%; cursor: pointer;">
+                        Log In
+                    </button>
+                </div>
+            <?php else: ?>
+                <!-- Step 1: Enter Email -->
+                <div id="enterEmail">
+                    <p class="auth-subtitle">
+                        Enter your email to get started.
+                    </p>
+                    <input
+                        type="email"
+                        id="email"
+                        class="auth-input"
+                        name="email"
+                        placeholder="youremail@example.com"
+                        required />
+                    <button
+                        type="button"
+                        id="emailLoginContinueBtn"
+                        class="auth-btn primary-btn"
+                        style="border: none; width: 100%; margin-top: 12px; cursor: pointer;">
+                        Continue
+                    </button>
                 </div>
 
-                <button
-                    type="button"
-                    id="verifyEmailOTPBtn"
-                    class="auth-btn primary-btn"
-                    style="border: none; width: 100%; cursor: pointer;">
-                    Verify OTP
-                </button>
-            </div>
+                <!-- Step 2: Verify OTP -->
+                <div id="verifyEmailOTP" style="display: none;">
+                    <p class="auth-subtitle">
+                        Verify 6-digit OTP sent to your email
+                    </p>
+                    <input
+                        type="text"
+                        inputmode="numeric"
+                        pattern="^\d{6}$"
+                        maxlength="6"
+                        id="otpEmailValue"
+                        class="auth-input"
+                        name="otp"
+                        placeholder="123456"
+                        disabled />
 
-            <!-- Step 3: Complete Registration -->
-            <div id="userRegistration" style="display: none;">
-                <p class="auth-subtitle">
-                    Enter your full name to complete setup
-                </p>
-                <input
-                    type="text"
-                    id="userName"
-                    class="auth-input"
-                    name="name"
-                    placeholder="Full Name (e.g. Avinash Kumar)" />
+                    <div style="margin: 12px 0 16px; text-align: left;">
+                        <a href="#" id="resendEmailOTPBtn" class="disabled" style="color: var(--accent-primary, #0066cc); text-decoration: none; font-size: 0.9rem; pointer-events: none;">
+                            Resend OTP in 30s
+                        </a>
+                    </div>
 
-                <button
-                    type="button"
-                    id="userRegistrationBtn"
-                    class="auth-btn primary-btn"
-                    style="border: none; width: 100%; margin-top: 12px; cursor: pointer;">
-                    Complete Registration
-                </button>
-            </div>
+                    <button
+                        type="button"
+                        id="verifyEmailOTPBtn"
+                        class="auth-btn primary-btn"
+                        style="border: none; width: 100%; cursor: pointer;">
+                        Verify OTP
+                    </button>
+                </div>
+
+                <!-- Step 3: Complete Registration -->
+                <div id="userRegistration" style="display: none;">
+                    <p class="auth-subtitle">
+                        Enter your full name to complete setup
+                    </p>
+                    <input
+                        type="text"
+                        id="userName"
+                        class="auth-input"
+                        name="name"
+                        placeholder="Full Name (e.g. Avinash Kumar)" />
+
+                    <button
+                        type="button"
+                        id="userRegistrationBtn"
+                        class="auth-btn primary-btn"
+                        style="border: none; width: 100%; margin-top: 12px; cursor: pointer;">
+                        Complete Registration
+                    </button>
+                </div>
+            <?php endif; ?>
         </form>
 
         <!-- Social Login Section (hidden when email is entered) -->
@@ -385,6 +441,65 @@ require_once 'header.php';
                     showNotice("Error updating profile.", "error");
                 }
             });
+        }
+
+        const loginBtn = document.getElementById("loginBtn");
+        if (loginBtn) {
+            async function submitPasswordLogin() {
+                hideNotice();
+                const email = (document.getElementById("email")?.value || "").trim();
+                const pass = (document.getElementById("pass")?.value || "").trim();
+                if (!email) {
+                    showNotice("Please enter your email", "warning");
+                    return;
+                }
+                if (!pass) {
+                    showNotice("Please enter your password", "warning");
+                    return;
+                }
+                loginBtn.style.display = "none";
+                try {
+                    const formData = new URLSearchParams();
+                    formData.append("type", "auth");
+                    formData.append("action", "login");
+                    formData.append("email", email);
+                    formData.append("pass", pass);
+                    formData.append("redirect_url", "<?php echo addslashes($redirect_url); ?>");
+
+                    const res = await fetch("/", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                        body: formData.toString()
+                    });
+                    const data = await res.json();
+                    if (data.status === "success") {
+                        showNotice("Login successful! Redirecting...", "success");
+                        setTimeout(() => {
+                            const redirect = getQueryParam("redirect_url") || data.url || "<?php echo addslashes($redirect_url); ?>";
+                            window.location.href = redirect;
+                        }, 600);
+                    } else {
+                        showNotice(data.msg || "Invalid credentials", "error");
+                        loginBtn.style.display = "flex";
+                    }
+                } catch (err) {
+                    console.error(err);
+                    showNotice("An error occurred during login. Please try again.", "error");
+                    loginBtn.style.display = "flex";
+                }
+            }
+
+            loginBtn.addEventListener("click", submitPasswordLogin);
+
+            const passInput = document.getElementById("pass");
+            if (passInput) {
+                passInput.addEventListener("keypress", function(e) {
+                    if (e.key === "Enter") {
+                        e.preventDefault();
+                        submitPasswordLogin();
+                    }
+                });
+            }
         }
     });
 </script>

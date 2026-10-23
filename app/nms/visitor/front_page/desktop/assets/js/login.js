@@ -470,3 +470,47 @@ $("#userRegistrationBtn").click(function (e) {
     },
   });
 });
+
+// Password login submission
+$("#loginBtn").on("click", function (e) {
+  e.preventDefault();
+  var email = $("#email").val().trim();
+  var pass = $("#pass").val().trim();
+
+  if (email === "") {
+    popUpMessage("center", "Please enter your email", "warning");
+    return;
+  }
+  if (pass === "") {
+    popUpMessage("center", "Please enter your password", "warning");
+    return;
+  }
+
+  $("#loginBtn").hide();
+
+  $.ajax({
+    type: "POST",
+    url: "/",
+    dataType: "json",
+    data: $("#login").serialize(),
+    success: function (data) {
+      if (data.status === "success") {
+        popUpMessage("center", data.msg || "Login Successfully", "success");
+        setTimeout(function () {
+          var redirect = getURLParameter("redirect_url") || data.url || "/manage-subscription/";
+          window.location.href = redirect;
+        }, 1200);
+      } else {
+        popUpMessage("center", data.msg || "Invalid credentials", data.status || "error");
+        $("#loginBtn").show();
+      }
+    },
+    error: function (xhr) {
+      console.log(xhr);
+      var errMsg = (xhr.responseJSON && xhr.responseJSON.msg) ? xhr.responseJSON.msg : "Login failed. Please try again.";
+      popUpMessage("center", errMsg, "error");
+      $("#loginBtn").show();
+    }
+  });
+});
+
