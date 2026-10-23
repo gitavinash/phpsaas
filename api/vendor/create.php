@@ -43,7 +43,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         $addUser = true;
         $isNewUser = false;
-        $newUserId = defined('USER_ID') ? USER_ID : 0;
         if ((int)SITE_APP_ID === 32) {
             $checkUser = mysqli_query($connection, "SELECT user_id FROM " . TABLE_PREFIX . "user WHERE user_email='{$email}' OR user_mobile='{$mobile}' LIMIT 1");
             if (mysqli_num_rows($checkUser) > 0) {
