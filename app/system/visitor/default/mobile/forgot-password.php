@@ -7,12 +7,6 @@ require_once 'header.php';
     <div class="form">
         <div class="logo"><img src="<?php echo SITE_LOGO ?>" alt="<?php echo SITE_NAME ?>"></div>
         <div class="card-body">
-            <div class="auth-icon-badge" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M21 2l-2 2m-1.5 1.5L16 7l-1.5-1.5L13 7l-1.5-1.5L10 7 8.5 5.5 7 7 3 11a5.66 5.66 0 1 0 8 8l4-4"></path>
-                    <circle cx="16.5" cy="7.5" r=".5" fill="currentColor"></circle>
-                </svg>
-            </div>
             <div class="form-heading">
                 <strong>Forgot Password?</strong>No worries, we'll send you instructions to reset it.
             </div>

@@ -2,6 +2,7 @@
 
 include_once 'header.php';
 
+$toAddress = !empty($toAddress) ? $toAddress : (isset($email) ? $email : '');
 $subject = 'Forgot Password';
 
 // $email_body = "

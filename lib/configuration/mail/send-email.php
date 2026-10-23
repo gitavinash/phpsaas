@@ -88,13 +88,15 @@ if (EMAIL_ENABLE == 1) {
         $mail->AltBody = strip_tags($email_body);
 
         if (!$mail->send()) {
-            echo 'Mailer Error: ' . $mail->ErrorInfo;
+            $emailIsNotDelivered = 'Mailer Error: ' . $mail->ErrorInfo;
+            error_log('Mailer Error: ' . $mail->ErrorInfo);
         }
     } catch (Exception $e) {
         if (SITE_ID == 17) {
             echo SMTP_PASSWORD . ' -> ' . SMTP_USERNAME . ' -> ' . SMTP_HOST . ' -> ' . SMTP_PORT . ' -> ' . $mail->SMTPSecure;
             exit();
         }
-        echo "Message could not be sent. Exception: {$e->getMessage()} | Mailer Error: {$mail->ErrorInfo}";
+        $emailIsNotDelivered = "Message could not be sent: " . $e->getMessage();
+        error_log("Message could not be sent. Exception: {$e->getMessage()} | Mailer Error: {$mail->ErrorInfo}");
     }
 }

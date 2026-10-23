@@ -7,6 +7,9 @@ function forgotPassword($connection, $data)
 
 	extract($data);
 
+	$email = isset($email) ? trim($email) : '';
+	$toAddress = $email;
+
 	if ($checkUser = mysqli_query($connection, "SELECT user_salt_key, user_id FROM " . TABLE_PREFIX . "user WHERE user_email='{$email}'")) {
 
 		if (mysqli_num_rows($checkUser) != 0) {
@@ -14,6 +17,7 @@ function forgotPassword($connection, $data)
 			extract(mysqli_fetch_assoc($checkUser));
 
 			$passwordResetURL = SITE_URL . '/verify/password/?transaction=' . $user_salt_key . '&email=' . base64_encode($email);
+			$toAddress = $email;
 
 			require_once EMAIL_TEMPLATE . 'forgot-password.php';
 
