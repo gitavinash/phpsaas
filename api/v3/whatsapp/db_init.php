@@ -18,6 +18,7 @@ function initWhatsAppDatabase($connection) {
         chat_id BIGINT(20) NOT NULL AUTO_INCREMENT,
         chat_site_id BIGINT(20) NOT NULL,
         chat_phone VARCHAR(35) NOT NULL,
+        chat_device_phone VARCHAR(35) DEFAULT NULL,
         chat_name VARCHAR(150) DEFAULT NULL,
         chat_pushname VARCHAR(150) DEFAULT NULL,
         chat_avatar VARCHAR(500) DEFAULT NULL,
@@ -28,9 +29,10 @@ function initWhatsAppDatabase($connection) {
         chat_created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
         chat_updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
         PRIMARY KEY (chat_id),
-        UNIQUE KEY uq_site_phone (chat_site_id, chat_phone),
+        UNIQUE KEY uq_site_dev_phone (chat_site_id, chat_device_phone, chat_phone),
         INDEX idx_site_updated (chat_site_id, chat_updated_at),
         INDEX idx_site_msg_time (chat_site_id, chat_last_message_time),
+        INDEX idx_device_phone (chat_site_id, chat_device_phone),
         INDEX idx_lead_id (chat_lead_id)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;";
 
@@ -60,6 +62,18 @@ function initWhatsAppDatabase($connection) {
         if ($colRes2 && mysqli_num_rows($colRes2) === 0) {
             @mysqli_query($connection, "ALTER TABLE " . $prefix . "whatsapp_chat ADD COLUMN chat_device_phone VARCHAR(35) DEFAULT NULL AFTER chat_phone");
             @mysqli_query($connection, "ALTER TABLE " . $prefix . "whatsapp_chat ADD INDEX idx_device_phone (chat_site_id, chat_device_phone)");
+        }
+    } catch (Throwable $e) {}
+
+    // Safely migrate chat table unique key to include chat_device_phone for multi-device isolation
+    try {
+        $idxResOld = @mysqli_query($connection, "SHOW INDEX FROM " . $prefix . "whatsapp_chat WHERE Key_name = 'uq_site_phone'");
+        if ($idxResOld && mysqli_num_rows($idxResOld) > 0) {
+            @mysqli_query($connection, "ALTER TABLE " . $prefix . "whatsapp_chat DROP INDEX uq_site_phone");
+        }
+        $idxResNew = @mysqli_query($connection, "SHOW INDEX FROM " . $prefix . "whatsapp_chat WHERE Key_name = 'uq_site_dev_phone'");
+        if ($idxResNew && mysqli_num_rows($idxResNew) === 0) {
+            @mysqli_query($connection, "ALTER TABLE " . $prefix . "whatsapp_chat ADD UNIQUE KEY uq_site_dev_phone (chat_site_id, chat_device_phone, chat_phone)");
         }
     } catch (Throwable $e) {}
 

@@ -20,10 +20,9 @@ if ($sendMessageTo != '') {
                     $msgBody = '';
 
                     if (stripos($templateName, 'enquiry') !== false || stripos($templateName, 'thank') !== false) {
-                        $cName = trim($rawVars[0] ?? 'Valued Customer');
-                        $cSubj = trim($rawVars[1] ?? 'Tour Inquiry');
-                        $cDate = trim($rawVars[2] ?? '');
-                        $msgBody = "Hello {$cName},\n\nThank you for reaching out to *{$siteNameVal}*!\nWe have received your enquiry for *{$cSubj}*" . (!empty($cDate) && $cDate !== 'N/A' ? " (Travel Date: {$cDate})" : "") . ".\n\nOur travel expert will connect with you shortly with your customized proposal.\n\nWarm regards,\n*{$siteNameVal}*";
+                        // Automatic customer enquiry greetings are disabled by default; strictly handled via CRM Workflow Automation
+                        $sentViaDevice = true;
+                        $response = 'Automatic enquiry message skipped (handled via Workflow)';
                     } elseif (stripos($templateName, 'payment') !== false) {
                         $cName = trim($rawVars[0] ?? 'Valued Customer');
                         $cPkg = trim($rawVars[1] ?? 'Tour Package');
@@ -41,10 +40,12 @@ if ($sendMessageTo != '') {
                         $msgBody = "Hello,\n\nGreetings from *{$siteNameVal}*!\n" . implode("\n", array_filter(array_map('trim', $rawVars))) . "\n\nWarm regards,\n*{$siteNameVal}*";
                     }
 
-                    $directRes = sendWhatsAppDirectMessage($connection, $siteIdVal, 0, $sendMessageTo, $msgBody);
-                    if ($directRes && isset($directRes['status']) && $directRes['status'] === 'success') {
-                        $sentViaDevice = true;
-                        $response = 'success (via connected WhatsApp Web device)';
+                    if (!empty($msgBody)) {
+                        $directRes = sendWhatsAppDirectMessage($connection, $siteIdVal, 0, $sendMessageTo, $msgBody);
+                        if ($directRes && isset($directRes['status']) && $directRes['status'] === 'success') {
+                            $sentViaDevice = true;
+                            $response = 'success (via connected WhatsApp Web device)';
+                        }
                     }
                 }
             }

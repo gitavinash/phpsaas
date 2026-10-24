@@ -348,7 +348,8 @@ enquiry_time) VALUES(" . SITE_ID . ", '{$userId}', '{$escaped_ip}', '{$escaped_c
             if (defined('ENABLE_WHATSAPP_BUSINESS_API')) {
                 if (ENABLE_WHATSAPP_BUSINESS_API == 'yes') {
                     require_once WHATSAPP_TEMPLATE_ADMIN . 'new_enquiry.php';
-                    require_once WHATSAPP_TEMPLATE_VISITOR . 'enquiry_thank_you.php';
+                    // Visitor thank-you WhatsApp message disabled: handled exclusively via CRM Workflow Automation
+                    // require_once WHATSAPP_TEMPLATE_VISITOR . 'enquiry_thank_you.php';
                 }
             }
         }

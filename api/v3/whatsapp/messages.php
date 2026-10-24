@@ -191,8 +191,20 @@ if ($method === 'GET') {
 
     if ($chatId <= 0 && !empty($phone)) {
         $cleanPhone = preg_replace('/[^0-9+]/', '', $phone);
+        $phoneDigits = preg_replace('/[^0-9]/', '', $cleanPhone);
+        $last10 = substr($phoneDigits, -10);
         $escPhone = mysqli_real_escape_string($connection, $cleanPhone);
-        $cQ = mysqli_query($connection, "SELECT chat_id FROM " . TABLE_PREFIX . "whatsapp_chat WHERE chat_site_id = {$siteId} AND chat_phone = '{$escPhone}' LIMIT 1");
+
+        $reqDevPhone = trim($_GET['device_phone'] ?? '');
+        $devCond = "";
+        if (!empty($reqDevPhone) && $reqDevPhone !== 'all') {
+            $cleanReqDev = preg_replace('/[^0-9]/', '', $reqDevPhone);
+            $last10Dev = substr($cleanReqDev, -10);
+            $escReqDev = mysqli_real_escape_string($connection, $reqDevPhone);
+            $devCond = " AND (chat_device_phone = '{$escReqDev}' OR chat_device_phone LIKE '%{$last10Dev}')";
+        }
+
+        $cQ = mysqli_query($connection, "SELECT chat_id FROM " . TABLE_PREFIX . "whatsapp_chat WHERE chat_site_id = {$siteId} AND (chat_phone = '{$escPhone}' OR chat_phone LIKE '%{$last10}') {$devCond} ORDER BY chat_id DESC LIMIT 1");
         if ($cQ && mysqli_num_rows($cQ) > 0) {
             $cRow = mysqli_fetch_assoc($cQ);
             $chatId = (int)$cRow['chat_id'];
@@ -630,14 +642,36 @@ if ($method === 'POST') {
         }
         $cleanPhone = strlen($digits) >= 8 ? ('+' . $digits) : '';
         $escPhone = mysqli_real_escape_string($connection, $cleanPhone);
+        $last10 = substr($digits, -10);
+
+        $selectedDevicePhone = trim($data['device_phone'] ?? '');
+        $currentUserId = defined('USER_ID') ? (int)USER_ID : (isset($user_id) ? (int)$user_id : 0);
+        $userDevPhone = '';
+        if ($currentUserId > 0) {
+            $uadQ = mysqli_query($connection, "SELECT device_phone FROM " . TABLE_PREFIX . "whatsapp_device WHERE device_site_id = {$siteId} AND device_assigned_user_id = {$currentUserId} AND device_status = 'connected' LIMIT 1");
+            if ($uadQ && $uadR = mysqli_fetch_assoc($uadQ)) {
+                $userDevPhone = $uadR['device_phone'] ?? '';
+            }
+        }
+        $targetDevPhone = !empty($userDevPhone) ? $userDevPhone : (!empty($selectedDevicePhone) && $selectedDevicePhone !== 'all' ? $selectedDevicePhone : '');
+        $escTargetDev = mysqli_real_escape_string($connection, $targetDevPhone);
+
         if (!empty($cleanPhone)) {
-            $cQ = mysqli_query($connection, "SELECT chat_id FROM " . TABLE_PREFIX . "whatsapp_chat WHERE chat_site_id = {$siteId} AND chat_phone = '{$escPhone}' LIMIT 1");
+            $cQ = mysqli_query($connection, "SELECT chat_id FROM " . TABLE_PREFIX . "whatsapp_chat 
+                WHERE chat_site_id = {$siteId} 
+                  AND (chat_phone = '{$escPhone}' OR chat_phone LIKE '%{$last10}')
+                  AND (chat_device_phone = '{$escTargetDev}' OR chat_device_phone = '' OR chat_device_phone IS NULL)
+                ORDER BY (chat_device_phone = '{$escTargetDev}') DESC 
+                LIMIT 1");
             if ($cQ && mysqli_num_rows($cQ) > 0) {
                 $cRow = mysqli_fetch_assoc($cQ);
                 $chatId = (int)$cRow['chat_id'];
             } else {
                 // Auto create chat
-                mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "whatsapp_chat (chat_site_id, chat_phone, chat_name) VALUES ({$siteId}, '{$escPhone}', '{$escPhone}')");
+                mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "whatsapp_chat 
+                    (chat_site_id, chat_phone, chat_device_phone, chat_name) 
+                    VALUES ({$siteId}, '{$escPhone}', '{$escTargetDev}', '{$escPhone}')
+                    ON DUPLICATE KEY UPDATE chat_id = LAST_INSERT_ID(chat_id)");
                 $chatId = (int)mysqli_insert_id($connection);
             }
         }
