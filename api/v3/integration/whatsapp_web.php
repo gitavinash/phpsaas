@@ -963,10 +963,21 @@ if ($action === 'check_status' || $action === 'status') {
                                       device_last_sync = '{$now}'");
 
         saveWaWebConfig($connection, $siteId, 'whatsapp_web_status', 'connected');
-        if (!empty($userPhone)) saveWaWebConfig($connection, $siteId, 'whatsapp_web_phone', $userPhone);
-        if (!empty($userName)) saveWaWebConfig($connection, $siteId, 'whatsapp_web_pushname', $userName);
         saveWaWebConfig($connection, $siteId, 'whatsapp_web_last_sync', $now);
         ensureFirstDeviceIsDefault($connection, $siteId, $escSession);
+
+        $chkIsDef = mysqli_query($connection, "SELECT device_id FROM " . TABLE_PREFIX . "whatsapp_device WHERE device_site_id = {$siteId} AND device_session_id = '{$escSession}' AND device_is_default = 1 LIMIT 1");
+        $isDefDev = ($chkIsDef && mysqli_num_rows($chkIsDef) > 0);
+
+        $chkCurPh = mysqli_query($connection, "SELECT site_configuration_value FROM " . TABLE_PREFIX . "site_configuration WHERE site_configuration_site_id = {$siteId} AND site_configuration_key = 'whatsapp_web_phone' LIMIT 1");
+        $curPhVal = ($chkCurPh && $cp = mysqli_fetch_assoc($chkCurPh)) ? trim($cp['site_configuration_value']) : '';
+
+        if (($isDefDev || empty($curPhVal)) && !empty($userPhone)) {
+            saveWaWebConfig($connection, $siteId, 'whatsapp_web_phone', $userPhone);
+            if (!empty($userName)) {
+                saveWaWebConfig($connection, $siteId, 'whatsapp_web_pushname', $userName);
+            }
+        }
     }
 
     echo json_encode([
@@ -1020,7 +1031,7 @@ if ($action === 'disconnect' || $action === 'delete_device') {
     }
 
     // Update site-level config based on whether any connected device remains
-    $remDevQ = mysqli_query($connection, "SELECT device_phone, device_name FROM " . TABLE_PREFIX . "whatsapp_device WHERE device_site_id = {$siteId} AND device_status = 'connected' LIMIT 1");
+    $remDevQ = mysqli_query($connection, "SELECT device_phone, device_name FROM " . TABLE_PREFIX . "whatsapp_device WHERE device_site_id = {$siteId} AND device_status = 'connected' ORDER BY device_is_default DESC, device_id ASC LIMIT 1");
     if ($remDevQ && mysqli_num_rows($remDevQ) > 0) {
         $remDev = mysqli_fetch_assoc($remDevQ);
         saveWaWebConfig($connection, $siteId, 'whatsapp_web_status', 'connected');

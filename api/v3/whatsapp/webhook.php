@@ -130,12 +130,8 @@ if (($payload['event'] ?? '') === 'device_connected') {
         $escName  = mysqli_real_escape_string($connection, $name);
         $escSession = mysqli_real_escape_string($connection, $sessionId);
         $now = date('Y-m-d H:i:s');
-        mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "site_configuration (site_configuration_site_id, site_configuration_key, site_configuration_value, site_configuration_status) VALUES ({$siteId}, 'whatsapp_web_status', 'connected', 1) ON DUPLICATE KEY UPDATE site_configuration_value = 'connected'");
-        mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "site_configuration (site_configuration_site_id, site_configuration_key, site_configuration_value, site_configuration_status) VALUES ({$siteId}, 'whatsapp_web_phone', '{$escPhone}', 1) ON DUPLICATE KEY UPDATE site_configuration_value = '{$escPhone}'");
-        mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "site_configuration (site_configuration_site_id, site_configuration_key, site_configuration_value, site_configuration_status) VALUES ({$siteId}, 'whatsapp_web_pushname', '{$escName}', 1) ON DUPLICATE KEY UPDATE site_configuration_value = '{$escName}'");
-        mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "site_configuration (site_configuration_site_id, site_configuration_key, site_configuration_value, site_configuration_status) VALUES ({$siteId}, 'whatsapp_web_last_sync', '{$now}', 1) ON DUPLICATE KEY UPDATE site_configuration_value = '{$now}'");
 
-        // Sync into isw_whatsapp_device
+        // 1. Sync into isw_whatsapp_device first
         $assignedUserSql = "NULL";
         if (preg_match('/^agent_(\d+)$/', $sessionId, $m)) {
             $assignedUserSql = (int)$m[1];
@@ -160,6 +156,22 @@ if (($payload['event'] ?? '') === 'device_connected') {
 
         require_once __DIR__ . '/device_helper.php';
         ensureFirstDeviceIsDefault($connection, $siteId, $escSession);
+
+        // 2. Update site_configuration status and timestamp
+        mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "site_configuration (site_configuration_site_id, site_configuration_key, site_configuration_value, site_configuration_status) VALUES ({$siteId}, 'whatsapp_web_status', 'connected', 1) ON DUPLICATE KEY UPDATE site_configuration_value = 'connected', site_configuration_status = 1");
+        mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "site_configuration (site_configuration_site_id, site_configuration_key, site_configuration_value, site_configuration_status) VALUES ({$siteId}, 'whatsapp_web_last_sync', '{$now}', 1) ON DUPLICATE KEY UPDATE site_configuration_value = '{$now}', site_configuration_status = 1");
+
+        // 3. Only update site-level phone/pushname if this is the default device or site phone is not set yet
+        $chkIsDefault = mysqli_query($connection, "SELECT device_id FROM " . TABLE_PREFIX . "whatsapp_device WHERE device_site_id = {$siteId} AND device_session_id = '{$escSession}' AND device_is_default = 1 LIMIT 1");
+        $isDefaultDev = ($chkIsDefault && mysqli_num_rows($chkIsDefault) > 0);
+
+        $chkCurPhone = mysqli_query($connection, "SELECT site_configuration_value FROM " . TABLE_PREFIX . "site_configuration WHERE site_configuration_site_id = {$siteId} AND site_configuration_key = 'whatsapp_web_phone' LIMIT 1");
+        $curPhoneVal = ($chkCurPhone && $cpr = mysqli_fetch_assoc($chkCurPhone)) ? trim($cpr['site_configuration_value']) : '';
+
+        if ($isDefaultDev || empty($curPhoneVal)) {
+            mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "site_configuration (site_configuration_site_id, site_configuration_key, site_configuration_value, site_configuration_status) VALUES ({$siteId}, 'whatsapp_web_phone', '{$escPhone}', 1) ON DUPLICATE KEY UPDATE site_configuration_value = '{$escPhone}', site_configuration_status = 1");
+            mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "site_configuration (site_configuration_site_id, site_configuration_key, site_configuration_value, site_configuration_status) VALUES ({$siteId}, 'whatsapp_web_pushname', '{$escName}', 1) ON DUPLICATE KEY UPDATE site_configuration_value = '{$escName}', site_configuration_status = 1");
+        }
 
         // Clear any previous disconnection alert now that device is successfully connected
         mysqli_query($connection, "DELETE FROM " . TABLE_PREFIX . "site_configuration WHERE site_configuration_site_id = {$siteId} AND site_configuration_key = 'whatsapp_disconnect_alert'");

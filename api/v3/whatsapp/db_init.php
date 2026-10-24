@@ -129,6 +129,14 @@ function initWhatsAppDatabase($connection) {
         }
     } catch (Throwable $e) {}
 
+    // 4. Safely ensure uq_site_key UNIQUE KEY on site_configuration to prevent duplicate configs
+    try {
+        $idxScRes = @mysqli_query($connection, "SHOW INDEX FROM " . $prefix . "site_configuration WHERE Key_name = 'uq_site_key'");
+        if ($idxScRes && mysqli_num_rows($idxScRes) === 0) {
+            @mysqli_query($connection, "ALTER TABLE " . $prefix . "site_configuration ADD UNIQUE KEY uq_site_key (site_configuration_site_id, site_configuration_key)");
+        }
+    } catch (Throwable $e) {}
+
     $initialized = true;
     return true;
 }
