@@ -18,6 +18,8 @@ if (!isset($connection)) {
     }
 }
 
+require_once __DIR__ . '/phone_helper.php';
+
 $rawInput = file_get_contents('php://input');
 $payload = json_decode($rawInput, true) ?? [];
 if (empty($payload) && !empty($_POST)) {
@@ -295,6 +297,9 @@ if (($payload['event'] ?? '') === 'batch_sync') {
         $cTime = ($cTs && $cTs > 0) ? date('Y-m-d H:i:s', $cTs) : date('Y-m-d H:i:s');
 
         // Match with CRM lead ONLY if one already exists - NEVER create a new lead during sync
+        $normCPhone = normalizeWhatsAppPhone($cPhone);
+        $strictCPhone = buildStrictPhoneCondition($connection, 'chat_phone', $normCPhone);
+        $escPhone = mysqli_real_escape_string($connection, $normCPhone);
         $phoneDigits = preg_replace('/[^0-9]/', '', $cPhone);
         $last10 = substr($phoneDigits, -10);
         $leadVal = "NULL";
@@ -312,7 +317,7 @@ if (($payload['event'] ?? '') === 'batch_sync') {
         $chatId = 0;
         $chk = mysqli_query($connection, "SELECT chat_id, chat_name, chat_pushname FROM " . TABLE_PREFIX . "whatsapp_chat 
                                           WHERE chat_site_id = {$siteId} 
-                                            AND (chat_phone = '{$escPhone}' OR chat_phone LIKE '%{$last10}')
+                                            AND {$strictCPhone}
                                             AND (chat_device_phone = '{$cleanDevMatch}' OR chat_device_phone = '' OR chat_device_phone IS NULL)
                                           ORDER BY (chat_device_phone = '{$cleanDevMatch}') DESC 
                                           LIMIT 1");
@@ -342,7 +347,7 @@ if (($payload['event'] ?? '') === 'batch_sync') {
             if ($chatId <= 0) {
                 $cRecQ = mysqli_query($connection, "SELECT chat_id FROM " . TABLE_PREFIX . "whatsapp_chat 
                                                     WHERE chat_site_id = {$siteId} 
-                                                      AND chat_phone = '{$escPhone}' 
+                                                      AND {$strictCPhone} 
                                                       AND (chat_device_phone = '{$cleanDevMatch}' OR chat_device_phone = '' OR chat_device_phone IS NULL)
                                                     ORDER BY (chat_device_phone = '{$cleanDevMatch}') DESC 
                                                     LIMIT 1");
@@ -699,6 +704,8 @@ if (!empty($connectedDevicePhone) && !empty($payload['session_id'])) {
     }
 
     // Find or create chat conversation
+    $cleanPhone = normalizeWhatsAppPhone($cleanPhone);
+    $strictContactCond = buildStrictPhoneCondition($connection, 'chat_phone', $cleanPhone);
     $avatar   = trim($payload['avatar'] ?? ($payload['profile_pic'] ?? ''));
     $escAvatar = mysqli_real_escape_string($connection, $avatar);
     $escPhone = mysqli_real_escape_string($connection, $cleanPhone);
@@ -720,6 +727,11 @@ if (!empty($connectedDevicePhone) && !empty($payload['session_id'])) {
         $text = '';
     }
 
+    // Normalize internal message markers like [Reaction: ...], [Doc: ...]
+    $internalMeta = extractInternalMessageType($text, $type);
+    $type = $internalMeta['type'];
+    $text = $internalMeta['clean_text'];
+
     if ($type === 'contact') {
         $cObj = json_decode($text, true);
         $cName = !empty($cObj['name']) ? $cObj['name'] : 'Contact';
@@ -728,6 +740,10 @@ if (!empty($connectedDevicePhone) && !empty($payload['session_id'])) {
         $lObj = json_decode($text, true);
         $lName = !empty($lObj['name']) ? $lObj['name'] : (!empty($lObj['address']) ? $lObj['address'] : 'Shared Location');
         $lastPreviewMsg = '📍 Location: ' . $lName;
+    } elseif ($type === 'reaction') {
+        $lastPreviewMsg = !empty($internalMeta['reaction_emoji']) ? $internalMeta['reaction_emoji'] : 'Reaction';
+    } elseif ($type === 'document') {
+        $lastPreviewMsg = !empty($internalMeta['doc_name']) ? ('📄 ' . $internalMeta['doc_name']) : '📄 Document';
     } else {
         $lastPreviewMsg = !empty($text) ? $text : (!empty($media) ? '📷 Photo' : ($type === 'image' ? '📷 Photo' : '[Message]'));
     }
@@ -737,7 +753,7 @@ if (!empty($connectedDevicePhone) && !empty($payload['session_id'])) {
 
     $chatQ = mysqli_query($connection, "SELECT chat_id FROM " . TABLE_PREFIX . "whatsapp_chat 
         WHERE chat_site_id = {$siteId} 
-          AND (chat_phone = '{$escPhone}' OR chat_phone LIKE '%{$last10}')
+          AND {$strictContactCond}
           AND (chat_device_phone = '{$cleanInsDev}' OR chat_device_phone = '' OR chat_device_phone IS NULL)
         ORDER BY (chat_device_phone = '{$cleanInsDev}') DESC 
         LIMIT 1");
@@ -773,7 +789,7 @@ if (!empty($connectedDevicePhone) && !empty($payload['session_id'])) {
         if ($chatId <= 0) {
             $cRecQ = mysqli_query($connection, "SELECT chat_id FROM " . TABLE_PREFIX . "whatsapp_chat 
                                                 WHERE chat_site_id = {$siteId} 
-                                                  AND chat_phone = '{$escPhone}' 
+                                                  AND {$strictContactCond} 
                                                   AND (chat_device_phone = '{$cleanInsDev}' OR chat_device_phone = '' OR chat_device_phone IS NULL)
                                                 ORDER BY (chat_device_phone = '{$cleanInsDev}') DESC 
                                                 LIMIT 1");

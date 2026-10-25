@@ -21,6 +21,8 @@ if (!isset($connection)) {
     }
 }
 
+require_once __DIR__ . '/phone_helper.php';
+
 $siteId = defined('SITE_ID') ? (int)SITE_ID : 0;
 
 if ($siteId <= 0) {
@@ -797,6 +799,21 @@ if ($method === 'GET') {
             $agentDisplay = $agentNameMap[(int)$row['enquiry_agent']];
         }
 
+        $rawLastMsg = $row['chat_last_message'] ?? '';
+        $typeMeta = extractInternalMessageType($rawLastMsg, 'text');
+        $cleanLastMsg = $typeMeta['clean_text'];
+        if ($typeMeta['type'] === 'reaction') {
+            $cleanLastMsg = !empty($typeMeta['reaction_emoji']) ? $typeMeta['reaction_emoji'] : 'Reaction';
+        } elseif ($typeMeta['type'] === 'document') {
+            $cleanLastMsg = !empty($typeMeta['doc_name']) ? ('📄 ' . $typeMeta['doc_name']) : '📄 Document';
+        } elseif ($typeMeta['type'] === 'image') {
+            $cleanLastMsg = '📷 Photo';
+        } elseif ($typeMeta['type'] === 'video') {
+            $cleanLastMsg = '🎥 Video';
+        } elseif ($typeMeta['type'] === 'audio') {
+            $cleanLastMsg = '🎤 Voice Note';
+        }
+
         $chats[] = [
             'chat_id'           => (int)$row['chat_id'],
             'phone'             => $phone,
@@ -804,7 +821,8 @@ if ($method === 'GET') {
             'raw_name'          => $chatName,
             'pushname'          => !empty($row['chat_pushname']) ? $row['chat_pushname'] : '',
             'avatar'            => !empty($row['chat_avatar']) ? $row['chat_avatar'] : '',
-            'last_message'      => $row['chat_last_message'] ?? '',
+            'last_message'      => $cleanLastMsg,
+            'raw_last_message'  => $rawLastMsg,
             'last_message_time' => $row['chat_last_message_time'] ?? '',
             'time_display'      => $formattedTime,
             'unread_count'      => (int)$row['chat_unread_count'],

@@ -4491,6 +4491,7 @@ main .container:has(#pluginWhatsappWebApp) {
   box-shadow: 0 2px 6px rgba(0, 168, 132, 0.3);
   transition: transform 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
   padding: 0;
+  position: relative;
 }
 
 .wa-voice-play-btn i {
@@ -4499,6 +4500,46 @@ main .container:has(#pluginWhatsappWebApp) {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.wa-voice-play-btn svg {
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
+  display: none;
+  pointer-events: none;
+}
+
+.wa-voice-play-btn .wa-voice-svg-play {
+  display: block;
+  margin-left: 2px;
+}
+
+.wa-voice-play-btn.is-playing .wa-voice-svg-play {
+  display: none;
+}
+
+.wa-voice-play-btn.is-playing .wa-voice-svg-pause {
+  display: block;
+}
+
+.wa-voice-play-btn.is-download .wa-voice-svg-play,
+.wa-voice-play-btn.is-download .wa-voice-svg-pause {
+  display: none;
+}
+
+.wa-voice-play-btn.is-download .wa-voice-svg-download {
+  display: block;
+}
+
+.wa-voice-play-btn.is-loading .wa-voice-svg-play,
+.wa-voice-play-btn.is-loading .wa-voice-svg-pause,
+.wa-voice-play-btn.is-loading .wa-voice-svg-download {
+  display: none;
+}
+
+.wa-voice-play-btn.is-loading .wa-voice-svg-spinner {
+  display: block;
 }
 
 .wa-voice-play-btn:hover {
@@ -4523,6 +4564,10 @@ main .container:has(#pluginWhatsappWebApp) {
 .wa-voice-play-btn.is-download {
   background: #3B82F6;
   box-shadow: 0 2px 6px rgba(59, 130, 246, 0.3);
+}
+
+.wa-voice-play-btn.is-download:hover {
+  background: #2563EB;
 }
 
 .wa-voice-track-wrap {
@@ -5422,3 +5467,70 @@ main .container:has(#pluginWhatsappWebApp) {
   max-width: 320px;
   margin: 6px 0 8px;
 }
+
+/* WhatsApp Reaction Badge & Pill */
+.wa-msg-reaction-container {
+  display: flex;
+  align-items: center;
+  padding: 2px 4px 4px;
+}
+
+.wa-msg-reaction-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(11, 20, 26, 0.12);
+  border-radius: 16px;
+  padding: 3px 10px 3px 6px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  cursor: default;
+  user-select: none;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.wa-msg-bubble.outgoing .wa-msg-reaction-pill {
+  background: #E7FCE3;
+  border-color: rgba(0, 168, 132, 0.25);
+}
+
+.wa-msg-reaction-pill:hover {
+  transform: scale(1.05);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+}
+
+.wa-reaction-emoji {
+  font-size: 20px;
+  line-height: 1;
+  display: inline-block;
+  transform: translateY(-1px);
+}
+
+.wa-reaction-label {
+  font-size: 11px;
+  font-weight: 500;
+  color: #667781;
+}
+
+.wa-msg-bubble.outgoing .wa-reaction-label {
+  color: #008069;
+}
+
+/* Avatar resilient loading & fallback */
+.wa-avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  display: block;
+}
+
+.wa-thread-avatar.is-fallback,
+.wa-header-avatar.is-fallback {
+  background: #E2E8F0;
+  color: #64748B;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+

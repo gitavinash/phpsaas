@@ -21,6 +21,8 @@ if (!isset($connection)) {
     }
 }
 
+require_once __DIR__ . '/phone_helper.php';
+
 $siteId = defined('SITE_ID') ? (int)SITE_ID : 0;
 
 if ($siteId <= 0) {
@@ -228,21 +230,18 @@ if ($method === 'GET') {
     $phone  = trim($_GET['phone'] ?? '');
 
     if ($chatId <= 0 && !empty($phone)) {
-        $cleanPhone = preg_replace('/[^0-9+]/', '', $phone);
-        $phoneDigits = preg_replace('/[^0-9]/', '', $cleanPhone);
-        $last10 = substr($phoneDigits, -10);
-        $escPhone = mysqli_real_escape_string($connection, $cleanPhone);
+        $cleanPhone = normalizeWhatsAppPhone($phone);
+        $strictChatCond = buildStrictPhoneCondition($connection, 'chat_phone', $cleanPhone);
 
         $reqDevPhone = trim($_GET['device_phone'] ?? '');
         $devCond = "";
         if (!empty($reqDevPhone) && $reqDevPhone !== 'all') {
-            $cleanReqDev = preg_replace('/[^0-9]/', '', $reqDevPhone);
-            $last10Dev = substr($cleanReqDev, -10);
-            $escReqDev = mysqli_real_escape_string($connection, $reqDevPhone);
-            $devCond = " AND (chat_device_phone = '{$escReqDev}' OR chat_device_phone LIKE '%{$last10Dev}')";
+            $normReqDev = normalizeWhatsAppPhone($reqDevPhone);
+            $strictDevCond = buildStrictPhoneCondition($connection, 'chat_device_phone', $normReqDev);
+            $devCond = " AND {$strictDevCond}";
         }
 
-        $cQ = mysqli_query($connection, "SELECT chat_id FROM " . TABLE_PREFIX . "whatsapp_chat WHERE chat_site_id = {$siteId} AND (chat_phone = '{$escPhone}' OR chat_phone LIKE '%{$last10}') {$devCond} ORDER BY chat_id DESC LIMIT 1");
+        $cQ = mysqli_query($connection, "SELECT chat_id FROM " . TABLE_PREFIX . "whatsapp_chat WHERE chat_site_id = {$siteId} AND {$strictChatCond} {$devCond} ORDER BY chat_id DESC LIMIT 1");
         if ($cQ && mysqli_num_rows($cQ) > 0) {
             $cRow = mysqli_fetch_assoc($cQ);
             $chatId = (int)$cRow['chat_id'];
@@ -395,9 +394,20 @@ if ($method === 'GET') {
     }
 
     // Fetch latest messages chronologically (oldest at top, newest at bottom)
+    // Strictly isolate messages to this contact conversation: sender or receiver must match chat_phone
+    $normChatPhone = !empty($chatPhone) ? normalizeWhatsAppPhone($chatPhone) : '';
+    $phoneCondSql = "1=1";
+    if (!empty($normChatPhone)) {
+        $senderStrict = buildStrictPhoneCondition($connection, 'message_sender', $normChatPhone);
+        $receiverStrict = buildStrictPhoneCondition($connection, 'message_receiver', $normChatPhone);
+        $phoneCondSql = "({$senderStrict} OR {$receiverStrict})";
+    }
+
     $sql = "SELECT * FROM (
                 SELECT * FROM " . TABLE_PREFIX . "whatsapp_message 
-                WHERE message_site_id = {$siteId} AND message_chat_id = {$chatId} 
+                WHERE message_site_id = {$siteId} 
+                  AND message_chat_id = {$chatId} 
+                  AND {$phoneCondSql}
                 ORDER BY message_created_at DESC, message_id DESC 
                 LIMIT 300
             ) sub 
@@ -628,22 +638,30 @@ if ($method === 'GET') {
                 $mType = 'location';
             }
 
+            // Normalize internal markers: [Reaction: emoji], [Doc: title], placeholders
+            $typeMeta = extractInternalMessageType((string)($row['message_text'] ?? ''), $mType);
+            $finalType = $typeMeta['type'];
+            $cleanText = $typeMeta['clean_text'];
+
             $messages[] = [
-                'id'            => (int)$row['message_id'],
-                'wa_id'         => $row['message_wa_id'] ?? '',
-                'direction'     => $row['message_direction'],
-                'sender'        => $row['message_sender'],
-                'receiver'      => $row['message_receiver'],
-                'type'          => $mType,
-                'text'          => $row['message_text'] ?? '',
-                'media_url'     => $mediaUrl,
-                'contact_data'  => $contactData,
-                'location_data' => $locationData,
-                'status'        => $row['message_status'],
-                'created_at'    => $row['message_created_at'],
-                'time'          => $timeDisplay,
-                'date'          => $dateDisplay,
-                'date_label'    => $dateLabel
+                'id'             => (int)$row['message_id'],
+                'wa_id'          => $row['message_wa_id'] ?? '',
+                'direction'      => $row['message_direction'],
+                'sender'         => $row['message_sender'],
+                'receiver'       => $row['message_receiver'],
+                'type'           => $finalType,
+                'text'           => $cleanText,
+                'raw_text'       => $row['message_text'] ?? '',
+                'reaction_emoji' => $typeMeta['reaction_emoji'] ?? null,
+                'doc_name'       => $typeMeta['doc_name'] ?? null,
+                'media_url'      => $mediaUrl,
+                'contact_data'   => $contactData,
+                'location_data'  => $locationData,
+                'status'         => $row['message_status'],
+                'created_at'     => $row['message_created_at'],
+                'time'           => $timeDisplay,
+                'date'           => $dateDisplay,
+                'date_label'     => $dateLabel
             ];
         }
     }
@@ -720,12 +738,10 @@ if ($method === 'POST') {
         if (str_starts_with($digits, '0')) {
             $digits = ltrim($digits, '0');
         }
-        if (strlen($digits) === 10) {
-            $digits = '91' . $digits;
-        }
-        $cleanPhone = strlen($digits) >= 8 ? ('+' . $digits) : '';
+        $normPhone = normalizeWhatsAppPhone($digits);
+        $cleanPhone = $normPhone;
         $escPhone = mysqli_real_escape_string($connection, $cleanPhone);
-        $last10 = substr($digits, -10);
+        $strictChatPhoneCond = buildStrictPhoneCondition($connection, 'chat_phone', $cleanPhone);
 
         $selectedDevicePhone = trim($data['device_phone'] ?? '');
         $currentUserId = defined('USER_ID') ? (int)USER_ID : (isset($user_id) ? (int)$user_id : 0);
@@ -742,7 +758,7 @@ if ($method === 'POST') {
         if (!empty($cleanPhone)) {
             $cQ = mysqli_query($connection, "SELECT chat_id FROM " . TABLE_PREFIX . "whatsapp_chat 
                 WHERE chat_site_id = {$siteId} 
-                  AND (chat_phone = '{$escPhone}' OR chat_phone LIKE '%{$last10}')
+                  AND {$strictChatPhoneCond}
                   AND (chat_device_phone = '{$escTargetDev}' OR chat_device_phone = '' OR chat_device_phone IS NULL)
                 ORDER BY (chat_device_phone = '{$escTargetDev}') DESC 
                 LIMIT 1");

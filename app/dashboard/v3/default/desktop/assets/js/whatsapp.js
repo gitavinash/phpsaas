@@ -352,6 +352,19 @@
       }, true);
 
       document.addEventListener("error", function (e) {
+        if (e.target && e.target.classList && e.target.classList.contains("wa-avatar-img")) {
+          const img = e.target;
+          const parent = img.parentElement;
+          if (parent) {
+            parent.classList.add("is-fallback");
+            img.remove();
+            if (!parent.querySelector("i, span")) {
+              parent.innerHTML = '<i class="fi fi-rr-user"></i>';
+            }
+          }
+          return;
+        }
+
         if (e.target && e.target.classList && e.target.classList.contains("wa-msg-img")) {
           const img = e.target;
           const box = img.closest(".wa-msg-img-box");
@@ -380,6 +393,7 @@
         if ($player.hasClass("is-pending")) {
           const waId = $player.closest(".wa-msg-voice-card").attr("data-retry-wa-id");
           if (waId) {
+            $btn.addClass("is-loading");
             $btn.find("i").attr("class", "fi fi-rr-spinner wa-spin");
             self.fetchSingleMedia(waId, $player.closest(".wa-msg-voice-card"));
           }
@@ -394,18 +408,22 @@
           if (this !== audio && !this.paused) {
             this.pause();
             const $other = $(this).closest(".wa-voice-player");
+            $other.find(".wa-voice-play-btn").removeClass("is-playing");
             $other.find(".wa-voice-play-btn i").attr("class", "fi fi-rr-play");
           }
         });
 
         if (audio.paused) {
           audio.play().then(function () {
+            $btn.addClass("is-playing");
             $btn.find("i").attr("class", "fi fi-rr-pause");
           }).catch(function (err) {
             console.warn("Audio playback failed:", err);
+            $btn.removeClass("is-playing is-loading");
           });
         } else {
           audio.pause();
+          $btn.removeClass("is-playing");
           $btn.find("i").attr("class", "fi fi-rr-play");
         }
       });
@@ -479,6 +497,7 @@
           const audio = e.target;
           const $player = $(audio).closest(".wa-voice-player");
           if ($player.length) {
+            $player.find(".wa-voice-play-btn").removeClass("is-playing is-loading");
             $player.find(".wa-voice-play-btn i").attr("class", "fi fi-rr-play");
             audio.currentTime = 0;
             self.updateVoiceProgress($player, audio);
@@ -491,7 +510,19 @@
           const audio = e.target;
           const $player = $(audio).closest(".wa-voice-player");
           if ($player.length) {
+            $player.find(".wa-voice-play-btn").removeClass("is-playing");
             $player.find(".wa-voice-play-btn i").attr("class", "fi fi-rr-play");
+          }
+        }
+      }, true);
+
+      document.addEventListener("error", function (e) {
+        if (e.target && e.target.classList && e.target.classList.contains("wa-voice-audio-el")) {
+          const audio = e.target;
+          const $player = $(audio).closest(".wa-voice-player");
+          if ($player.length) {
+            $player.find(".wa-voice-play-btn").removeClass("is-playing is-loading");
+            $player.find(".wa-voice-time").text("Audio error");
           }
         }
       }, true);
@@ -1045,8 +1076,10 @@
                 latestPhone = chat.phone;
                 latestAvatar = chat.avatar || "";
               } else {
-                // Instantly refresh current chat stream and scroll to bottom
-                self.loadMessages(self.activeChatId, true);
+                // Instantly refresh current chat stream; only scroll down if reader is already near bottom
+                const $stream = $("#waMessagesStream");
+                const isNearBottom = $stream.length ? (($stream[0].scrollHeight - $stream[0].scrollTop - $stream[0].clientHeight) < 120) : true;
+                self.loadMessages(self.activeChatId, isNearBottom);
               }
             }
             if (!self.knownChats) self.knownChats = new Map();
@@ -1157,6 +1190,10 @@
     selectChat: function (chatId, phone) {
       if (!chatId) return;
 
+      // Increment sequence token to safely discard any stale in-flight or delayed responses
+      this.activeChatReqSeq = (this.activeChatReqSeq || 0) + 1;
+      const currentReqSeq = this.activeChatReqSeq;
+
       // Abort any in-flight messages request from previous chat
       if (this.currentMessagesXhr && typeof this.currentMessagesXhr.abort === "function") {
         try { this.currentMessagesXhr.abort(); } catch (e) {}
@@ -1170,8 +1207,36 @@
       this.clearAttachment();
 
       $(".wa-thread-item").removeClass("active");
-      $(`.wa-thread-item[data-chat-id="${chatId}"]`).addClass("active");
-      $(`.wa-thread-item[data-chat-id="${chatId}"]`).find(".wa-unread-badge").remove();
+      const $thread = $(`.wa-thread-item[data-chat-id="${chatId}"]`);
+      $thread.addClass("active");
+      $thread.find(".wa-unread-badge").remove();
+
+      // Immediately reset or initialize header to prevent previous contact's photo/info lingering
+      const threadAvatarImg = $thread.find(".wa-avatar-img").attr("src");
+      const threadInitials = $thread.find(".wa-thread-avatar span").text();
+      const threadName = $thread.find(".wa-thread-name").text().trim();
+
+      if (threadAvatarImg) {
+        $("#waActiveAvatar").removeClass("is-fallback").html(`<img src="${this.escapeHtml(threadAvatarImg)}" alt="" class="wa-avatar-img" />`);
+      } else if (threadInitials) {
+        $("#waActiveAvatar").removeClass("is-fallback").html(`<span>${this.escapeHtml(threadInitials)}</span>`);
+      } else {
+        $("#waActiveAvatar").addClass("is-fallback").html('<i class="fi fi-rr-user"></i>');
+      }
+
+      if (threadName) {
+        $("#waActiveName").text(threadName);
+      } else if (phone) {
+        $("#waActiveName").text(phone);
+      } else {
+        $("#waActiveName").text("WhatsApp Contact");
+      }
+      if (phone) {
+        $("#waActivePhone").text(phone);
+        $("#waActivePhoneWrap").removeClass("d-none").show();
+      } else {
+        $("#waActivePhoneWrap").addClass("d-none").hide();
+      }
 
       $("#waEmptyState").hide();
       $("#waActiveChatWrapper").addClass("is-open");
@@ -1180,10 +1245,10 @@
       // Clear stream immediately so previous chat messages never linger
       $("#waMessagesStream").html('<div class="wa-loading-threads"><i class="fi fi-rr-spinner wa-spin"></i><span>Loading conversation...</span></div>');
 
-      this.loadMessages(chatId, true);
+      this.loadMessages(chatId, true, null, currentReqSeq);
     },
 
-    loadMessages: function (chatId, scrollToBottom, callback) {
+    loadMessages: function (chatId, scrollToBottom, callback, reqSeq) {
       const self = this;
       if (!chatId) {
         if (typeof callback === "function") callback();
@@ -1195,6 +1260,8 @@
       }
       this.isLoadingMessages = true;
 
+      const activeSeq = reqSeq || self.activeChatReqSeq || 0;
+
       this.currentMessagesXhr = $.ajax({
         url: "/api/v3/whatsapp/messages/?chat_id=" + chatId,
         method: "GET",
@@ -1202,6 +1269,9 @@
         success: function (res) {
           // Strictly ensure user has not switched to another chat while request was in-flight
           if (String(self.activeChatId) !== String(chatId)) {
+            return;
+          }
+          if (activeSeq && self.activeChatReqSeq && activeSeq !== self.activeChatReqSeq) {
             return;
           }
           if (!res || res.status !== "success") return;
@@ -1312,15 +1382,30 @@
             const isOut = msg.direction === "outgoing";
             let contentHtml = "";
             const trimmedText = (msg.text || "").trim();
+            const isReaction = msg.type === "reaction" || !!msg.reaction_emoji || /^\[Reaction:\s*(.*?)\]$/u.test(trimmedText);
             const isContact = msg.type === "contact" || !!msg.contact_data || /^\[Contacts?:\s*.*?\]$/i.test(trimmedText);
             const isLocation = msg.type === "location" || msg.type === "live_location" || !!msg.location_data || (/^\[Location:\s*.*?\]$/i.test(trimmedText) || /^\[Live Location\]$/i.test(trimmedText));
             const isVoice = msg.type === "audio" || msg.type === "voice" || (msg.media_url && msg.media_url.match(/\.(ogg|mp3|m4a|wav|aac|opus)($|\?)/i)) || trimmedText === "[Voice Note]" || trimmedText === "[Audio]";
             const isVideo = msg.type === "video" || (msg.media_url && msg.media_url.match(/\.(mp4|mov|webm|mkv|avi)($|\?)/i)) || trimmedText === "[Video]";
             const isImage = msg.type === "image" || (msg.media_url && msg.media_url.match(/\.(jpeg|jpg|gif|png|webp)($|\?)/i)) || trimmedText === "[Image]" || trimmedText === "[Photo]";
-            const isDoc = msg.type === "document" || (msg.media_url && !isVoice && !isVideo && !isImage) || trimmedText === "[Attachment]" || trimmedText === "[Document]";
+            const isDoc = msg.type === "document" || !!msg.doc_name || (msg.media_url && !isVoice && !isVideo && !isImage) || /^\[Doc:\s*.*?\]$/i.test(trimmedText) || trimmedText === "[Attachment]" || trimmedText === "[Document]";
 
             let isMedia = false;
-            if (isContact) {
+            if (isReaction) {
+              let emoji = msg.reaction_emoji;
+              if (!emoji) {
+                const rxMatch = trimmedText.match(/^\[Reaction:\s*(.*?)\]$/u);
+                emoji = rxMatch ? rxMatch[1].trim() : "👍";
+              }
+              contentHtml = `
+                <div class="wa-msg-reaction-container">
+                  <div class="wa-msg-reaction-pill" title="Reaction">
+                    <span class="wa-reaction-emoji">${self.escapeHtml(emoji)}</span>
+                    <span class="wa-reaction-label">Reacted</span>
+                  </div>
+                </div>
+              `;
+            } else if (isContact) {
               contentHtml = self.renderContactCard(msg);
             } else if (isLocation) {
               contentHtml = self.renderLocationCard(msg);
@@ -1335,6 +1420,10 @@
               contentHtml = msg.media_url ? self.renderImageCard(msg) : self.renderPendingImageCard(msg);
             } else if (isDoc) {
               isMedia = true;
+              if (!msg.doc_name && /^\[Doc:\s*(.*?)\]$/i.test(trimmedText)) {
+                const dm = trimmedText.match(/^\[Doc:\s*(.*?)\]$/i);
+                msg.doc_name = dm ? dm[1].trim() : "Document";
+              }
               contentHtml = msg.media_url ? self.renderDocCard(msg) : self.renderPendingDocCard(msg);
             } else if (msg.text) {
               contentHtml = `<div class="wa-msg-text">${self.formatMessageText(msg.text)}</div>`;
@@ -1345,7 +1434,8 @@
             // Append text caption if media has non-placeholder text
             if (isMedia && msg.text) {
               const skipPlaceholders = ["[Voice Note]", "[Audio]", "[Video]", "[Image]", "[Photo]", "[Media]", "[Attachment]", "[Document]"];
-              if (!skipPlaceholders.includes(trimmedText)) {
+              const isInternalPrefix = /^\[(Reaction|Doc|Location|Contact):\s*.*?\]$/i.test(trimmedText);
+              if (!skipPlaceholders.includes(trimmedText) && !isInternalPrefix) {
                 contentHtml += `<div class="wa-msg-text">${self.formatMessageText(msg.text)}</div>`;
               }
             }
@@ -1361,9 +1451,15 @@
             `;
           });
 
+          const prevScrollTop = $stream.length ? $stream[0].scrollTop : 0;
+          const prevScrollHeight = $stream.length ? $stream[0].scrollHeight : 0;
+          const clientHeight = $stream.length ? $stream[0].clientHeight : 0;
+          const wasNearBottom = (prevScrollHeight - prevScrollTop - clientHeight) < 120;
+          const shouldScrollBottom = scrollToBottom || wasNearBottom;
+
           if (self.lastStreamHtml === html && $stream.children(".wa-msg-bubble").length > 0) {
             self.autoFetchPendingImages();
-            if (scrollToBottom) {
+            if (shouldScrollBottom) {
               $stream.scrollTop($stream[0].scrollHeight);
             }
             return;
@@ -1382,7 +1478,7 @@
           // Automatically trigger background download for pending images
           self.autoFetchPendingImages();
 
-          if (scrollToBottom) {
+          if (shouldScrollBottom) {
             $stream.scrollTop($stream[0].scrollHeight);
             setTimeout(function () {
               if ($stream.length) $stream.scrollTop($stream[0].scrollHeight);
@@ -1391,14 +1487,22 @@
               if ($stream.length) $stream.scrollTop($stream[0].scrollHeight);
             }, 250);
             $stream.find("img.wa-msg-img").one("load", function () {
-              if ($stream.length) $stream.scrollTop($stream[0].scrollHeight);
+              if ($stream.length) {
+                const currentDist = $stream[0].scrollHeight - $stream[0].scrollTop - $stream[0].clientHeight;
+                if (currentDist < 160) {
+                  $stream.scrollTop($stream[0].scrollHeight);
+                }
+              }
             });
+            $("#waScrollUnreadDot").addClass("d-none");
+            $("#btnScrollToBottom").addClass("d-none");
           } else {
-            const isScrolledUp = ($stream[0].scrollHeight - $stream.scrollTop()) > ($stream[0].clientHeight + 120);
-            if (isScrolledUp) {
-              $("#waScrollUnreadDot").removeClass("d-none");
-              $("#btnScrollToBottom").removeClass("d-none");
-            }
+            // User was reading previous messages: preserve current scroll offset
+            const newScrollHeight = $stream[0].scrollHeight;
+            const heightDiff = newScrollHeight - prevScrollHeight;
+            $stream[0].scrollTop = prevScrollTop + (heightDiff > 0 ? heightDiff : 0);
+            $("#waScrollUnreadDot").removeClass("d-none");
+            $("#btnScrollToBottom").removeClass("d-none");
           }
         },
         complete: function () {
@@ -1418,12 +1522,22 @@
         rawFilename = rawFilename.substring(0, 42) + "...";
       }
 
-      const extMatch = cleanUrl.match(/\.([a-z0-9]+)$/i);
-      const ext = extMatch ? extMatch[1].toLowerCase() : "";
+      let cleanFallback = (fallbackText || "").trim();
+      const docPrefixMatch = cleanFallback.match(/^\[Doc:\s*(.*?)\]$/i);
+      if (docPrefixMatch) {
+        cleanFallback = docPrefixMatch[1].trim();
+      }
 
-      let docName = (fallbackText && fallbackText !== "[Attachment]" && fallbackText !== "[Document]" && fallbackText !== "[Media]")
-        ? fallbackText
+      let docName = (cleanFallback && cleanFallback !== "[Attachment]" && cleanFallback !== "[Document]" && cleanFallback !== "[Media]")
+        ? cleanFallback
         : (rawFilename || "Document");
+
+      let extMatch = cleanUrl.match(/\.([a-z0-9]+)$/i);
+      let ext = extMatch ? extMatch[1].toLowerCase() : "";
+      if (!ext && docName.includes(".")) {
+        const nameExtMatch = docName.match(/\.([a-z0-9]+)$/i);
+        if (nameExtMatch) ext = nameExtMatch[1].toLowerCase();
+      }
 
       let icon = "fi-rr-document";
       let theme = "wa-doc-theme-default";
@@ -1708,7 +1822,10 @@
       return `
         <div class="wa-msg-voice-card" data-wa-id="${self.escapeHtml(msg.wa_id || '')}">
           <div class="wa-voice-player">
-            <button type="button" class="wa-voice-play-btn" title="Play voice note">
+            <button type="button" class="wa-voice-play-btn" title="Play voice note" aria-label="Play voice note">
+              <svg class="wa-voice-svg-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+              <svg class="wa-voice-svg-pause" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+              <svg class="wa-voice-svg-spinner wa-spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10" stroke-opacity="0.25"/><path d="M12 2a10 10 0 0 1 10 10" stroke-linecap="round"/></svg>
               <i class="fi fi-rr-play"></i>
             </button>
             <div class="wa-voice-track-wrap">
@@ -1741,8 +1858,10 @@
       return `
         <div class="wa-msg-voice-card wa-auto-fetch-media" data-retry-wa-id="${self.escapeHtml(msg.wa_id || '')}">
           <div class="wa-voice-player is-pending" title="Click to download voice note">
-            <button type="button" class="wa-voice-play-btn is-download" title="Download voice note">
-              <i class="fi fi-rr-arrow-down-to-bracket"></i>
+            <button type="button" class="wa-voice-play-btn is-download" title="Download voice note" aria-label="Download voice note">
+              <svg class="wa-voice-svg-download" viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM17 13l-5 5-5-5h3V9h4v4h3z"/></svg>
+              <svg class="wa-voice-svg-spinner wa-spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10" stroke-opacity="0.25"/><path d="M12 2a10 10 0 0 1 10 10" stroke-linecap="round"/></svg>
+              <i class="fi fi-rr-download"></i>
             </button>
             <div class="wa-voice-track-wrap">
               <div class="wa-voice-waveform">
@@ -1839,18 +1958,19 @@
 
     renderPendingDocCard: function (msg) {
       const self = this;
+      const docInfo = self.getDocInfo(msg.media_url, msg.doc_name || msg.text);
       return `
         <div class="wa-msg-media" data-retry-wa-id="${self.escapeHtml(msg.wa_id || '')}">
-          <div class="wa-msg-doc-card wa-doc-theme-default wa-media-doc-card-pending wa-auto-fetch-media" data-retry-wa-id="${self.escapeHtml(msg.wa_id || '')}">
+          <div class="wa-msg-doc-card ${docInfo.theme} wa-media-doc-card-pending wa-auto-fetch-media" data-retry-wa-id="${self.escapeHtml(msg.wa_id || '')}">
             <div class="wa-doc-main-link">
               <div class="wa-doc-icon-box">
-                <i class="fi fi-rr-file-download"></i>
-                <span class="wa-doc-pill-ext">DOC</span>
+                <i class="fi ${docInfo.icon || 'fi-rr-file-download'}"></i>
+                <span class="wa-doc-pill-ext">${self.escapeHtml(docInfo.ext || 'DOC')}</span>
               </div>
               <div class="wa-doc-details">
-                <div class="wa-doc-name">Attachment</div>
+                <div class="wa-doc-name" title="${self.escapeHtml(docInfo.filename)}">${self.escapeHtml(docInfo.filename)}</div>
                 <div class="wa-doc-meta-row">
-                  <span>Click to load document</span>
+                  <span>${self.escapeHtml(docInfo.label)} · Click to load</span>
                   <span class="wa-doc-action-btn"><i class="fi fi-rr-download"></i></span>
                 </div>
               </div>

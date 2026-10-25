@@ -12,6 +12,8 @@ if (!defined('TABLE_PREFIX')) {
     define('TABLE_PREFIX', 'isw_');
 }
 
+require_once __DIR__ . '/phone_helper.php';
+
 /**
  * Resolves the appropriate WhatsApp device for an outbound message or action.
  * Priority rules:
@@ -279,12 +281,13 @@ function sendWhatsAppDirectMessage($connection, $siteId, $senderUserId, $recipie
     $chatId = isset($options['chat_id']) ? (int)$options['chat_id'] : 0;
 
     if ($chatId <= 0) {
-        $last10 = substr($rDigits, -10);
+        $normRecipientPhone = normalizeWhatsAppPhone($cleanRecipientPhone);
+        $strictRecipientCond = buildStrictPhoneCondition($connection, 'chat_phone', $normRecipientPhone);
         $leadSqlCond = $leadId > 0 ? " OR chat_lead_id = {$leadId}" : "";
         $chatQ = mysqli_query($connection, "SELECT chat_id, chat_device_phone, chat_lead_id FROM {$prefix}whatsapp_chat 
             WHERE chat_site_id = {$siteId} 
-              AND (chat_phone = '{$escRecipientPhone}' OR chat_phone = '{$rDigits}' OR chat_phone LIKE '%{$last10}'{$leadSqlCond}) 
-            ORDER BY (chat_phone = '{$escRecipientPhone}') DESC, (chat_phone LIKE '%{$last10}') DESC, chat_id DESC 
+              AND ({$strictRecipientCond}{$leadSqlCond}) 
+            ORDER BY (chat_phone = '{$escRecipientPhone}') DESC, chat_id DESC 
             LIMIT 1");
         if ($chatQ && mysqli_num_rows($chatQ) > 0) {
             $cRow = mysqli_fetch_assoc($chatQ);
