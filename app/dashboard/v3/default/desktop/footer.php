@@ -136,6 +136,8 @@
 				<script src="<?php echo ADMIN_JS ?>web_forms.js?v=<?php echo time(); ?>"></script>
 				<script src="<?php echo ADMIN_JS ?>whatsapp_templates.js?v=<?php echo time(); ?>"></script>
 				<script src="<?php echo ADMIN_JS ?>workflows.js?v=<?php echo time(); ?>"></script>
+				<script src="<?php echo ADMIN_JS ?>control_panel.js?v=<?php echo time(); ?>"></script>
+				<script src="<?php echo ADMIN_JS ?>configurations.js?v=<?php echo time(); ?>"></script>
 				<?php
 				$appJSPath = ADMIN_PATH . 'assets/js/' . SITE_APP . '.js';
 				$appJSScript = ADMIN_JS . SITE_APP . '.js';
