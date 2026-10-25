@@ -117,11 +117,22 @@
       });
 
       // Filter tabs (delegated)
+      // Filter pills (All, Unread, CRM Leads)
       $(document).on("click", ".wa-filter-pill", function () {
         $(".wa-filter-pill").removeClass("active");
         $(this).addClass("active");
         self.currentFilter = $(this).data("filter") || "all";
-        self.loadThreads();
+        self.lastThreadsHtml = null;
+        self.shouldScrollThreadsTop = true;
+        const $threadsContainer = $("#waThreadsContainer");
+        if ($threadsContainer.length) {
+          $threadsContainer.scrollTop(0);
+        }
+        self.loadThreads(function () {
+          if ($("#waThreadsContainer").length) {
+            $("#waThreadsContainer").scrollTop(0);
+          }
+        });
       });
 
       // Device Tab click (Sidebar line switcher)
@@ -132,7 +143,16 @@
         $(this).addClass("active");
         self.updateHeaderStatusBadge();
         self.lastThreadsHtml = null;
-        self.loadThreads();
+        self.shouldScrollThreadsTop = true;
+        const $threadsContainer = $("#waThreadsContainer");
+        if ($threadsContainer.length) {
+          $threadsContainer.scrollTop(0);
+        }
+        self.loadThreads(function () {
+          if ($("#waThreadsContainer").length) {
+            $("#waThreadsContainer").scrollTop(0);
+          }
+        });
       });
 
       // Keyboard support for device tabs
@@ -1168,6 +1188,10 @@
           }
           self.lastThreadsHtml = html;
           $container.html(html);
+          if (self.shouldScrollThreadsTop) {
+            $container.scrollTop(0);
+            self.shouldScrollThreadsTop = false;
+          }
           self.handlePendingLeadChat(res.chats);
 
         },

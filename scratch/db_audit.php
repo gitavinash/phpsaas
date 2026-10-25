@@ -1,9 +1,14 @@
 <?php
-$_SERVER['DOCUMENT_ROOT'] = '/opt/homebrew/var/www/php/isw-app';
-$_SERVER['HTTP_HOST'] = 'localhost';
-require_once __DIR__ . '/../config.php';
-require_once __DIR__ . '/../lib/modules/connection.php';
-require_once __DIR__ . '/../api/v3/whatsapp/phone_helper.php';
+if (empty($_SERVER['DOCUMENT_ROOT']) || !file_exists($_SERVER['DOCUMENT_ROOT'] . '/config.php')) {
+    $_SERVER['DOCUMENT_ROOT'] = dirname(__DIR__);
+}
+$_SERVER['HTTP_HOST'] = $_SERVER['HTTP_HOST'] ?? 'localhost';
+$_SERVER['REMOTE_ADDR'] = $_SERVER['REMOTE_ADDR'] ?? '127.0.0.1';
+$_SERVER['QUERY_STRING'] = $_SERVER['QUERY_STRING'] ?? '';
+$_SERVER['REQUEST_URI'] = $_SERVER['REQUEST_URI'] ?? '/';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/config.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/lib/modules/connection.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/api/v3/whatsapp/phone_helper.php';
 
 if (!isset($connection)) {
     die("Database connection failed\n");
