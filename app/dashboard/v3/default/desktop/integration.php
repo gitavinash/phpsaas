@@ -24,6 +24,14 @@ $isFbActive       = (!defined('ENABLE_FACEBOOK_LEAD_ADS') || ENABLE_FACEBOOK_LEA
 $isGAdsActive     = (defined('ENABLE_GOOGLE_ADS') && ENABLE_GOOGLE_ADS == '1');
 $isWfActive       = (!defined('ENABLE_WEB_FORMS') || ENABLE_WEB_FORMS == '1');
 $isWaActive       = (defined('ENABLE_WHATSAPP_WEB_API') && ENABLE_WHATSAPP_WEB_API == '1');
+$hasConnectedWaDevice = false;
+$intSiteId = defined('SITE_ID') ? (int)SITE_ID : (defined('APP_SITE_ID') ? (int)APP_SITE_ID : 0);
+if (isset($connection) && $connection && $intSiteId > 0) {
+    $chkDevConn = @mysqli_query($connection, "SELECT device_id FROM " . TABLE_PREFIX . "whatsapp_device WHERE device_site_id = {$intSiteId} AND device_status = 'connected' LIMIT 1");
+    if ($chkDevConn && mysqli_num_rows($chkDevConn) > 0) {
+        $hasConnectedWaDevice = true;
+    }
+}
 $isSmtpActive     = (!defined('ENABLE_SMTP_EMAIL') || ENABLE_SMTP_EMAIL == '1');
 $isWhActive       = (!defined('ENABLE_WEBHOOKS') || ENABLE_WEBHOOKS == '1');
 $isUpiActive      = (!defined('ENABLE_UPI') || ENABLE_UPI == '1');
@@ -190,7 +198,7 @@ $isWorkflowsActive = (!defined('ENABLE_WORKFLOWS') || ENABLE_WORKFLOWS == '1');
         </div>
 
         <!-- 4b. WhatsApp Web API (QR Code) -->
-        <div class="integration-card <?php echo ($isWaActive ? 'is-active-card' : 'is-disabled'); ?>" data-category="messaging" data-slug="whatsapp_web">
+        <div class="integration-card <?php echo ($isWaActive ? 'is-active-card' : 'is-disabled'); ?>" data-category="messaging" data-slug="whatsapp_web" data-connected="<?php echo $hasConnectedWaDevice ? '1' : '0'; ?>">
             <div class="integration-card-header">
                 <div class="integration-brand-logo brand-whatsapp">
                     <img src="/app/dashboard/v3/default/desktop/assets/images/integration/whatsapp.svg" alt="WhatsApp Web">

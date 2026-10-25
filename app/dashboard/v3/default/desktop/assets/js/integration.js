@@ -85,7 +85,20 @@
       }
     },
 
-    updateAsidePluginState: function (slug, isActive) {
+    updateAsidePluginState: function (slug, isActive, hasConnected) {
+      if (slug === "whatsapp_web") {
+        let isDeviceConnected = hasConnected;
+        if (isDeviceConnected === undefined) {
+          const $waCard = $('.integration-card[data-slug="whatsapp_web"]');
+          if ($waCard.length) {
+            isDeviceConnected = $waCard.attr("data-connected") === "1" || $waCard.data("connected") === true;
+          }
+        }
+        if (isActive && isDeviceConnected === false) {
+          isActive = false;
+        }
+      }
+
       const $asideItems = $('[data-aside-plugin="' + slug + '"]');
       const $asideAvailable = $('[data-aside-plugin="' + slug + '_available"]');
       if (isActive) {
@@ -203,7 +216,12 @@
 
         // Optimistic UI updates
         self.updateCardActionState($card, isChecked);
-        self.updateAsidePluginState(slug, isChecked);
+        if (slug === "whatsapp_web") {
+          const isCardConn = $card.attr("data-connected") === "1" || $card.data("connected") === true;
+          self.updateAsidePluginState(slug, isChecked, isCardConn);
+        } else {
+          self.updateAsidePluginState(slug, isChecked);
+        }
 
         // If activating a payment gateway, deactivate all other payment gateways
         if (isChecked && isPg) {
@@ -234,6 +252,10 @@
           success: function (res) {
             $toggle.prop("disabled", false);
             if (res && res.status === "success") {
+              if (slug === "whatsapp_web" && res.has_connected_device !== undefined) {
+                $card.attr("data-connected", res.has_connected_device ? "1" : "0");
+                self.updateAsidePluginState(slug, isChecked, !!res.has_connected_device);
+              }
               // Ensure any deactivated slugs returned by API are synced
               if (Array.isArray(res.deactivated_slugs)) {
                 res.deactivated_slugs.forEach(function (deactSlug) {
@@ -381,7 +403,7 @@
       if (!$app.length) return;
 
       let qrInterval = null;
-      let countdown = 30;
+      let countdown = 60;
       let statusPollInterval = null;
       let modalPollInterval = null;
       let modalCountdownInterval = null;
@@ -411,7 +433,12 @@
 
               const isActive = !!res.is_active;
               $("#waWebActiveToggle").prop("checked", isActive);
-              self.updateAsidePluginState("whatsapp_web", isActive);
+              const hasConnectedDev = (res.has_connected_device !== undefined)
+                ? !!res.has_connected_device
+                : !!(stateDevices && stateDevices.some(function (d) {
+                    return (d.status === "connected" || d.device_status === "connected");
+                  }));
+              self.updateAsidePluginState("whatsapp_web", isActive, hasConnectedDev);
               updateWaWebSectionsVisibility(isActive);
 
               if (isAdmin) {
@@ -591,7 +618,9 @@
 
       // 4. Load QR Code for Unassigned Agent
       function loadAgentQrCode(force) {
-        $("#waAgentQrCodeContainer").html('<div class="wa-qr-placeholder"><i class="fi fi-rr-spinner wa-spin"></i><span>Generating your QR Code...</span></div>');
+        if (!$("#waAgentQrCodeContainer svg").length || force) {
+          $("#waAgentQrCodeContainer").html('<div class="wa-qr-placeholder"><i class="fi fi-rr-spinner wa-spin"></i><span>Generating your QR Code...</span></div>');
+        }
         const url = "/api/v3/integration/whatsapp_web/?action=generate_qr" + (force ? "&force=1" : "");
         $.ajax({
           url: url,
@@ -607,7 +636,7 @@
             }
             if (res && res.status === "success" && res.qr_svg) {
               $("#waAgentQrCodeContainer").html(res.qr_svg);
-              resetAgentCountdown(res.expires_in || 30);
+              resetAgentCountdown(Math.max(60, res.expires_in || 60));
               if (res.session_id) {
                 currentAgentSessionId = res.session_id;
                 startAgentStatusPolling(res.session_id);
@@ -629,7 +658,7 @@
 
       function resetAgentCountdown(duration) {
         clearInterval(qrInterval);
-        countdown = duration || 30;
+        countdown = Math.max(60, duration || 60);
         $("#waAgentQrTimer").text(countdown);
         qrInterval = setInterval(function () {
           countdown--;
@@ -736,7 +765,7 @@
 
         currentModalSessionId = "device_" + Date.now();
         $("#waAddDeviceModal").addClass("is-active");
-        loadModalQrCode(currentModalSessionId);
+        loadModalQrCode(currentModalSessionId, true);
         startModalStatusPolling(currentModalSessionId);
       });
 
@@ -760,10 +789,13 @@
         }
       });
 
-      function loadModalQrCode(sessId) {
-        $("#waModalQrCodeContainer").html('<div class="wa-qr-placeholder"><i class="fi fi-rr-spinner wa-spin"></i><span>Generating QR code...</span></div>');
+      function loadModalQrCode(sessId, force) {
+        if (!$("#waModalQrCodeContainer svg").length || force) {
+          $("#waModalQrCodeContainer").html('<div class="wa-qr-placeholder"><i class="fi fi-rr-spinner wa-spin"></i><span>Generating QR code...</span></div>');
+        }
+        const url = "/api/v3/integration/whatsapp_web/?action=generate_qr&session_id=" + encodeURIComponent(sessId) + "&new_device=1" + (force ? "&force=1" : "");
         $.ajax({
-          url: "/api/v3/integration/whatsapp_web/?action=generate_qr&session_id=" + encodeURIComponent(sessId) + "&new_device=1",
+          url: url,
           method: "GET",
           dataType: "json",
           success: function (res) {
@@ -795,7 +827,7 @@
                 startModalStatusPolling(res.session_id);
               }
               $("#waModalQrCodeContainer").html(res.qr_svg);
-              let modalCountdown = res.expires_in || 30;
+              let modalCountdown = Math.max(60, res.expires_in || 60);
               $("#waModalQrTimer").text(modalCountdown);
               clearInterval(modalCountdownInterval);
               modalCountdownInterval = setInterval(function () {
@@ -804,14 +836,14 @@
                 if (modalCountdown <= 0) {
                   clearInterval(modalCountdownInterval);
                   if ($("#waAddDeviceModal").hasClass("is-active")) {
-                    loadModalQrCode(currentModalSessionId || sessId);
+                    loadModalQrCode(currentModalSessionId || sessId, false);
                   }
                 }
               }, 1000);
             } else if (res && res.status === "initializing") {
               setTimeout(function () {
                 if ($("#waAddDeviceModal").hasClass("is-active")) {
-                  loadModalQrCode(currentModalSessionId || sessId);
+                  loadModalQrCode(currentModalSessionId || sessId, false);
                 }
               }, 1500);
             } else if (res && res.msg) {
@@ -891,7 +923,7 @@
       }
 
       $("#btnModalRefreshQr").on("click", function () {
-        if (currentModalSessionId) loadModalQrCode(currentModalSessionId);
+        if (currentModalSessionId) loadModalQrCode(currentModalSessionId, true);
       });
 
       // Modal Phone Pairing
@@ -1218,15 +1250,18 @@
         const $toggle = $(this);
         $toggle.prop("disabled", true);
 
+        const hasConnectedDev = !!(stateDevices && stateDevices.some(function (d) {
+          return (d.status === "connected" || d.device_status === "connected");
+        }));
         updateWaWebSectionsVisibility(isChecked);
-        self.updateAsidePluginState("whatsapp_web", isChecked);
+        self.updateAsidePluginState("whatsapp_web", isChecked, hasConnectedDev);
 
         self.togglePlugin("whatsapp_web", "enable_whatsapp_web_api", isChecked, function (success) {
           $toggle.prop("disabled", false);
           if (!success) {
             $toggle.prop("checked", !isChecked);
             updateWaWebSectionsVisibility(!isChecked);
-            self.updateAsidePluginState("whatsapp_web", !isChecked);
+            self.updateAsidePluginState("whatsapp_web", !isChecked, hasConnectedDev);
           }
         });
       });

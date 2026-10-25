@@ -227,7 +227,7 @@ $isWaWebActive = (defined('ENABLE_WHATSAPP_WEB_API') && ENABLE_WHATSAPP_WEB_API 
                                             </div>
                                         </div>
                                         <div class="wa-qr-countdown-wrap">
-                                            <span>Auto-refreshes in <strong id="waAgentQrTimer">30</strong>s</span>
+                                            <span>Auto-refreshes in <strong id="waAgentQrTimer">60</strong>s</span>
                                             <button type="button" class="btn-wa-link" id="btnAgentRefreshQr">
                                                 <i class="fi fi-rr-refresh"></i> Refresh QR Code
                                             </button>
@@ -454,7 +454,7 @@ $isWaWebActive = (defined('ENABLE_WHATSAPP_WEB_API') && ENABLE_WHATSAPP_WEB_API 
                                 </div>
                             </div>
                             <div class="wa-qr-countdown-wrap">
-                                <span>Refreshes in <strong id="waModalQrTimer">30</strong>s</span>
+                                <span>Refreshes in <strong id="waModalQrTimer">60</strong>s</span>
                                 <button type="button" class="btn-wa-link" id="btnModalRefreshQr">
                                     <i class="fi fi-rr-refresh"></i> Refresh QR
                                 </button>

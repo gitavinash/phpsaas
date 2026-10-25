@@ -400,6 +400,13 @@ if ($action === 'get_devices' || $action === 'devices') {
         'devices'             => $devices,
         'agents'              => $agents,
         'disconnect_alert'    => !empty($configs['whatsapp_disconnect_alert']) ? json_decode($configs['whatsapp_disconnect_alert'], true) : null,
+        'has_connected_device'=> (function() use ($devices, $userAssignedDevice) {
+            if ($userAssignedDevice && ($userAssignedDevice['device_status'] ?? '') === 'connected') return true;
+            foreach ($devices as $dev) {
+                if (($dev['status'] ?? '') === 'connected') return true;
+            }
+            return false;
+        })(),
         'is_active'           => $configs['enable_whatsapp_web_api'] === '1'
     ]);
     exit;
@@ -643,7 +650,7 @@ if ($action === 'generate_qr' || $action === 'qr') {
             'session_id' => $sessionId,
             'qr_data'    => $gwRes['qr_string'] ?? '',
             'qr_svg'     => $gwRes['qr_svg'],
-            'expires_in' => $gwRes['expires_in'] ?? 30,
+            'expires_in' => (int)($gwRes['expires_in'] ?? 60),
             'is_live'    => true,
             'created_at' => date('Y-m-d H:i:s')
         ]);

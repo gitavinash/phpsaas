@@ -469,6 +469,12 @@ body.v3-agent-layout main .container {
   display: flex !important;
 }
 
+/* Sidebar hidden navigation items */
+nav.side-nav ul li.is-hidden,
+nav.side-nav li.is-hidden {
+  display: none !important;
+}
+
 /* --- 5. COMPACT SIDEBAR STYLING --- */
 nav.side-nav ul li.header-section-name {
   padding: 10px 8px 4px 8px !important;

@@ -86,6 +86,16 @@ if ($method === 'GET') {
         }
     }
 
+    // Check if at least 1 WhatsApp device is connected on this site
+    $hasConnectedWaDevice = false;
+    $waDevQ = @mysqli_query($connection, "SELECT device_phone FROM " . TABLE_PREFIX . "whatsapp_device WHERE device_site_id = {$siteId} AND device_status = 'connected' LIMIT 1");
+    if ($waDevQ && $waDevR = mysqli_fetch_assoc($waDevQ)) {
+        $hasConnectedWaDevice = true;
+        if (empty($configMap['whatsapp_web_phone']) && !empty($waDevR['device_phone'])) {
+            $configMap['whatsapp_web_phone'] = $waDevR['device_phone'];
+        }
+    }
+
     // Determine currently active single payment gateway
     // Default to razorpay if none explicitly set, or pick the first active
     $activePgFound = null;
@@ -182,7 +192,8 @@ if ($method === 'GET') {
             'toggle_key'    => 'enable_whatsapp_web_api',
             'is_active'     => ($configMap['enable_whatsapp_web_api'] ?? '0') === '1',
             'status_label'  => !empty($configMap['whatsapp_web_phone']) ? 'Connected (' . $configMap['whatsapp_web_phone'] . ')' : (($configMap['enable_whatsapp_web_api'] ?? '0') === '1' ? 'Ready to Scan' : 'Available'),
-            'is_connected'  => !empty($configMap['whatsapp_web_phone']),
+            'is_connected'  => $hasConnectedWaDevice || !empty($configMap['whatsapp_web_phone']),
+            'has_connected_device' => $hasConnectedWaDevice,
             'features'      => [
                 'Scan QR code with existing personal or business WhatsApp',
                 'Real-time incoming message synchronization to CRM',
@@ -517,14 +528,19 @@ if ($method === 'POST' || $method === 'PUT') {
 
     if ($ok) {
         $stateWord = $isActive === 1 ? 'activated' : 'deactivated';
-        echo json_encode([
+        $resPayload = [
             'status'            => 'success',
             'msg'               => "Integration {$stateWord} successfully.",
             'is_active'         => $isActive === 1,
             'is_payment_gateway'=> isset($paymentGateways[$pluginSlug]),
             'active_slug'       => $pluginSlug,
             'deactivated_slugs' => $deactivatedSlugs
-        ]);
+        ];
+        if ($pluginSlug === 'whatsapp_web') {
+            $chkDevQ = @mysqli_query($connection, "SELECT device_id FROM " . TABLE_PREFIX . "whatsapp_device WHERE device_site_id = {$siteId} AND device_status = 'connected' LIMIT 1");
+            $resPayload['has_connected_device'] = ($chkDevQ && mysqli_num_rows($chkDevQ) > 0);
+        }
+        echo json_encode($resPayload);
     } else {
         http_response_code(500);
         echo json_encode([

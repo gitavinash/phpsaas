@@ -1541,6 +1541,7 @@ class WhatsAppSession {
         emitOwnEvents: true,
         defaultQueryTimeoutMs: 120000,
         markOnlineOnConnect: true,
+        qrTimeout: 90000,
         getMessage: async (key) => {
           return this.getMessage(key);
         },
@@ -1567,6 +1568,7 @@ class WhatsAppSession {
               console.log(`\n================== SCAN WHATSAPP QR [${this.sessionId}] ==================\n` + termQr + `\n========================================================================\n`);
             }
             this.connectionStatus = "qr_ready";
+            this.isConnecting = false;
           } catch (err) {
             console.error(`[WhatsApp Gateway:${this.sessionId}] Failed to generate QR SVG:`, err);
           }
@@ -2437,25 +2439,31 @@ app.get("/qr", async (req, res) => {
     }
 
     const force = req.query.force === "1" || req.query.force === "true";
-    let isStale = (Date.now() - s.qrGeneratedAt) > 28000;
+    const QR_TTL_MS = 60000;
+    const qrAge = s.qrGeneratedAt ? (Date.now() - s.qrGeneratedAt) : Infinity;
+    const isStale = qrAge > QR_TTL_MS;
 
-    if ((force || s.connectionStatus === "disconnected" || !s.sock) && s.connectionStatus !== "connected") {
+    if ((force || isStale || s.connectionStatus === "disconnected" || !s.sock) && s.connectionStatus !== "connected") {
       try {
-        if (s.sock) s.sock.end();
+        if (s.sock) {
+          s.sock.ev?.removeAllListeners?.();
+          s.sock.end?.();
+        }
       } catch (e) {}
+      s.sock = null;
+      s.isConnecting = false;
       s.currentQrSvg = null;
       s.currentQrString = null;
       s.startSocket();
     }
 
-    // If QR is missing or stale, wait up to 4.5s for the live socket to generate it
-    if (!s.currentQrSvg || isStale) {
+    // If QR is missing, wait up to 5s for the live socket to generate it
+    if (!s.currentQrSvg && s.connectionStatus !== "connected") {
       let waited = 0;
-      while (!s.currentQrSvg && s.connectionStatus !== "connected" && waited < 4500) {
-        await new Promise((r) => setTimeout(r, 300));
-        waited += 300;
+      while (!s.currentQrSvg && s.connectionStatus !== "connected" && waited < 5000) {
+        await new Promise((r) => setTimeout(r, 250));
+        waited += 250;
       }
-      isStale = (Date.now() - s.qrGeneratedAt) > 28000;
     }
 
     if (s.connectionStatus === "connected") {
@@ -2467,9 +2475,9 @@ app.get("/qr", async (req, res) => {
       });
     }
 
-    if (s.currentQrSvg && !isStale) {
+    if (s.currentQrSvg) {
       const elapsed = Math.floor((Date.now() - s.qrGeneratedAt) / 1000);
-      const remaining = Math.max(5, 30 - elapsed);
+      const remaining = Math.max(15, 60 - elapsed);
       return res.json({
         status: "qr_ready",
         session_id: s.sessionId,
