@@ -98,25 +98,48 @@ if ($method === 'GET') {
         if (!empty($msgWaId)) {
             $escWaId = mysqli_real_escape_string($connection, $msgWaId);
 
+            $upDir = (defined('ROOT') ? ROOT : dirname(__DIR__, 3)) . '/upload/whatsapp';
+            $cacheDir = (defined('ROOT') ? ROOT : dirname(__DIR__, 3)) . '/services/whatsapp-gateway/media_cache';
+            if (!is_dir($upDir)) {
+                @mkdir($upDir, 0777, true);
+            }
+
             // 1. Check if DB already has media_url for this message
             $chkDb = mysqli_query($connection, "SELECT message_id, message_media_url, message_type FROM " . TABLE_PREFIX . "whatsapp_message WHERE message_site_id = {$siteId} AND message_wa_id = '{$escWaId}' AND message_media_url != '' LIMIT 1");
             if ($chkDb && mysqli_num_rows($chkDb) > 0) {
                 $dbRow = mysqli_fetch_assoc($chkDb);
+                $cleanUrl = preg_replace('#^https?://(?:127\.0\.0\.1|localhost):3001/media/#i', '/upload/whatsapp/', $dbRow['message_media_url']);
+                $dbType = $dbRow['message_type'] ?? 'image';
+                if ($cleanUrl !== $dbRow['message_media_url']) {
+                    $escClean = mysqli_real_escape_string($connection, $cleanUrl);
+                    @mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "whatsapp_message SET message_media_url = '{$escClean}' WHERE message_id = " . (int)$dbRow['message_id']);
+                }
                 echo json_encode([
                     'status'    => 'success',
-                    'media_url' => $dbRow['message_media_url'],
-                    'type'      => $dbRow['message_type']
+                    'media_url' => $cleanUrl,
+                    'type'      => $dbType
                 ]);
                 exit;
             }
 
-            // 2. Check if file is already on local disk
-            $upDir = (defined('ROOT') ? ROOT : dirname(__DIR__, 3)) . '/upload/whatsapp';
-            foreach (['jpg', 'jpeg', 'png', 'webp', 'pdf', 'mp4', 'ogg'] as $chkExt) {
+            // 2. Check if file is already on local disk or in gateway cache
+            $allExts = ['jpg', 'jpeg', 'png', 'webp', 'gif', 'mp4', 'mov', 'webm', 'ogg', 'mp3', 'm4a', 'wav', 'aac', 'opus', 'pdf', 'doc', 'docx', 'xls', 'xlsx', 'txt', 'zip'];
+            foreach ($allExts as $chkExt) {
                 $chkFile = $upDir . '/wa_' . $msgWaId . '.' . $chkExt;
+                $cacheFile = $cacheDir . '/wa_' . $msgWaId . '.' . $chkExt;
+                if (!file_exists($chkFile) && file_exists($cacheFile) && filesize($cacheFile) > 0) {
+                    @copy($cacheFile, $chkFile);
+                }
                 if (file_exists($chkFile) && filesize($chkFile) > 0) {
                     $foundUrl = '/upload/whatsapp/wa_' . $msgWaId . '.' . $chkExt;
-                    $foundType = in_array($chkExt, ['jpg', 'jpeg', 'png', 'webp']) ? 'image' : ($chkExt === 'pdf' ? 'document' : 'media');
+                    $foundType = 'document';
+                    if (in_array($chkExt, ['jpg', 'jpeg', 'png', 'webp', 'gif'])) {
+                        $foundType = 'image';
+                    } elseif (in_array($chkExt, ['mp4', 'mov', 'webm'])) {
+                        $foundType = 'video';
+                    } elseif (in_array($chkExt, ['ogg', 'mp3', 'm4a', 'wav', 'aac', 'opus'])) {
+                        $foundType = 'audio';
+                    }
                     $escU = mysqli_real_escape_string($connection, $foundUrl);
                     $escT = mysqli_real_escape_string($connection, $foundType);
                     mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "whatsapp_message SET message_media_url = '{$escU}', message_type = '{$escT}' WHERE message_site_id = {$siteId} AND message_wa_id = '{$escWaId}'");
@@ -138,13 +161,21 @@ if ($method === 'GET') {
                 if (isset($gwJson['results']) && is_array($gwJson['results'])) {
                     foreach ($gwJson['results'] as $r) {
                         if (!empty($r['url']) && ($r['msgId'] ?? '') === $msgWaId) {
-                            $escU = mysqli_real_escape_string($connection, $r['url']);
-                            $escT = mysqli_real_escape_string($connection, $r['type'] ?? 'image');
+                            $normUrl = preg_replace('#^https?://(?:127\.0\.0\.1|localhost):3001/media/#i', '/upload/whatsapp/', $r['url']);
+                            $resType = $r['type'] ?? 'image';
+                            if ($resType === 'media') {
+                                if (preg_match('/\.(mp4|mov|webm)($|\?)/i', $normUrl)) $resType = 'video';
+                                elseif (preg_match('/\.(ogg|mp3|m4a|wav|aac|opus)($|\?)/i', $normUrl)) $resType = 'audio';
+                                elseif (preg_match('/\.(jpe?g|png|webp|gif)($|\?)/i', $normUrl)) $resType = 'image';
+                                else $resType = 'document';
+                            }
+                            $escU = mysqli_real_escape_string($connection, $normUrl);
+                            $escT = mysqli_real_escape_string($connection, $resType);
                             mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "whatsapp_message SET message_media_url = '{$escU}', message_type = '{$escT}' WHERE message_site_id = {$siteId} AND message_wa_id = '{$escWaId}'");
                             echo json_encode([
                                 'status'    => 'success',
-                                'media_url' => $r['url'],
-                                'type'      => $r['type'] ?? 'image'
+                                'media_url' => $normUrl,
+                                'type'      => $resType
                             ]);
                             exit;
                         }
@@ -381,7 +412,8 @@ if ($method === 'GET') {
 
         $seenWaIds = [];
         $seenRecentMsgs = [];
-        foreach ($rawRows as $row) {
+        $rowCount = count($rawRows);
+        foreach ($rawRows as $i => $row) {
             $waIdVal = trim($row['message_wa_id'] ?? '');
             $textVal = trim($row['message_text'] ?? '');
             $dirVal = $row['message_direction'] ?? '';
@@ -431,21 +463,61 @@ if ($method === 'GET') {
                 }
             }
             $mediaUrl = $row['message_media_url'] ?? '';
+            if (!empty($mediaUrl)) {
+                $mediaUrl = preg_replace('#^https?://(?:127\.0\.0\.1|localhost):3001/media/#i', '/upload/whatsapp/', $mediaUrl);
+            }
             $mType = strtolower(trim($row['message_type'] ?? 'text'));
+            $mText = trim((string)($row['message_text'] ?? ''));
+
             if (empty($mediaUrl) && !empty($row['message_wa_id'])) {
                 $upDir = (defined('ROOT') ? ROOT : dirname(__DIR__, 3)) . '/upload/whatsapp';
-                foreach (['jpg', 'jpeg', 'png', 'webp', 'pdf', 'mp4', 'ogg'] as $chkExt) {
+                $cacheDir = (defined('ROOT') ? ROOT : dirname(__DIR__, 3)) . '/services/whatsapp-gateway/media_cache';
+                $allExts = ['jpg', 'jpeg', 'png', 'webp', 'gif', 'mp4', 'mov', 'webm', 'ogg', 'mp3', 'm4a', 'wav', 'aac', 'opus', 'pdf', 'doc', 'docx', 'xls', 'xlsx', 'txt', 'zip'];
+                foreach ($allExts as $chkExt) {
                     $chkFile = $upDir . '/wa_' . $row['message_wa_id'] . '.' . $chkExt;
+                    $cacheFile = $cacheDir . '/wa_' . $row['message_wa_id'] . '.' . $chkExt;
+                    if (!file_exists($chkFile) && file_exists($cacheFile) && filesize($cacheFile) > 0) {
+                        @copy($cacheFile, $chkFile);
+                    }
                     if (file_exists($chkFile) && filesize($chkFile) > 0) {
                         $mediaUrl = '/upload/whatsapp/wa_' . $row['message_wa_id'] . '.' . $chkExt;
-                        if ($mType === 'text') {
-                            $mType = in_array($chkExt, ['jpg', 'jpeg', 'png', 'webp']) ? 'image' : ($chkExt === 'pdf' ? 'document' : 'media');
+                        $foundType = 'document';
+                        if (in_array($chkExt, ['jpg', 'jpeg', 'png', 'webp', 'gif'])) {
+                            $foundType = 'image';
+                        } elseif (in_array($chkExt, ['mp4', 'mov', 'webm'])) {
+                            $foundType = 'video';
+                        } elseif (in_array($chkExt, ['ogg', 'mp3', 'm4a', 'wav', 'aac', 'opus'])) {
+                            $foundType = 'audio';
                         }
+                        $mType = $foundType;
                         $escU = mysqli_real_escape_string($connection, $mediaUrl);
                         $escT = mysqli_real_escape_string($connection, $mType);
                         @mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "whatsapp_message SET message_media_url = '{$escU}', message_type = '{$escT}' WHERE message_id = " . (int)$row['message_id']);
                         break;
                     }
+                }
+            }
+
+            // Infer correct media type if still marked as 'text' or generic 'media'
+            if ($mType === 'text' || empty($mType) || $mType === 'media') {
+                if (!empty($mediaUrl)) {
+                    if (preg_match('/\.(jpe?g|png|webp|gif)($|\?)/i', $mediaUrl)) {
+                        $mType = 'image';
+                    } elseif (preg_match('/\.(mp4|mov|webm)($|\?)/i', $mediaUrl)) {
+                        $mType = 'video';
+                    } elseif (preg_match('/\.(ogg|mp3|m4a|wav|aac|opus)($|\?)/i', $mediaUrl)) {
+                        $mType = 'audio';
+                    } else {
+                        $mType = 'document';
+                    }
+                } elseif ($mText === '[Voice Note]' || stripos($mText, 'voice note') !== false || $mText === '[Audio]') {
+                    $mType = 'audio';
+                } elseif ($mText === '[Video]') {
+                    $mType = 'video';
+                } elseif ($mText === '[Image]' || $mText === '[Photo]') {
+                    $mType = 'image';
+                } elseif ($mText === '[Document]' || $mText === '[Attachment]') {
+                    $mType = 'document';
                 }
             }
 

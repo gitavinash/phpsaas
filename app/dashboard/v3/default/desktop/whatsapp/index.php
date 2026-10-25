@@ -286,12 +286,31 @@ $isCallingAgent = in_array($userRole, ['agent', 'calling_agent', 'crm_calling_ag
         </div>
     </div>
 
-    <!-- Lightbox Modal for Full Image View -->
+    <!-- Lightbox Modal for Full Image & Media View (WhatsApp Web Style) -->
     <div class="wa-lightbox-overlay d-none" id="waImageLightboxModal" aria-hidden="true">
-        <div class="wa-lightbox-dialog">
-            <button type="button" class="wa-lightbox-close" id="btnCloseLightbox" title="Close">
-                <i class="fi fi-rr-cross"></i>
-            </button>
+        <div class="wa-lightbox-header">
+            <div class="wa-lightbox-meta">
+                <button type="button" class="wa-lightbox-btn" id="btnCloseLightboxTop" title="Close (Esc)">
+                    <i class="fi fi-rr-arrow-left"></i>
+                </button>
+                <div>
+                    <div class="wa-lightbox-sender" id="waLightboxSender">WhatsApp Photo</div>
+                    <div class="wa-lightbox-time" id="waLightboxTime"></div>
+                </div>
+            </div>
+            <div class="wa-lightbox-actions">
+                <button type="button" class="wa-lightbox-btn" id="btnZoomLightbox" title="Zoom In / Out">
+                    <i class="fi fi-rr-zoom-in"></i>
+                </button>
+                <a href="#" download="whatsapp_image.jpg" class="wa-lightbox-btn" id="btnDownloadLightbox" title="Download Photo">
+                    <i class="fi fi-rr-download"></i>
+                </a>
+                <button type="button" class="wa-lightbox-btn" id="btnCloseLightbox" title="Close (Esc)">
+                    <i class="fi fi-rr-cross"></i>
+                </button>
+            </div>
+        </div>
+        <div class="wa-lightbox-body" id="waLightboxBody">
             <img class="wa-lightbox-img" id="waLightboxImage" src="" alt="WhatsApp Media">
         </div>
     </div>

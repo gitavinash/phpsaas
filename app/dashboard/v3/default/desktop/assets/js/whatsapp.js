@@ -293,25 +293,49 @@
         }
       });
 
-      // Lightbox view for chat images
+      // Lightbox view for chat images (WhatsApp Web style)
       $(document).on("click", ".wa-msg-img", function () {
         const src = $(this).attr("src");
         if (src) {
-          $("#waLightboxImage").attr("src", src);
+          const $bubble = $(this).closest(".wa-msg-bubble");
+          const isOut = $bubble.hasClass("outgoing");
+          const activeName = $("#waActiveChatName").text().trim() || "WhatsApp Contact";
+          const timeText = $bubble.find(".wa-msg-meta span:first").text().trim();
+
+          $("#waLightboxImage").attr("src", src).removeClass("is-zoomed");
+          $("#btnZoomLightbox i").attr("class", "fi fi-rr-zoom-in");
+          $("#waLightboxSender").text(isOut ? "You" : activeName);
+          $("#waLightboxTime").text(timeText);
+          $("#btnDownloadLightbox").attr("href", src).attr("download", src.split("/").pop() || "whatsapp_image.jpg");
           $("#waImageLightboxModal").removeClass("d-none").addClass("is-active").attr("aria-hidden", "false");
         }
       });
 
-      // Close Lightbox
-      $(document).on("click", "#btnCloseLightbox", function () {
-        $("#waImageLightboxModal").addClass("d-none").removeClass("is-active").attr("aria-hidden", "true");
-        $("#waLightboxImage").attr("src", "");
+      // Zoom toggle in Lightbox
+      $(document).on("click", "#btnZoomLightbox", function () {
+        const $img = $("#waLightboxImage");
+        $img.toggleClass("is-zoomed");
+        const isZ = $img.hasClass("is-zoomed");
+        $(this).find("i").attr("class", isZ ? "fi fi-rr-zoom-out" : "fi fi-rr-zoom-in");
       });
 
-      $(document).on("click", "#waImageLightboxModal", function (e) {
+      // Close Lightbox
+      $(document).on("click", "#btnCloseLightbox, #btnCloseLightboxTop", function () {
+        $("#waImageLightboxModal").addClass("d-none").removeClass("is-active").attr("aria-hidden", "true");
+        $("#waLightboxImage").attr("src", "").removeClass("is-zoomed");
+      });
+
+      $(document).on("click", "#waLightboxBody", function (e) {
         if (e.target === this) {
           $("#waImageLightboxModal").addClass("d-none").removeClass("is-active").attr("aria-hidden", "true");
-          $("#waLightboxImage").attr("src", "");
+          $("#waLightboxImage").attr("src", "").removeClass("is-zoomed");
+        }
+      });
+
+      $(document).on("keydown", function (e) {
+        if (e.key === "Escape" && !$("#waImageLightboxModal").hasClass("d-none")) {
+          $("#waImageLightboxModal").addClass("d-none").removeClass("is-active").attr("aria-hidden", "true");
+          $("#waLightboxImage").attr("src", "").removeClass("is-zoomed");
         }
       });
 
@@ -334,63 +358,167 @@
           if (box) {
             const bubble = box.closest(".wa-msg-bubble");
             const waId = bubble ? (bubble.getAttribute("data-wa-id") || "") : "";
-            box.innerHTML = `
-              <div class="wa-img-error-fallback" data-retry-wa-id="${self.escapeHtml(waId)}">
-                <i class="fi fi-rr-refresh"></i>
-                <span>Failed to load photo · Click to retry</span>
-              </div>
-            `;
+            const retries = parseInt(box.getAttribute("data-retries") || "0", 10);
+            if (retries < 1 && waId) {
+              box.setAttribute("data-retries", (retries + 1).toString());
+              self.fetchSingleMedia(waId, $(box));
+            } else {
+              box.innerHTML = `
+                <div class="wa-img-error-fallback" data-retry-wa-id="${self.escapeHtml(waId)}">
+                  <i class="fi fi-rr-refresh"></i>
+                  <span>Failed to load photo · Click to retry</span>
+                </div>
+              `;
+            }
           }
         }
       }, true);
 
-      // Click to retry loading image
-      $(document).on("click", ".wa-img-error-fallback[data-retry-wa-id], .wa-media-photo-card[data-retry-wa-id]", function () {
-        const $el = $(this);
-        const waId = $el.attr("data-retry-wa-id");
-        if (!waId) return;
-        const $box = $el.closest(".wa-msg-img-box");
-        if ($box.length) {
-          $box.removeClass("is-fetching").addClass("wa-auto-fetch-media");
-          $box.html(`
-            <div class="wa-img-skeleton-loader">
-              <i class="fi fi-rr-spinner wa-spin"></i>
-              <span>Retrying photo...</span>
-            </div>
-          `);
-          self.autoFetchPendingImages();
-        } else {
-          $el.addClass("is-loading");
-          $.ajax({
-            url: "/api/v3/whatsapp/messages/?action=retry_media&msg_id=" + encodeURIComponent(waId),
-            type: "GET",
-            timeout: 12000,
-            complete: function () {
-              setTimeout(function () {
-                self.loadMessages(self.activeChatId, false);
-              }, 1000);
-            }
+      // Voice Note Player Listeners (WhatsApp Web Audio Experience)
+      $(document).on("click", ".wa-voice-play-btn", function (e) {
+        e.preventDefault();
+        const $btn = $(this);
+        const $player = $btn.closest(".wa-voice-player");
+
+        // Pending voice note download
+        if ($player.hasClass("is-pending")) {
+          const waId = $player.closest(".wa-msg-voice-card").attr("data-retry-wa-id");
+          if (waId) {
+            $btn.find("i").attr("class", "fi fi-rr-spinner wa-spin");
+            self.fetchSingleMedia(waId, $player.closest(".wa-msg-voice-card"));
+          }
+          return;
+        }
+
+        const audio = $player.find("audio.wa-voice-audio-el")[0];
+        if (!audio) return;
+
+        // Pause any other active audio elements on the page
+        $("audio.wa-voice-audio-el").each(function () {
+          if (this !== audio && !this.paused) {
+            this.pause();
+            const $other = $(this).closest(".wa-voice-player");
+            $other.find(".wa-voice-play-btn i").attr("class", "fi fi-rr-play");
+          }
+        });
+
+        if (audio.paused) {
+          audio.play().then(function () {
+            $btn.find("i").attr("class", "fi fi-rr-pause");
+          }).catch(function (err) {
+            console.warn("Audio playback failed:", err);
           });
+        } else {
+          audio.pause();
+          $btn.find("i").attr("class", "fi fi-rr-play");
         }
       });
 
-      // Click to load pending document attachment
-      $(document).on("click", ".wa-media-doc-card-pending[data-retry-wa-id]", function () {
-        const $card = $(this);
-        const waId = $card.attr("data-retry-wa-id");
-        if (!waId || $card.hasClass("is-loading")) return;
-        $card.addClass("is-loading");
-        $card.find(".wa-doc-meta-row span:first").text("Downloading attachment...");
-        $.ajax({
-          url: "/api/v3/whatsapp/messages/?action=retry_media&msg_id=" + encodeURIComponent(waId),
-          type: "GET",
-          timeout: 12000,
-          complete: function () {
-            setTimeout(function () {
-              self.loadMessages(self.activeChatId, false);
-            }, 1000);
+      // Voice speed toggle (1x -> 1.5x -> 2x -> 1x)
+      $(document).on("click", ".wa-voice-speed-pill", function (e) {
+        e.preventDefault();
+        const $pill = $(this);
+        const $player = $pill.closest(".wa-voice-player");
+        const audio = $player.find("audio.wa-voice-audio-el")[0];
+        if (!audio) return;
+
+        let rate = audio.playbackRate || 1.0;
+        if (rate === 1.0) rate = 1.5;
+        else if (rate === 1.5) rate = 2.0;
+        else rate = 1.0;
+
+        audio.playbackRate = rate;
+        $pill.text(rate + "x");
+      });
+
+      // Slider scrubbing
+      $(document).on("input change", ".wa-voice-slider", function () {
+        const $slider = $(this);
+        const $player = $slider.closest(".wa-voice-player");
+        const audio = $player.find("audio.wa-voice-audio-el")[0];
+        if (!audio || !audio.duration) return;
+
+        const seekTime = (parseFloat($slider.val()) / 100) * audio.duration;
+        audio.currentTime = seekTime;
+        self.updateVoiceProgress($player, audio);
+      });
+
+      // Waveform click seeking
+      $(document).on("click", ".wa-voice-waveform", function (e) {
+        const $wave = $(this);
+        const $player = $wave.closest(".wa-voice-player");
+        const audio = $player.find("audio.wa-voice-audio-el")[0];
+        if (!audio || !audio.duration) return;
+
+        const rect = this.getBoundingClientRect();
+        const clickX = e.clientX - rect.left;
+        const ratio = Math.max(0, Math.min(1, clickX / rect.width));
+        audio.currentTime = ratio * audio.duration;
+        self.updateVoiceProgress($player, audio);
+      });
+
+      // Native audio listeners via capture phase
+      document.addEventListener("timeupdate", function (e) {
+        if (e.target && e.target.classList && e.target.classList.contains("wa-voice-audio-el")) {
+          const audio = e.target;
+          const $player = $(audio).closest(".wa-voice-player");
+          if ($player.length) {
+            self.updateVoiceProgress($player, audio);
           }
-        });
+        }
+      }, true);
+
+      document.addEventListener("loadedmetadata", function (e) {
+        if (e.target && e.target.classList && e.target.classList.contains("wa-voice-audio-el")) {
+          const audio = e.target;
+          const $player = $(audio).closest(".wa-voice-player");
+          if ($player.length) {
+            $player.find(".wa-voice-time").text(self.formatAudioTime(audio.duration));
+          }
+        }
+      }, true);
+
+      document.addEventListener("ended", function (e) {
+        if (e.target && e.target.classList && e.target.classList.contains("wa-voice-audio-el")) {
+          const audio = e.target;
+          const $player = $(audio).closest(".wa-voice-player");
+          if ($player.length) {
+            $player.find(".wa-voice-play-btn i").attr("class", "fi fi-rr-play");
+            audio.currentTime = 0;
+            self.updateVoiceProgress($player, audio);
+          }
+        }
+      }, true);
+
+      document.addEventListener("pause", function (e) {
+        if (e.target && e.target.classList && e.target.classList.contains("wa-voice-audio-el")) {
+          const audio = e.target;
+          const $player = $(audio).closest(".wa-voice-player");
+          if ($player.length) {
+            $player.find(".wa-voice-play-btn i").attr("class", "fi fi-rr-play");
+          }
+        }
+      }, true);
+
+      // Click to retry loading image, audio, video, or document
+      $(document).on("click", ".wa-img-error-fallback[data-retry-wa-id], .wa-media-photo-card[data-retry-wa-id], .wa-video-skeleton-loader, .wa-media-doc-card-pending[data-retry-wa-id], .wa-media-voice-card-pending[data-retry-wa-id]", function (e) {
+        const $el = $(this);
+        const waId = $el.attr("data-retry-wa-id") || $el.closest("[data-retry-wa-id]").attr("data-retry-wa-id");
+        if (!waId) return;
+
+        const $container = $el.closest(".wa-msg-img-box, .wa-msg-voice-card, .wa-msg-doc-card, .wa-msg-video-box");
+        if ($container.length) {
+          $container.html(`
+            <div class="wa-img-skeleton-loader">
+              <i class="fi fi-rr-spinner wa-spin"></i>
+              <span>Downloading media...</span>
+            </div>
+          `);
+          self.fetchSingleMedia(waId, $container);
+        } else {
+          $el.addClass("is-loading");
+          self.fetchSingleMedia(waId, $el);
+        }
       });
 
       // Contact card Message / Chat button
@@ -1176,81 +1304,39 @@
             const trimmedText = (msg.text || "").trim();
             const isContact = msg.type === "contact" || !!msg.contact_data || /^\[Contacts?:\s*.*?\]$/i.test(trimmedText);
             const isLocation = msg.type === "location" || msg.type === "live_location" || !!msg.location_data || (/^\[Location:\s*.*?\]$/i.test(trimmedText) || /^\[Live Location\]$/i.test(trimmedText));
+            const isVoice = msg.type === "audio" || msg.type === "voice" || (msg.media_url && msg.media_url.match(/\.(ogg|mp3|m4a|wav|aac|opus)($|\?)/i)) || trimmedText === "[Voice Note]" || trimmedText === "[Audio]";
+            const isVideo = msg.type === "video" || (msg.media_url && msg.media_url.match(/\.(mp4|mov|webm|mkv|avi)($|\?)/i)) || trimmedText === "[Video]";
+            const isImage = msg.type === "image" || (msg.media_url && msg.media_url.match(/\.(jpeg|jpg|gif|png|webp)($|\?)/i)) || trimmedText === "[Image]" || trimmedText === "[Photo]";
+            const isDoc = msg.type === "document" || (msg.media_url && !isVoice && !isVideo && !isImage) || trimmedText === "[Attachment]" || trimmedText === "[Document]";
 
+            let isMedia = false;
             if (isContact) {
               contentHtml = self.renderContactCard(msg);
             } else if (isLocation) {
               contentHtml = self.renderLocationCard(msg);
-            } else if (msg.media_url) {
-              if (msg.type === "image" || msg.media_url.match(/\.(jpeg|jpg|gif|png|webp)($|\?)/i)) {
-                contentHtml += `
-                  <div class="wa-msg-media">
-                    <div class="wa-msg-img-box">
-                      <div class="wa-img-skeleton-loader">
-                        <i class="fi fi-rr-spinner wa-spin"></i>
-                        <span>Loading photo...</span>
-                      </div>
-                      <img src="${self.escapeHtml(msg.media_url)}" class="wa-msg-img" alt="Photo" loading="lazy" />
-                    </div>
-                  </div>`;
-              } else {
-                const docInfo = self.getDocInfo(msg.media_url, msg.text);
-                contentHtml += `
-                  <div class="wa-msg-media">
-                    <div class="wa-msg-doc-card ${docInfo.theme}">
-                      <a href="${self.escapeHtml(msg.media_url)}" target="_blank" rel="noopener noreferrer" class="wa-doc-main-link" download="${self.escapeHtml(docInfo.filename)}">
-                        <div class="wa-doc-icon-box">
-                          <i class="fi ${docInfo.icon}"></i>
-                          <span class="wa-doc-pill-ext">${self.escapeHtml(docInfo.ext)}</span>
-                        </div>
-                        <div class="wa-doc-details">
-                          <div class="wa-doc-name" title="${self.escapeHtml(docInfo.filename)}">${self.escapeHtml(docInfo.filename)}</div>
-                          <div class="wa-doc-meta-row">
-                            <span>${self.escapeHtml(docInfo.label)}</span>
-                            <span class="wa-doc-action-btn" title="Download"><i class="fi fi-rr-download"></i></span>
-                          </div>
-                        </div>
-                      </a>
-                    </div>
-                  </div>`;
-              }
-              if (msg.text && msg.text !== "[Image]" && msg.text !== "[Photo]" && msg.text !== "[Media]" && msg.text !== "[Attachment]" && msg.text !== "[Document]") {
-                contentHtml += `<div class="wa-msg-text">${self.formatMessageText(msg.text)}</div>`;
-              }
+            } else if (isVoice) {
+              isMedia = true;
+              contentHtml = msg.media_url ? self.renderVoiceCard(msg) : self.renderPendingVoiceCard(msg);
+            } else if (isVideo) {
+              isMedia = true;
+              contentHtml = msg.media_url ? self.renderVideoCard(msg) : self.renderPendingVideoCard(msg);
+            } else if (isImage) {
+              isMedia = true;
+              contentHtml = msg.media_url ? self.renderImageCard(msg) : self.renderPendingImageCard(msg);
+            } else if (isDoc) {
+              isMedia = true;
+              contentHtml = msg.media_url ? self.renderDocCard(msg) : self.renderPendingDocCard(msg);
+            } else if (msg.text) {
+              contentHtml = `<div class="wa-msg-text">${self.formatMessageText(msg.text)}</div>`;
             } else {
-              if (msg.text === "[Image]" || msg.text === "[Photo]" || msg.type === "image") {
-                contentHtml += `
-                  <div class="wa-msg-media">
-                    <div class="wa-msg-img-box wa-auto-fetch-media" data-retry-wa-id="${self.escapeHtml(msg.wa_id || '')}">
-                      <div class="wa-img-skeleton-loader">
-                        <i class="fi fi-rr-spinner wa-spin"></i>
-                        <span>Loading photo...</span>
-                      </div>
-                    </div>
-                  </div>`;
-              } else if (msg.type === "document" || msg.text === "[Attachment]" || msg.text === "[Document]") {
-                contentHtml += `
-                  <div class="wa-msg-media">
-                    <div class="wa-msg-doc-card wa-doc-theme-default wa-media-doc-card-pending" data-retry-wa-id="${self.escapeHtml(msg.wa_id || '')}">
-                      <div class="wa-doc-main-link">
-                        <div class="wa-doc-icon-box">
-                          <i class="fi fi-rr-file-download"></i>
-                          <span class="wa-doc-pill-ext">DOC</span>
-                        </div>
-                        <div class="wa-doc-details">
-                          <div class="wa-doc-name">Attachment</div>
-                          <div class="wa-doc-meta-row">
-                            <span>Click to load document</span>
-                            <span class="wa-doc-action-btn"><i class="fi fi-rr-download"></i></span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>`;
-              } else if (msg.text) {
+              contentHtml = `<div class="wa-msg-text"><em>[Message]</em></div>`;
+            }
+
+            // Append text caption if media has non-placeholder text
+            if (isMedia && msg.text) {
+              const skipPlaceholders = ["[Voice Note]", "[Audio]", "[Video]", "[Image]", "[Photo]", "[Media]", "[Attachment]", "[Document]"];
+              if (!skipPlaceholders.includes(trimmedText)) {
                 contentHtml += `<div class="wa-msg-text">${self.formatMessageText(msg.text)}</div>`;
-              } else {
-                contentHtml += `<div class="wa-msg-text"><em>[Message]</em></div>`;
               }
             }
 
@@ -1575,7 +1661,266 @@
       `;
     },
 
-    autoFetchPendingImages: function () {
+    formatAudioTime: function (sec) {
+      if (!sec || isNaN(sec) || !isFinite(sec)) return "0:00";
+      const m = Math.floor(sec / 60);
+      const s = Math.floor(sec % 60);
+      return m + ":" + (s < 10 ? "0" : "") + s;
+    },
+
+    updateVoiceProgress: function ($player, audio) {
+      const self = this;
+      if (!audio || !audio.duration) return;
+      const ratio = Math.max(0, Math.min(1, audio.currentTime / audio.duration));
+      $player.find(".wa-voice-slider").val(ratio * 100);
+      $player.find(".wa-voice-time").text(self.formatAudioTime(audio.currentTime));
+
+      const $bars = $player.find(".wa-voice-bar");
+      const total = $bars.length;
+      const activeIdx = Math.floor(ratio * total);
+      $bars.each(function (idx) {
+        if (idx <= activeIdx) {
+          $(this).addClass("is-played");
+        } else {
+          $(this).removeClass("is-played");
+        }
+      });
+    },
+
+    renderVoiceCard: function (msg) {
+      const self = this;
+      const waveHeights = [8, 14, 20, 10, 16, 22, 14, 8, 18, 24, 16, 12, 20, 26, 18, 10, 14, 22, 16, 8, 12, 18, 24, 14, 10, 16, 12, 8];
+      let barsHtml = "";
+      for (let i = 0; i < waveHeights.length; i++) {
+        barsHtml += `<span class="wa-voice-bar" style="height:${waveHeights[i]}px" data-idx="${i}"></span>`;
+      }
+
+      return `
+        <div class="wa-msg-voice-card" data-wa-id="${self.escapeHtml(msg.wa_id || '')}">
+          <div class="wa-voice-player">
+            <button type="button" class="wa-voice-play-btn" title="Play voice note">
+              <i class="fi fi-rr-play"></i>
+            </button>
+            <div class="wa-voice-track-wrap">
+              <div class="wa-voice-waveform" title="Seek position">
+                ${barsHtml}
+              </div>
+              <input type="range" class="wa-voice-slider" min="0" max="100" value="0" step="0.1" aria-label="Seek voice note" />
+              <div class="wa-voice-meta-row">
+                <span class="wa-voice-time">0:00</span>
+                <button type="button" class="wa-voice-speed-pill" title="Playback speed">1x</button>
+              </div>
+            </div>
+            <div class="wa-voice-avatar-badge" title="Voice Note">
+              <i class="fi fi-rr-microphone"></i>
+            </div>
+            <audio class="wa-voice-audio-el" src="${self.escapeHtml(msg.media_url)}" preload="metadata"></audio>
+          </div>
+        </div>
+      `;
+    },
+
+    renderPendingVoiceCard: function (msg) {
+      const self = this;
+      const waveHeights = [8, 14, 20, 10, 16, 22, 14, 8, 18, 24, 16, 12, 20, 26, 18, 10, 14, 22, 16, 8, 12, 18, 24, 14, 10, 16, 12, 8];
+      let barsHtml = "";
+      for (let i = 0; i < waveHeights.length; i++) {
+        barsHtml += `<span class="wa-voice-bar" style="height:${waveHeights[i]}px"></span>`;
+      }
+
+      return `
+        <div class="wa-msg-voice-card wa-auto-fetch-media" data-retry-wa-id="${self.escapeHtml(msg.wa_id || '')}">
+          <div class="wa-voice-player is-pending" title="Click to download voice note">
+            <button type="button" class="wa-voice-play-btn is-download" title="Download voice note">
+              <i class="fi fi-rr-arrow-down-to-bracket"></i>
+            </button>
+            <div class="wa-voice-track-wrap">
+              <div class="wa-voice-waveform">
+                ${barsHtml}
+              </div>
+              <div class="wa-voice-meta-row">
+                <span class="wa-voice-pending-label">Voice Note · Click to load</span>
+                <span class="wa-voice-time"><i class="fi fi-rr-download"></i></span>
+              </div>
+            </div>
+            <div class="wa-voice-avatar-badge" title="Voice Note">
+              <i class="fi fi-rr-microphone"></i>
+            </div>
+          </div>
+        </div>
+      `;
+    },
+
+    renderVideoCard: function (msg) {
+      const self = this;
+      return `
+        <div class="wa-msg-video-media" data-wa-id="${self.escapeHtml(msg.wa_id || '')}">
+          <div class="wa-msg-video-box">
+            <video class="wa-msg-video" src="${self.escapeHtml(msg.media_url)}" controls playsinline preload="metadata"></video>
+          </div>
+        </div>
+      `;
+    },
+
+    renderPendingVideoCard: function (msg) {
+      const self = this;
+      return `
+        <div class="wa-msg-video-media" data-retry-wa-id="${self.escapeHtml(msg.wa_id || '')}">
+          <div class="wa-msg-video-box wa-video-skeleton-loader wa-auto-fetch-media" data-retry-wa-id="${self.escapeHtml(msg.wa_id || '')}" title="Click to download video">
+            <i class="fi fi-rr-play-alt"></i>
+            <span>Video · Click to download</span>
+          </div>
+        </div>
+      `;
+    },
+
+    renderImageCard: function (msg) {
+      const self = this;
+      return `
+        <div class="wa-msg-media" data-wa-id="${self.escapeHtml(msg.wa_id || '')}">
+          <div class="wa-msg-img-box">
+            <div class="wa-img-skeleton-loader">
+              <i class="fi fi-rr-spinner wa-spin"></i>
+              <span>Loading photo...</span>
+            </div>
+            <img src="${self.escapeHtml(msg.media_url)}" class="wa-msg-img" alt="Photo" loading="lazy" />
+          </div>
+        </div>
+      `;
+    },
+
+    renderPendingImageCard: function (msg) {
+      const self = this;
+      return `
+        <div class="wa-msg-media" data-retry-wa-id="${self.escapeHtml(msg.wa_id || '')}">
+          <div class="wa-msg-img-box wa-auto-fetch-media" data-retry-wa-id="${self.escapeHtml(msg.wa_id || '')}">
+            <div class="wa-img-skeleton-loader">
+              <i class="fi fi-rr-spinner wa-spin"></i>
+              <span>Loading photo...</span>
+            </div>
+          </div>
+        </div>
+      `;
+    },
+
+    renderDocCard: function (msg) {
+      const self = this;
+      const docInfo = self.getDocInfo(msg.media_url, msg.text);
+      return `
+        <div class="wa-msg-media" data-wa-id="${self.escapeHtml(msg.wa_id || '')}">
+          <div class="wa-msg-doc-card ${docInfo.theme}">
+            <a href="${self.escapeHtml(msg.media_url)}" target="_blank" rel="noopener noreferrer" class="wa-doc-main-link" download="${self.escapeHtml(docInfo.filename)}">
+              <div class="wa-doc-icon-box">
+                <i class="fi ${docInfo.icon}"></i>
+                <span class="wa-doc-pill-ext">${self.escapeHtml(docInfo.ext)}</span>
+              </div>
+              <div class="wa-doc-details">
+                <div class="wa-doc-name" title="${self.escapeHtml(docInfo.filename)}">${self.escapeHtml(docInfo.filename)}</div>
+                <div class="wa-doc-meta-row">
+                  <span>${self.escapeHtml(docInfo.label)}</span>
+                  <span class="wa-doc-action-btn" title="Download"><i class="fi fi-rr-download"></i></span>
+                </div>
+              </div>
+            </a>
+          </div>
+        </div>
+      `;
+    },
+
+    renderPendingDocCard: function (msg) {
+      const self = this;
+      return `
+        <div class="wa-msg-media" data-retry-wa-id="${self.escapeHtml(msg.wa_id || '')}">
+          <div class="wa-msg-doc-card wa-doc-theme-default wa-media-doc-card-pending wa-auto-fetch-media" data-retry-wa-id="${self.escapeHtml(msg.wa_id || '')}">
+            <div class="wa-doc-main-link">
+              <div class="wa-doc-icon-box">
+                <i class="fi fi-rr-file-download"></i>
+                <span class="wa-doc-pill-ext">DOC</span>
+              </div>
+              <div class="wa-doc-details">
+                <div class="wa-doc-name">Attachment</div>
+                <div class="wa-doc-meta-row">
+                  <span>Click to load document</span>
+                  <span class="wa-doc-action-btn"><i class="fi fi-rr-download"></i></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    },
+
+    fetchSingleMedia: function (waId, $targetEl) {
+      const self = this;
+      if (!waId) return;
+
+      $.ajax({
+        url: "/api/v3/whatsapp/messages/?action=retry_media&msg_id=" + encodeURIComponent(waId),
+        type: "GET",
+        timeout: 15000,
+        dataType: "json",
+        success: function (res) {
+          if (res && res.status === "success" && res.media_url) {
+            let type = res.type || "";
+            const cleanUrl = res.media_url.toLowerCase();
+            if (type === "audio" || cleanUrl.match(/\.(ogg|mp3|m4a|wav|aac|opus)($|\?)/i)) {
+              type = "audio";
+            } else if (type === "video" || cleanUrl.match(/\.(mp4|mov|webm|mkv|avi)($|\?)/i)) {
+              type = "video";
+            } else if (type === "image" || cleanUrl.match(/\.(jpeg|jpg|png|webp|gif)($|\?)/i)) {
+              type = "image";
+            } else {
+              type = "document";
+            }
+
+            const dummyMsg = {
+              wa_id: waId,
+              media_url: res.media_url,
+              type: type,
+              text: ""
+            };
+
+            let newHtml = "";
+            if (type === "audio") {
+              newHtml = self.renderVoiceCard(dummyMsg);
+            } else if (type === "video") {
+              newHtml = self.renderVideoCard(dummyMsg);
+            } else if (type === "image") {
+              newHtml = self.renderImageCard(dummyMsg);
+            } else {
+              newHtml = self.renderDocCard(dummyMsg);
+            }
+
+            if ($targetEl && $targetEl.length) {
+              $targetEl.replaceWith(newHtml);
+            }
+          } else {
+            if ($targetEl && $targetEl.length) {
+              $targetEl.removeClass("is-fetching");
+              $targetEl.html(`
+                <div class="wa-img-error-fallback" data-retry-wa-id="${self.escapeHtml(waId)}">
+                  <i class="fi fi-rr-picture"></i>
+                  <span>Photo unavailable · Click to retry</span>
+                </div>
+              `);
+            }
+          }
+        },
+        error: function () {
+          if ($targetEl && $targetEl.length) {
+            $targetEl.removeClass("is-fetching");
+            $targetEl.html(`
+              <div class="wa-img-error-fallback" data-retry-wa-id="${self.escapeHtml(waId)}">
+                <i class="fi fi-rr-refresh"></i>
+                <span>Failed to load photo · Click to retry</span>
+              </div>
+            `);
+          }
+        }
+      });
+    },
+
+    autoFetchPendingMedia: function () {
       const self = this;
       const $pending = $("#waMessagesStream").find(".wa-auto-fetch-media[data-retry-wa-id]:not(.is-fetching)");
       if (!$pending.length) return;
@@ -1586,68 +1931,12 @@
         if (!waId) return;
 
         $box.addClass("is-fetching");
-        $.ajax({
-          url: "/api/v3/whatsapp/messages/?action=retry_media&msg_id=" + encodeURIComponent(waId),
-          type: "GET",
-          timeout: 12000,
-          dataType: "json",
-          success: function (res) {
-            if (res && res.status === "success" && res.media_url) {
-              $box.removeClass("wa-auto-fetch-media is-fetching");
-              if (res.type === "image" || res.media_url.match(/\.(jpeg|jpg|gif|png|webp)($|\?)/i)) {
-                $box.html(`
-                  <div class="wa-img-skeleton-loader">
-                    <i class="fi fi-rr-spinner wa-spin"></i>
-                    <span>Loading photo...</span>
-                  </div>
-                  <img src="${self.escapeHtml(res.media_url)}" class="wa-msg-img" alt="Photo" loading="lazy" />
-                `);
-                const img = $box.find("img.wa-msg-img")[0];
-                if (img && img.complete && img.naturalWidth > 0) {
-                  img.classList.add("is-ready");
-                  $box.find(".wa-img-skeleton-loader").remove();
-                }
-              } else {
-                const docInfo = self.getDocInfo(res.media_url, "");
-                $box.replaceWith(`
-                  <div class="wa-msg-doc-card ${docInfo.theme}">
-                    <a href="${self.escapeHtml(res.media_url)}" target="_blank" rel="noopener noreferrer" class="wa-doc-main-link" download="${self.escapeHtml(docInfo.filename)}">
-                      <div class="wa-doc-icon-box">
-                        <i class="fi ${docInfo.icon}"></i>
-                        <span class="wa-doc-pill-ext">${self.escapeHtml(docInfo.ext)}</span>
-                      </div>
-                      <div class="wa-doc-details">
-                        <div class="wa-doc-name" title="${self.escapeHtml(docInfo.filename)}">${self.escapeHtml(docInfo.filename)}</div>
-                        <div class="wa-doc-meta-row">
-                          <span>${self.escapeHtml(docInfo.label)}</span>
-                          <span class="wa-doc-action-btn" title="Download"><i class="fi fi-rr-download"></i></span>
-                        </div>
-                      </div>
-                    </a>
-                  </div>
-                `);
-              }
-            } else {
-              $box.removeClass("is-fetching");
-              $box.html(`
-                <div class="wa-img-error-fallback" data-retry-wa-id="${self.escapeHtml(waId)}">
-                  <i class="fi fi-rr-picture"></i>
-                  <span>Photo unavailable · Click to retry</span>
-                </div>
-              `);
-            }
-          },
-          error: function () {
-            $box.removeClass("is-fetching");
-            $box.html(`
-              <div class="wa-img-error-fallback" data-retry-wa-id="${self.escapeHtml(waId)}">
-                <i class="fi fi-rr-refresh"></i>
-                <span>Failed to load photo · Click to retry</span>
-              </div>
-            `);
-          }
-        });
+        self.fetchSingleMedia(waId, $box);
       });
+    },
+
+    autoFetchPendingImages: function () {
+      this.autoFetchPendingMedia();
     },
 
     sendMessage: function () {
