@@ -4170,6 +4170,7 @@ main .container:has(#pluginWhatsappWebApp) {
   border-radius: 8px;
   overflow: hidden;
   max-width: 330px;
+  max-height: 380px;
   position: relative;
 }
 
@@ -4178,8 +4179,10 @@ main .container:has(#pluginWhatsappWebApp) {
   position: relative;
   display: block;
   max-width: 320px;
+  width: 100%;
   min-width: 180px;
   min-height: 140px;
+  max-height: 350px;
   border-radius: 8px;
   overflow: hidden;
   background: rgba(0, 0, 0, 0.04);
@@ -4247,6 +4250,8 @@ main .container:has(#pluginWhatsappWebApp) {
   justify-content: center;
   gap: 6px;
   padding: 24px 16px;
+  min-height: 140px;
+  max-height: 220px;
   color: #64748B;
   font-size: 12px;
   cursor: pointer;

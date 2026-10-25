@@ -358,18 +358,14 @@
           if (box) {
             const bubble = box.closest(".wa-msg-bubble");
             const waId = bubble ? (bubble.getAttribute("data-wa-id") || "") : "";
-            const retries = parseInt(box.getAttribute("data-retries") || "0", 10);
-            if (retries < 1 && waId) {
-              box.setAttribute("data-retries", (retries + 1).toString());
-              self.fetchSingleMedia(waId, $(box));
-            } else {
-              box.innerHTML = `
-                <div class="wa-img-error-fallback" data-retry-wa-id="${self.escapeHtml(waId)}">
-                  <i class="fi fi-rr-refresh"></i>
-                  <span>Failed to load photo · Click to retry</span>
-                </div>
-              `;
-            }
+            box.classList.remove("wa-auto-fetch-media", "is-fetching");
+            box.classList.add("is-failed");
+            box.innerHTML = `
+              <div class="wa-img-error-fallback" data-retry-wa-id="${self.escapeHtml(waId)}">
+                <i class="fi fi-rr-refresh"></i>
+                <span>Failed to load photo · Click to retry</span>
+              </div>
+            `;
           }
         }
       }, true);
@@ -506,8 +502,22 @@
         const waId = $el.attr("data-retry-wa-id") || $el.closest("[data-retry-wa-id]").attr("data-retry-wa-id");
         if (!waId) return;
 
-        const $container = $el.closest(".wa-msg-img-box, .wa-msg-voice-card, .wa-msg-doc-card, .wa-msg-video-box");
+        const $box = $el.closest(".wa-msg-img-box");
+        if ($box.length) {
+          $box.removeClass("is-failed wa-auto-fetch-media").addClass("is-fetching");
+          $box.html(`
+            <div class="wa-img-skeleton-loader">
+              <i class="fi fi-rr-spinner wa-spin"></i>
+              <span>Downloading media...</span>
+            </div>
+          `);
+          self.fetchSingleMedia(waId, $box);
+          return;
+        }
+
+        const $container = $el.closest(".wa-msg-voice-card, .wa-msg-doc-card, .wa-msg-video-box");
         if ($container.length) {
+          $container.removeClass("is-failed wa-auto-fetch-media").addClass("is-fetching");
           $container.html(`
             <div class="wa-img-skeleton-loader">
               <i class="fi fi-rr-spinner wa-spin"></i>
@@ -1857,7 +1867,7 @@
       $.ajax({
         url: "/api/v3/whatsapp/messages/?action=retry_media&msg_id=" + encodeURIComponent(waId),
         type: "GET",
-        timeout: 15000,
+        timeout: 10000,
         dataType: "json",
         success: function (res) {
           if (res && res.status === "success" && res.media_url) {
@@ -1892,12 +1902,20 @@
             }
 
             if ($targetEl && $targetEl.length) {
-              $targetEl.replaceWith(newHtml);
+              const $mediaParent = $targetEl.closest(".wa-msg-media, .wa-msg-voice-card, .wa-msg-video-media");
+              if ($mediaParent.length) {
+                $mediaParent.replaceWith(newHtml);
+              } else {
+                $targetEl.replaceWith(newHtml);
+              }
             }
           } else {
             if ($targetEl && $targetEl.length) {
-              $targetEl.removeClass("is-fetching");
-              $targetEl.html(`
+              $targetEl.removeClass("is-fetching wa-auto-fetch-media").addClass("is-failed");
+              const $imgBox = $targetEl.hasClass("wa-msg-img-box") ? $targetEl : $targetEl.find(".wa-msg-img-box");
+              const $dest = $imgBox.length ? $imgBox : $targetEl;
+              $dest.removeClass("is-fetching wa-auto-fetch-media").addClass("is-failed");
+              $dest.html(`
                 <div class="wa-img-error-fallback" data-retry-wa-id="${self.escapeHtml(waId)}">
                   <i class="fi fi-rr-picture"></i>
                   <span>Photo unavailable · Click to retry</span>
@@ -1908,8 +1926,11 @@
         },
         error: function () {
           if ($targetEl && $targetEl.length) {
-            $targetEl.removeClass("is-fetching");
-            $targetEl.html(`
+            $targetEl.removeClass("is-fetching wa-auto-fetch-media").addClass("is-failed");
+            const $imgBox = $targetEl.hasClass("wa-msg-img-box") ? $targetEl : $targetEl.find(".wa-msg-img-box");
+            const $dest = $imgBox.length ? $imgBox : $targetEl;
+            $dest.removeClass("is-fetching wa-auto-fetch-media").addClass("is-failed");
+            $dest.html(`
               <div class="wa-img-error-fallback" data-retry-wa-id="${self.escapeHtml(waId)}">
                 <i class="fi fi-rr-refresh"></i>
                 <span>Failed to load photo · Click to retry</span>
@@ -1922,7 +1943,8 @@
 
     autoFetchPendingMedia: function () {
       const self = this;
-      const $pending = $("#waMessagesStream").find(".wa-auto-fetch-media[data-retry-wa-id]:not(.is-fetching)");
+      self.attemptedMediaWaIds = self.attemptedMediaWaIds || new Set();
+      const $pending = $("#waMessagesStream").find(".wa-auto-fetch-media[data-retry-wa-id]:not(.is-fetching):not(.is-failed)");
       if (!$pending.length) return;
 
       $pending.each(function () {
@@ -1930,7 +1952,14 @@
         const waId = $box.attr("data-retry-wa-id");
         if (!waId) return;
 
-        $box.addClass("is-fetching");
+        // Skip if already attempted in this session to prevent infinite requests
+        if (self.attemptedMediaWaIds.has(waId)) {
+          $box.removeClass("wa-auto-fetch-media");
+          return;
+        }
+
+        self.attemptedMediaWaIds.add(waId);
+        $box.removeClass("wa-auto-fetch-media").addClass("is-fetching");
         self.fetchSingleMedia(waId, $box);
       });
     },

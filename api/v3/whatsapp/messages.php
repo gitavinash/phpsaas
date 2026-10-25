@@ -104,22 +104,25 @@ if ($method === 'GET') {
                 @mkdir($upDir, 0777, true);
             }
 
-            // 1. Check if DB already has media_url for this message
+            // 1. Check if DB already has media_url for this message AND file actually exists on disk
             $chkDb = mysqli_query($connection, "SELECT message_id, message_media_url, message_type FROM " . TABLE_PREFIX . "whatsapp_message WHERE message_site_id = {$siteId} AND message_wa_id = '{$escWaId}' AND message_media_url != '' LIMIT 1");
             if ($chkDb && mysqli_num_rows($chkDb) > 0) {
                 $dbRow = mysqli_fetch_assoc($chkDb);
                 $cleanUrl = preg_replace('#^https?://(?:127\.0\.0\.1|localhost):3001/media/#i', '/upload/whatsapp/', $dbRow['message_media_url']);
                 $dbType = $dbRow['message_type'] ?? 'image';
-                if ($cleanUrl !== $dbRow['message_media_url']) {
-                    $escClean = mysqli_real_escape_string($connection, $cleanUrl);
-                    @mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "whatsapp_message SET message_media_url = '{$escClean}' WHERE message_id = " . (int)$dbRow['message_id']);
+                $localPath = (defined('ROOT') ? ROOT : dirname(__DIR__, 3)) . '/' . ltrim($cleanUrl, '/');
+                if (file_exists($localPath) && filesize($localPath) > 0) {
+                    if ($cleanUrl !== $dbRow['message_media_url']) {
+                        $escClean = mysqli_real_escape_string($connection, $cleanUrl);
+                        @mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "whatsapp_message SET message_media_url = '{$escClean}' WHERE message_id = " . (int)$dbRow['message_id']);
+                    }
+                    echo json_encode([
+                        'status'    => 'success',
+                        'media_url' => $cleanUrl,
+                        'type'      => $dbType
+                    ]);
+                    exit;
                 }
-                echo json_encode([
-                    'status'    => 'success',
-                    'media_url' => $cleanUrl,
-                    'type'      => $dbType
-                ]);
-                exit;
             }
 
             // 2. Check if file is already on local disk or in gateway cache
@@ -154,11 +157,11 @@ if ($method === 'GET') {
 
             // 3. Request WhatsApp gateway to fetch media from device
             $gwUrl = "http://127.0.0.1:3001/retry-media?msg_id=" . urlencode($msgWaId);
-            $ctx = stream_context_create(['http' => ['timeout' => 12]]);
+            $ctx = stream_context_create(['http' => ['timeout' => 8]]);
             $gwRes = @file_get_contents($gwUrl, false, $ctx);
             if ($gwRes) {
                 $gwJson = json_decode($gwRes, true);
-                if (isset($gwJson['results']) && is_array($gwJson['results'])) {
+                if (isset($gwJson['results']) && is_array($gwJson['results']) && !empty($gwJson['results'])) {
                     foreach ($gwJson['results'] as $r) {
                         if (!empty($r['url']) && ($r['msgId'] ?? '') === $msgWaId) {
                             $normUrl = preg_replace('#^https?://(?:127\.0\.0\.1|localhost):3001/media/#i', '/upload/whatsapp/', $r['url']);
@@ -181,9 +184,13 @@ if ($method === 'GET') {
                         }
                     }
                 }
+                if (isset($gwJson['status']) && $gwJson['status'] === 'success' && empty($gwJson['results'])) {
+                    echo json_encode(['status' => 'unavailable', 'msg' => 'Media file is no longer available on WhatsApp device.']);
+                    exit;
+                }
             }
 
-            echo $gwRes ?: json_encode(['status' => 'pending']);
+            echo json_encode(['status' => 'unavailable', 'msg' => 'Media file is currently unavailable or gateway is offline.']);
             exit;
         }
         echo json_encode(['status' => 'error', 'msg' => 'Message ID required']);
@@ -465,6 +472,10 @@ if ($method === 'GET') {
             $mediaUrl = $row['message_media_url'] ?? '';
             if (!empty($mediaUrl)) {
                 $mediaUrl = preg_replace('#^https?://(?:127\.0\.0\.1|localhost):3001/media/#i', '/upload/whatsapp/', $mediaUrl);
+                $diskPath = (defined('ROOT') ? ROOT : dirname(__DIR__, 3)) . '/' . ltrim($mediaUrl, '/');
+                if (!file_exists($diskPath) || filesize($diskPath) <= 0) {
+                    $mediaUrl = '';
+                }
             }
             $mType = strtolower(trim($row['message_type'] ?? 'text'));
             $mText = trim((string)($row['message_text'] ?? ''));
