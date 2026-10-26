@@ -3,11 +3,13 @@
 if ($sendMessageTo != '') {
 
     $sentViaDevice = false;
+    $shouldBypassDevice = (!empty($bypassDevice) || (isset($templateName) && $templateName === 'aleya_bw_1'));
+
     $siteIdVal = defined('SITE_ID') ? (int)SITE_ID : 0;
     if ($siteIdVal <= 0 && isset($siteId)) {
         $siteIdVal = (int)$siteId;
     }
-    if (isset($connection) && $siteIdVal > 0) {
+    if (!$shouldBypassDevice && isset($connection) && $siteIdVal > 0) {
         $tblPfx = defined('TABLE_PREFIX') ? TABLE_PREFIX : 'isw_';
         $devChk = mysqli_query($connection, "SELECT device_id FROM {$tblPfx}whatsapp_device WHERE device_site_id = {$siteIdVal} AND device_status = 'connected' LIMIT 1");
         if ($devChk && mysqli_num_rows($devChk) > 0) {
@@ -55,21 +57,28 @@ if ($sendMessageTo != '') {
     if (!$sentViaDevice) {
         $url = "https://bhashsms.com/api/sendmsgutil.php";
 
+        $cleanPhone = preg_replace('/[^0-9]/', '', (string)$sendMessageTo);
+        if (strlen($cleanPhone) === 11 && substr($cleanPhone, 0, 1) === '0') {
+            $cleanPhone = substr($cleanPhone, 1);
+        }
+        $bhashUser = !empty($whatsappAdmin) ? $whatsappAdmin : (defined('COMPANY_WHATSAPP_USERNAME') ? COMPANY_WHATSAPP_USERNAME : "Aleya_BWA");
+        $bhashPass = !empty($whatsappPassword) ? $whatsappPassword : (defined('COMPANY_WHATSAPP_PASSWORD') ? COMPANY_WHATSAPP_PASSWORD : "123456");
+
         // Encode all other values normally
         $query = http_build_query([
-            "user"     => ((isset($whatsappAdmin)) ? $whatsappAdmin : "Aleya_BWA"),
-            "pass"     => ((isset($whatsappPassword)) ? $whatsappPassword : "123456"),
+            "user"     => $bhashUser,
+            "pass"     => $bhashPass,
             "sender"   => "BUZWAP",
-            "phone"    => $sendMessageTo,
+            "phone"    => $cleanPhone,
             "text"     => $templateName,
             "priority" => "wa",
             "stype"    => "normal"
         ]);
 
-        // But Params: allow commas, encode only URL-sensitive characters (e.g., space → %20)
+        // But Params: allow commas, encode only URL-sensitive characters (e.g., space → %20, & → %26)
         $safeParams = str_replace(
-            [' ', '+'],
-            ['%20', '%20'], // ensure space stays as %20, not "+"
+            [' ', '+', '&'],
+            ['%20', '%20', '%26'],
             $variablesValues
         );
 
@@ -77,11 +86,20 @@ if ($sendMessageTo != '') {
         $fullUrl = $url . '?' . $query . '&Params=' . $safeParams;
 
         // Perform GET request
-        $response = file_get_contents($fullUrl);
+        $response = @file_get_contents($fullUrl);
+        if ($response === false || $response === null) {
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $fullUrl);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            $response = curl_exec($ch);
+            curl_close($ch);
+        }
     }
 
     // Prepare log data
-    $logStatus = (strpos($response, 'success') !== false) ? 'success' : 'failed';
+    $logStatus = (strpos(strtolower((string)$response), 'success') !== false) ? 'success' : 'failed';
     $logEntry = [
         'timestamp' => date('Y-m-d H:i:s'),
         'phone' => $sendMessageTo,
@@ -91,9 +109,10 @@ if ($sendMessageTo != '') {
     ];
 
     // Create logs directory if not exists
-    $logDir = ROOT . 'logs/whatsapp-logs';
+    $baseRootDir = defined('ROOT') ? rtrim(ROOT, '/') : dirname(__DIR__, 2);
+    $logDir = $baseRootDir . '/logs/whatsapp-logs';
     if (!is_dir($logDir)) {
-        mkdir($logDir, 0755, true);
+        @mkdir($logDir, 0755, true);
     }
 
     // Format as table row and append to log file

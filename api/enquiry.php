@@ -323,6 +323,8 @@ enquiry_time) VALUES(" . SITE_ID . ", '{$userId}', '{$escaped_ip}', '{$escaped_c
                 }
             }
 
+            $cleanEnquirySubject = $subject;
+
             if (isset($sender)) {
                 if (!isset($doNotSendEmail)) {
 
@@ -345,12 +347,25 @@ enquiry_time) VALUES(" . SITE_ID . ", '{$userId}', '{$escaped_ip}', '{$escaped_c
                 }
             }
 
-            if (defined('ENABLE_WHATSAPP_BUSINESS_API')) {
-                if (ENABLE_WHATSAPP_BUSINESS_API == 'yes') {
-                    require_once WHATSAPP_TEMPLATE_ADMIN . 'new_enquiry.php';
-                    // Visitor thank-you WhatsApp message disabled: handled exclusively via CRM Workflow Automation
-                    // require_once WHATSAPP_TEMPLATE_VISITOR . 'enquiry_thank_you.php';
+            $enableWhatsAppApi = defined('ENABLE_WHATSAPP_BUSINESS_API') ? strtolower(ENABLE_WHATSAPP_BUSINESS_API) : '';
+            if (empty($enableWhatsAppApi) && isset($connection)) {
+                $targetSiteId = defined('SITE_ID') && (int)SITE_ID > 0 ? (int)SITE_ID : (isset($site_id) ? (int)$site_id : 0);
+                $tblPrefix = defined('TABLE_PREFIX') ? TABLE_PREFIX : 'isw_';
+                if ($targetSiteId > 0) {
+                    $cfgQ = mysqli_query($connection, "SELECT site_configuration_value FROM {$tblPrefix}site_configuration WHERE site_configuration_site_id = {$targetSiteId} AND site_configuration_key = 'enable_whatsapp_business_api' AND site_configuration_status = 1 LIMIT 1");
+                    if ($cfgQ && $cfgR = mysqli_fetch_assoc($cfgQ)) {
+                        $enableWhatsAppApi = strtolower(trim($cfgR['site_configuration_value']));
+                    }
                 }
+            }
+
+            if ($enableWhatsAppApi === 'yes') {
+                $subject = $cleanEnquirySubject;
+                if (defined('WHATSAPP_TEMPLATE_ADMIN') && file_exists(WHATSAPP_TEMPLATE_ADMIN . 'new_enquiry.php')) {
+                    require WHATSAPP_TEMPLATE_ADMIN . 'new_enquiry.php';
+                }
+                // Visitor thank-you WhatsApp message disabled: handled exclusively via CRM Workflow Automation
+                // require_once WHATSAPP_TEMPLATE_VISITOR . 'enquiry_thank_you.php';
             }
         }
 
