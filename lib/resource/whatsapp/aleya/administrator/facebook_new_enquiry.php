@@ -58,11 +58,21 @@ $variablesValues = $paramSubject . ',' . $paramTravelDates . ',' . $paramName . 
 $targetNumber = '';
 if (defined('ADMIN_WHATSAPP_NUMBER') && !empty(ADMIN_WHATSAPP_NUMBER)) {
     $targetNumber = ADMIN_WHATSAPP_NUMBER;
-} elseif (isset($connection)) {
+} elseif (defined('NOTIFICATION_ADMIN_WHATSAPP_NUMBER') && !empty(NOTIFICATION_ADMIN_WHATSAPP_NUMBER)) {
+    $targetNumber = NOTIFICATION_ADMIN_WHATSAPP_NUMBER;
+} elseif (defined('COMPANY_WHATSAPP') && !empty(COMPANY_WHATSAPP)) {
+    $targetNumber = COMPANY_WHATSAPP;
+}
+
+if (empty($targetNumber) && isset($connection)) {
     $targetSiteId = defined('SITE_ID') && (int)SITE_ID > 0 ? (int)SITE_ID : (isset($site_id) ? (int)$site_id : 0);
-    $tblPrefix = defined('TABLE_PREFIX') ? TABLE_PREFIX : 'isw_';
-    if ($targetSiteId > 0) {
-        $qNum = mysqli_query($connection, "SELECT site_configuration_value FROM {$tblPrefix}site_configuration WHERE site_configuration_site_id = {$targetSiteId} AND site_configuration_key = 'admin_whatsapp_number' AND site_configuration_status = 1 LIMIT 1");
+    $ownerId = isset($site_owner_id) ? (int)$site_owner_id : 0;
+    $parentSiteId = defined('APP_SITE_ID') ? (int)APP_SITE_ID : 0;
+    $siteIds = array_unique(array_filter([$targetSiteId, $ownerId, $parentSiteId]));
+    if (!empty($siteIds)) {
+        $siteIdList = implode(',', $siteIds);
+        $tblPrefix = defined('TABLE_PREFIX') ? TABLE_PREFIX : 'isw_';
+        $qNum = mysqli_query($connection, "SELECT site_configuration_key, site_configuration_value FROM {$tblPrefix}site_configuration WHERE site_configuration_site_id IN ({$siteIdList}) AND site_configuration_key IN ('notification_admin_whatsapp_number', 'admin_whatsapp_number', 'notification_company_whatsapp_number', 'company_whatsapp_number', 'notification_company_whatsapp', 'company_whatsapp', 'company_mobile') AND site_configuration_status = 1 AND site_configuration_value != '' ORDER BY CASE site_configuration_key WHEN 'notification_admin_whatsapp_number' THEN 1 WHEN 'admin_whatsapp_number' THEN 2 WHEN 'notification_company_whatsapp_number' THEN 3 WHEN 'company_whatsapp_number' THEN 4 ELSE 5 END ASC LIMIT 1");
         if ($qNum && $rNum = mysqli_fetch_assoc($qNum)) {
             $targetNumber = trim($rNum['site_configuration_value']);
         }

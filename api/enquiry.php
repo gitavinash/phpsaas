@@ -347,19 +347,42 @@ enquiry_time) VALUES(" . SITE_ID . ", '{$userId}', '{$escaped_ip}', '{$escaped_c
                 }
             }
 
-            $enableWhatsAppApi = defined('ENABLE_WHATSAPP_BUSINESS_API') ? strtolower(ENABLE_WHATSAPP_BUSINESS_API) : '';
-            if (empty($enableWhatsAppApi) && isset($connection)) {
+            $isWhatsAppEnabled = false;
+            if (defined('ENABLE_WHATSAPP_BUSINESS_API')) {
+                $cVal = strtolower(trim((string)ENABLE_WHATSAPP_BUSINESS_API));
+                if (in_array($cVal, ['yes', '1', 'true', 'on'], true)) {
+                    $isWhatsAppEnabled = true;
+                }
+            }
+            if (!$isWhatsAppEnabled && defined('NOTIFICATION_ENABLE_WHATSAPP_BUSINESS_API')) {
+                $cVal = strtolower(trim((string)NOTIFICATION_ENABLE_WHATSAPP_BUSINESS_API));
+                if (in_array($cVal, ['yes', '1', 'true', 'on'], true)) {
+                    $isWhatsAppEnabled = true;
+                }
+            }
+
+            if (!$isWhatsAppEnabled && isset($connection)) {
                 $targetSiteId = defined('SITE_ID') && (int)SITE_ID > 0 ? (int)SITE_ID : (isset($site_id) ? (int)$site_id : 0);
-                $tblPrefix = defined('TABLE_PREFIX') ? TABLE_PREFIX : 'isw_';
-                if ($targetSiteId > 0) {
-                    $cfgQ = mysqli_query($connection, "SELECT site_configuration_value FROM {$tblPrefix}site_configuration WHERE site_configuration_site_id = {$targetSiteId} AND site_configuration_key = 'enable_whatsapp_business_api' AND site_configuration_status = 1 LIMIT 1");
-                    if ($cfgQ && $cfgR = mysqli_fetch_assoc($cfgQ)) {
-                        $enableWhatsAppApi = strtolower(trim($cfgR['site_configuration_value']));
+                $ownerId = isset($site_owner_id) ? (int)$site_owner_id : 0;
+                $parentSiteId = defined('APP_SITE_ID') ? (int)APP_SITE_ID : 0;
+                $siteIds = array_unique(array_filter([$targetSiteId, $ownerId, $parentSiteId]));
+                if (!empty($siteIds)) {
+                    $siteIdList = implode(',', $siteIds);
+                    $tblPrefix = defined('TABLE_PREFIX') ? TABLE_PREFIX : 'isw_';
+                    $cfgQ = mysqli_query($connection, "SELECT site_configuration_key, site_configuration_value FROM {$tblPrefix}site_configuration WHERE site_configuration_site_id IN ({$siteIdList}) AND site_configuration_key IN ('notification_enable_whatsapp_business_api', 'enable_whatsapp_business_api', 'notification_enable_whatsapp', 'enable_whatsapp') AND site_configuration_status = 1");
+                    if ($cfgQ) {
+                        while ($cfgR = mysqli_fetch_assoc($cfgQ)) {
+                            $v = strtolower(trim((string)$cfgR['site_configuration_value']));
+                            if (in_array($v, ['yes', '1', 'true', 'on'], true)) {
+                                $isWhatsAppEnabled = true;
+                                break;
+                            }
+                        }
                     }
                 }
             }
 
-            if ($enableWhatsAppApi === 'yes') {
+            if ($isWhatsAppEnabled) {
                 $subject = $cleanEnquirySubject;
                 if (defined('WHATSAPP_TEMPLATE_ADMIN') && file_exists(WHATSAPP_TEMPLATE_ADMIN . 'new_enquiry.php')) {
                     require WHATSAPP_TEMPLATE_ADMIN . 'new_enquiry.php';
