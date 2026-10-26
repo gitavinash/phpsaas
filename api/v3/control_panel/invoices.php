@@ -20,6 +20,10 @@ if (!isset($connection)) {
 $tblPrefix = defined('TABLE_PREFIX') ? TABLE_PREFIX : 'isw_';
 $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 
+// Ensure tables exist across all environments
+require_once __DIR__ . '/schema_helper.php';
+ensureControlPanelTables($connection, $tblPrefix);
+
 // --------------------------------------------------------------------------
 // 1. GET: List Invoices or Single Invoice Details
 // --------------------------------------------------------------------------

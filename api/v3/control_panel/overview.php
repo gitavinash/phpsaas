@@ -19,6 +19,10 @@ if (!isset($connection)) {
 
 $tblPrefix = defined('TABLE_PREFIX') ? TABLE_PREFIX : 'isw_';
 
+// Ensure tables exist across all environments
+require_once __DIR__ . '/schema_helper.php';
+ensureControlPanelTables($connection, $tblPrefix);
+
 // 1. Total & Active Apps
 $appStats = ['total' => 0, 'active' => 0];
 $appRes = mysqli_query($connection, "SELECT COUNT(*) as total, SUM(CASE WHEN app_status = 1 THEN 1 ELSE 0 END) as active FROM {$tblPrefix}app");
@@ -81,19 +85,23 @@ $financialStats = [
     'unpaid_invoices' => 0
 ];
 
-$invRes = mysqli_query($connection, "SELECT 
-    COALESCE(SUM(invoice_total), 0) as total_billed,
-    COALESCE(SUM(CASE WHEN invoice_status = 'paid' THEN invoice_total ELSE 0 END), 0) as total_paid,
-    COALESCE(SUM(CASE WHEN invoice_status != 'paid' THEN invoice_total ELSE 0 END), 0) as total_unpaid,
-    COUNT(CASE WHEN invoice_status = 'paid' THEN 1 END) as paid_invoices,
-    COUNT(CASE WHEN invoice_status != 'paid' THEN 1 END) as unpaid_invoices
-    FROM {$tblPrefix}control_panel_invoice");
-if ($invRes && $row = mysqli_fetch_assoc($invRes)) {
-    $financialStats['total_billed'] = (float)$row['total_billed'];
-    $financialStats['total_paid'] = (float)$row['total_paid'];
-    $financialStats['total_unpaid'] = (float)$row['total_unpaid'];
-    $financialStats['paid_invoices'] = (int)$row['paid_invoices'];
-    $financialStats['unpaid_invoices'] = (int)$row['unpaid_invoices'];
+try {
+    $invRes = mysqli_query($connection, "SELECT 
+        COALESCE(SUM(invoice_total), 0) as total_billed,
+        COALESCE(SUM(CASE WHEN invoice_status = 'paid' THEN invoice_total ELSE 0 END), 0) as total_paid,
+        COALESCE(SUM(CASE WHEN invoice_status != 'paid' THEN invoice_total ELSE 0 END), 0) as total_unpaid,
+        COUNT(CASE WHEN invoice_status = 'paid' THEN 1 END) as paid_invoices,
+        COUNT(CASE WHEN invoice_status != 'paid' THEN 1 END) as unpaid_invoices
+        FROM {$tblPrefix}control_panel_invoice");
+    if ($invRes && $row = mysqli_fetch_assoc($invRes)) {
+        $financialStats['total_billed'] = (float)$row['total_billed'];
+        $financialStats['total_paid'] = (float)$row['total_paid'];
+        $financialStats['total_unpaid'] = (float)$row['total_unpaid'];
+        $financialStats['paid_invoices'] = (int)$row['paid_invoices'];
+        $financialStats['unpaid_invoices'] = (int)$row['unpaid_invoices'];
+    }
+} catch (\Throwable $e) {
+    // Graceful fallback if table is unavailable
 }
 
 // 6. Partner Commissions Summary
@@ -103,15 +111,19 @@ $commissionStats = [
     'pending_commissions' => 0.00
 ];
 
-$commRes = mysqli_query($connection, "SELECT 
-    COALESCE(SUM(commission_amount), 0) as total_commissions,
-    COALESCE(SUM(CASE WHEN commission_status = 'paid' THEN commission_amount ELSE 0 END), 0) as paid_commissions,
-    COALESCE(SUM(CASE WHEN commission_status = 'pending' THEN commission_amount ELSE 0 END), 0) as pending_commissions
-    FROM {$tblPrefix}control_panel_commission");
-if ($commRes && $row = mysqli_fetch_assoc($commRes)) {
-    $commissionStats['total_commissions'] = (float)$row['total_commissions'];
-    $commissionStats['paid_commissions'] = (float)$row['paid_commissions'];
-    $commissionStats['pending_commissions'] = (float)$row['pending_commissions'];
+try {
+    $commRes = mysqli_query($connection, "SELECT 
+        COALESCE(SUM(commission_amount), 0) as total_commissions,
+        COALESCE(SUM(CASE WHEN commission_status = 'paid' THEN commission_amount ELSE 0 END), 0) as paid_commissions,
+        COALESCE(SUM(CASE WHEN commission_status = 'pending' THEN commission_amount ELSE 0 END), 0) as pending_commissions
+        FROM {$tblPrefix}control_panel_commission");
+    if ($commRes && $row = mysqli_fetch_assoc($commRes)) {
+        $commissionStats['total_commissions'] = (float)$row['total_commissions'];
+        $commissionStats['paid_commissions'] = (float)$row['paid_commissions'];
+        $commissionStats['pending_commissions'] = (float)$row['pending_commissions'];
+    }
+} catch (\Throwable $e) {
+    // Graceful fallback if table is unavailable
 }
 
 // 7. Recent Sites Provisioned (Last 5)
