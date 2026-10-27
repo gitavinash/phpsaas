@@ -660,7 +660,7 @@ if (!empty($connectedDevicePhone) && !empty($payload['session_id'])) {
     }
 
     if (strlen($last10) >= 8) {
-        $leadQ = mysqli_query($connection, "SELECT enquiry_id, TRIM(CONCAT(COALESCE(enquiry_first_name, ''), ' ', COALESCE(enquiry_last_name, ''))) as lead_name FROM " . TABLE_PREFIX . "enquiry WHERE enquiry_site_id = {$siteId} AND enquiry_mobile LIKE '%{$last10}' LIMIT 1");
+        $leadQ = mysqli_query($connection, "SELECT enquiry_id, TRIM(CONCAT(COALESCE(enquiry_first_name, ''), ' ', COALESCE(enquiry_last_name, ''))) as lead_name FROM " . TABLE_PREFIX . "enquiry WHERE enquiry_site_id = {$siteId} AND enquiry_mobile LIKE '%{$last10}' ORDER BY enquiry_id DESC LIMIT 1");
         if ($leadQ && mysqli_num_rows($leadQ) > 0) {
             $lRow = mysqli_fetch_assoc($leadQ);
             $leadId = (int)$lRow['enquiry_id'];

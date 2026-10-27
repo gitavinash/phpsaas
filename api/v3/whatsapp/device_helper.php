@@ -29,7 +29,7 @@ require_once __DIR__ . '/phone_helper.php';
  * @param int $senderUserId
  * @return array|null Device associative array or null if no connected device exists
  */
-function resolveSenderWhatsAppDevice($connection, $siteId, $senderUserId = 0) {
+function resolveSenderWhatsAppDevice($connection, $siteId, $senderUserId = 0, array $options = []) {
     if (!$connection || $siteId <= 0) {
         return null;
     }
@@ -38,7 +38,7 @@ function resolveSenderWhatsAppDevice($connection, $siteId, $senderUserId = 0) {
     $senderUserId = (int)$senderUserId;
     $prefix = defined('TABLE_PREFIX') ? TABLE_PREFIX : 'isw_';
 
-    // 1. Check if sender user has an assigned connected device
+    // 1. Check if explicit sender user has an assigned connected device
     if ($senderUserId > 0) {
         $agQ = mysqli_query($connection, "SELECT * FROM {$prefix}whatsapp_device 
             WHERE device_site_id = {$siteId} 
@@ -52,7 +52,81 @@ function resolveSenderWhatsAppDevice($connection, $siteId, $senderUserId = 0) {
         }
     }
 
-    // 2. Check site's explicit default device
+    // 2. Check if a Lead is associated and has an assigned agent with a connected WhatsApp device
+    $leadId = isset($options['lead_id']) ? (int)$options['lead_id'] : (isset($options['enquiry_id']) ? (int)$options['enquiry_id'] : 0);
+    $recipientPhone = trim($options['recipient_phone'] ?? ($options['phone'] ?? ''));
+
+    if ($leadId <= 0 && !empty($recipientPhone)) {
+        $rDigits = preg_replace('/[^0-9]/', '', $recipientPhone);
+        $last10 = substr($rDigits, -10);
+        if (strlen($last10) >= 8) {
+            $esc10 = mysqli_real_escape_string($connection, $last10);
+            $lFindQ = mysqli_query($connection, "SELECT enquiry_id, enquiry_agent FROM {$prefix}enquiry 
+                WHERE enquiry_site_id = {$siteId} AND enquiry_mobile LIKE '%{$esc10}' 
+                ORDER BY enquiry_id DESC LIMIT 1");
+            if ($lFindQ && $lRow = mysqli_fetch_assoc($lFindQ)) {
+                $leadId = (int)$lRow['enquiry_id'];
+                $foundAgent = (int)($lRow['enquiry_agent'] ?? 0);
+            }
+        }
+    }
+
+    if ($leadId > 0) {
+        if (!isset($foundAgent)) {
+            $leadAgQ = mysqli_query($connection, "SELECT enquiry_agent FROM {$prefix}enquiry 
+                WHERE enquiry_id = {$leadId} AND enquiry_site_id = {$siteId} LIMIT 1");
+            $foundAgent = ($leadAgQ && $lr = mysqli_fetch_assoc($leadAgQ)) ? (int)$lr['enquiry_agent'] : 0;
+        }
+
+        if ($foundAgent > 0) {
+            $leadDevQ = mysqli_query($connection, "SELECT * FROM {$prefix}whatsapp_device 
+                WHERE device_site_id = {$siteId} 
+                  AND device_assigned_user_id = {$foundAgent} 
+                  AND device_status = 'connected' 
+                LIMIT 1");
+            if ($leadDevQ && mysqli_num_rows($leadDevQ) > 0) {
+                $dev = mysqli_fetch_assoc($leadDevQ);
+                $dev['resolved_reason'] = 'lead_assigned_agent';
+                return $dev;
+            }
+        }
+    }
+
+    // 3. Check if recipient has an ongoing conversation with an established connected device
+    if (!empty($recipientPhone)) {
+        $normP = normalizeWhatsAppPhone($recipientPhone);
+        $cleanP = preg_replace('/[^0-9]/', '', $normP);
+        $last10P = substr($cleanP, -10);
+        if (strlen($last10P) >= 8) {
+            $esc10P = mysqli_real_escape_string($connection, $last10P);
+            $chatDevQ = mysqli_query($connection, "SELECT chat_device_phone FROM {$prefix}whatsapp_chat 
+                WHERE chat_site_id = {$siteId} AND chat_phone LIKE '%{$esc10P}' AND chat_device_phone IS NOT NULL AND chat_device_phone != '' AND chat_device_phone != 'CRM'
+                ORDER BY chat_id DESC LIMIT 1");
+            if ($chatDevQ && $cdRow = mysqli_fetch_assoc($chatDevQ)) {
+                $cDevPhone = preg_replace('/[^0-9]/', '', $cdRow['chat_device_phone']);
+                $cDevLast10 = substr($cDevPhone, -10);
+                if (strlen($cDevLast10) >= 8) {
+                    $escCD = mysqli_real_escape_string($connection, $cDevLast10);
+                    $estDevQ = mysqli_query($connection, "SELECT * FROM {$prefix}whatsapp_device 
+                        WHERE device_site_id = {$siteId} AND device_phone LIKE '%{$escCD}' AND device_status = 'connected' LIMIT 1");
+                    if ($estDevQ && mysqli_num_rows($estDevQ) > 0) {
+                        $estDev = mysqli_fetch_assoc($estDevQ);
+                        $estDevUserId = (int)($estDev['device_assigned_user_id'] ?? 0);
+                        // Strict Isolation Rule:
+                        // If lead is assigned to Agent A, NEVER use Agent B's personal device!
+                        if (!empty($foundAgent) && $foundAgent > 0 && $estDevUserId > 0 && $estDevUserId !== $foundAgent) {
+                            // Mismatch: Established chat was with another agent, do not hijack for this lead
+                        } else {
+                            $estDev['resolved_reason'] = 'established_chat_device';
+                            return $estDev;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // 4. Check site's explicit default device
     $defQ = mysqli_query($connection, "SELECT * FROM {$prefix}whatsapp_device 
         WHERE device_site_id = {$siteId} 
           AND device_is_default = 1 
@@ -64,7 +138,7 @@ function resolveSenderWhatsAppDevice($connection, $siteId, $senderUserId = 0) {
         return $dev;
     }
 
-    // 3. Check site_configuration whatsapp_default_device_id
+    // 5. Check site_configuration whatsapp_default_device_id
     $cfgDefQ = mysqli_query($connection, "SELECT site_configuration_value FROM {$prefix}site_configuration 
         WHERE site_configuration_site_id = {$siteId} 
           AND site_configuration_key = 'whatsapp_default_device_id' 
@@ -86,7 +160,7 @@ function resolveSenderWhatsAppDevice($connection, $siteId, $senderUserId = 0) {
         }
     }
 
-    // 4. Count connected devices on the site
+    // 6. If only 1 device is connected on the site, use this device
     $cntQ = mysqli_query($connection, "SELECT COUNT(*) as cnt FROM {$prefix}whatsapp_device 
         WHERE device_site_id = {$siteId} AND device_status = 'connected'");
     $connectedCount = ($cntQ && $cr = mysqli_fetch_assoc($cntQ)) ? (int)$cr['cnt'] : 0;
@@ -102,16 +176,8 @@ function resolveSenderWhatsAppDevice($connection, $siteId, $senderUserId = 0) {
         }
     }
 
-    // 5. Fallback: Any connected device on this site
-    $anyQ = mysqli_query($connection, "SELECT * FROM {$prefix}whatsapp_device 
-        WHERE device_site_id = {$siteId} AND device_status = 'connected' 
-        ORDER BY device_id ASC 
-        LIMIT 1");
-    if ($anyQ && mysqli_num_rows($anyQ) > 0) {
-        $dev = mysqli_fetch_assoc($anyQ);
-        $dev['resolved_reason'] = 'any_connected';
-        return $dev;
-    }
+    // Note: Do NOT blindly fall back to arbitrary other sales agents' private connected devices.
+    // In multi-agent environments, sending from another agent's phone causes severe cross-agent message leakage.
 
     return null;
 }
@@ -233,8 +299,12 @@ function sendWhatsAppDirectMessage($connection, $siteId, $senderUserId, $recipie
         }
     }
 
+    if (empty($options['recipient_phone']) && !empty($recipientPhone)) {
+        $options['recipient_phone'] = $recipientPhone;
+    }
+
     if (!$device) {
-        $device = resolveSenderWhatsAppDevice($connection, $siteId, $senderUserId);
+        $device = resolveSenderWhatsAppDevice($connection, $siteId, $senderUserId, $options);
     }
 
     if (!$device || empty($device['device_session_id'])) {

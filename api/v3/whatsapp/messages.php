@@ -782,9 +782,10 @@ if ($method === 'POST') {
         exit;
     }
 
-    // Fetch chat phone
-    $cQ = mysqli_query($connection, "SELECT chat_phone FROM " . TABLE_PREFIX . "whatsapp_chat WHERE chat_id = {$chatId} AND chat_site_id = {$siteId} LIMIT 1");
+    // Fetch chat phone and linked lead
+    $cQ = mysqli_query($connection, "SELECT chat_phone, chat_lead_id FROM " . TABLE_PREFIX . "whatsapp_chat WHERE chat_id = {$chatId} AND chat_site_id = {$siteId} LIMIT 1");
     $cRow = $cQ ? mysqli_fetch_assoc($cQ) : null;
+    $chatLeadId = (int)($cRow['chat_lead_id'] ?? 0);
     $rawRecipient = !empty($cRow['chat_phone']) ? $cRow['chat_phone'] : $phone;
     $rDigits = preg_replace('/[^0-9]/', '', $rawRecipient);
     if (str_starts_with($rDigits, '0')) {
@@ -921,8 +922,11 @@ if ($method === 'POST') {
             }
         }
         if (!$foundDev) {
-            // Fallback to default device (or single connected device)
-            $resDev = resolveSenderWhatsAppDevice($connection, $siteId, $currentUserId);
+            // Fallback: check assigned lead agent, established chat device, or site default
+            $resDev = resolveSenderWhatsAppDevice($connection, $siteId, $currentUserId, [
+                'lead_id' => $chatLeadId,
+                'recipient_phone' => $recipientPhone
+            ]);
             if ($resDev) {
                 $targetSessionId = $resDev['device_session_id'];
                 if (!empty($resDev['device_phone'])) {

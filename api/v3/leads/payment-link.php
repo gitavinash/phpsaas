@@ -165,28 +165,21 @@ if (!empty($notes)) {
 }
 
 if ($sendWhatsApp && !empty($customerMobile)) {
-    // A: Check if WhatsApp Gateway / Microservice is active
-    $gwUrl = defined('WHATSAPP_GATEWAY_URL') ? WHATSAPP_GATEWAY_URL : 'http://localhost:3000';
-    $gwEndpoint = rtrim($gwUrl, '/') . '/send-message';
-    
-    $payload = json_encode([
-        'phone' => (strlen($customerMobile) === 10 ? '91' . $customerMobile : $customerMobile),
-        'message' => $whatsappMsg
-    ]);
+    $helperPath = dirname(__DIR__) . '/whatsapp/device_helper.php';
+    if (file_exists($helperPath)) {
+        require_once $helperPath;
+        if (function_exists('sendWhatsAppDirectMessage')) {
+            $waRes = sendWhatsAppDirectMessage($connection, $siteId, $currentUserId, $customerMobile, $whatsappMsg, [
+                'lead_id' => $leadId,
+                'type' => 'text'
+            ]);
+            if ($waRes && isset($waRes['status']) && $waRes['status'] === 'success') {
+                $whatsappSent = true;
+            }
+        }
+    }
 
-    $ch = curl_init($gwEndpoint);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_POST, true);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
-    curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
-    curl_setopt($ch, CURLOPT_TIMEOUT, 3);
-    $gwResponse = @curl_exec($ch);
-    $curlHttpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-    curl_close($ch);
-
-    if ($curlHttpCode === 200) {
-        $whatsappSent = true;
-    } elseif (defined('ENABLE_WHATSAPP_BUSINESS_API') && ENABLE_WHATSAPP_BUSINESS_API === 'yes') {
+    if (!$whatsappSent && defined('ENABLE_WHATSAPP_BUSINESS_API') && ENABLE_WHATSAPP_BUSINESS_API === 'yes') {
         // B: Official Meta / Business API Template
         if (defined('WHATSAPP_TEMPLATE_VISITOR') && file_exists(WHATSAPP_TEMPLATE_VISITOR . 'payment_request.php')) {
             $profile_display_name = $customerName;

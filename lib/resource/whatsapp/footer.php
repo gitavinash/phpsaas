@@ -43,7 +43,16 @@ if ($sendMessageTo != '') {
                     }
 
                     if (!empty($msgBody)) {
-                        $directRes = sendWhatsAppDirectMessage($connection, $siteIdVal, 0, $sendMessageTo, $msgBody);
+                        $senderUserVal = defined('USER_ID') ? (int)USER_ID : 0;
+                        if ($senderUserVal <= 0 && isset($userId)) {
+                            $senderUserVal = (int)$userId;
+                        }
+                        $leadIdVal = isset($leadId) ? (int)$leadId : (isset($enquiry_id) ? (int)$enquiry_id : 0);
+                        $sendOpts = [
+                            'lead_id' => $leadIdVal,
+                            'recipient_phone' => $sendMessageTo
+                        ];
+                        $directRes = sendWhatsAppDirectMessage($connection, $siteIdVal, $senderUserVal, $sendMessageTo, $msgBody, $sendOpts);
                         if ($directRes && isset($directRes['status']) && $directRes['status'] === 'success') {
                             $sentViaDevice = true;
                             $response = 'success (via connected WhatsApp Web device)';

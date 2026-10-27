@@ -1208,17 +1208,8 @@ class WhatsAppSession {
         }
       }
 
-      // 6. Try matching against recent outgoing activity (within 10 minutes)
-      if (this.lastOutgoingPhone && (Date.now() - this.lastOutgoingTime < 600000)) {
-        const cleanOut = this.lastOutgoingPhone.replace(/[^0-9]/g, "");
-        if (cleanOut.length >= 7 && cleanOut.length <= 13) {
-          this.lidPhoneMap.set(normalized, this.lastOutgoingPhone);
-          this.lidPhoneMap.set(decoded.user + "@lid", this.lastOutgoingPhone);
-          this.lidPhoneMap.set(decoded.user, this.lastOutgoingPhone);
-          this.lidPhoneMap.set("+" + decoded.user, this.lastOutgoingPhone);
-          return this.lastOutgoingPhone;
-        }
-      }
+      // 6. Note: Removed unsafe lastOutgoingPhone heuristic to prevent cross-contact LID spoofing
+      // Customers must never be identified based on who the agent recently messaged.
 
       // 7. Hardcoded test user mapping
       if (decoded.user.includes("187810329956513")) {
@@ -2567,29 +2558,39 @@ app.post("/send-message", async (req, res) => {
   let reqSid = req.body?.session_id || req.query?.session_id;
   const targetSiteId = req.body?.site_id || req.query?.site_id || null;
   let s = reqSid ? getSession(reqSid, req) : null;
-  if (!s || s.connectionStatus !== "connected") {
-    for (const sess of sessions.values()) {
-      if (sess.connectionStatus === "connected") {
-        if (targetSiteId) {
-          const sessMatchesSite = sess.siteId ? (String(sess.siteId) === String(targetSiteId)) : (sess.sessionId.startsWith(`site_${targetSiteId}_`));
-          if (!sessMatchesSite) continue;
-        }
-        s = sess;
-        break;
+
+  // If a specific session was requested, enforce that session strictly!
+  // NEVER silently hijack another sales agent's WhatsApp session.
+  if (reqSid) {
+    if (s && s.connectionStatus !== "connected" && fs.existsSync(path.join(s.authDir, "creds.json"))) {
+      let waitCount = 0;
+      while (s.connectionStatus !== "connected" && waitCount < 10) {
+        await new Promise(r => setTimeout(r, 500));
+        waitCount++;
       }
     }
-  }
-  if (!s && targetSiteId) {
-    s = getSession(`site_${targetSiteId}_default`, req);
-  } else if (!s) {
-    s = getSession("default", req);
-  }
 
-  if (s && s.connectionStatus !== "connected" && fs.existsSync(path.join(s.authDir, "creds.json"))) {
-    let waitCount = 0;
-    while (s.connectionStatus !== "connected" && waitCount < 10) {
-      await new Promise(r => setTimeout(r, 500));
-      waitCount++;
+    if (!s || s.connectionStatus !== "connected" || !s.sock) {
+      return res.status(400).json({
+        status: "error",
+        message: `Requested WhatsApp device (${reqSid}) is not connected. Dispatch aborted to prevent sending from the wrong agent number.`,
+      });
+    }
+  } else {
+    // No specific session requested: try site default or general default only
+    if (targetSiteId) {
+      s = getSession(`site_${targetSiteId}_default`, req);
+    }
+    if (!s || s.connectionStatus !== "connected") {
+      s = getSession("default", req);
+    }
+
+    if (s && s.connectionStatus !== "connected" && fs.existsSync(path.join(s.authDir, "creds.json"))) {
+      let waitCount = 0;
+      while (s.connectionStatus !== "connected" && waitCount < 10) {
+        await new Promise(r => setTimeout(r, 500));
+        waitCount++;
+      }
     }
   }
 
