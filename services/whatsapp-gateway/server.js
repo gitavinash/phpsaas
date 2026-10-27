@@ -102,6 +102,7 @@ function extractTimestamp(ts) {
 }
 
 const origConsoleLog = console.log;
+const origConsoleInfo = console.info;
 const origConsoleWarn = console.warn;
 const origConsoleError = console.error;
 
@@ -126,11 +127,37 @@ function shouldFormatArgs(args) {
 }
 
 console.log = function (...args) {
+  const msg = args
+    .map((a) => (typeof a === "object" ? (a?.stack || a?.message || JSON.stringify(a)) : String(a)))
+    .join(" ");
+
+  if (msg.includes("Closing session") || msg.includes("SessionEntry")) {
+    return;
+  }
+
   if (shouldFormatArgs(args)) {
     const ts = getFormattedTimestamp();
     origConsoleLog.apply(console, ["\n" + `${COLOR.DIM}[${ts}]${COLOR.RESET}`, ...args, "\n"]);
   } else {
     origConsoleLog.apply(console, args);
+  }
+};
+
+console.info = function (...args) {
+  const msg = args
+    .map((a) => (typeof a === "object" ? (a?.stack || a?.message || JSON.stringify(a)) : String(a)))
+    .join(" ");
+
+  // Suppress internal libsignal cryptographic session ratchet dumps (e.g. "Closing session: SessionEntry")
+  if (msg.includes("Closing session") || msg.includes("SessionEntry")) {
+    return;
+  }
+
+  if (shouldFormatArgs(args)) {
+    const ts = getFormattedTimestamp();
+    origConsoleInfo.apply(console, ["\n" + `${COLOR.CYAN}[${ts}] [INFO]${COLOR.RESET}`, ...args, "\n"]);
+  } else {
+    origConsoleInfo.apply(console, args);
   }
 };
 
@@ -622,27 +649,36 @@ async function downloadAndSaveMedia(msg, sessionId, sock = null, allowPhoneRetry
         }
       );
     } catch (dErr) {
-      console.log(`[WhatsApp Gateway:${sessionId}] Initial download failed for ${msgId}: ${dErr.message || dErr}`);
       if (allowPhoneRetry && sock && typeof sock.updateMediaMessage === "function") {
-        console.log(`[WhatsApp Gateway:${sessionId}] Requesting media update from phone via sock.updateMediaMessage for ${msgId}...`);
         try {
           const updatedMsg = await Promise.race([
             sock.updateMediaMessage(realMsg),
             new Promise((_, reject) => setTimeout(() => reject(new Error("Timeout waiting for media update")), 8000))
           ]);
           if (updatedMsg) {
-            console.log(`[WhatsApp Gateway:${sessionId}] Phone responded with refreshed media for ${msgId}! Downloading buffer...`);
             buffer = await downloadMediaMessage(updatedMsg, "buffer", {}, { logger });
           }
         } catch (retryErr) {
-          console.warn(`[WhatsApp Gateway:${sessionId}] Phone media retry failed for ${msgId}:`, retryErr.message || retryErr);
+          printCardLog(`${COLOR.BG_YELLOW}${COLOR.BOLD} [MEDIA RETRY TIMEOUT] ${COLOR.RESET}`, [
+            ["Session ID", sessionId],
+            ["Message ID", msgId],
+            ["Warning", "Phone media refresh timed out (8s)"],
+            ["Fallback", "Using cached thumbnail or direct message link"],
+          ], COLOR.YELLOW);
         }
       }
     }
 
     if (buffer && buffer.length > 0) {
       fs.writeFileSync(filePath, buffer);
-      console.log(`[WhatsApp Gateway:${sessionId}] Downloaded media (${mediaType}, ${buffer.length} bytes): ${getMediaUrl(fileName)}`);
+      printCardLog(`${COLOR.BG_BLUE}${COLOR.BOLD} [MEDIA DOWNLOADED] ${COLOR.RESET}`, [
+        ["Session ID", sessionId],
+        ["Message ID", msgId],
+        ["Media Type", mediaType],
+        ["File Size", `${buffer.length.toLocaleString()} bytes`],
+        ["File Name", fileName],
+        ["Media URL", getMediaUrl(fileName)],
+      ], COLOR.BLUE);
       return {
         type: mediaType,
         url: getMediaUrl(fileName),
@@ -650,7 +686,11 @@ async function downloadAndSaveMedia(msg, sessionId, sock = null, allowPhoneRetry
       };
     }
   } catch (err) {
-    console.warn(`[WhatsApp Gateway:${sessionId}] Failed to download media buffer for ${msgId}:`, err.message || err);
+    printCardLog(`${COLOR.BG_YELLOW}${COLOR.BOLD} [MEDIA BUFFER WARNING] ${COLOR.RESET}`, [
+      ["Session ID", sessionId],
+      ["Message ID", msgId],
+      ["Error", err.message || String(err)],
+    ], COLOR.YELLOW);
   }
 
   // 2. Fallback: check jpegThumbnail
@@ -670,7 +710,13 @@ async function downloadAndSaveMedia(msg, sessionId, sock = null, allowPhoneRetry
         : Buffer.from(mediaObj.jpegThumbnail, "base64");
       if (thumbBuf && thumbBuf.length > 0) {
         fs.writeFileSync(thumbPath, thumbBuf);
-        console.log(`[WhatsApp Gateway:${sessionId}] Saved media thumbnail: ${getMediaUrl(thumbName)}`);
+        printCardLog(`${COLOR.BG_CYAN}${COLOR.BOLD} [MEDIA THUMBNAIL SAVED] ${COLOR.RESET}`, [
+          ["Session ID", sessionId],
+          ["Message ID", msgId],
+          ["Media Type", `${mediaType} (thumbnail)`],
+          ["Thumbnail URL", getMediaUrl(thumbName)],
+          ["Status", "Full media unavailable on CDN; fallback thumbnail saved"],
+        ], COLOR.CYAN);
         return {
           type: mediaType,
           url: getMediaUrl(thumbName),
@@ -1377,12 +1423,13 @@ class WhatsAppSession {
       const lastMsg = c.lastMessageText || "";
       const chatMessages = [];
       if (Array.isArray(c.messages) && c.messages.length > 0) {
-        for (const mItem of c.messages.slice(-30)) {
+        for (const mItem of c.messages.slice(-10)) {
           const realMsg = (mItem.message && mItem.message.key) ? mItem.message : mItem;
           const msgId = realMsg.key?.id || mItem.msg_id || null;
           const fromMe = !!(realMsg.key?.fromMe !== undefined ? realMsg.key?.fromMe : mItem.from_me);
           const rawMsg = realMsg.message || realMsg;
-          const text = mItem.text || getMessageText(rawMsg);
+          const text = (typeof mItem.text === "string" ? mItem.text : getMessageText(rawMsg)) || "";
+          const cleanText = text.replace(/[\uD800-\uDFFF]/g, "").replace(/\0/g, "").substring(0, 500);
           const ts = extractTimestamp(realMsg.messageTimestamp || mItem.timestamp);
 
           let mediaUrl = mItem.media_url || mItem.media || "";
@@ -1401,7 +1448,7 @@ class WhatsAppSession {
           chatMessages.push({
             msg_id: msgId,
             from_me: fromMe,
-            text: text,
+            text: cleanText,
             media_url: mediaUrl,
             type: mediaType,
             timestamp: ts,
@@ -1412,7 +1459,7 @@ class WhatsAppSession {
         chatMessages.push({
           msg_id: null,
           from_me: false,
-          text: lastMsg,
+          text: String(lastMsg).replace(/[\uD800-\uDFFF]/g, "").replace(/\0/g, "").substring(0, 500),
           media_url: "",
           type: fallbackType,
           timestamp: extractTimestamp(c.conversationTimestamp),
@@ -1423,10 +1470,11 @@ class WhatsAppSession {
       processedPhones.add(phone);
 
       const contact = this.contactStore.get(jid) || {};
-      const pushname = c.pushName || contact.notify || contact.verifiedName || "";
-      const name = c.name || contact.name || "";
+      const pushname = (c.pushName || contact.notify || contact.verifiedName || "").replace(/[\uD800-\uDFFF]/g, "").replace(/\0/g, "");
+      const name = (c.name || contact.name || "").replace(/[\uD800-\uDFFF]/g, "").replace(/\0/g, "");
       const ts = extractTimestamp(c.conversationTimestamp);
       const avatar = c.avatar || (this.avatarCache.get(jid)?.url) || "";
+      const cleanLastMsg = (lastMsg || (chatMessages.length ? chatMessages[chatMessages.length - 1].text : "")).replace(/[\uD800-\uDFFF]/g, "").replace(/\0/g, "").substring(0, 500);
 
       batchPayload.push({
         phone: phone,
@@ -1435,7 +1483,7 @@ class WhatsAppSession {
         avatar: avatar,
         unread_count: Number(c.unreadCount) || 0,
         timestamp: ts,
-        last_message: lastMsg || (chatMessages.length ? chatMessages[chatMessages.length - 1].text : ""),
+        last_message: cleanLastMsg,
         messages: chatMessages,
         is_sync: true,
         is_historical: true,
@@ -1452,8 +1500,8 @@ class WhatsAppSession {
       }
       processedPhones.add(phone);
 
-      const pushname = ct.notify || ct.verifiedName || "";
-      const name = ct.name || "";
+      const pushname = (ct.notify || ct.verifiedName || "").replace(/[\uD800-\uDFFF]/g, "").replace(/\0/g, "");
+      const name = (ct.name || "").replace(/[\uD800-\uDFFF]/g, "").replace(/\0/g, "");
       const avatar = (this.avatarCache.get(jid)?.url) || "";
 
       batchPayload.push({
@@ -1471,7 +1519,7 @@ class WhatsAppSession {
     }
 
     if (batchPayload.length > 0) {
-      const CHUNK_SIZE = 150;
+      const CHUNK_SIZE = 30;
       printCardLog(`${COLOR.BG_BLUE}${COLOR.BOLD} [SYNC HISTORICAL CHATS] ${COLOR.RESET}`, [
         ["Site Domain", this.getSiteDomain()],
         ["Device WhatsApp", this.connectedUser?.phone || "Connected Device"],
@@ -1485,6 +1533,7 @@ class WhatsAppSession {
         const chunk = batchPayload.slice(i, i + CHUNK_SIZE);
         await this.notify({
           event: "batch_sync",
+          site_id: this.siteId,
           is_sync: true,
           is_historical: true,
           chats: chunk,
@@ -2157,7 +2206,7 @@ try {
   console.error("[WhatsApp Gateway] Error scanning auth sessions on startup:", e);
 }
 
-function notifyCrm(payload, targetOverrideUrl = null, redirectCount = 0) {
+function notifyCrm(payload, targetOverrideUrl = null, redirectCount = 0, overrideHostHeader = null) {
   return new Promise((resolve) => {
     if (redirectCount > 3) {
       console.error("[WhatsApp Gateway] CRM Webhook exceeded max redirects (3).");
@@ -2179,11 +2228,9 @@ function notifyCrm(payload, targetOverrideUrl = null, redirectCount = 0) {
       const defaultPort = url.protocol === "https:" ? 443 : 80;
 
       // Determine the optimal Host header:
-      // If targetUrl points to 127.0.0.1 or localhost, but we know the actual tenant domain
-      // (from targetOverrideUrl, lastKnownWebhookUrl, or environment), use that domain as the Host header
-      // so Apache name-based VirtualHosts route to the correct CRM tenant instead of the default 404 VirtualHost.
-      let hostHeader = url.host;
-      if (url.hostname === "127.0.0.1" || url.hostname === "localhost") {
+      // If targetUrl points to 127.0.0.1 or localhost, preserve the original tenant domain
+      let hostHeader = overrideHostHeader || url.host;
+      if (!overrideHostHeader && (url.hostname === "127.0.0.1" || url.hostname === "localhost")) {
         let resolvedDomain = null;
         if (lastKnownWebhookUrl) {
           try {
@@ -2235,10 +2282,11 @@ function notifyCrm(payload, targetOverrideUrl = null, redirectCount = 0) {
               ["Response", (resBody || "").substring(0, 150)],
             ], COLOR.YELLOW);
 
-            // If a public domain webhook returns error/404 or fails, fallback to direct loopback (127.0.0.1) with Host header
-            if (url.hostname !== "127.0.0.1" && redirectCount === 0) {
+            // If public domain returns 502/503/504 gateway error, fallback to loopback (127.0.0.1) preserving original Host
+            // NEVER fallback on 4xx client errors (400, 403, 404), as the server is reachable and loopback will simply reject it again.
+            if (url.hostname !== "127.0.0.1" && redirectCount === 0 && (res.statusCode >= 500 && res.statusCode <= 504)) {
               const fallbackUrl = `http://127.0.0.1${url.pathname}${url.search}`;
-              return resolve(notifyCrm(payload, fallbackUrl, 1));
+              return resolve(notifyCrm(payload, fallbackUrl, 1, url.host));
             }
             resolve(false);
           } else {
@@ -2304,7 +2352,7 @@ function notifyCrm(payload, targetOverrideUrl = null, redirectCount = 0) {
         // If connection to public URL failed (e.g. DNS / NAT loopback failure / Cloudflare timeout), fallback to 127.0.0.1 with Host header
         if (url.hostname !== "127.0.0.1" && redirectCount === 0) {
           const fallbackUrl = `http://127.0.0.1${url.pathname}${url.search}`;
-          return resolve(notifyCrm(payload, fallbackUrl, 1));
+          return resolve(notifyCrm(payload, fallbackUrl, 1, url.host));
         }
         resolve(false);
       });

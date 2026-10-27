@@ -21,9 +21,22 @@ if (!isset($connection)) {
 require_once __DIR__ . '/phone_helper.php';
 
 $rawInput = file_get_contents('php://input');
-$payload = json_decode($rawInput, true) ?? [];
+$payload = json_decode($rawInput, true);
+if ($payload === null && !empty($rawInput)) {
+    $cleanedInput = mb_convert_encoding($rawInput, 'UTF-8', 'UTF-8');
+    $payload = json_decode($cleanedInput, true);
+}
 if (empty($payload) && !empty($_POST)) {
     $payload = $_POST;
+}
+if (empty($payload)) {
+    http_response_code(400);
+    echo json_encode([
+        'status' => 'error',
+        'msg' => 'Payload is empty or invalid JSON.',
+        'json_error' => json_last_error_msg()
+    ]);
+    exit;
 }
 
 try {
