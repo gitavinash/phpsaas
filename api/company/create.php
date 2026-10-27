@@ -8,11 +8,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $msg = '';
     $country = ((isset($country)) ? $country : '101');
     $companyType = ((isset($companyType)) ? (($companyType != 'select') ? $companyType : '') : '');
-    $address = "";
-    $city = "";
-    $state = "";
-    $pinCode = "";
-    $companyCode = ((isset($companyCode)) ? $companyCode : 'COMP-' . time());
+    $address = ((isset($address)) ? trim($address) : '');
+    $city = ((isset($city) && $city != 'select') ? $city : 0);
+    $state = ((isset($state) && $state != 'select') ? $state : 0);
+    $pinCode = ((isset($pinCode)) ? trim($pinCode) : '');
+    $companyCode = ((isset($companyCode) && $companyCode != '') ? $companyCode : 'COMP-' . time());
+    $description = ((isset($description)) ? $description : '');
+    $gst = ((isset($gst)) ? $gst : '');
+    $pan = ((isset($pan)) ? $pan : '');
+    $cin = ((isset($cin)) ? $cin : '');
 
     if ($name == '') {
         $msg = 'Kindly enter company name';
@@ -43,6 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         $addUser = true;
         $isNewUser = false;
+        $newUserId = defined('USER_ID') ? USER_ID : 0;
         if ((int)SITE_APP_ID === 32) {
             $checkUser = mysqli_query($connection, "SELECT user_id FROM " . TABLE_PREFIX . "user WHERE user_email='{$email}' OR user_mobile='{$mobile}' LIMIT 1");
             if (mysqli_num_rows($checkUser) > 0) {
@@ -89,7 +94,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $addressId = 0;
         }
 
-        $addCompany = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "company(company_code, company_site_id, company_user_id, company_address_id, company_logo, company_title, company_description, company_gst, company_pan, company_cin, company_email, company_mobile, company_type, company_status) VALUES('{$companyCode}', " . SITE_ID . ", {$newUserId}, '{$addressId}', '{$featureImage}', '{$name}', '{$description}', '{$gst}', '{$pan}', '{$cin}', '{$email}', '{$mobile}', '{$companyType}', 1)");
+        $addCompany = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "company(company_code, company_site_id, company_user_id, company_address_id, company_logo, company_title, company_description, company_gst, company_pan, company_cin, company_email, company_mobile, company_type, company_status) VALUES('{$companyCode}', " . SITE_ID . ", '{$newUserId}', '{$addressId}', '{$featureImage}', '{$name}', '{$description}', '{$gst}', '{$pan}', '{$cin}', '{$email}', '{$mobile}', '{$companyType}', 1)");
         $companyId = mysqli_insert_id($connection);
 
         if ($addAddress && $addCompany && $addUser) {

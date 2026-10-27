@@ -26,16 +26,21 @@
                 </thead>
                 <?php
 
-                if ($companyList = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "company INNER JOIN " . TABLE_PREFIX . "address ON company_address_id=address_id INNER JOIN " . TABLE_PREFIX . "city ON address_city_id=city_id WHERE company_site_id=" . SITE_ID . " AND company_status=1 ORDER BY company_update DESC")) {
+                if ($companyList = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "company LEFT JOIN " . TABLE_PREFIX . "address ON company_address_id=address_id LEFT JOIN " . TABLE_PREFIX . "city ON address_city_id=city_id WHERE company_site_id=" . SITE_ID . " AND company_status=1 ORDER BY company_update DESC")) {
                     echo "<tbody>";
                     if (mysqli_num_rows($companyList) > 0) {
                         while ($companyData = mysqli_fetch_assoc($companyList)) {
                             extract($companyData);
+                            $addressDisplayParts = array_filter([(!empty($address_area) ? $address_area : ''), (!empty($city_name) ? $city_name : '')]);
+                            $addressDisplay = implode(', ', $addressDisplayParts) . (!empty($address_pin_code) ? ' - ' . $address_pin_code : '');
+                            $addressDisplay = !empty($addressDisplay) ? $addressDisplay : 'N/A';
+                            $cityDisplay = !empty($city_name) ? $city_name : 'N/A';
+                            $companyTypeDisplay = !empty($company_type) ? ucwords(str_replace('_', ' ', $company_type)) : 'N/A';
                             echo "<tr>
                                 <td>{$company_title}</td>
-                                <td>{$address_area}, {$city_name} - {$address_pin_code}</td>
-                                <td>" . ucwords(str_replace('_', ' ', $company_type)) . "</td>
-                                <td>{$city_name}</td>
+                                <td>{$addressDisplay}</td>
+                                <td>{$companyTypeDisplay}</td>
+                                <td>{$cityDisplay}</td>
                                 <td>
                                 <a href='/dashboard/company/update/?id=" . base64_encode($company_id) . "' data-title='Edit company' class='tableActionIconBtn'><i class='fi fi-rr-edit bgLightGreen'></i></a>
                                 <a href='#' data-type='company' data-id='{$company_id}' data-title='Delete company' class='tableActionIconBtn deleteButton'><i class='fi fi-rr-trash bgRed'></i></a>

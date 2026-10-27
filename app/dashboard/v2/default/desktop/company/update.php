@@ -14,7 +14,23 @@ if (!isset($id)) { ?>
 
 $companyId = base64_decode($id);
 
-if ($checkCompany = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "company INNER JOIN " . TABLE_PREFIX . "address ON company_address_id=address_id INNER JOIN " . TABLE_PREFIX . "city ON address_city_id=city_id INNER JOIN " . TABLE_PREFIX . "state ON city_state_id=state_id WHERE company_id='{$companyId}'")) {
+$company_title = '';
+$company_description = '';
+$address_area = '';
+$state_name = '';
+$city_name = '';
+$address_state_id = '';
+$address_pin_code = '';
+$company_email = '';
+$company_mobile = '';
+$company_cin = '';
+$company_gst = '';
+$company_pan = '';
+$company_code = '';
+$company_type = '';
+$company_logo = '';
+
+if ($checkCompany = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "company LEFT JOIN " . TABLE_PREFIX . "address ON company_address_id=address_id LEFT JOIN " . TABLE_PREFIX . "city ON address_city_id=city_id LEFT JOIN " . TABLE_PREFIX . "state ON city_state_id=state_id WHERE company_id='{$companyId}'")) {
     if (mysqli_num_rows($checkCompany) > 0) {
         extract(mysqli_fetch_assoc($checkCompany));
     }
@@ -59,7 +75,7 @@ if ($checkCompany = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . 
                                 if ($stateList = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "state WHERE state_country_id=101 AND state_status=1")) {
                                     if (mysqli_num_rows($stateList) > 0) {
                                         while ($state = mysqli_fetch_assoc($stateList)) {
-                                            echo "<option value='{$state['state_id']}' " . ((strtolower($state['state_name']) == strtolower($state_name)) ? 'selected' : '') . " >{$state['state_name']}</option>";
+                                            echo "<option value='{$state['state_id']}' " . ((!empty($state_name) && strtolower($state['state_name']) == strtolower($state_name)) ? 'selected' : '') . " >{$state['state_name']}</option>";
                                         }
                                     }
                                 }
@@ -73,10 +89,10 @@ if ($checkCompany = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . 
                                 <option value="select">Select city</option>
                                 <?php
 
-                                if ($cityList = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "city WHERE city_state_id={$address_state_id} AND city_status=1")) {
+                                if (!empty($address_state_id) && $cityList = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "city WHERE city_state_id='{$address_state_id}' AND city_status=1")) {
                                     if (mysqli_num_rows($cityList) > 0) {
                                         while ($city = mysqli_fetch_assoc($cityList)) {
-                                            echo "<option value='{$city['city_id']}' " . ((strtolower($city['city_name']) == strtolower($city_name)) ? 'selected' : '') . " >{$city['city_name']}</option>";
+                                            echo "<option value='{$city['city_id']}' " . ((!empty($city_name) && strtolower($city['city_name']) == strtolower($city_name)) ? 'selected' : '') . " >{$city['city_name']}</option>";
                                         }
                                     }
                                 }
