@@ -1,7 +1,7 @@
 <?php
 
 $themeColor = defined('SITE_THEME_COLOUR') && !empty(SITE_THEME_COLOUR) ? SITE_THEME_COLOUR : (defined('SITE_THEME_COLOR') ? SITE_THEME_COLOR : '#2563eb');
-$siteName = defined('SITE_NAME') && !empty(SITE_NAME) ? SITE_NAME : 'ISW CRM';
+$siteName = defined('SITE_NAME') && !empty(SITE_NAME) ? SITE_NAME : 'Aleya CRM';
 $appName = defined('SITE_APP_NAME') && !empty(SITE_APP_NAME) ? ucwords(str_replace('_', ' ', SITE_APP_NAME)) : 'Aleya';
 $creditName = defined('CREDIT') && !empty(CREDIT) ? CREDIT : 'Blumox Technologies';
 $appUrl = 'https://aleya.in?utm_source=' . urlencode(strtolower(str_replace(' ', '_', $siteName))) . '&utm_medium=email';

@@ -1156,7 +1156,7 @@ switch ($action) {
         $id = (int)($params['id'] ?? 0);
         $nodes = is_array($params['nodes'] ?? null) ? $params['nodes'] : json_decode($params['nodes'] ?? '[]', true);
         $conns = is_array($params['connections'] ?? null) ? $params['connections'] : json_decode($params['connections'] ?? '[]', true);
-        
+
         $preset = $params['preset'] ?? 'couple';
         $presets = [
             'couple' => [
@@ -1191,8 +1191,8 @@ switch ($action) {
             ]
         ];
 
-        $testPayload = !empty($params['test_payload']) && is_array($params['test_payload']) 
-            ? $params['test_payload'] 
+        $testPayload = !empty($params['test_payload']) && is_array($params['test_payload'])
+            ? $params['test_payload']
             : ($presets[$preset] ?? $presets['couple']);
 
         if (empty($nodes)) {
@@ -1601,7 +1601,7 @@ switch ($action) {
                         $friendlyColor = '#0ea5e9';
                         $friendlyPill = '₹' . number_format($amount);
                         $stepDetails = [
-                            'link' => 'https://pay.isw.one/token/' . substr(md5(time()), 0, 8),
+                            'link' => 'https://pay.blumox.com/token/' . substr(md5(time()), 0, 8),
                             'amount' => $amount,
                             'currency' => 'INR'
                         ];

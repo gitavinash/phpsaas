@@ -48,14 +48,14 @@ $appConfig = [
         'badge'       => 'Online Store & Products',
         'icon'        => 'fi fi-rr-shopping-bag',
         'placeholder' => 'my-store',
-        'subdomain'   => '.isw.one'
+        'subdomain'   => '.blumox.com'
     ],
     'ecom_gift' => [
         'name'        => 'Gift & Bakery Studio',
         'badge'       => 'Custom Gifting & Deliveries',
         'icon'        => 'fi fi-rr-gift',
         'placeholder' => 'my-giftstudio',
-        'subdomain'   => '.isw.one'
+        'subdomain'   => '.blumox.com'
     ]
 ];
 

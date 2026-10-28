@@ -1,5 +1,5 @@
 /**
- * ISW CRM WhatsApp Web Gateway Daemon - Multi-Device Edition
+ * Aleya CRM WhatsApp Web Gateway Daemon - Multi-Device Edition
  * Powered by @whiskeysockets/baileys
  * Path: services/whatsapp-gateway/server.js
  */

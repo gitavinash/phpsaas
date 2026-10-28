@@ -185,7 +185,7 @@ if ($checkEmailQuery && mysqli_num_rows($checkEmailQuery) > 0) {
         $baseSlug = 'agency';
     }
 
-    $mainDomain = defined('MAIN_DOMAIN') ? MAIN_DOMAIN : 'isw.one';
+    $mainDomain = defined('MAIN_DOMAIN') ? MAIN_DOMAIN : 'blumox.com';
     $candidateSlug = $baseSlug;
     $suffix = 0;
     $siteDomain = '';

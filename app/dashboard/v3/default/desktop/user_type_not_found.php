@@ -3,7 +3,7 @@ if (file_exists(__DIR__ . '/../../../../lib/configuration/directory.php')) {
     @include_once __DIR__ . '/../../../../lib/configuration/directory.php';
 }
 
-$siteName = defined('SITE_NAME') ? SITE_NAME : 'ISW Portal';
+$siteName = defined('SITE_NAME') ? SITE_NAME : 'Blumox Portal';
 $siteLogo = (defined('SITE_LOGO') && SITE_LOGO != '') ? SITE_LOGO : '';
 $siteThemeColor = (defined('SITE_THEME_COLOUR') && SITE_THEME_COLOUR != '') ? SITE_THEME_COLOUR : '#4f46e5';
 $siteIcon = defined('SITE_ICON') ? SITE_ICON : '';

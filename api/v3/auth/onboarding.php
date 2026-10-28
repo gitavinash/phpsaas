@@ -111,7 +111,7 @@ $category     = trim($data['category'] ?? '');
 $currency     = trim($data['currency'] ?? 'INR');
 $packageId    = (int)($data['package_id'] ?? ($data['plan_id'] ?? 0));
 $paymentId    = trim((string)($data['payment_id'] ?? ''));
-$paymentStatus= trim((string)($data['payment_status'] ?? ($paymentId ? 'completed' : 'pending')));
+$paymentStatus = trim((string)($data['payment_status'] ?? ($paymentId ? 'completed' : 'pending')));
 $copyTourData = !isset($data['copy_tour_packages']) || in_array($data['copy_tour_packages'], [1, '1', true, 'true'], true);
 
 // If business name was not passed in POST, lookup previously registered site name
@@ -150,7 +150,7 @@ if (empty($subdomain)) {
     $subdomain = strtolower(preg_replace('/[^a-zA-Z0-9]/', '', $businessName));
 }
 
-$mainDomain = defined('MAIN_DOMAIN') ? MAIN_DOMAIN : 'isw.one';
+$mainDomain = defined('MAIN_DOMAIN') ? MAIN_DOMAIN : 'blumox.com';
 $fullDomain = $subdomain . '.' . $mainDomain;
 
 // Map App Type to App ID

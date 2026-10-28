@@ -1,4 +1,5 @@
 <?php
+
 /**
  * WhatsApp Device & Outbound Messaging Helper
  * Path: api/v3/whatsapp/device_helper.php
@@ -29,7 +30,8 @@ require_once __DIR__ . '/phone_helper.php';
  * @param int $senderUserId
  * @return array|null Device associative array or null if no connected device exists
  */
-function resolveSenderWhatsAppDevice($connection, $siteId, $senderUserId = 0, array $options = []) {
+function resolveSenderWhatsAppDevice($connection, $siteId, $senderUserId = 0, array $options = [])
+{
     if (!$connection || $siteId <= 0) {
         return null;
     }
@@ -190,7 +192,8 @@ function resolveSenderWhatsAppDevice($connection, $siteId, $senderUserId = 0, ar
  * @param int $siteId
  * @param string|int|null $sessionIdOrDevId
  */
-function ensureFirstDeviceIsDefault($connection, $siteId, $sessionIdOrDevId = null) {
+function ensureFirstDeviceIsDefault($connection, $siteId, $sessionIdOrDevId = null)
+{
     if (!$connection || $siteId <= 0) {
         return;
     }
@@ -264,7 +267,8 @@ function ensureFirstDeviceIsDefault($connection, $siteId, $sessionIdOrDevId = nu
  * @param array $options [lead_id, type, media_url, file_name, device_id]
  * @return array ['status' => 'success'|'error', 'msg' => '...', 'device' => array]
  */
-function sendWhatsAppDirectMessage($connection, $siteId, $senderUserId, $recipientPhone, $messageText, array $options = []) {
+function sendWhatsAppDirectMessage($connection, $siteId, $senderUserId, $recipientPhone, $messageText, array $options = [])
+{
     if (!$connection || $siteId <= 0) {
         return ['status' => 'error', 'msg' => 'Invalid database connection or site identifier.'];
     }
@@ -537,7 +541,8 @@ function sendWhatsAppDirectMessage($connection, $siteId, $senderUserId, $recipie
  * @param int $statusCode
  * @return bool
  */
-function handleWhatsAppDeviceDisconnection($connection, $siteId, $sessionId, $phone = '', $reason = '', $statusCode = 0) {
+function handleWhatsAppDeviceDisconnection($connection, $siteId, $sessionId, $phone = '', $reason = '', $statusCode = 0)
+{
     if (!$connection || (int)$siteId <= 0) {
         return false;
     }
@@ -606,7 +611,8 @@ function handleWhatsAppDeviceDisconnection($connection, $siteId, $sessionId, $ph
  * @param int $remCount
  * @return bool
  */
-function sendWhatsAppDisconnectionEmail($connection, $siteId, $sessionId, $phone = '', $reason = '', $statusCode = 0, $remCount = 0) {
+function sendWhatsAppDisconnectionEmail($connection, $siteId, $sessionId, $phone = '', $reason = '', $statusCode = 0, $remCount = 0)
+{
     if (!$connection || (int)$siteId <= 0) {
         return false;
     }
@@ -751,8 +757,8 @@ function sendWhatsAppDisconnectionEmail($connection, $siteId, $sessionId, $phone
     </div>";
 
     // 6. Send Email using system mailer
-    $sendMailPath = defined('SEND_EMAIL') && file_exists(SEND_EMAIL) 
-        ? SEND_EMAIL 
+    $sendMailPath = defined('SEND_EMAIL') && file_exists(SEND_EMAIL)
+        ? SEND_EMAIL
         : (defined('CONFIG') ? CONFIG . 'mail/send-email.php' : (dirname(__DIR__, 3) . '/lib/configuration/mail/send-email.php'));
 
     if (file_exists($sendMailPath)) {
@@ -770,7 +776,8 @@ function sendWhatsAppDisconnectionEmail($connection, $siteId, $sessionId, $phone
         ob_start();
         try {
             require $sendMailPath;
-        } catch (\Throwable $e) {}
+        } catch (\Throwable $e) {
+        }
         ob_get_clean();
         return true;
     }
@@ -787,7 +794,8 @@ function sendWhatsAppDisconnectionEmail($connection, $siteId, $sessionId, $phone
  * @return bool True if PDF was created successfully with valid size
  */
 if (!function_exists('generateHeadlessPdf')) {
-    function generateHeadlessPdf(string $targetUrl, string $outputPdfPath): bool {
+    function generateHeadlessPdf(string $targetUrl, string $outputPdfPath): bool
+    {
         $candidates = [
             // Standard Linux server binary paths
             '/usr/bin/google-chrome',
@@ -898,7 +906,7 @@ if (!function_exists('generateHeadlessPdf')) {
             }
         }
 
-        error_log("[ISW V3 generateHeadlessPdf] Failed to render PDF for URL: {$targetUrl} to {$outputPdfPath}");
+        error_log("[Aleya V3 generateHeadlessPdf] Failed to render PDF for URL: {$targetUrl} to {$outputPdfPath}");
         return false;
     }
 }
@@ -923,7 +931,8 @@ if (!function_exists('resolveWhatsAppLeadAction')) {
      * @param int|null $existingChatId
      * @return array
      */
-    function resolveWhatsAppLeadAction($connection, $siteId, $userId, $userRole, $leadPhone, $customerName = '', $leadId = 0, $destination = '', $existingChatId = null) {
+    function resolveWhatsAppLeadAction($connection, $siteId, $userId, $userRole, $leadPhone, $customerName = '', $leadId = 0, $destination = '', $existingChatId = null)
+    {
         $siteId = (int)$siteId;
         $userId = (int)$userId;
         $prefix = defined('TABLE_PREFIX') ? TABLE_PREFIX : 'isw_';
@@ -1092,4 +1101,3 @@ if (!function_exists('resolveWhatsAppLeadAction')) {
         ];
     }
 }
-

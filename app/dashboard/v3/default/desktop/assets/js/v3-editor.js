@@ -1,7 +1,7 @@
 /**
  * V3 Modern Rich Text Editor
  * Path: /app/dashboard/v3/default/desktop/assets/js/v3-editor.js
- * Designed exclusively for ISW-App V3 Dashboard.
+ * Designed exclusively for Aleya V3 Dashboard.
  * Uses native Flaticon (fi fi-rr-*) icons, modern glassmorphic styling, and two-way data binding.
  */
 

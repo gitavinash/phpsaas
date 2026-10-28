@@ -15,7 +15,7 @@ if (isset($_COOKIE['isLogin']) && isset($_COOKIE['user_data'])) {
 
 $tblPrefix = defined('TABLE_PREFIX') ? TABLE_PREFIX : 'isw_';
 $siteId = defined('SITE_ID') ? (int)SITE_ID : 1;
-$siteName = defined('SITE_NAME') ? SITE_NAME : 'ISW Platform';
+$siteName = defined('SITE_NAME') ? SITE_NAME : 'Blumox Platform';
 $siteLogo = defined('SITE_LOGO') && !empty(SITE_LOGO) ? SITE_LOGO : '';
 $siteIcon = defined('SITE_ICON') && !empty(SITE_ICON) ? SITE_ICON : '';
 $appVersion = defined('ALEYA_APP_VERSION') ? ALEYA_APP_VERSION : (defined('SITE_VERSION') ? SITE_VERSION : '3.0');

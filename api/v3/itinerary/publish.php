@@ -1,4 +1,5 @@
 <?php
+
 /**
  * V3 Itinerary Publish API
  * Endpoint: /api/v3/itinerary/publish.php
@@ -104,7 +105,7 @@ if ($refId <= 0) {
 }
 
 // Extract and sanitize pricing accurately for each person type
-$cleanPrice = function($val) {
+$cleanPrice = function ($val) {
     if (is_numeric($val)) return (float)$val;
     $val = str_replace(',', '', (string)$val);
     if (preg_match('/\d+(\.\d+)?/', $val, $m)) {
@@ -240,7 +241,7 @@ if (mysqli_query($connection, $insertQuery)) {
         $pkgTemplate = mysqli_real_escape_string($connection, trim((string)($content['template'] ?? 'mit')));
         $pkgStartFrom = mysqli_real_escape_string($connection, trim((string)($content['pickup_location'] ?? '')));
         $pkgEndTo = mysqli_real_escape_string($connection, trim((string)($content['drop_location'] ?? '')));
-        
+
         $destRaw = trim((string)($content['city'] ?? ($content['destination'] ?? '')));
         $destParts = array_filter(array_map('trim', explode(',', $destRaw)));
         $destParts = array_values($destParts);
@@ -275,15 +276,15 @@ if (mysqli_query($connection, $insertQuery)) {
 
         $pkgDuration = (int)($content['duration_days'] ?? (is_array($content['itinerary'] ?? null) ? count($content['itinerary']) : 1));
         $pkgOverview = mysqli_real_escape_string($connection, trim((string)($content['overview'] ?? '')));
-        
+
         $pkgItinArr = is_array($content['itinerary'] ?? null) ? $content['itinerary'] : [];
         $pkgItinJson = mysqli_real_escape_string($connection, json_encode($pkgItinArr, JSON_UNESCAPED_UNICODE));
-        
+
         $pkgInclusions = mysqli_real_escape_string($connection, trim((string)($content['inclusions'] ?? '')));
         $pkgExclusions = mysqli_real_escape_string($connection, trim((string)($content['exclusions'] ?? '')));
         $pkgHotel = mysqli_real_escape_string($connection, trim((string)($content['hotel'] ?? '')));
         $pkgVehicle = mysqli_real_escape_string($connection, trim((string)($content['vehicle'] ?? ($content['outstation_vehicle'] ?? ''))));
-        
+
         $pkgImage = '';
         if (!empty($pkgItinArr[0]['image'])) {
             $pkgImage = trim((string)$pkgItinArr[0]['image']);
@@ -716,10 +717,10 @@ if (mysqli_query($connection, $insertQuery)) {
                         if (file_exists($pdfDiskPath) && filesize($pdfDiskPath) > 200) {
                             $hasValidPdf = true;
                             $pdfRelUrl = '/upload/itineraries/' . $pdfFileName;
-                            error_log("[ISW V3 Itinerary PDF] Client PDF accepted. Size: " . strlen($pdfDecoded) . " bytes -> Saved to " . $pdfDiskPath);
+                            error_log("[Aleya V3 Itinerary PDF] Client PDF accepted. Size: " . strlen($pdfDecoded) . " bytes -> Saved to " . $pdfDiskPath);
                         }
                     } else {
-                        error_log("[ISW V3 Itinerary PDF] Client PDF payload present but decode/validation failed. Decoded length: " . ($pdfDecoded !== false ? strlen($pdfDecoded) : 0));
+                        error_log("[Aleya V3 Itinerary PDF] Client PDF payload present but decode/validation failed. Decoded length: " . ($pdfDecoded !== false ? strlen($pdfDecoded) : 0));
                     }
                 }
 
@@ -774,10 +775,14 @@ if (mysqli_query($connection, $insertQuery)) {
                         }
 
                         // Restore $_GET state
-                        if ($prevId !== null) $_GET['id'] = $prevId; else unset($_GET['id']);
-                        if ($prevQId !== null) $_GET['quotation_id'] = $prevQId; else unset($_GET['quotation_id']);
-                        if ($prevFormat !== null) $_GET['format'] = $prevFormat; else unset($_GET['format']);
-                        if ($prevHideActions !== null) $_GET['hide_actions'] = $prevHideActions; else unset($_GET['hide_actions']);
+                        if ($prevId !== null) $_GET['id'] = $prevId;
+                        else unset($_GET['id']);
+                        if ($prevQId !== null) $_GET['quotation_id'] = $prevQId;
+                        else unset($_GET['quotation_id']);
+                        if ($prevFormat !== null) $_GET['format'] = $prevFormat;
+                        else unset($_GET['format']);
+                        if ($prevHideActions !== null) $_GET['hide_actions'] = $prevHideActions;
+                        else unset($_GET['hide_actions']);
 
                         if (!empty($renderedProposalHtml)) {
                             $tmpHtmlFile = $uploadDir . '/tmp_itin_' . $quotationId . '_' . $itinHash . '.html';
@@ -804,7 +809,7 @@ if (mysqli_query($connection, $insertQuery)) {
                             $pdfRelUrl = '/upload/itineraries/' . $pdfFileName;
                         }
                     } catch (\Throwable $e) {
-                        error_log("[ISW V3 Itinerary PDF] Generation exception: " . $e->getMessage());
+                        error_log("[Blumox V3 Itinerary PDF] Generation exception: " . $e->getMessage());
                     }
                 }
 

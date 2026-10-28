@@ -173,8 +173,8 @@ function seedDefaultWhatsAppWorkflows($connection, $siteId)
             'title' => 'Instant Default Destination Itinerary PDF',
             'package_id' => 3,
             'itinerary_title' => '5 Night / 6 Days Manali & Himachal Bestselling Tour Package',
-            'itinerary_url' => 'https://isw-app.test/assets/itineraries/manali-himachal-package.pdf',
-            'brochure_url' => 'https://isw-app.test/assets/itineraries/manali-himachal-package.pdf',
+            'itinerary_url' => 'https://blumox-app.test/assets/itineraries/manali-himachal-package.pdf',
+            'brochure_url' => 'https://blumox-app.test/assets/itineraries/manali-himachal-package.pdf',
             'message_text' => "While our destination desk tailors your personalized quotation, here is our bestselling verified itinerary brochure for your selected destination! 📄✨\n\nIncludes day-by-day sightseeing highlights, verified mountain resort options, and private cab transfers: [Download Itinerary Brochure]"
         ],
         [
@@ -229,8 +229,8 @@ function seedDefaultWhatsAppWorkflows($connection, $siteId)
             'title' => 'Dispatch Final Tailored Tour Itinerary & Inclusions',
             'package_id' => 3,
             'itinerary_title' => 'Final Custom Tour Itinerary & Quotation Summary',
-            'itinerary_url' => 'https://isw-app.test/assets/itineraries/custom-tour-quotation.pdf',
-            'brochure_url' => 'https://isw-app.test/assets/itineraries/custom-tour-quotation.pdf',
+            'itinerary_url' => 'https://blumox-app.test/assets/itineraries/custom-tour-quotation.pdf',
+            'brochure_url' => 'https://blumox-app.test/assets/itineraries/custom-tour-quotation.pdf',
             'message_text' => "Here is your complete Tailored Holiday Quotation, {name}! 🌟\n\n✅ 5 Nights accommodation in 4★/5★ verified resorts\n✅ Daily buffet breakfast & chef dinners\n✅ Dedicated private AC sedan for all airport transfers & local sightseeing\n✅ 24/7 dedicated travel concierge on WhatsApp"
         ],
         [
@@ -241,7 +241,7 @@ function seedDefaultWhatsAppWorkflows($connection, $siteId)
             'title' => 'Token Advance Booking Deposit Link (₹5,000)',
             'amount' => 5000,
             'currency' => 'INR',
-            'message_text' => "To lock in early-bird hotel rates and confirm driver allotment, you can secure your reservation with a refundable token booking advance of ₹5,000:\n\n💳 Instant Secure Payment Link: https://isw-app.test/pay/token-advance-deposit\n\n(Supports Google Pay, PhonePe, Paytm, UPI, Cards, and Net Banking)"
+            'message_text' => "To lock in early-bird hotel rates and confirm driver allotment, you can secure your reservation with a refundable token booking advance of ₹5,000:\n\n💳 Instant Secure Payment Link: https://blumox-app.test/pay/token-advance-deposit\n\n(Supports Google Pay, PhonePe, Paytm, UPI, Cards, and Net Banking)"
         ],
         [
             'id' => 'n_step_9',
@@ -515,4 +515,3 @@ function distributeLeadViaAutomation($connection, $siteId, $leadId, array $conte
         'assigned_agent_name' => $assignedAgentName
     ];
 }
-

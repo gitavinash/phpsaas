@@ -90,7 +90,7 @@ if ($userQuery && mysqli_num_rows($userQuery) > 0) {
 
 // Generate 6-digit OTP
 $otpCode = str_pad((string)random_int(100000, 999999), 6, '0', STR_PAD_LEFT);
-if ($email === 'appreview@example.com' || $email === 'demo@isw.one') {
+if ($email === 'appreview@example.com' || $email === 'demo@blumox.com') {
     $otpCode = '111111';
 }
 
@@ -126,7 +126,7 @@ if (!$inserted) {
 $otpRefId = mysqli_insert_id($connection);
 
 // Send Email via communication helper
-$siteName = defined('SITE_NAME') ? SITE_NAME : 'ISW';
+$siteName = defined('SITE_NAME') ? SITE_NAME : 'Blumox';
 $sendSuccess = true;
 $sendError = '';
 
@@ -148,7 +148,7 @@ if (function_exists('sendOTPviaEmail')) {
     }
 }
 
-if (!$sendSuccess && $email !== 'demo@isw.one' && $email !== 'appreview@example.com') {
+if (!$sendSuccess && $email !== 'demo@blumox.com' && $email !== 'appreview@example.com') {
     http_response_code(500);
     echo json_encode([
         'status' => 'error',

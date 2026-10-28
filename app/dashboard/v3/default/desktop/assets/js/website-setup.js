@@ -414,7 +414,7 @@
       }
 
       // Show checking state
-      const suffix = (self.appType === "aleya") ? ".aleya.in" : ".isw.one";
+      const suffix = (self.appType === "aleya") ? ".aleya.in" : ".blumox.com";
       self.showSubdomainFeedback("checking", "fi fi-rr-spinner fi-spin", `Checking availability for ${slug}${suffix}...`);
 
       // Debounce API check

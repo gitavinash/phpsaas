@@ -38,9 +38,28 @@ if (empty($cleanSlug)) {
 
 // Disallow reserved platform subdomains
 $reservedSubdomains = [
-    'www', 'api', 'admin', 'administrator', 'mail', 'app', 'dashboard',
-    'auth', 'login', 'signup', 'register', 'checkout', 'pay', 'billing',
-    'support', 'help', 'static', 'cdn', 'assets', 'portal', 'crm', 'erp'
+    'www',
+    'api',
+    'admin',
+    'administrator',
+    'mail',
+    'app',
+    'dashboard',
+    'auth',
+    'login',
+    'signup',
+    'register',
+    'checkout',
+    'pay',
+    'billing',
+    'support',
+    'help',
+    'static',
+    'cdn',
+    'assets',
+    'portal',
+    'crm',
+    'erp'
 ];
 
 if (in_array($cleanSlug, $reservedSubdomains, true)) {
@@ -54,10 +73,10 @@ if (in_array($cleanSlug, $reservedSubdomains, true)) {
 }
 
 $appParam = strtolower(trim($_GET['app'] ?? ($_POST['app'] ?? 'aleya')));
-$domainSuffix = ($appParam === 'aleya') ? '.aleya.in' : '.isw.one';
+$domainSuffix = ($appParam === 'aleya') ? '.aleya.in' : '.blumox.com';
 $displayDomain = $cleanSlug . $domainSuffix;
 
-$mainDomain = defined('MAIN_DOMAIN') ? MAIN_DOMAIN : 'isw.one';
+$mainDomain = defined('MAIN_DOMAIN') ? MAIN_DOMAIN : 'blumox.com';
 $fullDomain = $cleanSlug . '.' . $mainDomain;
 $escSlug    = mysqli_real_escape_string($connection, $cleanSlug);
 $escFull    = mysqli_real_escape_string($connection, $fullDomain);

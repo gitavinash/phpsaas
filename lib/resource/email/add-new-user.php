@@ -1,7 +1,7 @@
 <?php
 
 $themeColor = defined('SITE_THEME_COLOUR') && !empty(SITE_THEME_COLOUR) ? SITE_THEME_COLOUR : (defined('SITE_THEME_COLOR') && !empty(SITE_THEME_COLOR) ? SITE_THEME_COLOR : '#2563eb');
-$siteName = defined('SITE_NAME') && !empty(SITE_NAME) ? SITE_NAME : 'ISW CRM';
+$siteName = defined('SITE_NAME') && !empty(SITE_NAME) ? SITE_NAME : 'Aleya CRM';
 $siteUrl = defined('SITE_URL') ? SITE_URL : ('https://' . ($_SERVER['HTTP_HOST'] ?? ''));
 
 $subject = 'Welcome to ' . $siteName . ' - Your Account Details';
