@@ -143,6 +143,16 @@ function render_andblooms_mobile_menu_tree(array $items, int $depth = 0): void
                         'transaction_id': ''
                     });
                 </script>
+                <!-- Event snippet for Purchase conversion page -->
+<script>
+  gtag('event', 'conversion', {
+      'send_to': 'AW-628904231/OgMhCLfdtdIBEKei8asC',
+      'value': 2000.0,
+      'currency': 'INR',
+      'transaction_id': ''
+      // 'new_customer': true /* calculate dynamically, populate with true/false */,
+  });
+</script>
     <?php
 
             }
