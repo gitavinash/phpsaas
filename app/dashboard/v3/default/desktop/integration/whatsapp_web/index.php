@@ -360,7 +360,7 @@ $isWaWebActive = (defined('ENABLE_WHATSAPP_WEB_API') && ENABLE_WHATSAPP_WEB_API 
                     <div class="v3-form-group">
                         <label class="v3-form-label">Webhook Receiver Endpoint</label>
                         <div class="wa-copy-input-wrap">
-                            <input type="text" id="waWebhookUrlDisplay" class="v3-form-input readonly-input" readonly value="/api/v3/whatsapp/webhook.php">
+                            <input type="text" id="waWebhookUrlDisplay" class="v3-form-input readonly-input" readonly value="/api/v3/whatsapp/webhook/">
                             <button type="button" class="btn-wa-copy" id="btnCopyWebhook" title="Copy to clipboard">
                                 <i class="fi fi-rr-copy"></i>
                             </button>

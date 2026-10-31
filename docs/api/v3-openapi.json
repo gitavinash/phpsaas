@@ -1,0 +1,4478 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "ISW App V3 REST API Suite",
+    "version": "3.0.0",
+    "description": "Comprehensive, multi-tenant REST API suite for CRM leads, tour packages, smart AI itineraries, visual automations, WhatsApp messaging, fleet logistics, accommodations, ledger accounts, and SaaS tenant management. Fully optimized for both human software engineers and autonomous AI agents.",
+    "contact": {
+      "name": "ISW Engineering Team",
+      "url": "https://blumox.com"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://{domain}/api/v3",
+      "description": "Production/Staging workspace tenant host",
+      "variables": {
+        "domain": {
+          "default": "crm.example.com",
+          "description": "Tenant custom domain or platform subdomain"
+        }
+      }
+    },
+    {
+      "url": "/api/v3",
+      "description": "Relative URL (Same-Origin SPA requests)"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Authentication",
+      "description": "Session authentication, OTP verification, passwordless login, and tenant onboarding"
+    },
+    {
+      "name": "Leads & CRM",
+      "description": "Lead lifecycle, pipeline statuses, assignment, tasks, notes, interactions, and payment links"
+    },
+    {
+      "name": "Tour Packages",
+      "description": "Package catalog, day-wise itineraries, hotel bindings, transportation, pricing slabs"
+    },
+    {
+      "name": "Smart Itineraries",
+      "description": "AI itinerary generation, customized quote presentations, and public customer views"
+    },
+    {
+      "name": "Dashboard Analytics",
+      "description": "Executive KPIs, revenue charts, conversion analytics, agent performance"
+    },
+    {
+      "name": "Automation Workflows",
+      "description": "Visual flowchart automations, triggers, actions, test simulations, and execution logs"
+    },
+    {
+      "name": "WhatsApp CRM",
+      "description": "Multi-device WhatsApp pairing, QR code generation, active chat threads, messaging, media dispatch"
+    },
+    {
+      "name": "Transporters & Fleet",
+      "description": "Transporter vendors, vehicle fleet models, quotation engine, rate calculations"
+    },
+    {
+      "name": "Accommodations",
+      "description": "Hotel properties, room inventory, room types, and property amenities"
+    },
+    {
+      "name": "Media & Gallery",
+      "description": "Package media assets, AI image recommendations, day assignments, and featured photos"
+    },
+    {
+      "name": "Policies & Compliance",
+      "description": "Cancellation policies, payment terms, and terms of service management"
+    },
+    {
+      "name": "Company & Branches",
+      "description": "Multi-company and branch directory configurations"
+    },
+    {
+      "name": "User Management & RBAC",
+      "description": "Staff user directory, access roles, permissions, and KYC verification"
+    },
+    {
+      "name": "Accounts & Ledger",
+      "description": "Accounting transaction ledger, payment verification, and audit logs"
+    },
+    {
+      "name": "Integrations Hub",
+      "description": "Payment gateways, Google Ads, SMTP, webhooks, and embedded lead web forms"
+    },
+    {
+      "name": "SaaS Control Panel",
+      "description": "Superadmin multi-tenant provisioning, app store, themes, and platform invoices"
+    },
+    {
+      "name": "Site Settings",
+      "description": "Tenant configurations, banking details, contacts, notifications, and SEO"
+    },
+    {
+      "name": "Geography & Utilities",
+      "description": "Geographical master data (cities, states, countries) and URL link shortener"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "CookieAuth": {
+        "type": "apiKey",
+        "in": "cookie",
+        "name": "user_data",
+        "description": "Base64-encoded user salt key stored in HTTP cookie alongside PHP session identifier"
+      },
+      "SessionAuth": {
+        "type": "apiKey",
+        "in": "cookie",
+        "name": "PHPSESSID",
+        "description": "Standard PHP session cookie holding user_id, site_id, and user_role"
+      }
+    },
+    "schemas": {
+      "StandardSuccessResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "integer",
+            "example": 200
+          },
+          "msg": {
+            "type": "string",
+            "example": "Operation completed successfully."
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "pagination": {
+            "type": "object",
+            "properties": {
+              "current_page": {
+                "type": "integer",
+                "example": 1
+              },
+              "total_pages": {
+                "type": "integer",
+                "example": 5
+              },
+              "total_records": {
+                "type": "integer",
+                "example": 100
+              },
+              "limit": {
+                "type": "integer",
+                "example": 20
+              },
+              "offset": {
+                "type": "integer",
+                "example": 0
+              }
+            }
+          }
+        }
+      },
+      "StandardErrorResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "example": "error"
+          },
+          "code": {
+            "type": "string",
+            "example": "invalid_parameters"
+          },
+          "message": {
+            "type": "string",
+            "example": "A required parameter was missing or invalid."
+          },
+          "http_code": {
+            "type": "integer",
+            "example": 400
+          }
+        }
+      },
+      "Lead": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": 42
+          },
+          "encoded_id": {
+            "type": "string",
+            "example": "NDI="
+          },
+          "first_name": {
+            "type": "string",
+            "example": "Rajesh"
+          },
+          "last_name": {
+            "type": "string",
+            "example": "Sharma"
+          },
+          "name": {
+            "type": "string",
+            "example": "Rajesh Sharma"
+          },
+          "mobile": {
+            "type": "string",
+            "example": "+919876543210"
+          },
+          "email": {
+            "type": "string",
+            "example": "rajesh@example.com"
+          },
+          "subject": {
+            "type": "string",
+            "example": "Kashmir 5N/6D Package Enquiry"
+          },
+          "source": {
+            "type": "string",
+            "example": "Google Ads"
+          },
+          "status": {
+            "type": "integer",
+            "description": "1: Fresh, 2: In-Progress, 3: Follow-up, 4/16: Cancelled, 6: Confirmed, 9: Quote Sent",
+            "example": 1
+          },
+          "status_label": {
+            "type": "string",
+            "example": "Fresh"
+          },
+          "agent_id": {
+            "type": "integer",
+            "example": 7
+          },
+          "agent_name": {
+            "type": "string",
+            "example": "Anita Verma"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2026-10-25 14:30:00"
+          },
+          "followup_date": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2026-10-29 11:00:00"
+          }
+        }
+      },
+      "TourPackage": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": 105
+          },
+          "title": {
+            "type": "string",
+            "example": "Magical Kashmir & Ladakh 6D/5N"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "domestic",
+              "international"
+            ],
+            "example": "domestic"
+          },
+          "duration": {
+            "type": "integer",
+            "description": "Duration in days",
+            "example": 6
+          },
+          "theme": {
+            "type": "string",
+            "example": "Honeymoon"
+          },
+          "template": {
+            "type": "string",
+            "enum": [
+              "mit",
+              "standard",
+              "modern",
+              "aleya"
+            ],
+            "example": "mit"
+          },
+          "city": {
+            "type": "string",
+            "example": "Srinagar"
+          },
+          "state": {
+            "type": "string",
+            "example": "Jammu and Kashmir"
+          },
+          "country": {
+            "type": "string",
+            "example": "India"
+          },
+          "hotel_type": {
+            "type": "string",
+            "example": "3_star_hotel"
+          },
+          "status": {
+            "type": "integer",
+            "description": "1: Active, 2: Draft, 3: Deleted",
+            "example": 1
+          },
+          "status_label": {
+            "type": "string",
+            "example": "Active"
+          },
+          "price_min": {
+            "type": "number",
+            "example": 18500.0
+          }
+        }
+      },
+      "Workflow": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": 12
+          },
+          "title": {
+            "type": "string",
+            "example": "Fresh Lead WhatsApp Welcome & Round Robin"
+          },
+          "status": {
+            "type": "integer",
+            "description": "1: Active, 0: Inactive",
+            "example": 1
+          },
+          "trigger_type": {
+            "type": "string",
+            "enum": [
+              "lead_created",
+              "whatsapp_incoming",
+              "lead_stage_changed",
+              "payment_received",
+              "itinerary_viewed",
+              "webhook_received"
+            ],
+            "example": "lead_created"
+          },
+          "nodes": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "edges": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "execution_count": {
+            "type": "integer",
+            "example": 1420
+          }
+        }
+      },
+      "WhatsAppMessage": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": 892
+          },
+          "chat_id": {
+            "type": "integer",
+            "example": 45
+          },
+          "sender_phone": {
+            "type": "string",
+            "example": "919876543210"
+          },
+          "text": {
+            "type": "string",
+            "example": "Hello, thank you for your enquiry! Here is your custom travel proposal."
+          },
+          "direction": {
+            "type": "string",
+            "enum": [
+              "inbound",
+              "outbound"
+            ],
+            "example": "outbound"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "text",
+              "image",
+              "document",
+              "template",
+              "audio"
+            ],
+            "example": "text"
+          },
+          "media_url": {
+            "type": "string",
+            "example": "/upload/whatsapp/proposal_45.pdf"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "sent",
+              "delivered",
+              "read",
+              "failed"
+            ],
+            "example": "delivered"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2026-10-28 09:30:00"
+          }
+        }
+      }
+    }
+  },
+  "security": [
+    {
+      "CookieAuth": []
+    },
+    {
+      "SessionAuth": []
+    }
+  ],
+  "paths": {
+    "/auth/login.php": {
+      "post": {
+        "summary": "User Authentication & Session Initialization",
+        "description": "Authenticates staff or customer using email, mobile, or username with password. Establishes multi-tenant session and sets user_data salt cookie.",
+        "tags": [
+          "Authentication"
+        ],
+        "operationId": "v3_auth_login",
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardSuccessResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error or invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - Insufficient permissions for user role",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "identifier",
+                  "password"
+                ],
+                "properties": {
+                  "identifier": {
+                    "type": "string",
+                    "description": "Email address, mobile number, or username",
+                    "example": "agent@travelagency.com"
+                  },
+                  "password": {
+                    "type": "string",
+                    "description": "Plain text account password",
+                    "example": "Secret@2026"
+                  },
+                  "redirect_url": {
+                    "type": "string",
+                    "description": "Target redirection URL post-login",
+                    "default": "/dashboard/"
+                  }
+                }
+              }
+            },
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "identifier",
+                  "password"
+                ],
+                "properties": {
+                  "identifier": {
+                    "type": "string",
+                    "description": "Email address, mobile number, or username",
+                    "example": "agent@travelagency.com"
+                  },
+                  "password": {
+                    "type": "string",
+                    "description": "Plain text account password",
+                    "example": "Secret@2026"
+                  },
+                  "redirect_url": {
+                    "type": "string",
+                    "description": "Target redirection URL post-login",
+                    "default": "/dashboard/"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-ai-tool-definition": {
+          "name": "v3_auth_login",
+          "description": "User Authentication & Session Initialization"
+        }
+      }
+    },
+    "/auth/send-otp.php": {
+      "post": {
+        "summary": "Dispatch Email OTP for Passwordless Login",
+        "description": "Generates and sends a secure 6-digit one-time password to the specified user email address.",
+        "tags": [
+          "Authentication"
+        ],
+        "operationId": "v3_auth_send_otp",
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardSuccessResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error or invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - Insufficient permissions for user role",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "email"
+                ],
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email",
+                    "example": "staff@travelagency.com"
+                  }
+                }
+              }
+            },
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "email"
+                ],
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email",
+                    "example": "staff@travelagency.com"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-ai-tool-definition": {
+          "name": "v3_auth_send_otp",
+          "description": "Dispatch Email OTP for Passwordless Login"
+        }
+      }
+    },
+    "/auth/verify-otp.php": {
+      "post": {
+        "summary": "Verify Email OTP & Authenticate Session",
+        "description": "Validates submitted 6-digit OTP code against issued tokens and establishes authenticated user session.",
+        "tags": [
+          "Authentication"
+        ],
+        "operationId": "v3_auth_verify_otp",
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardSuccessResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error or invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - Insufficient permissions for user role",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "email",
+                  "otp"
+                ],
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email",
+                    "example": "staff@travelagency.com"
+                  },
+                  "otp": {
+                    "type": "string",
+                    "pattern": "^[0-9]{6}$",
+                    "example": "482910"
+                  }
+                }
+              }
+            },
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "email",
+                  "otp"
+                ],
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email",
+                    "example": "staff@travelagency.com"
+                  },
+                  "otp": {
+                    "type": "string",
+                    "pattern": "^[0-9]{6}$",
+                    "example": "482910"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-ai-tool-definition": {
+          "name": "v3_auth_verify_otp",
+          "description": "Verify Email OTP & Authenticate Session"
+        }
+      }
+    },
+    "/auth/check-domain.php": {
+      "get": {
+        "summary": "Real-time Tenant Subdomain Availability Checker",
+        "description": "Verifies if a requested agency subdomain or workspace slug is available or already reserved.",
+        "tags": [
+          "Authentication"
+        ],
+        "operationId": "v3_auth_check_domain",
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardSuccessResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error or invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - Insufficient permissions for user role",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "subdomain",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Desired workspace slug",
+            "example": "bluetravels"
+          }
+        ],
+        "x-ai-tool-definition": {
+          "name": "v3_auth_check_domain",
+          "description": "Real-time Tenant Subdomain Availability Checker"
+        }
+      }
+    },
+    "/auth/register.php": {
+      "post": {
+        "summary": "Tenant & Workspace Registration",
+        "description": "Creates a brand new travel agency workspace tenant, registers master administrator user, and provisions site access.",
+        "tags": [
+          "Authentication"
+        ],
+        "operationId": "v3_auth_register_tenant",
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardSuccessResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error or invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - Insufficient permissions for user role",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "company_name",
+                  "subdomain",
+                  "email",
+                  "mobile"
+                ],
+                "properties": {
+                  "company_name": {
+                    "type": "string",
+                    "example": "Blue Sky Holidays"
+                  },
+                  "subdomain": {
+                    "type": "string",
+                    "example": "bluesky"
+                  },
+                  "first_name": {
+                    "type": "string",
+                    "example": "Aarav"
+                  },
+                  "last_name": {
+                    "type": "string",
+                    "example": "Kapoor"
+                  },
+                  "email": {
+                    "type": "string",
+                    "format": "email",
+                    "example": "aarav@bluesky.com"
+                  },
+                  "mobile": {
+                    "type": "string",
+                    "example": "+919876543210"
+                  },
+                  "app_id": {
+                    "type": "string",
+                    "example": "crm"
+                  }
+                }
+              }
+            },
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "company_name",
+                  "subdomain",
+                  "email",
+                  "mobile"
+                ],
+                "properties": {
+                  "company_name": {
+                    "type": "string",
+                    "example": "Blue Sky Holidays"
+                  },
+                  "subdomain": {
+                    "type": "string",
+                    "example": "bluesky"
+                  },
+                  "first_name": {
+                    "type": "string",
+                    "example": "Aarav"
+                  },
+                  "last_name": {
+                    "type": "string",
+                    "example": "Kapoor"
+                  },
+                  "email": {
+                    "type": "string",
+                    "format": "email",
+                    "example": "aarav@bluesky.com"
+                  },
+                  "mobile": {
+                    "type": "string",
+                    "example": "+919876543210"
+                  },
+                  "app_id": {
+                    "type": "string",
+                    "example": "crm"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-ai-tool-definition": {
+          "name": "v3_auth_register_tenant",
+          "description": "Tenant & Workspace Registration"
+        }
+      }
+    },
+    "/leads/list.php": {
+      "get": {
+        "summary": "Paginated Leads Directory with Filters & KPIs",
+        "description": "Fetches paginated enquiries/leads scoped to the active tenant site and user role. Supports date range, status filters, search, and returns aggregate KPI counters.",
+        "tags": [
+          "Leads & CRM"
+        ],
+        "operationId": "v3_leads_list",
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardSuccessResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error or invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - Insufficient permissions for user role",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 1
+            },
+            "description": "Page number"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 20
+            },
+            "description": "Page size limit (max 100)"
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Status code (1=fresh, 2=pending, 3=followup, 6=confirmed, 16=cancel, 9=quote sent, or comma-separated list)"
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Search keyword in customer name, mobile, email, or subject"
+          },
+          {
+            "name": "daterange",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Date range format: 'YYYY-MM-DD - YYYY-MM-DD' or 'all'"
+          },
+          {
+            "name": "agentId",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filter by assigned agent ID or 'unassigned' (privileged users only)"
+          }
+        ],
+        "x-ai-tool-definition": {
+          "name": "v3_leads_list",
+          "description": "Paginated Leads Directory with Filters & KPIs"
+        }
+      }
+    },
+    "/leads/view.php": {
+      "get": {
+        "summary": "Lead Detail Record with Full Timeline & Activities",
+        "description": "Retrieves full information for a single enquiry including customer contact, travel requirements, quotes, tasks, notes, and activity history.",
+        "tags": [
+          "Leads & CRM"
+        ],
+        "operationId": "v3_leads_view",
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardSuccessResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error or invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - Insufficient permissions for user role",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Lead identifier (numeric ID or base64 encoded string)",
+            "example": "42"
+          }
+        ],
+        "x-ai-tool-definition": {
+          "name": "v3_leads_view",
+          "description": "Lead Detail Record with Full Timeline & Activities"
+        }
+      }
+    },
+    "/leads/create.php": {
+      "post": {
+        "summary": "Create New Enquiry / Lead",
+        "description": "Creates a new customer lead in the pipeline, automatically assigning site scope and triggering welcome automations.",
+        "tags": [
+          "Leads & CRM"
+        ],
+        "operationId": "v3_leads_create",
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardSuccessResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error or invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - Insufficient permissions for user role",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "first_name",
+                  "mobile"
+                ],
+                "properties": {
+                  "first_name": {
+                    "type": "string",
+                    "example": "Priya"
+                  },
+                  "last_name": {
+                    "type": "string",
+                    "example": "Nair"
+                  },
+                  "mobile": {
+                    "type": "string",
+                    "example": "+919811223344"
+                  },
+                  "email": {
+                    "type": "string",
+                    "format": "email",
+                    "example": "priya.nair@example.com"
+                  },
+                  "subject": {
+                    "type": "string",
+                    "example": "Goa 4N/5N Beach Holiday with Family"
+                  },
+                  "source": {
+                    "type": "string",
+                    "example": "Website Form"
+                  },
+                  "agent_id": {
+                    "type": "integer",
+                    "description": "Optional assigned agent ID",
+                    "example": 5
+                  },
+                  "status": {
+                    "type": "integer",
+                    "description": "Initial status code (default 1 = fresh)",
+                    "default": 1
+                  },
+                  "destination": {
+                    "type": "string",
+                    "example": "Goa"
+                  },
+                  "adults": {
+                    "type": "integer",
+                    "default": 2
+                  },
+                  "children": {
+                    "type": "integer",
+                    "default": 1
+                  },
+                  "travel_date": {
+                    "type": "string",
+                    "format": "date",
+                    "example": "2026-11-15"
+                  }
+                }
+              }
+            },
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "first_name",
+                  "mobile"
+                ],
+                "properties": {
+                  "first_name": {
+                    "type": "string",
+                    "example": "Priya"
+                  },
+                  "last_name": {
+                    "type": "string",
+                    "example": "Nair"
+                  },
+                  "mobile": {
+                    "type": "string",
+                    "example": "+919811223344"
+                  },
+                  "email": {
+                    "type": "string",
+                    "format": "email",
+                    "example": "priya.nair@example.com"
+                  },
+                  "subject": {
+                    "type": "string",
+                    "example": "Goa 4N/5N Beach Holiday with Family"
+                  },
+                  "source": {
+                    "type": "string",
+                    "example": "Website Form"
+                  },
+                  "agent_id": {
+                    "type": "integer",
+                    "description": "Optional assigned agent ID",
+                    "example": 5
+                  },
+                  "status": {
+                    "type": "integer",
+                    "description": "Initial status code (default 1 = fresh)",
+                    "default": 1
+                  },
+                  "destination": {
+                    "type": "string",
+                    "example": "Goa"
+                  },
+                  "adults": {
+                    "type": "integer",
+                    "default": 2
+                  },
+                  "children": {
+                    "type": "integer",
+                    "default": 1
+                  },
+                  "travel_date": {
+                    "type": "string",
+                    "format": "date",
+                    "example": "2026-11-15"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-ai-tool-definition": {
+          "name": "v3_leads_create",
+          "description": "Create New Enquiry / Lead"
+        }
+      }
+    },
+    "/leads/update.php": {
+      "post": {
+        "summary": "Update Lead Contact & Travel Information",
+        "description": "Modifies personal profile, travel dates, passenger counts, budget, or destination preferences for an existing lead.",
+        "tags": [
+          "Leads & CRM"
+        ],
+        "operationId": "v3_leads_update",
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardSuccessResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error or invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - Insufficient permissions for user role",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "id"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "description": "Numeric or base64 lead ID",
+                    "example": "42"
+                  },
+                  "first_name": {
+                    "type": "string",
+                    "example": "Priya"
+                  },
+                  "last_name": {
+                    "type": "string",
+                    "example": "Nair"
+                  },
+                  "email": {
+                    "type": "string",
+                    "example": "priya.nair@example.com"
+                  },
+                  "mobile": {
+                    "type": "string",
+                    "example": "+919811223344"
+                  },
+                  "subject": {
+                    "type": "string",
+                    "example": "Goa Luxury Honeymoon 5N/6D"
+                  },
+                  "destination": {
+                    "type": "string",
+                    "example": "Goa"
+                  }
+                }
+              }
+            },
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "id"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "description": "Numeric or base64 lead ID",
+                    "example": "42"
+                  },
+                  "first_name": {
+                    "type": "string",
+                    "example": "Priya"
+                  },
+                  "last_name": {
+                    "type": "string",
+                    "example": "Nair"
+                  },
+                  "email": {
+                    "type": "string",
+                    "example": "priya.nair@example.com"
+                  },
+                  "mobile": {
+                    "type": "string",
+                    "example": "+919811223344"
+                  },
+                  "subject": {
+                    "type": "string",
+                    "example": "Goa Luxury Honeymoon 5N/6D"
+                  },
+                  "destination": {
+                    "type": "string",
+                    "example": "Goa"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-ai-tool-definition": {
+          "name": "v3_leads_update",
+          "description": "Update Lead Contact & Travel Information"
+        }
+      }
+    },
+    "/leads/update-status.php": {
+      "post": {
+        "summary": "Advance Lead Pipeline Stage / Status",
+        "description": "Updates the stage of an enquiry (e.g. from Fresh to In-Progress, Follow-up, Confirmed, or Cancelled). Enforces workflow triggers.",
+        "tags": [
+          "Leads & CRM"
+        ],
+        "operationId": "v3_leads_update_status",
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardSuccessResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error or invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - Insufficient permissions for user role",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "id",
+                  "status"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "description": "Lead ID (numeric or base64)",
+                    "example": "42"
+                  },
+                  "status": {
+                    "type": "integer",
+                    "description": "Target status integer (1: Fresh, 2: In-Progress, 3: Followup, 6: Confirmed, 16: Cancel)",
+                    "example": 3
+                  },
+                  "reason": {
+                    "type": "string",
+                    "description": "Optional status transition remark or cancel reason",
+                    "example": "Client requested follow-up next Tuesday afternoon"
+                  }
+                }
+              }
+            },
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "id",
+                  "status"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "description": "Lead ID (numeric or base64)",
+                    "example": "42"
+                  },
+                  "status": {
+                    "type": "integer",
+                    "description": "Target status integer (1: Fresh, 2: In-Progress, 3: Followup, 6: Confirmed, 16: Cancel)",
+                    "example": 3
+                  },
+                  "reason": {
+                    "type": "string",
+                    "description": "Optional status transition remark or cancel reason",
+                    "example": "Client requested follow-up next Tuesday afternoon"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-ai-tool-definition": {
+          "name": "v3_leads_update_status",
+          "description": "Advance Lead Pipeline Stage / Status"
+        }
+      }
+    },
+    "/leads/assign.php": {
+      "post": {
+        "summary": "Assign Lead to Sales Agent / Executive",
+        "description": "Transfers lead ownership to an agent, updates pipeline status, logs an internal history record, and triggers notification alerts.",
+        "tags": [
+          "Leads & CRM"
+        ],
+        "operationId": "v3_leads_assign_agent",
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardSuccessResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error or invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - Insufficient permissions for user role",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "lead_id",
+                  "agent_id"
+                ],
+                "properties": {
+                  "lead_id": {
+                    "type": "string",
+                    "example": "42"
+                  },
+                  "agent_id": {
+                    "type": "integer",
+                    "description": "Target agent user ID",
+                    "example": 7
+                  },
+                  "notes": {
+                    "type": "string",
+                    "example": "High priority honeymoon inquiry, please contact via phone immediately."
+                  }
+                }
+              }
+            },
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "lead_id",
+                  "agent_id"
+                ],
+                "properties": {
+                  "lead_id": {
+                    "type": "string",
+                    "example": "42"
+                  },
+                  "agent_id": {
+                    "type": "integer",
+                    "description": "Target agent user ID",
+                    "example": 7
+                  },
+                  "notes": {
+                    "type": "string",
+                    "example": "High priority honeymoon inquiry, please contact via phone immediately."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-ai-tool-definition": {
+          "name": "v3_leads_assign_agent",
+          "description": "Assign Lead to Sales Agent / Executive"
+        }
+      }
+    },
+    "/leads/add-note.php": {
+      "post": {
+        "summary": "Append Internal Note or Schedule Follow-up",
+        "description": "Adds an internal communication log, customer conversation record, or reminder timestamp to a lead.",
+        "tags": [
+          "Leads & CRM"
+        ],
+        "operationId": "v3_leads_add_note",
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardSuccessResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error or invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - Insufficient permissions for user role",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "leadId",
+                  "msg"
+                ],
+                "properties": {
+                  "leadId": {
+                    "type": "string",
+                    "example": "42"
+                  },
+                  "title": {
+                    "type": "string",
+                    "default": "Note",
+                    "example": "Phone Call Summary"
+                  },
+                  "msg": {
+                    "type": "string",
+                    "example": "Discussed 4-star hotel options in Candolim. Customer prefers beachfront villa."
+                  },
+                  "followupTime": {
+                    "type": "string",
+                    "format": "date-time",
+                    "example": "2026-10-30 15:30:00"
+                  },
+                  "finalNotes": {
+                    "type": "boolean",
+                    "default": false
+                  }
+                }
+              }
+            },
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "leadId",
+                  "msg"
+                ],
+                "properties": {
+                  "leadId": {
+                    "type": "string",
+                    "example": "42"
+                  },
+                  "title": {
+                    "type": "string",
+                    "default": "Note",
+                    "example": "Phone Call Summary"
+                  },
+                  "msg": {
+                    "type": "string",
+                    "example": "Discussed 4-star hotel options in Candolim. Customer prefers beachfront villa."
+                  },
+                  "followupTime": {
+                    "type": "string",
+                    "format": "date-time",
+                    "example": "2026-10-30 15:30:00"
+                  },
+                  "finalNotes": {
+                    "type": "boolean",
+                    "default": false
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-ai-tool-definition": {
+          "name": "v3_leads_add_note",
+          "description": "Append Internal Note or Schedule Follow-up"
+        }
+      }
+    },
+    "/leads/kanban.php": {
+      "get": {
+        "summary": "Fetch Kanban Board Columns & Lead Cards",
+        "description": "Returns leads aggregated into pipeline stages (Fresh, In-Progress, Follow-up, Confirmed, Cancelled) for drag-and-drop workflow boards.",
+        "tags": [
+          "Leads & CRM"
+        ],
+        "operationId": "v3_leads_kanban",
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardSuccessResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error or invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - Insufficient permissions for user role",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "daterange",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Optional date filter"
+          },
+          {
+            "name": "agentId",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filter cards by agent ID"
+          }
+        ],
+        "x-ai-tool-definition": {
+          "name": "v3_leads_kanban",
+          "description": "Fetch Kanban Board Columns & Lead Cards"
+        }
+      }
+    },
+    "/leads/payment-link.php": {
+      "post": {
+        "summary": "Generate Instant Payment Link for Customer",
+        "description": "Creates a secure online payment checkout link via integrated payment gateway (Razorpay/Cashfree/PhonePe) tied to the lead enquiry.",
+        "tags": [
+          "Leads & CRM"
+        ],
+        "operationId": "v3_leads_create_payment_link",
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardSuccessResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error or invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - Insufficient permissions for user role",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "lead_id",
+                  "amount"
+                ],
+                "properties": {
+                  "lead_id": {
+                    "type": "string",
+                    "example": "42"
+                  },
+                  "amount": {
+                    "type": "number",
+                    "example": 15000.0
+                  },
+                  "purpose": {
+                    "type": "string",
+                    "example": "Booking Advance for Kashmir Tour"
+                  },
+                  "gateway": {
+                    "type": "string",
+                    "enum": [
+                      "razorpay",
+                      "cashfree",
+                      "phonepe",
+                      "upi"
+                    ],
+                    "default": "razorpay"
+                  }
+                }
+              }
+            },
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "lead_id",
+                  "amount"
+                ],
+                "properties": {
+                  "lead_id": {
+                    "type": "string",
+                    "example": "42"
+                  },
+                  "amount": {
+                    "type": "number",
+                    "example": 15000.0
+                  },
+                  "purpose": {
+                    "type": "string",
+                    "example": "Booking Advance for Kashmir Tour"
+                  },
+                  "gateway": {
+                    "type": "string",
+                    "enum": [
+                      "razorpay",
+                      "cashfree",
+                      "phonepe",
+                      "upi"
+                    ],
+                    "default": "razorpay"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-ai-tool-definition": {
+          "name": "v3_leads_create_payment_link",
+          "description": "Generate Instant Payment Link for Customer"
+        }
+      }
+    },
+    "/packages/list.php": {
+      "get": {
+        "summary": "List Tour Packages Catalog with Filter & Search",
+        "description": "Retrieves tour package catalog records. Supports filtering by destination type (domestic / international), status (active / draft), theme, and keywords.",
+        "tags": [
+          "Tour Packages"
+        ],
+        "operationId": "v3_packages_list",
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardSuccessResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error or invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - Insufficient permissions for user role",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "type",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "domestic",
+                "international",
+                "all"
+              ],
+              "default": "domestic"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 1
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 20
+            }
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Search keyword for package title or destination"
+          }
+        ],
+        "x-ai-tool-definition": {
+          "name": "v3_packages_list",
+          "description": "List Tour Packages Catalog with Filter & Search"
+        }
+      }
+    },
+    "/packages/get.php": {
+      "get": {
+        "summary": "Detailed Tour Package Record with Days & Hotels",
+        "description": "Retrieves complete tour package definition including day-by-day itineraries, associated gallery images, inclusions, exclusions, and vehicle assignments.",
+        "tags": [
+          "Tour Packages"
+        ],
+        "operationId": "v3_packages_get",
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardSuccessResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error or invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - Insufficient permissions for user role",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Package ID (integer or base64)",
+            "example": "105"
+          }
+        ],
+        "x-ai-tool-definition": {
+          "name": "v3_packages_get",
+          "description": "Detailed Tour Package Record with Days & Hotels"
+        }
+      }
+    },
+    "/packages/publish.php": {
+      "post": {
+        "summary": "Create or Update Tour Package Itinerary",
+        "description": "Creates a new tour package catalog entry or publishes full modifications to an existing itinerary package.",
+        "tags": [
+          "Tour Packages"
+        ],
+        "operationId": "v3_packages_save",
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardSuccessResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error or invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - Insufficient permissions for user role",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "packageName",
+                  "duration"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "description": "Package ID (omit when creating new)",
+                    "example": "105"
+                  },
+                  "packageName": {
+                    "type": "string",
+                    "example": "Enchanting Himachal 6 Days"
+                  },
+                  "travelStyle": {
+                    "type": "string",
+                    "example": "standard"
+                  },
+                  "tourPackageTemplate": {
+                    "type": "string",
+                    "enum": [
+                      "mit",
+                      "standard",
+                      "modern",
+                      "aleya"
+                    ],
+                    "default": "mit"
+                  },
+                  "packageType": {
+                    "type": "string",
+                    "enum": [
+                      "domestic",
+                      "international"
+                    ],
+                    "default": "domestic"
+                  },
+                  "duration": {
+                    "type": "integer",
+                    "example": 6
+                  },
+                  "hotel": {
+                    "type": "string",
+                    "default": "3_star_hotel"
+                  },
+                  "outstationVehicle": {
+                    "type": "string",
+                    "example": "toyota_innova"
+                  },
+                  "localSighseeignVehicle": {
+                    "type": "string",
+                    "example": "sedan_swift_dzire"
+                  },
+                  "overview": {
+                    "type": "string",
+                    "example": "Explore scenic valleys, snow mountains, and apple orchards in Shimla and Manali."
+                  },
+                  "inclusions": {
+                    "type": "string",
+                    "example": "Daily breakfast, Private AC vehicle, 3-star hotel stay, Sightseeing tours"
+                  },
+                  "exclusions": {
+                    "type": "string",
+                    "example": "Flight tickets, Personal expenses, Entry tickets, Adventure sports"
+                  }
+                }
+              }
+            },
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "packageName",
+                  "duration"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "description": "Package ID (omit when creating new)",
+                    "example": "105"
+                  },
+                  "packageName": {
+                    "type": "string",
+                    "example": "Enchanting Himachal 6 Days"
+                  },
+                  "travelStyle": {
+                    "type": "string",
+                    "example": "standard"
+                  },
+                  "tourPackageTemplate": {
+                    "type": "string",
+                    "enum": [
+                      "mit",
+                      "standard",
+                      "modern",
+                      "aleya"
+                    ],
+                    "default": "mit"
+                  },
+                  "packageType": {
+                    "type": "string",
+                    "enum": [
+                      "domestic",
+                      "international"
+                    ],
+                    "default": "domestic"
+                  },
+                  "duration": {
+                    "type": "integer",
+                    "example": 6
+                  },
+                  "hotel": {
+                    "type": "string",
+                    "default": "3_star_hotel"
+                  },
+                  "outstationVehicle": {
+                    "type": "string",
+                    "example": "toyota_innova"
+                  },
+                  "localSighseeignVehicle": {
+                    "type": "string",
+                    "example": "sedan_swift_dzire"
+                  },
+                  "overview": {
+                    "type": "string",
+                    "example": "Explore scenic valleys, snow mountains, and apple orchards in Shimla and Manali."
+                  },
+                  "inclusions": {
+                    "type": "string",
+                    "example": "Daily breakfast, Private AC vehicle, 3-star hotel stay, Sightseeing tours"
+                  },
+                  "exclusions": {
+                    "type": "string",
+                    "example": "Flight tickets, Personal expenses, Entry tickets, Adventure sports"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-ai-tool-definition": {
+          "name": "v3_packages_save",
+          "description": "Create or Update Tour Package Itinerary"
+        }
+      }
+    },
+    "/packages/prices.php": {
+      "get": {
+        "summary": "Fetch Package Price Slabs & Currency Rates",
+        "description": "Retrieves adult, child, and single occupancy pricing slabs with seasonal validity dates for a specific tour package.",
+        "tags": [
+          "Tour Packages"
+        ],
+        "operationId": "v3_packages_get_prices",
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardSuccessResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error or invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - Insufficient permissions for user role",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Package ID",
+            "example": "105"
+          }
+        ],
+        "x-ai-tool-definition": {
+          "name": "v3_packages_get_prices",
+          "description": "Fetch Package Price Slabs & Currency Rates"
+        }
+      },
+      "post": {
+        "summary": "Add, Modify or Delete Package Pricing Slab",
+        "description": "Creates a new price slab, updates existing pricing tiers, or deletes a pricing entry.",
+        "tags": [
+          "Tour Packages"
+        ],
+        "operationId": "v3_packages_save_price_slab",
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardSuccessResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error or invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - Insufficient permissions for user role",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "package_id",
+                  "selling_adult"
+                ],
+                "properties": {
+                  "action": {
+                    "type": "string",
+                    "enum": [
+                      "update",
+                      "delete"
+                    ],
+                    "default": "update"
+                  },
+                  "package_id": {
+                    "type": "string",
+                    "example": "105"
+                  },
+                  "price_id": {
+                    "type": "string",
+                    "description": "Price slab ID (omit when creating new)",
+                    "example": "41"
+                  },
+                  "selling_adult": {
+                    "type": "number",
+                    "example": 19500.0
+                  },
+                  "selling_child": {
+                    "type": "number",
+                    "example": 9800.0
+                  },
+                  "date_start": {
+                    "type": "string",
+                    "format": "date",
+                    "example": "2026-11-01"
+                  },
+                  "date_end": {
+                    "type": "string",
+                    "format": "date",
+                    "example": "2027-01-15"
+                  }
+                }
+              }
+            },
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "package_id",
+                  "selling_adult"
+                ],
+                "properties": {
+                  "action": {
+                    "type": "string",
+                    "enum": [
+                      "update",
+                      "delete"
+                    ],
+                    "default": "update"
+                  },
+                  "package_id": {
+                    "type": "string",
+                    "example": "105"
+                  },
+                  "price_id": {
+                    "type": "string",
+                    "description": "Price slab ID (omit when creating new)",
+                    "example": "41"
+                  },
+                  "selling_adult": {
+                    "type": "number",
+                    "example": 19500.0
+                  },
+                  "selling_child": {
+                    "type": "number",
+                    "example": 9800.0
+                  },
+                  "date_start": {
+                    "type": "string",
+                    "format": "date",
+                    "example": "2026-11-01"
+                  },
+                  "date_end": {
+                    "type": "string",
+                    "format": "date",
+                    "example": "2027-01-15"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-ai-tool-definition": {
+          "name": "v3_packages_save_price_slab",
+          "description": "Add, Modify or Delete Package Pricing Slab"
+        }
+      }
+    },
+    "/itinerary/generate.php": {
+      "post": {
+        "summary": "AI Smart Itinerary Generation Engine",
+        "description": "Generates custom tour itineraries using AI heuristics and catalog templates based on destination, duration, passenger profile, and interests.",
+        "tags": [
+          "Smart Itineraries"
+        ],
+        "operationId": "v3_itinerary_generate",
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardSuccessResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error or invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - Insufficient permissions for user role",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "destination",
+                  "duration"
+                ],
+                "properties": {
+                  "destination": {
+                    "type": "string",
+                    "example": "Kerala"
+                  },
+                  "duration": {
+                    "type": "integer",
+                    "description": "Trip duration in days",
+                    "example": 5
+                  },
+                  "theme": {
+                    "type": "string",
+                    "example": "Honeymoon"
+                  },
+                  "lead_id": {
+                    "type": "string",
+                    "description": "Optional associated lead ID",
+                    "example": "42"
+                  },
+                  "travelers_adults": {
+                    "type": "integer",
+                    "default": 2
+                  },
+                  "travelers_children": {
+                    "type": "integer",
+                    "default": 0
+                  },
+                  "hotel_rating": {
+                    "type": "string",
+                    "enum": [
+                      "3_star",
+                      "4_star",
+                      "5_star"
+                    ],
+                    "default": "4_star"
+                  }
+                }
+              }
+            },
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "destination",
+                  "duration"
+                ],
+                "properties": {
+                  "destination": {
+                    "type": "string",
+                    "example": "Kerala"
+                  },
+                  "duration": {
+                    "type": "integer",
+                    "description": "Trip duration in days",
+                    "example": 5
+                  },
+                  "theme": {
+                    "type": "string",
+                    "example": "Honeymoon"
+                  },
+                  "lead_id": {
+                    "type": "string",
+                    "description": "Optional associated lead ID",
+                    "example": "42"
+                  },
+                  "travelers_adults": {
+                    "type": "integer",
+                    "default": 2
+                  },
+                  "travelers_children": {
+                    "type": "integer",
+                    "default": 0
+                  },
+                  "hotel_rating": {
+                    "type": "string",
+                    "enum": [
+                      "3_star",
+                      "4_star",
+                      "5_star"
+                    ],
+                    "default": "4_star"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-ai-tool-definition": {
+          "name": "v3_itinerary_generate",
+          "description": "AI Smart Itinerary Generation Engine"
+        }
+      }
+    },
+    "/itinerary/show.php": {
+      "get": {
+        "summary": "Render Customer-Facing Itinerary Quotation Presentation",
+        "description": "Generates complete HTML/PDF quotation data using configured templates (MIT, Modern, Standard, Aleya) complete with agency branding and banking details.",
+        "tags": [
+          "Smart Itineraries"
+        ],
+        "operationId": "v3_itinerary_render_view",
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardSuccessResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error or invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - Insufficient permissions for user role",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Itinerary or Package quotation ID",
+            "example": "105"
+          },
+          {
+            "name": "lead_id",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Associated lead ID for personalized client quotation",
+            "example": "42"
+          },
+          {
+            "name": "template",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "mit",
+                "standard",
+                "modern",
+                "aleya"
+              ],
+              "default": "mit"
+            }
+          }
+        ],
+        "x-ai-tool-definition": {
+          "name": "v3_itinerary_render_view",
+          "description": "Render Customer-Facing Itinerary Quotation Presentation"
+        }
+      }
+    },
+    "/dashboard/overview.php": {
+      "get": {
+        "summary": "Executive Dashboard Overview & Aggregate Metrics",
+        "description": "Provides aggregated business metrics including fresh leads, confirmed conversions, revenue, pending follow-ups, and pipeline charts.",
+        "tags": [
+          "Dashboard Analytics"
+        ],
+        "operationId": "v3_dashboard_overview",
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardSuccessResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error or invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - Insufficient permissions for user role",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "daterange",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Date range: 'YYYY-MM-DD - YYYY-MM-DD'"
+          }
+        ],
+        "x-ai-tool-definition": {
+          "name": "v3_dashboard_overview",
+          "description": "Executive Dashboard Overview & Aggregate Metrics"
+        }
+      }
+    },
+    "/dashboard/kpis.php": {
+      "get": {
+        "summary": "Quick Counter KPIs for Top Bar",
+        "description": "Returns real-time numerical counters for active leads across all major status stages.",
+        "tags": [
+          "Dashboard Analytics"
+        ],
+        "operationId": "v3_dashboard_kpis",
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardSuccessResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error or invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - Insufficient permissions for user role",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-ai-tool-definition": {
+          "name": "v3_dashboard_kpis",
+          "description": "Quick Counter KPIs for Top Bar"
+        }
+      }
+    },
+    "/workflows/": {
+      "get": {
+        "summary": "Automation Workflows Directory & Canvas State",
+        "description": "Lists visual automation workflows or retrieves the complete flowchart graph (nodes, edges, conditions) for a specific automation ID.",
+        "tags": [
+          "Automation Workflows"
+        ],
+        "operationId": "v3_workflows_get",
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardSuccessResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error or invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - Insufficient permissions for user role",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "action",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "list",
+                "get",
+                "templates",
+                "logs",
+                "meta"
+              ],
+              "default": "list"
+            }
+          },
+          {
+            "name": "id",
+            "in": "query",
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Workflow ID (required when action=get or action=logs)"
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "all",
+                "active",
+                "inactive"
+              ]
+            }
+          }
+        ],
+        "x-ai-tool-definition": {
+          "name": "v3_workflows_get",
+          "description": "Automation Workflows Directory & Canvas State"
+        }
+      },
+      "post": {
+        "summary": "Save, Toggle, Duplicate, or Test Run Visual Automations",
+        "description": "Persists workflow flowchart canvas nodes/edges, toggles active status, duplicates templates, or triggers dry-run test simulations.",
+        "tags": [
+          "Automation Workflows"
+        ],
+        "operationId": "v3_workflows_action",
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardSuccessResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error or invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - Insufficient permissions for user role",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "action"
+                ],
+                "properties": {
+                  "action": {
+                    "type": "string",
+                    "enum": [
+                      "save",
+                      "toggle_status",
+                      "duplicate",
+                      "delete",
+                      "test_run",
+                      "install_template"
+                    ],
+                    "example": "save"
+                  },
+                  "id": {
+                    "type": "integer",
+                    "description": "Workflow ID (omit when creating new)",
+                    "example": 12
+                  },
+                  "title": {
+                    "type": "string",
+                    "example": "WhatsApp Instant Quote Followup"
+                  },
+                  "category": {
+                    "type": "string",
+                    "example": "sales"
+                  },
+                  "trigger_type": {
+                    "type": "string",
+                    "enum": [
+                      "lead_created",
+                      "whatsapp_incoming",
+                      "lead_stage_changed",
+                      "payment_received",
+                      "itinerary_viewed",
+                      "webhook_received"
+                    ],
+                    "example": "lead_created"
+                  },
+                  "nodes": {
+                    "type": "array",
+                    "items": {
+                      "type": "object"
+                    }
+                  },
+                  "edges": {
+                    "type": "array",
+                    "items": {
+                      "type": "object"
+                    }
+                  },
+                  "test_lead_id": {
+                    "type": "integer",
+                    "description": "Used when action=test_run"
+                  }
+                }
+              }
+            },
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "action"
+                ],
+                "properties": {
+                  "action": {
+                    "type": "string",
+                    "enum": [
+                      "save",
+                      "toggle_status",
+                      "duplicate",
+                      "delete",
+                      "test_run",
+                      "install_template"
+                    ],
+                    "example": "save"
+                  },
+                  "id": {
+                    "type": "integer",
+                    "description": "Workflow ID (omit when creating new)",
+                    "example": 12
+                  },
+                  "title": {
+                    "type": "string",
+                    "example": "WhatsApp Instant Quote Followup"
+                  },
+                  "category": {
+                    "type": "string",
+                    "example": "sales"
+                  },
+                  "trigger_type": {
+                    "type": "string",
+                    "enum": [
+                      "lead_created",
+                      "whatsapp_incoming",
+                      "lead_stage_changed",
+                      "payment_received",
+                      "itinerary_viewed",
+                      "webhook_received"
+                    ],
+                    "example": "lead_created"
+                  },
+                  "nodes": {
+                    "type": "array",
+                    "items": {
+                      "type": "object"
+                    }
+                  },
+                  "edges": {
+                    "type": "array",
+                    "items": {
+                      "type": "object"
+                    }
+                  },
+                  "test_lead_id": {
+                    "type": "integer",
+                    "description": "Used when action=test_run"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-ai-tool-definition": {
+          "name": "v3_workflows_action",
+          "description": "Save, Toggle, Duplicate, or Test Run Visual Automations"
+        }
+      }
+    },
+    "/whatsapp/chats.php": {
+      "get": {
+        "summary": "List Active WhatsApp Conversations & Recent Messages",
+        "description": "Retrieves ongoing WhatsApp threads for the current tenant workspace, enriched with matched lead CRM metadata and unread counts.",
+        "tags": [
+          "WhatsApp CRM"
+        ],
+        "operationId": "v3_whatsapp_list_chats",
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardSuccessResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error or invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - Insufficient permissions for user role",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 1
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 30
+            }
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Search by contact name or phone number"
+          }
+        ],
+        "x-ai-tool-definition": {
+          "name": "v3_whatsapp_list_chats",
+          "description": "List Active WhatsApp Conversations & Recent Messages"
+        }
+      }
+    },
+    "/whatsapp/messages.php": {
+      "get": {
+        "summary": "Fetch Message History for WhatsApp Thread",
+        "description": "Returns message timeline (text, images, PDFs, voice notes, delivery statuses) for a given chat thread.",
+        "tags": [
+          "WhatsApp CRM"
+        ],
+        "operationId": "v3_whatsapp_get_messages",
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardSuccessResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error or invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - Insufficient permissions for user role",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "chat_id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "example": 45
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 50
+            }
+          },
+          {
+            "name": "before_id",
+            "in": "query",
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Fetch older messages before this message ID"
+          }
+        ],
+        "x-ai-tool-definition": {
+          "name": "v3_whatsapp_get_messages",
+          "description": "Fetch Message History for WhatsApp Thread"
+        }
+      },
+      "post": {
+        "summary": "Send Outbound WhatsApp Message / Media / Document",
+        "description": "Dispatches outbound WhatsApp communication to a customer phone number or chat thread. Supports plain text, file upload, or base64 media.",
+        "tags": [
+          "WhatsApp CRM"
+        ],
+        "operationId": "v3_whatsapp_send_message",
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardSuccessResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error or invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - Insufficient permissions for user role",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "chat_id": {
+                    "type": "integer",
+                    "description": "Existing chat ID (if known)",
+                    "example": 45
+                  },
+                  "phone": {
+                    "type": "string",
+                    "description": "Destination phone number with country code",
+                    "example": "+919876543210"
+                  },
+                  "text": {
+                    "type": "string",
+                    "description": "Message body content",
+                    "example": "Hi Rajesh, please review your customized Kashmir tour itinerary quotation."
+                  },
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "text",
+                      "image",
+                      "document",
+                      "template"
+                    ],
+                    "default": "text"
+                  },
+                  "media_url": {
+                    "type": "string",
+                    "example": "/upload/whatsapp/quote_105.pdf"
+                  },
+                  "image_base64": {
+                    "type": "string",
+                    "description": "Optional inline data:image/... base64 string"
+                  }
+                }
+              }
+            },
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "chat_id": {
+                    "type": "integer",
+                    "description": "Existing chat ID (if known)",
+                    "example": 45
+                  },
+                  "phone": {
+                    "type": "string",
+                    "description": "Destination phone number with country code",
+                    "example": "+919876543210"
+                  },
+                  "text": {
+                    "type": "string",
+                    "description": "Message body content",
+                    "example": "Hi Rajesh, please review your customized Kashmir tour itinerary quotation."
+                  },
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "text",
+                      "image",
+                      "document",
+                      "template"
+                    ],
+                    "default": "text"
+                  },
+                  "media_url": {
+                    "type": "string",
+                    "example": "/upload/whatsapp/quote_105.pdf"
+                  },
+                  "image_base64": {
+                    "type": "string",
+                    "description": "Optional inline data:image/... base64 string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-ai-tool-definition": {
+          "name": "v3_whatsapp_send_message",
+          "description": "Send Outbound WhatsApp Message / Media / Document"
+        }
+      }
+    },
+    "/whatsapp/webhook/": {
+      "post": {
+        "summary": "WhatsApp Baileys / Cloud API Inbound Webhook",
+        "description": "Receives and processes incoming WhatsApp messages, updates delivery statuses (sent/delivered/read), and triggers active visual workflows.",
+        "tags": [
+          "WhatsApp CRM"
+        ],
+        "operationId": "v3_whatsapp_webhook",
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardSuccessResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error or invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - Insufficient permissions for user role",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "description": "Raw WhatsApp inbound message payload from Baileys or Cloud API engine"
+              }
+            },
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "description": "Raw WhatsApp inbound message payload from Baileys or Cloud API engine"
+              }
+            }
+          }
+        },
+        "x-ai-tool-definition": {
+          "name": "v3_whatsapp_webhook",
+          "description": "WhatsApp Baileys / Cloud API Inbound Webhook"
+        }
+      }
+    },
+    "/transporters/list.php": {
+      "get": {
+        "summary": "Transporter Vendors Directory",
+        "description": "Lists active transport vendors, fleet capabilities, operating states/cities, and contact details.",
+        "tags": [
+          "Transporters & Fleet"
+        ],
+        "operationId": "v3_transporters_list",
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardSuccessResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error or invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - Insufficient permissions for user role",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "search",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "city",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "x-ai-tool-definition": {
+          "name": "v3_transporters_list",
+          "description": "Transporter Vendors Directory"
+        }
+      }
+    },
+    "/transporters/quotation.php": {
+      "post": {
+        "summary": "Generate & Dispatch Fleet Quotation Proposal",
+        "description": "Generates transporter vehicle rate calculations, renders proposal PDFs, or sends formatted WhatsApp fleet quotations to customers or vendors.",
+        "tags": [
+          "Transporters & Fleet"
+        ],
+        "operationId": "v3_transporters_quotation",
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardSuccessResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error or invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - Insufficient permissions for user role",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "action": {
+                    "type": "string",
+                    "enum": [
+                      "save",
+                      "save_pdf",
+                      "send"
+                    ],
+                    "default": "save"
+                  },
+                  "quotation_id": {
+                    "type": "string",
+                    "example": "210"
+                  },
+                  "lead_id": {
+                    "type": "string",
+                    "example": "42"
+                  },
+                  "vehicle_type": {
+                    "type": "string",
+                    "example": "Toyota Innova Crysta"
+                  },
+                  "pickup_city": {
+                    "type": "string",
+                    "example": "Delhi"
+                  },
+                  "drop_city": {
+                    "type": "string",
+                    "example": "Manali"
+                  },
+                  "total_km": {
+                    "type": "number",
+                    "example": 1250
+                  },
+                  "rate_per_km": {
+                    "type": "number",
+                    "example": 18.5
+                  },
+                  "driver_allowance": {
+                    "type": "number",
+                    "example": 2500
+                  },
+                  "toll_tax_included": {
+                    "type": "boolean",
+                    "default": true
+                  }
+                }
+              }
+            },
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "action": {
+                    "type": "string",
+                    "enum": [
+                      "save",
+                      "save_pdf",
+                      "send"
+                    ],
+                    "default": "save"
+                  },
+                  "quotation_id": {
+                    "type": "string",
+                    "example": "210"
+                  },
+                  "lead_id": {
+                    "type": "string",
+                    "example": "42"
+                  },
+                  "vehicle_type": {
+                    "type": "string",
+                    "example": "Toyota Innova Crysta"
+                  },
+                  "pickup_city": {
+                    "type": "string",
+                    "example": "Delhi"
+                  },
+                  "drop_city": {
+                    "type": "string",
+                    "example": "Manali"
+                  },
+                  "total_km": {
+                    "type": "number",
+                    "example": 1250
+                  },
+                  "rate_per_km": {
+                    "type": "number",
+                    "example": 18.5
+                  },
+                  "driver_allowance": {
+                    "type": "number",
+                    "example": 2500
+                  },
+                  "toll_tax_included": {
+                    "type": "boolean",
+                    "default": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-ai-tool-definition": {
+          "name": "v3_transporters_quotation",
+          "description": "Generate & Dispatch Fleet Quotation Proposal"
+        }
+      }
+    },
+    "/vehicles/list.php": {
+      "get": {
+        "summary": "Vehicle Fleet Models Catalog",
+        "description": "Returns available vehicle fleet models (Sedans, SUVs, Tempo Travellers, Luxury Coaches) with seating capacities and amenities.",
+        "tags": [
+          "Transporters & Fleet"
+        ],
+        "operationId": "v3_vehicles_list",
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardSuccessResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error or invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - Insufficient permissions for user role",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-ai-tool-definition": {
+          "name": "v3_vehicles_list",
+          "description": "Vehicle Fleet Models Catalog"
+        }
+      }
+    },
+    "/properties/index.php": {
+      "get": {
+        "summary": "Hotels & Properties Directory",
+        "description": "Fetches hotel properties catalog with location filters, star ratings, and room types.",
+        "tags": [
+          "Accommodations"
+        ],
+        "operationId": "v3_properties_list",
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardSuccessResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error or invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - Insufficient permissions for user role",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "search",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "location",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "City name filter"
+          },
+          {
+            "name": "property_type",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "x-ai-tool-definition": {
+          "name": "v3_properties_list",
+          "description": "Hotels & Properties Directory"
+        }
+      }
+    },
+    "/properties/detail.php": {
+      "get": {
+        "summary": "Property Detail Record & Room Inventories",
+        "description": "Returns full hotel specifications including address, room categories, pricing, photos, and amenities.",
+        "tags": [
+          "Accommodations"
+        ],
+        "operationId": "v3_properties_detail",
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardSuccessResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error or invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - Insufficient permissions for user role",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "56"
+          }
+        ],
+        "x-ai-tool-definition": {
+          "name": "v3_properties_detail",
+          "description": "Property Detail Record & Room Inventories"
+        }
+      }
+    },
+    "/accounts/transactions.php": {
+      "get": {
+        "summary": "Financial Ledger & Payment Transactions",
+        "description": "Audits incoming payments, gateway settlements, offline receipts, and commission splits. Restricted to Accountant and Administrator roles.",
+        "tags": [
+          "Accounts & Ledger"
+        ],
+        "operationId": "v3_accounts_transactions",
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardSuccessResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error or invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - Insufficient permissions for user role",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 1
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 20
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "all",
+                "pending",
+                "approved",
+                "rejected"
+              ]
+            }
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "x-ai-tool-definition": {
+          "name": "v3_accounts_transactions",
+          "description": "Financial Ledger & Payment Transactions"
+        }
+      }
+    },
+    "/accounts/verify-payment.php": {
+      "post": {
+        "summary": "Verify & Approve Offline / Gateway Payment",
+        "description": "Marks a customer advance or final payment transaction as approved or rejected with financial reconciliation remarks.",
+        "tags": [
+          "Accounts & Ledger"
+        ],
+        "operationId": "v3_accounts_verify_payment",
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardSuccessResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error or invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - Insufficient permissions for user role",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "note_id",
+                  "action"
+                ],
+                "properties": {
+                  "note_id": {
+                    "type": "integer",
+                    "description": "Transaction note ID",
+                    "example": 89
+                  },
+                  "action": {
+                    "type": "string",
+                    "enum": [
+                      "approve",
+                      "reject"
+                    ],
+                    "example": "approve"
+                  },
+                  "reason": {
+                    "type": "string",
+                    "example": "Bank statement reference matched successfully."
+                  }
+                }
+              }
+            },
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "note_id",
+                  "action"
+                ],
+                "properties": {
+                  "note_id": {
+                    "type": "integer",
+                    "description": "Transaction note ID",
+                    "example": 89
+                  },
+                  "action": {
+                    "type": "string",
+                    "enum": [
+                      "approve",
+                      "reject"
+                    ],
+                    "example": "approve"
+                  },
+                  "reason": {
+                    "type": "string",
+                    "example": "Bank statement reference matched successfully."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-ai-tool-definition": {
+          "name": "v3_accounts_verify_payment",
+          "description": "Verify & Approve Offline / Gateway Payment"
+        }
+      }
+    },
+    "/integration/index.php": {
+      "get": {
+        "summary": "List Configured Third-Party Integrations & Gateways",
+        "description": "Returns status of payment gateways (Razorpay, Cashfree, PhonePe), Google Ads conversion pixels, WhatsApp Web engines, and Webhooks.",
+        "tags": [
+          "Integrations Hub"
+        ],
+        "operationId": "v3_integrations_list",
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardSuccessResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error or invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - Insufficient permissions for user role",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-ai-tool-definition": {
+          "name": "v3_integrations_list",
+          "description": "List Configured Third-Party Integrations & Gateways"
+        }
+      }
+    },
+    "/geo/cities.php": {
+      "get": {
+        "summary": "Cities Lookup by State",
+        "description": "Returns list of active cities within a specified state ID.",
+        "tags": [
+          "Geography & Utilities"
+        ],
+        "operationId": "v3_geo_cities",
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardSuccessResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error or invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - Insufficient permissions for user role",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "state_id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "example": 15
+          }
+        ],
+        "x-ai-tool-definition": {
+          "name": "v3_geo_cities",
+          "description": "Cities Lookup by State"
+        }
+      }
+    },
+    "/shortener/shorten.php": {
+      "post": {
+        "summary": "Generate Shortened URL",
+        "description": "Shortens long customer-facing quotation or itinerary URLs to concise links suitable for WhatsApp and SMS dispatch.",
+        "tags": [
+          "Geography & Utilities"
+        ],
+        "operationId": "v3_shortener_shorten",
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardSuccessResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error or invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - Insufficient permissions for user role",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "url"
+                ],
+                "properties": {
+                  "url": {
+                    "type": "string",
+                    "format": "uri",
+                    "example": "https://crm.example.com/dashboard/quote/?refId=NDI="
+                  }
+                }
+              }
+            },
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "url"
+                ],
+                "properties": {
+                  "url": {
+                    "type": "string",
+                    "format": "uri",
+                    "example": "https://crm.example.com/dashboard/quote/?refId=NDI="
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-ai-tool-definition": {
+          "name": "v3_shortener_shorten",
+          "description": "Generate Shortened URL"
+        }
+      }
+    }
+  }
+}

@@ -46,9 +46,6 @@ if ($siteAuthMethod !== 'PASSWORD') {
     $siteAuthMethod = 'OTP';
 }
 
-$rawChannel = isset($defaultAuthChannel) ? $defaultAuthChannel : ($_GET['channel'] ?? ($_GET['type'] ?? 'mobile'));
-$defaultAuthChannel = (strtolower(trim((string)$rawChannel)) === 'email') ? 'email' : 'mobile';
-
 // Default Aleya Brand Assets
 $aleyaLogo = '/app/aleya/visitor/aleya/desktop/assets/images/aleya_logo.png';
 $aleyaWhiteLogo = '/app/aleya/visitor/aleya/desktop/assets/images/aleya_white_logo.png';
@@ -205,7 +202,7 @@ $activeShowcase = $appShowcaseData[$appKey] ?? $appShowcaseData['aleya'];
                     <!-- Heading -->
                     <div class="form-heading">
                         <strong>Sign In</strong>
-                        <span id="authSubtitle"><?php echo ($siteAuthMethod === 'PASSWORD') ? 'Enter your credentials to access your workspace' : (($defaultAuthChannel === 'email') ? 'Enter your work email to access your workspace' : 'Enter your mobile number to access your workspace'); ?></span>
+                        <span><?php echo ($siteAuthMethod === 'PASSWORD') ? 'Enter your credentials to access your workspace' : 'Enter your work email or mobile number to access your workspace'; ?></span>
                     </div>
 
                     <!-- Dynamic Live Alert Banner -->
@@ -264,80 +261,44 @@ $activeShowcase = $appShowcaseData[$appKey] ?? $appShowcaseData['aleya'];
                             </form>
                         </div>
                     <?php else: ?>
-                        <!-- Passwordless OTP Workflow (Mobile & Email) -->
+                        <!-- Passwordless Unified Email & Mobile OTP Workflow -->
                         <div id="authOtpSection" class="auth-section">
-                            <!-- Step A: Enter Mobile or Email -->
+                            <!-- Step A: Enter Email or Mobile Number -->
                             <div id="paneOtpStepEmail" class="otp-pane">
-                                <!-- Mobile / Email Selector Tabs -->
-                                <div class="auth-channel-switcher" role="tablist" aria-label="Sign in method">
-                                    <button type="button" class="auth-channel-tab <?php echo ($defaultAuthChannel === 'mobile') ? 'active' : ''; ?>" id="tabChannelMobile" role="tab" aria-selected="<?php echo ($defaultAuthChannel === 'mobile') ? 'true' : 'false'; ?>" data-channel="mobile">
-                                        <i class="fi fi-rr-mobile-notch"></i>
-                                        <span>Mobile Number</span>
-                                    </button>
-                                    <button type="button" class="auth-channel-tab <?php echo ($defaultAuthChannel === 'email') ? 'active' : ''; ?>" id="tabChannelEmail" role="tab" aria-selected="<?php echo ($defaultAuthChannel === 'email') ? 'true' : 'false'; ?>" data-channel="email">
-                                        <i class="fi fi-rr-envelope"></i>
-                                        <span>Email Address</span>
-                                    </button>
-                                </div>
-
                                 <form id="formSendOtp" autocomplete="off">
-                                    <input type="hidden" name="channel" id="otpActiveChannel" value="<?php echo htmlspecialchars($defaultAuthChannel); ?>">
-
-                                    <!-- Mobile Input Group -->
-                                    <div class="form-group auth-channel-group <?php echo ($defaultAuthChannel === 'email') ? 'is-hidden' : ''; ?>" id="groupMobileInput">
-                                        <label class="auth-label" for="otpMobile">Mobile Number</label>
-                                        <div class="input-icon-wrap phone-input-wrap">
-                                            <span class="phone-country-code">+91</span>
-                                            <input
-                                                type="tel"
-                                                class="form-control input-with-label input-phone"
-                                                name="mobile"
-                                                id="otpMobile"
-                                                placeholder="98765 43210"
-                                                maxlength="10"
-                                                pattern="[6-9][0-9]{9}"
-                                                inputmode="numeric"
-                                                autocomplete="tel-national"
-                                                <?php echo ($defaultAuthChannel === 'mobile') ? 'required autofocus' : ''; ?>>
-                                        </div>
-                                        <span class="auth-field-hint">We'll send a 6-digit verification code via SMS</span>
-                                    </div>
-
-                                    <!-- Email Input Group -->
-                                    <div class="form-group auth-channel-group <?php echo ($defaultAuthChannel === 'email') ? '' : 'is-hidden'; ?>" id="groupEmailInput">
-                                        <label class="auth-label" for="otpEmail">Email Address</label>
+                                    <div class="form-group">
+                                        <label class="auth-label" id="lblOtpTarget" for="otpTarget">Email or Mobile Number</label>
                                         <div class="input-icon-wrap">
-                                            <i class="fi fi-rr-envelope input-icon"></i>
+                                            <i class="fi fi-rr-envelope input-icon" id="iconOtpTarget"></i>
                                             <input
-                                                type="email"
+                                                type="text"
                                                 class="form-control input-with-label"
-                                                name="email"
-                                                id="otpEmail"
-                                                placeholder="name@company.com"
-                                                autocomplete="email"
-                                                <?php echo ($defaultAuthChannel === 'email') ? 'required autofocus' : ''; ?>>
+                                                name="identifier"
+                                                id="otpTarget"
+                                                placeholder="name@company.com or 10-digit mobile"
+                                                required
+                                                autofocus>
                                         </div>
-                                        <span class="auth-field-hint">We'll send a 6-digit verification code via Email</span>
                                     </div>
 
                                     <input type="hidden" name="redirect_url" value="<?php echo htmlspecialchars($redirect_url); ?>">
 
                                     <button type="submit" id="btnSendOtp" class="button theme-button">
                                         <span class="btn-spinner"></span>
-                                        <span class="btn-text"><?php echo ($defaultAuthChannel === 'email') ? 'Continue with Email' : 'Continue with Mobile'; ?></span>
+                                        <span class="btn-text">Continue</span>
                                         <i class="fi fi-rr-arrow-right btn-arrow"></i>
                                     </button>
                                 </form>
                             </div>
 
                             <!-- Step B: Verify 6-Digit OTP Code -->
-                            <div id="paneOtpStepVerify" class="otp-pane is-hidden">
+                            <div id="paneOtpStepVerify" class="otp-pane">
                                 <div class="otp-sent-info">
                                     <div class="otp-sent-meta">
-                                        <span class="otp-sent-label" id="displayOtpChannelLabel">Code sent via SMS to</span>
+                                        <span class="otp-sent-label" id="lblOtpSentTarget">Code sent to</span>
                                         <strong id="displayOtpTarget" class="otp-sent-email"></strong>
                                     </div>
-                                    <a href="#" id="btnChangeOtpEmail" class="otp-edit-link" aria-label="Change phone number or email">
+                                    <a href="#" id="btnChangeOtpEmail" class="otp-edit-link">
                                         <i class="fi fi-rr-edit"></i> Edit
                                     </a>
                                 </div>

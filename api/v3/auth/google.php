@@ -152,53 +152,23 @@ if ($userRes && mysqli_num_rows($userRes) > 0) {
         mysqli_query($connection, "UPDATE {$tblPrefix}profile SET profile_image = '{$escPic}' WHERE profile_user_id = {$userId}");
     }
 
-    if (empty($user['site_access_id'])) {
-        mysqli_query($connection, "
-            INSERT INTO {$tblPrefix}site_access 
-                (site_access_site_id, site_access_user_id, site_access_type, site_access_status, site_access_meta)
-            VALUES 
-                ({$siteId}, {$userId}, 'customer', 1, '')
-        ");
-        $userRole = 'customer';
+    if (empty($user['site_access_id']) || (int)$user['site_access_status'] !== 1) {
+        http_response_code(403);
+        echo json_encode([
+            'status' => 'error',
+            'code'   => 'access_denied',
+            'msg'    => 'Access denied. You do not have access to this workspace.'
+        ]);
+        exit;
     }
 } else {
-    // Provision new user
-    $userSalt = hash('sha256', uniqid(mt_rand(), true) . $googleEmail . time());
-    $rawUsername = explode('@', $googleEmail)[0];
-    $escUser = mysqli_real_escape_string($connection, $rawUsername);
-
-    $insertUser = "
-        INSERT INTO {$tblPrefix}user 
-            (user_email, user_username, user_salt_key, user_status, user_reg_time, user_reg_ip)
-        VALUES 
-            ('{$escEmail}', '{$escUser}', '{$userSalt}', 1, NOW(), '" . ($_SERVER['REMOTE_ADDR'] ?? '127.0.0.1') . "')
-    ";
-    mysqli_query($connection, $insertUser);
-    $userId = mysqli_insert_id($connection);
-
-    $displayName = !empty($googleName) ? $googleName : ucfirst($rawUsername);
-    $escName = mysqli_real_escape_string($connection, $displayName);
-    $escPic = mysqli_real_escape_string($connection, $googlePicture);
-
-    mysqli_query($connection, "
-        INSERT INTO {$tblPrefix}profile 
-            (profile_user_id, profile_email, profile_display_name, profile_image) 
-        VALUES 
-            ({$userId}, '{$escEmail}', '{$escName}', '{$escPic}')
-    ");
-
-    mysqli_query($connection, "
-        INSERT INTO {$tblPrefix}site_access 
-            (site_access_site_id, site_access_user_id, site_access_type, site_access_status, site_access_meta)
-        VALUES 
-            ({$siteId}, {$userId}, 'customer', 1, '')
-    ");
-
-    $userRole = 'customer';
-    $userEmail = $googleEmail;
-    $userMobile = '';
-    $userAvatar = $googlePicture;
-    $siteMeta = '';
+    http_response_code(403);
+    echo json_encode([
+        'status' => 'error',
+        'code'   => 'access_denied',
+        'msg'    => 'Access denied. You do not have access to this workspace.'
+    ]);
+    exit;
 }
 
 // Establish Cookies & Session

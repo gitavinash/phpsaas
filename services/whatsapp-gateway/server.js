@@ -2219,7 +2219,7 @@ function notifyCrm(payload, targetOverrideUrl = null, redirectCount = 0, overrid
         return resolve(false);
       }
 
-      // Always canonicalize /webhook.php to /webhook/ to prevent Apache 301/302 redirects
+      // Always canonicalize /webhook/ to /webhook/ to prevent Apache 301/302 redirects
       targetUrl = targetUrl.replace(/\/webhook\.php(\?|$)/, "/webhook/$1");
 
       const data = JSON.stringify(payload);

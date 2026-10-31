@@ -80,6 +80,8 @@
     isSubmitting: false,
     resendInterval: null,
     currentOtpRef: "",
+    currentOtpTarget: "",
+    currentOtpMode: "email",
     currentOtpEmail: "",
 
     init: function () {
@@ -141,19 +143,24 @@
         }
       });
 
-      // 4. Email OTP: Step A - Send Code
+      // 4. Unified OTP: Input Auto-Detect Email or Phone
+      $(document).on("input", "#otpTarget, #otpEmail", function () {
+        self.handleTargetInput($(this).val());
+      });
+
+      // 4. Unified OTP: Step A - Send Code
       $(document).on("submit", "#formSendOtp", function (e) {
         e.preventDefault();
         self.handleSendOtp();
       });
 
-      // 4. Email OTP: Step B - Verify Code
+      // 4. Unified OTP: Step B - Verify Code
       $(document).on("submit", "#formVerifyOtp", function (e) {
         e.preventDefault();
         self.handleVerifyOtp();
       });
 
-      // Change email in OTP verify pane
+      // Change destination in OTP verify pane
       $(document).on("click", "#btnChangeOtpEmail", function (e) {
         e.preventDefault();
         self.resetOtpPane();
@@ -168,7 +175,7 @@
       });
 
       // Clear alert on typing
-      $(document).on("input", "#loginIdentifier, #loginPassword, #otpEmail, #otpCodeInput, #business_name, #first_name, #last_name, #email, #mobile, #onboardingBizName, #onboardingSubdomain", function () {
+      $(document).on("input", "#loginIdentifier, #loginPassword, #otpTarget, #otpEmail, #otpCodeInput, #business_name, #first_name, #last_name, #email, #mobile, #onboardingBizName, #onboardingSubdomain", function () {
         self.hideAlert();
       });
     },
@@ -254,8 +261,8 @@
         $("#business_name").trigger("focus");
       } else if ($("#onboardingBizName").is(":visible") && !$("#onboardingBizName").val()) {
         $("#onboardingBizName").trigger("focus");
-      } else if ($("#otpEmail").is(":visible") && !$("#otpEmail").val()) {
-        $("#otpEmail").trigger("focus");
+      } else if (($("#otpTarget").is(":visible") && !$("#otpTarget").val()) || ($("#otpEmail").is(":visible") && !$("#otpEmail").val())) {
+        ($("#otpTarget").length ? $("#otpTarget") : $("#otpEmail")).trigger("focus");
       }
     },
 
@@ -290,6 +297,15 @@
       if (redirect) {
         const cleaned = this.cleanRedirectUrl(redirect);
         $("input[name='redirect_url']").val(cleaned);
+      }
+
+      const mobileParam = params.get("mobile") || params.get("phone");
+      const emailParam = params.get("email");
+      const targetParam = params.get("identifier") || mobileParam || emailParam;
+      if (targetParam && $("#otpTarget, #otpEmail").length) {
+        const $targetInput = $("#otpTarget").length ? $("#otpTarget") : $("#otpEmail");
+        $targetInput.val(targetParam.trim());
+        this.handleTargetInput(targetParam.trim());
       }
     },
 
@@ -571,19 +587,109 @@
     },
 
     // -----------------------------------------------------------------------
-    // EMAIL OTP WORKFLOW
+    // AUTO-DETECTION HELPERS FOR EMAIL & MOBILE
+    // -----------------------------------------------------------------------
+    cleanMobile: function (val) {
+      if (!val) return "";
+      let cleaned = $.trim(val).replace(/[\s\-\(\)]/g, "");
+      if (cleaned.startsWith("+91")) {
+        cleaned = cleaned.substring(3);
+      } else if (/^91[6-9]\d{9}$/.test(cleaned)) {
+        cleaned = cleaned.substring(2);
+      } else if (cleaned.startsWith("0")) {
+        cleaned = cleaned.substring(1);
+      }
+      return cleaned.replace(/\D/g, "");
+    },
+
+    detectType: function (val) {
+      const trimmed = $.trim(val);
+      if (!trimmed) return "unknown";
+
+      const cleanPhone = this.cleanMobile(trimmed);
+      const isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed);
+      const hasAt = trimmed.includes("@");
+      const hasLetters = /[a-zA-Z]/.test(trimmed);
+
+      // If valid 10-digit mobile starting with 6-9
+      if (/^[6-9]\d{9}$/.test(cleanPhone)) {
+        return "phone";
+      }
+
+      // If valid email format
+      if (isEmail) {
+        return "email";
+      }
+
+      // Typing in progress: if contains @ or letters, identify as email
+      if (hasAt || (hasLetters && !trimmed.startsWith("+"))) {
+        return "email";
+      }
+
+      // Typing in progress: digits or starts with +, identify as phone
+      if (/^\+?\d+$/.test(trimmed.replace(/[\s\-]/g, ""))) {
+        return "phone";
+      }
+
+      return "unknown";
+    },
+
+    handleTargetInput: function (val) {
+      const type = this.detectType(val);
+      const $icon = $("#iconOtpTarget");
+      const $btnText = $("#btnSendOtp .btn-text");
+
+      if (type === "phone") {
+        $icon.attr("class", "fi fi-rr-phone-call input-icon");
+        $btnText.text("Continue with Mobile");
+      } else if (type === "email") {
+        $icon.attr("class", "fi fi-rr-envelope input-icon");
+        $btnText.text("Continue with Email");
+      } else {
+        $icon.attr("class", "fi fi-rr-envelope input-icon");
+        $btnText.text("Continue");
+      }
+    },
+
+    // -----------------------------------------------------------------------
+    // UNIFIED PASSWORDLESS OTP WORKFLOW (Email & Mobile SMS)
     // -----------------------------------------------------------------------
     handleSendOtp: function () {
       const self = this;
       if (self.isSubmitting) return;
 
-      const email = $.trim($("#otpEmail").val());
+      const $input = $("#otpTarget").length ? $("#otpTarget") : $("#otpEmail");
+      const rawVal = $.trim($input.val());
+
+      if (!rawVal) {
+        self.showAlert("warning", "Please enter your email or mobile number.");
+        $input.trigger("focus");
+        return;
+      }
+
+      const detected = self.detectType(rawVal);
+      const cleanPhone = self.cleanMobile(rawVal);
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-      if (!email || !emailRegex.test(email)) {
-        self.showAlert("warning", "Please enter a valid email address.");
-        $("#otpEmail").trigger("focus");
-        return;
+      let mode = "email";
+      let target = rawVal;
+
+      if (detected === "phone" || /^[6-9]\d{9}$/.test(cleanPhone)) {
+        if (!/^[6-9]\d{9}$/.test(cleanPhone)) {
+          self.showAlert("warning", "Please enter a valid 10-digit mobile number starting with 6-9.");
+          $input.trigger("focus");
+          return;
+        }
+        mode = "sms";
+        target = cleanPhone;
+      } else {
+        if (!emailRegex.test(rawVal)) {
+          self.showAlert("warning", "Please enter a valid email address or 10-digit mobile number.");
+          $input.trigger("focus");
+          return;
+        }
+        mode = "email";
+        target = rawVal;
       }
 
       const $btn = $("#btnSendOtp");
@@ -595,42 +701,91 @@
       $btnText.text("Sending Code...");
       self.hideAlert();
 
-      $.ajax({
-        url: "/api/v3/auth/send-otp/",
-        type: "POST",
-        dataType: "json",
-        contentType: "application/json",
-        data: JSON.stringify({ email: email }),
-        success: function (res) {
-          self.isSubmitting = false;
-          $btn.prop("disabled", false).removeClass("is-loading");
-          $btnText.text(origText);
+      if (mode === "sms") {
+        // Send SMS OTP via existing mobile auth API
+        $.ajax({
+          url: "/api/auth/auth-by-mobile/",
+          type: "GET",
+          dataType: "json",
+          data: {
+            mobile: target,
+            reg_type: "administrator"
+          },
+          success: function (res) {
+            self.isSubmitting = false;
+            $btn.prop("disabled", false).removeClass("is-loading");
+            $btnText.text(origText);
 
-          if (res && res.status === "success") {
-            self.currentOtpRef = res.otp_ref || "";
-            self.currentOtpEmail = email;
+            if (res && res.status === "success") {
+              self.currentOtpRef = res.otpRef || "";
+              self.currentOtpTarget = target;
+              self.currentOtpEmail = target;
+              self.currentOtpMode = "sms";
 
-            $("#displayOtpTarget").text(email);
-            $("#paneOtpStepEmail").hide();
-            $("#paneOtpStepVerify").fadeIn(150);
-            $("#otpCodeInput").val("").trigger("focus");
+              $("#lblOtpSentTarget").text("Code sent via SMS to");
+              $("#displayOtpTarget").text("+91 " + target);
+              $("#paneOtpStepEmail").hide();
+              $("#paneOtpStepVerify").fadeIn(150);
+              $("#otpCodeInput").val("").trigger("focus");
 
-            self.showAlert("success", res.msg || "Verification code sent!");
-            self.startResendTimer(30);
-          } else {
-            const msg = (res && res.msg) ? res.msg : "Failed to send verification code.";
-            self.showAlert("error", msg);
+              self.showAlert("success", res.msg || "Verification code sent via SMS!");
+              self.startResendTimer(30);
+            } else {
+              const msg = (res && res.msg) ? res.msg : "Failed to send verification code.";
+              self.showAlert("error", msg);
+            }
+          },
+          error: function (xhr) {
+            self.isSubmitting = false;
+            $btn.prop("disabled", false).removeClass("is-loading");
+            $btnText.text(origText);
+
+            const errorMsg = (xhr.responseJSON && xhr.responseJSON.msg) ? xhr.responseJSON.msg : "Failed to send code via SMS. Please try again.";
+            self.showAlert("error", errorMsg);
           }
-        },
-        error: function (xhr) {
-          self.isSubmitting = false;
-          $btn.prop("disabled", false).removeClass("is-loading");
-          $btnText.text(origText);
+        });
+      } else {
+        // Send Email OTP via V3 auth API
+        $.ajax({
+          url: "/api/v3/auth/send-otp/",
+          type: "POST",
+          dataType: "json",
+          contentType: "application/json",
+          data: JSON.stringify({ email: target }),
+          success: function (res) {
+            self.isSubmitting = false;
+            $btn.prop("disabled", false).removeClass("is-loading");
+            $btnText.text(origText);
 
-          const errorMsg = (xhr.responseJSON && xhr.responseJSON.msg) ? xhr.responseJSON.msg : "Failed to send code. Please try again.";
-          self.showAlert("error", errorMsg);
-        }
-      });
+            if (res && res.status === "success") {
+              self.currentOtpRef = res.otp_ref || "";
+              self.currentOtpTarget = target;
+              self.currentOtpEmail = target;
+              self.currentOtpMode = "email";
+
+              $("#lblOtpSentTarget").text("Code sent to");
+              $("#displayOtpTarget").text(target);
+              $("#paneOtpStepEmail").hide();
+              $("#paneOtpStepVerify").fadeIn(150);
+              $("#otpCodeInput").val("").trigger("focus");
+
+              self.showAlert("success", res.msg || "Verification code sent to your email!");
+              self.startResendTimer(30);
+            } else {
+              const msg = (res && res.msg) ? res.msg : "Failed to send verification code.";
+              self.showAlert("error", msg);
+            }
+          },
+          error: function (xhr) {
+            self.isSubmitting = false;
+            $btn.prop("disabled", false).removeClass("is-loading");
+            $btnText.text(origText);
+
+            const errorMsg = (xhr.responseJSON && xhr.responseJSON.msg) ? xhr.responseJSON.msg : "Failed to send code. Please try again.";
+            self.showAlert("error", errorMsg);
+          }
+        });
+      }
     },
 
     handleVerifyOtp: function () {
@@ -658,7 +813,10 @@
       const payload = {
         otp_ref: self.currentOtpRef,
         otp_code: code,
-        email: self.currentOtpEmail,
+        identifier: self.currentOtpTarget,
+        email: (self.currentOtpMode === "email") ? self.currentOtpTarget : "",
+        mobile: (self.currentOtpMode === "sms") ? self.currentOtpTarget : "",
+        otp_mode: self.currentOtpMode,
         redirect_url: redirectUrl
       };
 
@@ -701,28 +859,81 @@
 
     handleResendOtp: function () {
       const self = this;
-      if (!self.currentOtpEmail) return;
+      if (!self.currentOtpTarget) return;
 
-      $("#btnResendOtp").addClass("is-disabled").text("Sending...");
+      const $link = $("#btnResendOtp");
+      $link.addClass("is-disabled").text("Sending...");
 
+      if (self.currentOtpMode === "sms") {
+        // Resend via SMS API
+        $.ajax({
+          url: "/api/auth/resend-otp/",
+          type: "GET",
+          dataType: "json",
+          data: {
+            otp_ref_id: self.currentOtpRef,
+            otp_mode: "sms"
+          },
+          success: function (res) {
+            if (res && res.status === "success") {
+              self.showAlert("success", res.msg || "A new verification code has been sent via SMS.");
+              self.startResendTimer(30);
+            } else {
+              self.fallbackResendMobile();
+            }
+          },
+          error: function () {
+            self.fallbackResendMobile();
+          }
+        });
+      } else {
+        // Resend via Email API
+        $.ajax({
+          url: "/api/v3/auth/send-otp/",
+          type: "POST",
+          dataType: "json",
+          contentType: "application/json",
+          data: JSON.stringify({ email: self.currentOtpTarget }),
+          success: function (res) {
+            if (res && res.status === "success") {
+              self.currentOtpRef = res.otp_ref || self.currentOtpRef;
+              self.showAlert("success", "A new verification code has been sent to your email.");
+              self.startResendTimer(30);
+            } else {
+              self.showAlert("error", (res && res.msg) ? res.msg : "Failed to resend code.");
+              self.startResendTimer(15);
+            }
+          },
+          error: function () {
+            self.showAlert("error", "Network error resending code.");
+            self.startResendTimer(15);
+          }
+        });
+      }
+    },
+
+    fallbackResendMobile: function () {
+      const self = this;
       $.ajax({
-        url: "/api/v3/auth/send-otp/",
-        type: "POST",
+        url: "/api/auth/auth-by-mobile/",
+        type: "GET",
         dataType: "json",
-        contentType: "application/json",
-        data: JSON.stringify({ email: self.currentOtpEmail }),
+        data: {
+          mobile: self.currentOtpTarget,
+          reg_type: "administrator"
+        },
         success: function (res) {
           if (res && res.status === "success") {
-            self.currentOtpRef = res.otp_ref || self.currentOtpRef;
-            self.showAlert("success", "A new verification code has been sent.");
+            self.currentOtpRef = res.otpRef || self.currentOtpRef;
+            self.showAlert("success", "A new verification code has been sent via SMS.");
             self.startResendTimer(30);
           } else {
-            self.showAlert("error", (res && res.msg) ? res.msg : "Failed to resend code.");
+            self.showAlert("error", (res && res.msg) ? res.msg : "Failed to resend SMS code.");
             self.startResendTimer(15);
           }
         },
         error: function () {
-          self.showAlert("error", "Network error resending code.");
+          self.showAlert("error", "Network error resending SMS code.");
           self.startResendTimer(15);
         }
       });
@@ -756,7 +967,8 @@
       }
       $("#paneOtpStepVerify").hide();
       $("#paneOtpStepEmail").fadeIn(150);
-      $("#otpEmail").trigger("focus");
+      const $input = $("#otpTarget").length ? $("#otpTarget") : $("#otpEmail");
+      $input.trigger("focus");
     }
   };
 

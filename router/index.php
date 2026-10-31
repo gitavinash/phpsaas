@@ -178,7 +178,7 @@ switch ($urlStructure[0]) {
 		require_once 'service-worker.php';
 		exit();
 
-	// Image render
+		// Image render
 
 	case 'viewmedia':
 		require_once MODULES . 'media/image.php';
@@ -235,7 +235,7 @@ switch ($urlStructure[0]) {
 		break;
 
 	case 'webhook':
-		require_once 'webhook.php';
+		require_once 'webhook/';
 		break;
 
 	case 'amp':

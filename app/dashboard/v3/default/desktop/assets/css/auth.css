@@ -578,6 +578,10 @@ html, body {
   color: var(--brand-700);
 }
 
+.input-type-badge {
+  display: none !important;
+}
+
 .label-link-row {
   display: flex;
   align-items: center;

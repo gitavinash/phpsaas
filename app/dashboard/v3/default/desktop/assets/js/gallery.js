@@ -15,9 +15,15 @@
 })(function ($) {
   "use strict";
 
+  // Prevent re-initialization from wiping active package state if evaluated multiple times
+  if (window.V3Gallery && window.V3Gallery.isInitialized && window.V3Gallery.packageId) {
+    return;
+  }
+
   window.V3Gallery = {
     packageId: "",
     encodedId: "",
+    packageType: "domestic",
     galleryId: 0,
     totalDays: 1,
     galleryData: null,
@@ -30,6 +36,7 @@
     selectedUploadFiles: [],
     eventsBound: false,
     isLoading: false,
+    isInitialized: false,
     loadedPackageId: null,
 
     init: function (opts) {
@@ -44,8 +51,10 @@
       this.loadedPackageId = pkgId;
       this.packageId = pkgId;
       this.encodedId = opts.encodedId || "";
+      this.packageType = opts.packageType || "domestic";
       this.galleryData = null;
       this.isLoading = false;
+      this.isInitialized = true;
       this.pexelsLoaded = false;
       this.pexelsSuggestionsData = [];
       this.currentPexelsPage = 1;
@@ -60,8 +69,9 @@
       if ($wrapper.length > 0) {
         let pkgId = $wrapper.attr("data-package-id") || $wrapper.data("package-id");
         let encId = $wrapper.attr("data-encoded-id") || $wrapper.data("encoded-id") || "";
+        const pkgType = $wrapper.attr("data-package-type") || $wrapper.data("package-type") || "domestic";
 
-        if (!pkgId || pkgId === "0") {
+        if (!pkgId || pkgId === "0" || pkgId === 0) {
           const urlParams = new URLSearchParams(window.location.search);
           const rawId = urlParams.get("id");
           if (rawId) {
@@ -83,8 +93,23 @@
           }
         }
 
-        if (pkgId && pkgId !== "0") {
-          this.init({ packageId: pkgId, encodedId: encId });
+        if (pkgId && pkgId !== "0" && pkgId !== 0) {
+          this.init({ packageId: pkgId, encodedId: encId, packageType: pkgType });
+        } else {
+          // Render informative empty/error state when no package ID is provided
+          const listUrl = pkgType === "international" ? "/dashboard/packages/international/list/" : "/dashboard/packages/domestic/list/";
+          $("#galleryGrid").html(`
+            <div class="gallery-empty-state">
+              <i class="fi fi-rr-exclamation gallery-empty-state-icon"></i>
+              <h4 class="gallery-empty-state-title">No Tour Package Selected</h4>
+              <p class="gallery-empty-state-text">Please choose a package from the packages list to manage its gallery photos.</p>
+              <div class="gallery-empty-state-action">
+                <a href="${listUrl}" class="btn-gallery-action upload">
+                  <i class="fi fi-rr-arrow-left"></i> Back to Packages List
+                </a>
+              </div>
+            </div>
+          `);
         }
       }
     },
@@ -94,47 +119,57 @@
       this.eventsBound = true;
       const self = this;
 
+      // Clean unbind any previous gallery handlers to guarantee idempotency
+      $(document).off(".v3Gallery");
+
       // 1. Single Upload Image Trigger -> Open Modal Popup
-      $(document).on("click", ".open-gallery-upload-modal, #btnOpenGalleryUpload", function (e) {
+      $(document).on("click.v3Gallery", ".open-gallery-upload-modal, #btnOpenGalleryUpload", function (e) {
         e.preventDefault();
         self.openUploadModal();
       });
 
       // Close Upload Modal Popup
-      $(document).on("click", ".closeGalleryModal, .galleryBox .popUpBtn[onclick*='closePopup'], .galleryBox .closePopup", function (e) {
+      $(document).on("click.v3Gallery", ".closeGalleryModal, .galleryBox .popUpBtn[onclick*='closePopup'], .galleryBox .closePopup", function (e) {
         e.preventDefault();
         self.closeUploadModal();
       });
 
+      // Click outside upload modal backdrop
+      $(document).on("click.v3Gallery", ".galleryBox", function (e) {
+        if ($(e.target).hasClass("galleryBox")) {
+          self.closeUploadModal();
+        }
+      });
+
       // Upload submit button (prevent double submit with off().on())
       $(document)
-        .off("click", "#btnSubmitGalleryUpload, #addGallery")
-        .on("click", "#btnSubmitGalleryUpload, #addGallery", function (e) {
+        .off("click.v3GallerySubmit", "#btnSubmitGalleryUpload, #addGallery")
+        .on("click.v3GallerySubmit", "#btnSubmitGalleryUpload, #addGallery", function (e) {
           e.preventDefault();
           e.stopPropagation();
           self.submitGalleryUpload();
         });
 
       // DropZone Click -> Open Native File Picker
-      $(document).on("click", "#dropZone", function (e) {
+      $(document).on("click.v3Gallery", "#dropZone", function (e) {
         if ($(e.target).closest(".removeBtn").length > 0) return;
         $("#fileInput").trigger("click");
       });
 
       // DropZone Drag and Drop Handlers
-      $(document).on("dragenter dragover", "#dropZone", function (e) {
+      $(document).on("dragenter.v3Gallery dragover.v3Gallery", "#dropZone", function (e) {
         e.preventDefault();
         e.stopPropagation();
         $(this).addClass("dragover");
       });
 
-      $(document).on("dragleave", "#dropZone", function (e) {
+      $(document).on("dragleave.v3Gallery", "#dropZone", function (e) {
         e.preventDefault();
         e.stopPropagation();
         $(this).removeClass("dragover");
       });
 
-      $(document).on("drop", "#dropZone", function (e) {
+      $(document).on("drop.v3Gallery", "#dropZone", function (e) {
         e.preventDefault();
         e.stopPropagation();
         $(this).removeClass("dragover");
@@ -145,14 +180,14 @@
       });
 
       // File Input Change
-      $(document).on("change", "#fileInput", function () {
+      $(document).on("change.v3Gallery", "#fileInput", function () {
         if (this.files && this.files.length > 0) {
           self.handleFilesAdded(this.files);
         }
       });
 
       // Remove individual photo preview from dropZone
-      $(document).on("click", "#dropZone .removeBtn", function (e) {
+      $(document).on("click.v3Gallery", "#dropZone .removeBtn", function (e) {
         e.preventDefault();
         e.stopPropagation();
         const index = parseInt($(this).closest(".previewItem").data("index"), 10);
@@ -160,12 +195,12 @@
       });
 
       // Real-time client-side search inside gallery
-      $(document).on("input keyup", "#galleryLocalSearch", function () {
+      $(document).on("input.v3Gallery keyup.v3Gallery", "#galleryLocalSearch", function () {
         self.applyGalleryFilters();
       });
 
       // Individual Card Checkbox Selection
-      $(document).on("change", ".gallery-select-checkbox", function () {
+      $(document).on("change.v3Gallery", ".gallery-select-checkbox", function () {
         const $card = $(this).closest(".dash-gallery-card");
         if ($(this).is(":checked")) {
           $card.addClass("is-selected");
@@ -176,7 +211,7 @@
       });
 
       // "Select All" Checkbox Toggle
-      $(document).on("change", "#chkSelectAllGallery", function () {
+      $(document).on("change.v3Gallery", "#chkSelectAllGallery", function () {
         const isChecked = $(this).is(":checked");
         $(".dash-gallery-card:not(.is-filtered-out)").each(function () {
           const $chk = $(this).find(".gallery-select-checkbox");
@@ -191,13 +226,13 @@
       });
 
       // "Unselect All" Button Click
-      $(document).on("click", "#btnUnselectAllGallery", function (e) {
+      $(document).on("click.v3Gallery", "#btnUnselectAllGallery", function (e) {
         e.preventDefault();
         self.clearSelection();
       });
 
       // Single Image Delete Button
-      $(document).on("click", ".deleteSingleGalleryImage", function (e) {
+      $(document).on("click.v3Gallery", ".deleteSingleGalleryImage", function (e) {
         e.preventDefault();
         e.stopPropagation();
         const $btn = $(this);
@@ -224,7 +259,7 @@
       });
 
       // Bulk Delete Selected Photos Button
-      $(document).on("click", "#btnBulkDeleteGallery", function (e) {
+      $(document).on("click.v3Gallery", "#btnBulkDeleteGallery", function (e) {
         e.preventDefault();
         const $btn = $(this);
         const selectedImages = [];
@@ -260,17 +295,18 @@
         }
       });
 
-      // Tab switching
-      $(document).on("click", ".theme-filter-btn", function () {
+      // Tab switching: smoothly toggle Gallery Cards Grid vs. Pexels Suggestion Panel
+      $(document).on("click.v3Gallery", ".theme-filter-btn", function () {
         const btnId = $(this).attr("id");
+        const filter = $(this).data("filter");
 
-        if (btnId === "btnToggleSuggestions" || $(this).data("filter") === "suggestions") {
+        if (btnId === "btnToggleSuggestions" || filter === "suggestions") {
           $(".theme-filter-btn").removeClass("active");
           $(this).addClass("active");
 
           $("#galleryGrid, .dashboard-gallery-grid").hide();
-          $("#galleryBulkBar").hide();
-          $("#pexelsSuggestionPanel").slideDown(200);
+          $("#galleryBulkBar").removeClass("is-visible").hide();
+          $("#pexelsSuggestionPanel").slideDown(200).addClass("is-visible");
 
           if (!self.pexelsLoaded) {
             self.loadPexelsSuggestions();
@@ -279,7 +315,7 @@
           $(".theme-filter-btn").removeClass("active");
           $(this).addClass("active");
 
-          $("#pexelsSuggestionPanel").slideUp(200);
+          $("#pexelsSuggestionPanel").slideUp(200).removeClass("is-visible");
           $("#galleryGrid, .dashboard-gallery-grid").show();
 
           self.applyGalleryFilters();
@@ -287,7 +323,7 @@
       });
 
       // Pexels Search & Quick Filters
-      $(document).on("click", ".pexels-tag-btn", function () {
+      $(document).on("click.v3Gallery", ".pexels-tag-btn", function () {
         $(".pexels-tag-btn").removeClass("active");
         $(this).addClass("active");
         const tag = $(this).data("tag");
@@ -301,12 +337,12 @@
         self.loadPexelsSuggestions(searchQuery);
       });
 
-      $(document).on("click", "#btnSearchPexels", function () {
+      $(document).on("click.v3Gallery", "#btnSearchPexels", function () {
         const q = $("#pexelsSearchQuery").val().trim();
         self.loadPexelsSuggestions(q);
       });
 
-      $(document).on("keypress", "#pexelsSearchQuery", function (e) {
+      $(document).on("keypress.v3Gallery", "#pexelsSearchQuery", function (e) {
         if (e.which === 13) {
           e.preventDefault();
           $("#btnSearchPexels").click();
@@ -314,15 +350,15 @@
       });
 
       // Infinite load more Pexels photos
-      $(document).on("click", "#btnLoadMorePexels", function () {
+      $(document).on("click.v3Gallery", "#btnLoadMorePexels", function () {
         self.currentPexelsPage++;
         self.loadPexelsSuggestions(self.activeSearchQuery, true);
       });
 
       // Single Add Suggested Pexels Photo
       $(document)
-        .off("click", ".btn-add-single-pexels")
-        .on("click", ".btn-add-single-pexels", function (e) {
+        .off("click.v3GallerySinglePexels", ".btn-add-single-pexels")
+        .on("click.v3GallerySinglePexels", ".btn-add-single-pexels", function (e) {
           e.preventDefault();
           e.stopPropagation();
           const $btn = $(this);
@@ -332,6 +368,11 @@
 
           const idx = $btn.data("idx");
           const item = self.pexelsSuggestionsData[idx];
+          if (!item) {
+            $btn.removeAttr("data-busy").prop("disabled", false).html(origHtml);
+            return;
+          }
+
           const chosenDay =
             parseInt(
               $btn
@@ -379,8 +420,8 @@
 
       // Auto-assign All Suggested Day Photos
       $(document)
-        .off("click", "#btnAddAllSuggested")
-        .on("click", "#btnAddAllSuggested", function (e) {
+        .off("click.v3GalleryAllPexels", "#btnAddAllSuggested")
+        .on("click.v3GalleryAllPexels", "#btnAddAllSuggested", function (e) {
           e.preventDefault();
           e.stopPropagation();
           const $btn = $(this);
@@ -389,7 +430,7 @@
           const origHtml = $btn.html();
 
           $btn.html(
-            '<i class="fi fi-rr-spinner spinner"></i> Searching & Auto-Assigning Day Photos...'
+            '<i class="fi fi-rr-spinner spinner"></i> Auto-Assigning Photos...'
           );
 
           $.ajax({
@@ -431,11 +472,10 @@
         });
 
       // Day Assignment dropdown changes
-      $(document).on("change", ".assign-day-select", function () {
+      $(document).on("change.v3Gallery", ".assign-day-select", function () {
         const $select = $(this);
         const imagePath = $select.data("image");
         const newDay = parseInt($select.val()) || 0;
-        const $card = $select.closest(".dash-gallery-card");
 
         $select.prop("disabled", true);
 
@@ -478,7 +518,7 @@
       });
 
       // Set as Featured Image
-      $(document).on("click", ".setGalleryFeatureImage", function (e) {
+      $(document).on("click.v3Gallery", ".setGalleryFeatureImage", function (e) {
         e.preventDefault();
         const $btn = $(this);
         const image = $btn.data("image");
@@ -518,7 +558,7 @@
       });
 
       // Lightbox preview triggers
-      $(document).on("click", ".btn-preview-img", function (e) {
+      $(document).on("click.v3Gallery", ".btn-preview-img", function (e) {
         e.preventDefault();
         self.collectPreviewImages();
         const src = $(this).data("image");
@@ -529,7 +569,7 @@
         self.showLightboxModal();
       });
 
-      $(document).on("click", ".btn-preview-pexels-img", function (e) {
+      $(document).on("click.v3Gallery", ".btn-preview-pexels-img", function (e) {
         e.preventDefault();
         const fullUrl = $(this).data("url");
         const alt = $(this).data("alt") || "Pexels Stock Photo";
@@ -543,11 +583,17 @@
         $("#lightboxModal").addClass("active");
       });
 
-      $(document).on("click", "#lightboxClose", function () {
+      $(document).on("click.v3Gallery", "#lightboxClose", function () {
         $("#lightboxModal").removeClass("active");
       });
 
-      $(document).on("click", "#lightboxPrev", function () {
+      $(document).on("click.v3Gallery", "#lightboxModal", function (e) {
+        if ($(e.target).is("#lightboxModal")) {
+          $("#lightboxModal").removeClass("active");
+        }
+      });
+
+      $(document).on("click.v3Gallery", "#lightboxPrev", function () {
         if (self.previewImages.length === 0) return;
         self.currentLightboxIndex =
           (self.currentLightboxIndex - 1 + self.previewImages.length) %
@@ -555,16 +601,23 @@
         self.showLightboxModal();
       });
 
-      $(document).on("click", "#lightboxNext", function () {
+      $(document).on("click.v3Gallery", "#lightboxNext", function () {
         if (self.previewImages.length === 0) return;
         self.currentLightboxIndex =
           (self.currentLightboxIndex + 1) % self.previewImages.length;
         self.showLightboxModal();
       });
 
-      $(document).on("keydown", function (e) {
+      $(document).on("keydown.v3Gallery", function (e) {
+        if (e.key === "Escape") {
+          if ($("#lightboxModal").hasClass("active")) {
+            $("#lightboxModal").removeClass("active");
+          }
+          if ($(".galleryBox").hasClass("active") || $(".galleryBox").is(":visible")) {
+            self.closeUploadModal();
+          }
+        }
         if ($("#lightboxModal").hasClass("active")) {
-          if (e.key === "Escape") $("#lightboxModal").removeClass("active");
           if (e.key === "ArrowLeft") $("#lightboxPrev").click();
           if (e.key === "ArrowRight") $("#lightboxNext").click();
         }
@@ -572,15 +625,15 @@
     },
 
     openUploadModal: function () {
-      $(".popUp").hide();
+      $(".popUp").hide().removeClass("active");
       this.selectedUploadFiles = [];
       this.syncFileInputAndPreviews();
-      $(".galleryBox").css("display", "flex").fadeIn(200);
+      $(".galleryBox").addClass("active").fadeIn(200);
     },
 
     closeUploadModal: function () {
       this.isUploading = false;
-      $(".galleryBox").fadeOut(200);
+      $(".galleryBox").removeClass("active").fadeOut(200);
       const formElement = document.getElementById("addGalleryForm");
       if (formElement) formElement.reset();
       this.selectedUploadFiles = [];
@@ -704,7 +757,7 @@
 
       self.isUploading = true;
       const $btn = $("#btnSubmitGalleryUpload, #addGallery");
-      const origHtml = $btn.html() || '<i class="fi-rr-check"></i> Upload Now';
+      const origHtml = $btn.html() || '<i class="fi fi-rr-check"></i> Upload Now';
       $btn.prop("disabled", true).addClass("disabled").html('<i class="fi fi-rr-spinner spinner"></i> Uploading...');
 
       const data = new FormData();
@@ -761,10 +814,10 @@
         dataType: "json",
         success: function (res) {
           self.isLoading = false;
-          if (res.status === "success") {
+          if (res && res.status === "success") {
             self.galleryData = res;
             self.galleryId = res.galleryId || 0;
-            self.totalDays = res.package.totalDays || 1;
+            self.totalDays = res.package && res.package.totalDays ? res.package.totalDays : 1;
 
             self.renderHeaderMeta(res.package);
             self.renderKpis(res.stats);
@@ -774,13 +827,39 @@
             if (!self.pexelsLoaded && (!res.images || res.images.length === 0)) {
               self.loadPexelsSuggestions();
             }
+          } else {
+            const errorMsg = res && res.message ? res.message : "Tour Package not found or access denied.";
+            $grid.html(`
+              <div class="gallery-error-state">
+                <i class="fi fi-rr-cross-circle gallery-error-state-icon"></i>
+                <p class="gallery-error-state-text">${errorMsg}</p>
+                <button type="button" class="btn-gallery-action upload" id="btnRetryGalleryLoad">
+                  <i class="fi fi-rr-refresh"></i> Retry
+                </button>
+              </div>
+            `);
+            $("#btnRetryGalleryLoad").off("click").on("click", function () {
+              self.loadGalleryFromApi();
+            });
           }
         },
-        error: function () {
+        error: function (xhr) {
           self.isLoading = false;
-          $grid.html(
-            '<div style="grid-column: 1 / -1; padding: 40px; text-align: center; color: #ef4444;">Failed to load gallery data from API. Please refresh the page.</div>'
-          );
+          const errorMsg = xhr.responseJSON && xhr.responseJSON.message
+            ? xhr.responseJSON.message
+            : "Failed to load gallery data from API. Please try again.";
+          $grid.html(`
+            <div class="gallery-error-state">
+              <i class="fi fi-rr-cross-circle gallery-error-state-icon"></i>
+              <p class="gallery-error-state-text">${errorMsg}</p>
+              <button type="button" class="btn-gallery-action upload" id="btnRetryGalleryLoad">
+                <i class="fi fi-rr-refresh"></i> Retry
+              </button>
+            </div>
+          `);
+          $("#btnRetryGalleryLoad").off("click").on("click", function () {
+            self.loadGalleryFromApi();
+          });
         },
       });
     },
@@ -789,17 +868,23 @@
       if (!pkg) return;
       $("#pkgHeaderTitle").text(pkg.title || 'Tour Package');
       $("#pkgMetaTheme")
-        .attr("class", "pkg-theme-pill " + pkg.themeClass)
-        .text(pkg.themeLabel);
+        .attr("class", "pkg-theme-pill " + (pkg.themeClass || "pkg-theme-standard"))
+        .text(pkg.themeLabel || "Standard");
       $("#pkgMetaDuration").html(
-        `<i class="fi-rr-moon" style="color: #6366f1;"></i> ${pkg.duration}N / <i class="fi-rr-sun" style="color: #f59e0b;"></i> ${pkg.totalDays}D`
+        `<i class="fi fi-rr-moon text-indigo"></i> ${pkg.duration || 0}N / <i class="fi fi-rr-sun text-amber"></i> ${pkg.totalDays || 1}D`
       );
+
+      const fallbackLocation = this.packageType === "international" || pkg.category === "international" ? "International" : "Domestic";
       $("#pkgMetaLocation").html(
-        `<i class="fi-rr-marker" style="color: #0284c7;"></i> ${pkg.location_label || pkg.city || pkg.state || pkg.country || "Domestic"}`
+        `<i class="fi fi-rr-marker text-sky"></i> ${pkg.location_label || pkg.city || pkg.state || pkg.country || fallbackLocation}`
       );
+
       if (pkg.linkUrl) {
-        $("#btnViewLivePackage").attr("href", pkg.linkUrl).show();
+        $("#btnViewLivePackage").attr("href", pkg.linkUrl).removeClass("is-hidden").addClass("is-visible");
+      } else {
+        $("#btnViewLivePackage").addClass("is-hidden").removeClass("is-visible");
       }
+
       if (!$("#pexelsSearchQuery").val()) {
         $("#pexelsSearchQuery").val(pkg.defaultSearchQuery || "");
       }
@@ -926,17 +1011,27 @@
       const self = this;
       const $grid = $("#galleryGrid, .dashboard-gallery-grid");
 
-      if ($("#btnToggleSuggestions").hasClass("active") || $("#pexelsSuggestionPanel").is(":visible")) {
+      // Safely destroy existing select2 instances to avoid memory leaks
+      if ($.fn.select2) {
+        $grid.find(".assign-day-select").each(function () {
+          if ($(this).data("select2")) {
+            $(this).select2("destroy");
+          }
+        });
+      }
+
+      if ($("#btnToggleSuggestions").hasClass("active") || $("#pexelsSuggestionPanel").hasClass("is-visible")) {
         $grid.hide();
       }
 
       if (!images || images.length === 0) {
         self.clearSelection();
         $grid.html(`
-          <div class="empty-state" style="grid-column: 1 / -1; padding: 50px 20px; text-align: center; background: #fff; border-radius: 12px; border: 1px dashed #cbd5e1;">
-            <i class="fi-rr-picture" style="font-size: 36px; color: #94a3b8;"></i>
-            <p style="margin-top: 10px; color: #64748b;">No gallery photos uploaded yet. Pick suggested photos or click <b>Upload Image</b> to add photos.</p>
-            <div style="margin-top: 16px;">
+          <div class="gallery-empty-state">
+            <i class="fi fi-rr-picture gallery-empty-state-icon"></i>
+            <h4 class="gallery-empty-state-title">No Photos Uploaded Yet</h4>
+            <p class="gallery-empty-state-text">Upload tour photos from your device or discover recommended destination photos from Image Suggestions.</p>
+            <div class="gallery-empty-state-action">
               <button type="button" class="btn-gallery-action upload open-gallery-upload-modal">
                 <i class="fi fi-rr-cloud-upload"></i> Upload Image
               </button>
@@ -1054,13 +1149,13 @@
         self.activeSearchQuery = customQuery || "";
         self.pexelsSuggestionsData = [];
         const loadingHtml = `
-          <div class="pexels-loading-state" style="grid-column: 1 / -1; padding: 40px; text-align: center; color: #0284c7;">
-            <i class="fi fi-rr-spinner" style="font-size: 24px; animation: spin 1s linear infinite;"></i>
-            <p style="margin-top: 8px; font-weight: 600;">Fetching day-wise stock photos from Pexels...</p>
+          <div class="pexels-state-card is-loading">
+            <i class="fi fi-rr-spinner pexels-state-icon spinner"></i>
+            <p class="pexels-state-text">Fetching day-wise stock photos from Pexels...</p>
           </div>
         `;
         $("#pexelsGrid").html(loadingHtml);
-        $("#btnLoadMorePexels").hide();
+        $("#btnLoadMorePexels").removeClass("is-visible").hide();
       } else {
         $("#btnLoadMorePexels")
           .prop("disabled", true)
@@ -1088,17 +1183,20 @@
             self.renderPexelsGrid(res.suggestions, isAppend, startIndex);
 
             if (res.hasMore) {
-              $("#btnLoadMorePexels").show();
+              $("#btnLoadMorePexels").addClass("is-visible").show();
             } else {
-              $("#btnLoadMorePexels").hide();
+              $("#btnLoadMorePexels").removeClass("is-visible").hide();
             }
           } else {
             if (!isAppend) {
-              $("#pexelsGrid").html(
-                '<div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: #64748b;">No stock photo suggestions found. Try searching another keyword above.</div>'
-              );
+              $("#pexelsGrid").html(`
+                <div class="pexels-state-card is-empty">
+                  <i class="fi fi-rr-picture pexels-state-icon"></i>
+                  <p class="pexels-state-text">No stock photo suggestions found. Try searching another keyword above.</p>
+                </div>
+              `);
             }
-            $("#btnLoadMorePexels").hide();
+            $("#btnLoadMorePexels").removeClass("is-visible").hide();
           }
         },
         error: function () {
@@ -1106,9 +1204,12 @@
             .prop("disabled", false)
             .html('<i class="fi fi-rr-refresh"></i> Load More Stock Photos');
           if (!isAppend) {
-            $("#pexelsGrid").html(
-              '<div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: #ef4444;">Failed to fetch Pexels suggestions. Please check internet connection or try again.</div>'
-            );
+            $("#pexelsGrid").html(`
+              <div class="pexels-state-card is-error">
+                <i class="fi fi-rr-cross-circle pexels-state-icon"></i>
+                <p class="pexels-state-text">Failed to fetch Pexels suggestions. Please check internet connection or try again.</p>
+              </div>
+            `);
           }
         },
       });
@@ -1205,4 +1306,17 @@
       $("#lightboxModal").addClass("active");
     },
   };
+
+  // Auto-init on direct page load and SPA navigation
+  $(function () {
+    if (window.V3Gallery && typeof window.V3Gallery.autoInit === "function") {
+      window.V3Gallery.autoInit();
+    }
+  });
+
+  $(document).on("spa:loaded", function () {
+    if (window.V3Gallery && typeof window.V3Gallery.autoInit === "function") {
+      window.V3Gallery.autoInit();
+    }
+  });
 });

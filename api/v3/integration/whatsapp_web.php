@@ -140,15 +140,18 @@ $configKeys = [
     'whatsapp_disconnect_alert'
 ];
 
-function getWaWebConfigs($connection, $siteId, $keys) {
+function getWaWebConfigs($connection, $siteId, $keys)
+{
     global $deviceLimit;
-    $escKeys = "'" . implode("','", array_map(function($k) use ($connection) { return mysqli_real_escape_string($connection, $k); }, $keys)) . "'";
+    $escKeys = "'" . implode("','", array_map(function ($k) use ($connection) {
+        return mysqli_real_escape_string($connection, $k);
+    }, $keys)) . "'";
     $sql = "SELECT site_configuration_key, site_configuration_value 
             FROM " . TABLE_PREFIX . "site_configuration 
             WHERE site_configuration_site_id = {$siteId} 
               AND site_configuration_key IN ({$escKeys}) 
               AND site_configuration_status = 1";
-    
+
     $res = mysqli_query($connection, $sql);
     $data = [
         'enable_whatsapp_web_api'       => '0',
@@ -173,7 +176,8 @@ function getWaWebConfigs($connection, $siteId, $keys) {
     return $data;
 }
 
-function saveWaWebConfig($connection, $siteId, $key, $value) {
+function saveWaWebConfig($connection, $siteId, $key, $value)
+{
     $escKey = mysqli_real_escape_string($connection, $key);
     $escVal = mysqli_real_escape_string($connection, $value);
     $sql = "INSERT INTO " . TABLE_PREFIX . "site_configuration 
@@ -183,7 +187,8 @@ function saveWaWebConfig($connection, $siteId, $key, $value) {
     return mysqli_query($connection, $sql);
 }
 
-function callWaGateway($customUrl, $path, $method = 'GET', $body = null) {
+function callWaGateway($customUrl, $path, $method = 'GET', $body = null)
+{
     $gwUrl = !empty($customUrl) ? rtrim($customUrl, '/') : 'http://127.0.0.1:3001';
     $target = $gwUrl . '/' . ltrim($path, '/');
 
@@ -400,7 +405,7 @@ if ($action === 'get_devices' || $action === 'devices') {
         'devices'             => $devices,
         'agents'              => $agents,
         'disconnect_alert'    => !empty($configs['whatsapp_disconnect_alert']) ? json_decode($configs['whatsapp_disconnect_alert'], true) : null,
-        'has_connected_device'=> (function() use ($devices, $userAssignedDevice) {
+        'has_connected_device' => (function () use ($devices, $userAssignedDevice) {
             if ($userAssignedDevice && ($userAssignedDevice['device_status'] ?? '') === 'connected') return true;
             foreach ($devices as $dev) {
                 if (($dev['status'] ?? '') === 'connected') return true;
@@ -1121,7 +1126,7 @@ if ($method === 'GET') {
 
     $scheme = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? 'https' : 'http';
     $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
-    $webhookUrl = "{$scheme}://{$host}/api/v3/whatsapp/webhook.php";
+    $webhookUrl = "{$scheme}://{$host}/api/v3/whatsapp/webhook/";
 
     echo json_encode([
         'status'              => 'success',

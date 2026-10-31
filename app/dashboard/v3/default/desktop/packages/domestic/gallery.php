@@ -7,32 +7,32 @@ if (is_numeric($rawId) && (int)$rawId > 0) {
     $decoded = base64_decode((string)$rawId, true);
     $id = ($decoded !== false && is_numeric($decoded)) ? (int)$decoded : (int)$rawId;
 }
-$encodedId = base64_encode($id);
+$encodedId = base64_encode((string)$id);
 
 ?>
 
-<div class="package-page-wrapper package-gallery-wrapper" id="packageGalleryApp" data-package-id="<?php echo $id; ?>" data-encoded-id="<?php echo $encodedId; ?>">
+<div class="package-page-wrapper package-gallery-wrapper" id="packageGalleryApp" data-package-id="<?php echo $id; ?>" data-encoded-id="<?php echo $encodedId; ?>" data-package-type="domestic">
     <!-- Header Banner -->
     <div class="package-header-bar">
         <div class="package-header-left">
             <div class="package-header-icon">
-                <i class="fi-rr-gallery"></i>
+                <i class="fi fi-rr-gallery"></i>
             </div>
             <div class="package-header-titles">
                 <h2 id="pkgHeaderTitle">Tour Package</h2>
                 <div class="pkg-meta-row mt-1">
                     <span class="pkg-theme-pill pkg-theme-standard" id="pkgMetaTheme">Standard</span>
                     <span class="pkg-duration-badge" id="pkgMetaDuration">
-                        <i class="fi-rr-moon text-indigo"></i> 0N / <i class="fi-rr-sun text-amber"></i> 1D
+                        <i class="fi fi-rr-moon text-indigo"></i> 0N / <i class="fi fi-rr-sun text-amber"></i> 1D
                     </span>
                     <span class="pkg-duration-badge" id="pkgMetaLocation">
-                        <i class="fi-rr-marker text-sky"></i> Domestic
+                        <i class="fi fi-rr-marker text-sky"></i> Domestic
                     </span>
                 </div>
             </div>
         </div>
         <div class="package-header-actions">
-            <a href="#" target="_blank" class="btn-v3-action d-none" id="btnViewLivePackage" data-tooltip="View Live Package" title="View Live Package">
+            <a href="#" target="_blank" class="btn-v3-action is-hidden" id="btnViewLivePackage" data-tooltip="View Live Package" title="View Live Package">
                 <i class="fi fi-rr-eye"></i> View Package
             </a>
             <a href="/dashboard/packages/domestic/list/" class="btn-v3-action" data-tooltip="Back to Domestic Packages List" title="Back to Domestic Packages List">
@@ -47,28 +47,28 @@ $encodedId = base64_encode($id);
     <!-- Quick Metric KPI Row -->
     <div class="package-kpi-row">
         <div class="pkg-mini-kpi indigo">
-            <div class="kpi-icon"><i class="fi-rr-picture"></i></div>
+            <div class="kpi-icon"><i class="fi fi-rr-picture"></i></div>
             <div class="kpi-meta">
                 <p>Total Photos</p>
                 <h3 id="statTotalImages">-</h3>
             </div>
         </div>
         <div class="pkg-mini-kpi emerald">
-            <div class="kpi-icon"><i class="fi-rr-calendar-check"></i></div>
+            <div class="kpi-icon"><i class="fi fi-rr-calendar-check"></i></div>
             <div class="kpi-meta">
                 <p>Days Covered</p>
                 <h3 id="statDaysCovered">-</h3>
             </div>
         </div>
         <div class="pkg-mini-kpi emerald">
-            <div class="kpi-icon"><i class="fi-rr-exclamation"></i></div>
+            <div class="kpi-icon"><i class="fi fi-rr-exclamation"></i></div>
             <div class="kpi-meta">
                 <p>Days Missing Photo</p>
                 <h3 id="statDaysMissing">-</h3>
             </div>
         </div>
         <div class="pkg-mini-kpi sky">
-            <div class="kpi-icon"><i class="fi-rr-star"></i></div>
+            <div class="kpi-icon"><i class="fi fi-rr-star"></i></div>
             <div class="kpi-meta">
                 <p>Featured Cover</p>
                 <h3 id="statFeaturedCover">-</h3>
@@ -88,7 +88,7 @@ $encodedId = base64_encode($id);
             <button type="button" class="theme-filter-btn" data-filter="unassigned" data-tooltip="Show unassigned photos">
                 <i class="fi fi-rr-clock"></i> Unassigned <span class="filter-badge" id="tabCountUnassigned">0</span>
             </button>
-            <button type="button" class="theme-filter-btn btn-suggestions-tab" id="btnToggleSuggestions" data-tooltip="Discover recommended stock photos">
+            <button type="button" class="theme-filter-btn btn-suggestions-tab" id="btnToggleSuggestions" data-filter="suggestions" data-tooltip="Discover recommended stock photos">
                 <i class="fi fi-rr-magic-wand"></i> Image Suggestions
             </button>
         </div>
@@ -102,7 +102,7 @@ $encodedId = base64_encode($id);
     </div>
 
     <!-- Bulk Delete Toolbar -->
-    <div class="gallery-bulk-bar d-none" id="galleryBulkBar">
+    <div class="gallery-bulk-bar" id="galleryBulkBar">
         <div class="bulk-bar-info">
             <label class="gallery-select-all-label">
                 <input type="checkbox" id="chkSelectAllGallery">
@@ -121,7 +121,7 @@ $encodedId = base64_encode($id);
     </div>
 
     <!-- Pexels Stock Suggestions Panel -->
-    <div class="pexels-suggestion-panel d-none" id="pexelsSuggestionPanel">
+    <div class="pexels-suggestion-panel" id="pexelsSuggestionPanel">
         <div class="pexels-suggestion-header">
             <div>
                 <h3><i class="fi fi-rr-magic-wand"></i> Recommended Stock Photos</h3>
@@ -158,7 +158,7 @@ $encodedId = base64_encode($id);
 
         <!-- Infinite Load More Button Container -->
         <div class="pexels-load-more-wrap" id="pexelsLoadMoreWrap">
-            <button type="button" class="btn-pexels-action d-none btn-pexels-load-more" id="btnLoadMorePexels" data-tooltip="Load additional stock photos">
+            <button type="button" class="btn-pexels-action btn-pexels-load-more" id="btnLoadMorePexels" data-tooltip="Load additional stock photos">
                 <i class="fi fi-rr-refresh"></i> Load More Stock Photos
             </button>
         </div>
@@ -184,6 +184,7 @@ $encodedId = base64_encode($id);
                                     <h4 class="heading gallery-modal-title">
                                         <i class="fi fi-rr-cloud-upload"></i> Upload Gallery Photos
                                     </h4>
+                                    <button type="button" class="gallery-modal-close closeGalleryModal" title="Close modal">&times;</button>
                                 </div>
                                 <div class="form-group">
                                     <div id="dropZone" class="gallery-drop-zone">
@@ -221,7 +222,7 @@ $encodedId = base64_encode($id);
                 <button type="button" class="theme-lightbox-close" id="lightboxClose">&times;</button>
             </div>
             <div class="theme-lightbox-body">
-                <img id="lightboxImg" src="" alt="Preview">
+                <img id="lightboxImg" class="theme-lightbox-img" src="" alt="Preview">
             </div>
             <div class="theme-lightbox-footer">
                 <span class="theme-stat-pill is-green" id="lightboxDayBadge"><i class="fi fi-rr-calendar"></i> Day Status</span>

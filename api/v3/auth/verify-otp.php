@@ -54,7 +54,7 @@ $data = !empty($_POST) ? $_POST : $jsonData;
 
 $otpRef = trim($data['otp_ref'] ?? ($data['otp_ref_id'] ?? ''));
 $otpCode = preg_replace('/\D/', '', (string)($data['otp_code'] ?? ($data['otp'] ?? '')));
-$email = trim($data['email'] ?? '');
+$rawTarget = trim($data['identifier'] ?? ($data['email'] ?? ($data['mobile'] ?? '')));
 $redirectUrl = trim($data['redirect_url'] ?? '/dashboard/');
 
 $otpRefId = 0;
@@ -72,7 +72,7 @@ if (strlen($otpCode) !== 6) {
     exit;
 }
 
-if ($otpRefId <= 0 && empty($email)) {
+if ($otpRefId <= 0 && empty($rawTarget)) {
     http_response_code(400);
     echo json_encode([
         'status' => 'error',
@@ -81,12 +81,12 @@ if ($otpRefId <= 0 && empty($email)) {
     exit;
 }
 
-// Find OTP record
-$escEmail = mysqli_real_escape_string($connection, $email);
+// Find OTP record by reference ID or destination
+$escTarget = mysqli_real_escape_string($connection, $rawTarget);
 $otpQuery = "
     SELECT * 
     FROM {$tblPrefix}otp 
-    WHERE (otp_id = {$otpRefId} OR (otp_destination = '{$escEmail}' AND otp_mode = 'email'))
+    WHERE (otp_id = {$otpRefId} OR (otp_destination = '{$escTarget}' AND otp_status = 0))
       AND otp_status = 0
     ORDER BY otp_id DESC 
     LIMIT 1
@@ -107,6 +107,7 @@ $otpRow = mysqli_fetch_assoc($otpRes);
 $currentOtpId = (int)$otpRow['otp_id'];
 $otpDestination = (string)$otpRow['otp_destination'];
 $dbOtpCode = (string)$otpRow['otp_code'];
+$otpMode = strtolower(trim((string)($otpRow['otp_mode'] ?? 'email')));
 $expireTime = strtotime($otpRow['otp_expire']);
 
 if (time() > $expireTime) {
@@ -123,7 +124,7 @@ if ($otpCode !== $dbOtpCode && $otpCode !== '111111') {
     http_response_code(400);
     echo json_encode([
         'status' => 'error',
-        'msg'    => 'Incorrect verification code. Please check your email and try again.'
+        'msg'    => 'Incorrect verification code. Please check and try again.'
     ]);
     exit;
 }
@@ -131,8 +132,25 @@ if ($otpCode !== $dbOtpCode && $otpCode !== '111111') {
 // Mark OTP verified
 mysqli_query($connection, "UPDATE {$tblPrefix}otp SET otp_status = 1 WHERE otp_id = {$currentOtpId}");
 
-// Look up or provision user
+// Look up user (support both mobile and email destinations)
+$isMobileDest = ($otpMode === 'sms') || preg_match('/^[6-9]\d{9}$/', $otpDestination) || (is_numeric($otpDestination) && strlen($otpDestination) >= 10);
 $escDest = mysqli_real_escape_string($connection, $otpDestination);
+
+if ($isMobileDest) {
+    $cleanMobile = preg_replace('/\D/', '', $otpDestination);
+    if (strlen($cleanMobile) === 12 && substr($cleanMobile, 0, 2) === '91') {
+        $cleanMobile = substr($cleanMobile, 2);
+    } elseif (strlen($cleanMobile) === 13 && substr($cleanMobile, 0, 3) === '091') {
+        $cleanMobile = substr($cleanMobile, 3);
+    }
+    $escCleanMobile = mysqli_real_escape_string($connection, $cleanMobile);
+    $userCondition = "(u.user_mobile = '{$escDest}' OR u.user_mobile = '{$escCleanMobile}' OR u.user_email = '{$escDest}')";
+} else {
+    $userCondition = "(u.user_email = '{$escDest}' OR u.user_mobile = '{$escDest}')";
+}
+
+$siteAccessSiteCondition = ($siteId == 234 || $siteId == 49) ? "sa.site_access_site_id IN (49, 234)" : "sa.site_access_site_id = {$siteId}";
+
 $userSql = "
     SELECT 
         u.user_id, 
@@ -151,93 +169,69 @@ $userSql = "
         sa.site_access_meta
     FROM {$tblPrefix}user u
     LEFT JOIN {$tblPrefix}profile p ON p.profile_user_id = u.user_id
-    LEFT JOIN {$tblPrefix}site_access sa ON sa.site_access_user_id = u.user_id AND sa.site_access_site_id = {$siteId}
-    WHERE u.user_email = '{$escDest}'
+    LEFT JOIN {$tblPrefix}site_access sa ON sa.site_access_user_id = u.user_id AND {$siteAccessSiteCondition}
+    WHERE {$userCondition}
     LIMIT 1
 ";
 
 $userRes = mysqli_query($connection, $userSql);
 
-if ($userRes && mysqli_num_rows($userRes) > 0) {
-    $user = mysqli_fetch_assoc($userRes);
-    $userId = (int)$user['user_id'];
-    $userSalt = (string)$user['user_salt_key'];
-    $userRole = strtolower(trim($user['site_access_type'] ?? 'administrator'));
-    $displayName = trim($user['profile_display_name'] ?? '');
-    if (empty($displayName)) {
-        $displayName = trim(($user['profile_first_name'] ?? '') . ' ' . ($user['profile_last_name'] ?? ''));
-    }
-    if (empty($displayName)) {
-        $displayName = $user['user_username'] ?? 'Team Member';
-    }
-    $userEmail = $user['user_email'];
-    $userMobile = $user['user_mobile'] ?? '';
-    $userAvatar = $user['profile_image'] ?? '';
-    $siteMeta = $user['site_access_meta'] ?? '';
-
-    // If site access not granted yet, grant it
-    if (empty($user['site_access_id'])) {
-        mysqli_query($connection, "
-            INSERT INTO {$tblPrefix}site_access 
-                (site_access_site_id, site_access_user_id, site_access_type, site_access_status, site_access_meta)
-            VALUES 
-                ({$siteId}, {$userId}, 'administrator', 1, '')
-        ");
-        $userRole = 'administrator';
-    } else {
-        mysqli_query($connection, "
-            UPDATE {$tblPrefix}site_access 
-            SET site_access_status = 1 
-            WHERE site_access_site_id = {$siteId} AND site_access_user_id = {$userId}
-        ");
-    }
-} else {
-    $userSalt = hash('sha256', uniqid(mt_rand(), true) . $otpDestination . time());
-    $autoPassword = hash('sha256', $userSalt . uniqid('pass_', true));
-    $dummyMobile = '99' . str_pad((string)random_int(10000000, 99999999), 8, '0', STR_PAD_LEFT);
-
-    $rawUsername = strtolower(preg_replace('/[^a-zA-Z0-9]/', '', explode('@', $otpDestination)[0]));
-    if (empty($rawUsername)) {
-        $rawUsername = 'user' . time();
-    }
-    $escUser = mysqli_real_escape_string($connection, $rawUsername);
-    $checkUser = mysqli_query($connection, "SELECT user_id FROM {$tblPrefix}user WHERE user_username = '{$escUser}' LIMIT 1");
-    if ($checkUser && mysqli_num_rows($checkUser) > 0) {
-        $rawUsername = substr($rawUsername, 0, 14) . random_int(100, 999);
-        $escUser = mysqli_real_escape_string($connection, $rawUsername);
-    }
-
-    $insertUser = "
-        INSERT INTO {$tblPrefix}user 
-            (user_parent_id, user_username, user_email, user_mobile, user_password, user_salt_key, user_status, user_reg_time, user_reg_ip)
-        VALUES 
-            (0, '{$escUser}', '{$escDest}', '{$dummyMobile}', '{$autoPassword}', '{$userSalt}', 1, NOW(), '" . ($_SERVER['REMOTE_ADDR'] ?? '127.0.0.1') . "')
-    ";
-    mysqli_query($connection, $insertUser);
-    $userId = mysqli_insert_id($connection);
-
-    $displayName = ucfirst($rawUsername);
-    $escName = mysqli_real_escape_string($connection, $displayName);
-    mysqli_query($connection, "
-        INSERT INTO {$tblPrefix}profile 
-            (profile_user_id, profile_email, profile_display_name) 
-        VALUES 
-            ({$userId}, '{$escDest}', '{$escName}')
-    ");
-
-    mysqli_query($connection, "
-        INSERT INTO {$tblPrefix}site_access 
-            (site_access_site_id, site_access_user_id, site_access_type, site_access_status, site_access_meta)
-        VALUES 
-            ({$siteId}, {$userId}, 'administrator', 1, '')
-    ");
-
-    $userRole = 'administrator';
-    $userEmail = $otpDestination;
-    $userMobile = '';
-    $userAvatar = '';
-    $siteMeta = '';
+if (!$userRes || mysqli_num_rows($userRes) === 0) {
+    http_response_code(403);
+    echo json_encode([
+        'status' => 'error',
+        'code'   => 'access_denied',
+        'msg'    => 'Access denied. You do not have access to this workspace.'
+    ]);
+    exit;
 }
+
+$user = mysqli_fetch_assoc($userRes);
+
+if (empty($user['site_access_id'])) {
+    http_response_code(403);
+    echo json_encode([
+        'status' => 'error',
+        'code'   => 'access_denied',
+        'msg'    => 'Access denied. You do not have access to this workspace.'
+    ]);
+    exit;
+}
+
+if ((int)$user['site_access_status'] !== 1) {
+    http_response_code(403);
+    echo json_encode([
+        'status' => 'error',
+        'code'   => 'access_denied',
+        'msg'    => 'Access denied. Your workspace access has been deactivated.'
+    ]);
+    exit;
+}
+
+if ((int)$user['user_status'] !== 1) {
+    http_response_code(403);
+    echo json_encode([
+        'status' => 'error',
+        'code'   => 'account_inactive',
+        'msg'    => 'Access denied. Your account is inactive.'
+    ]);
+    exit;
+}
+
+$userId = (int)$user['user_id'];
+$userSalt = (string)$user['user_salt_key'];
+$userRole = strtolower(trim($user['site_access_type'] ?? 'administrator'));
+$displayName = trim($user['profile_display_name'] ?? '');
+if (empty($displayName)) {
+    $displayName = trim(($user['profile_first_name'] ?? '') . ' ' . ($user['profile_last_name'] ?? ''));
+}
+if (empty($displayName)) {
+    $displayName = $user['user_username'] ?? 'Team Member';
+}
+$userEmail = $user['user_email'];
+$userMobile = $user['user_mobile'] ?? '';
+$userAvatar = $user['profile_image'] ?? '';
+$siteMeta = $user['site_access_meta'] ?? '';
 
 // Ensure site status is active so isLogin doesn't block dashboard
 mysqli_query($connection, "UPDATE {$tblPrefix}site SET site_status = 1 WHERE site_id = {$siteId}");

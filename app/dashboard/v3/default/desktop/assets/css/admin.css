@@ -5290,11 +5290,16 @@ button.btn-action-icon.delete:hover,
 
 /* Pexels Stock Suggestions Section */
 .pexels-suggestion-panel {
+  display: none;
   background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%) !important;
   border: 1px solid #bae6fd !important;
   border-radius: var(--radius-xl, 14px) !important;
   padding: 20px !important;
   box-shadow: 0 4px 16px rgba(14, 165, 233, 0.08) !important;
+}
+
+.pexels-suggestion-panel.is-visible {
+  display: block !important;
 }
 
 .pexels-suggestion-header {
@@ -5493,6 +5498,8 @@ button.btn-action-icon.delete:hover,
 
 /* Hide dashboard-gallery-grid when Stock Suggestions is active or open */
 .package-gallery-wrapper:has(#btnToggleSuggestions.active)
+  .dashboard-gallery-grid,
+.package-gallery-wrapper:has(#pexelsSuggestionPanel.is-visible)
   .dashboard-gallery-grid,
 .package-gallery-wrapper:has(
     #pexelsSuggestionPanel:not([style*="display: none"])
@@ -5797,6 +5804,22 @@ button.btn-action-icon.delete:hover,
 
 .gallery-bulk-bar.is-visible {
   display: flex !important;
+}
+
+#btnViewLivePackage.is-hidden {
+  display: none !important;
+}
+
+#btnViewLivePackage.is-visible {
+  display: inline-flex !important;
+}
+
+#btnLoadMorePexels {
+  display: none;
+}
+
+#btnLoadMorePexels.is-visible {
+  display: inline-flex !important;
 }
 
 @keyframes slideDownBulk {
@@ -6170,6 +6193,120 @@ button.btn-action-icon.delete:hover,
 #dropZone .previewItem .removeBtn:hover {
   background: #dc2626 !important;
   transform: scale(1.15) !important;
+}
+
+/* Gallery Modal Header & Close Button */
+.gallery-modal-header {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  margin-bottom: 16px !important;
+}
+
+.gallery-modal-close {
+  background: transparent !important;
+  border: none !important;
+  font-size: 24px !important;
+  line-height: 1 !important;
+  color: #64748b !important;
+  cursor: pointer !important;
+  padding: 0 4px !important;
+  transition: color 0.15s ease !important;
+}
+
+.gallery-modal-close:hover {
+  color: #0f172a !important;
+}
+
+/* Gallery Empty & Error States */
+.gallery-empty-state {
+  grid-column: 1 / -1 !important;
+  padding: 50px 20px !important;
+  text-align: center !important;
+  background: #ffffff !important;
+  border-radius: 12px !important;
+  border: 1px dashed #cbd5e1 !important;
+}
+
+.gallery-empty-state-icon {
+  font-size: 36px !important;
+  color: #94a3b8 !important;
+  display: inline-block !important;
+}
+
+.gallery-empty-state-title {
+  margin: 12px 0 6px 0 !important;
+  font-size: 16px !important;
+  font-weight: 700 !important;
+  color: #1e293b !important;
+}
+
+.gallery-empty-state-text {
+  margin: 0 !important;
+  color: #64748b !important;
+  font-size: 13.5px !important;
+}
+
+.gallery-empty-state-action {
+  margin-top: 16px !important;
+}
+
+.gallery-error-state {
+  grid-column: 1 / -1 !important;
+  padding: 40px 20px !important;
+  text-align: center !important;
+  background: #ffffff !important;
+  border-radius: 12px !important;
+  border: 1px solid #fee2e2 !important;
+  color: #dc2626 !important;
+}
+
+.gallery-error-state-icon {
+  font-size: 32px !important;
+  color: #ef4444 !important;
+  display: block !important;
+  margin-bottom: 10px !important;
+}
+
+.gallery-error-state-text {
+  margin: 0 0 14px 0 !important;
+  font-size: 13.5px !important;
+  color: #b91c1c !important;
+}
+
+/* Pexels State Cards */
+.pexels-state-card {
+  grid-column: 1 / -1 !important;
+  padding: 40px 20px !important;
+  text-align: center !important;
+  border-radius: 10px !important;
+}
+
+.pexels-state-card.is-loading {
+  color: #0284c7 !important;
+}
+
+.pexels-state-card.is-empty {
+  color: #64748b !important;
+  background: #ffffff !important;
+  border: 1px dashed #cbd5e1 !important;
+}
+
+.pexels-state-card.is-error {
+  color: #ef4444 !important;
+  background: #ffffff !important;
+  border: 1px solid #fecaca !important;
+}
+
+.pexels-state-icon {
+  font-size: 24px !important;
+  display: inline-block !important;
+}
+
+.pexels-state-text {
+  margin-top: 8px !important;
+  font-weight: 600 !important;
+  font-size: 13px !important;
 }
 
 /* V3 Quill Rich Editor Full Box Clickable & Layout */

@@ -87,13 +87,24 @@ function sendOTPviaMSG91($mobile, $otpCode, $name = 'User', $site_name = 'Aleya.
     $url = "https://control.msg91.com/api/v5/flow/";
 
     $name = (($name != '') ? $name : 'User');
+    $templateId = defined('MSG91_TEMPLATE_ID') ? MSG91_TEMPLATE_ID : '68214b65d6fc051e341d60c2';
+    $authKey    = defined('MSG91_AUTH_KEY')    ? MSG91_AUTH_KEY    : '450705AN4fMGODY6821a622P1';
+
+    $cleanMobile = preg_replace('/\D/', '', (string)$mobile);
+    if (strlen($cleanMobile) === 12 && substr($cleanMobile, 0, 2) === '91') {
+        $cleanMobile = substr($cleanMobile, 2);
+    } elseif (strlen($cleanMobile) === 13 && substr($cleanMobile, 0, 3) === '091') {
+        $cleanMobile = substr($cleanMobile, 3);
+    } elseif (strlen($cleanMobile) === 11 && substr($cleanMobile, 0, 1) === '0') {
+        $cleanMobile = substr($cleanMobile, 1);
+    }
 
     $payload = [
-        "template_id" => MSG91_TEMPLATE_ID,
+        "template_id" => $templateId,
         "recipients" => [
             [
-                "mobiles" => "91" . $mobile,
-                "var1" => $otpCode
+                "mobiles" => "91" . $cleanMobile,
+                "var1" => (string)$otpCode
             ]
         ]
     ];
@@ -101,15 +112,26 @@ function sendOTPviaMSG91($mobile, $otpCode, $name = 'User', $site_name = 'Aleya.
     $headers = [
         'accept: application/json',
         'content-type: application/json',
-        'authkey: ' . MSG91_AUTH_KEY
+        'authkey: ' . $authKey,
+        'Connection: close',
+        'Expect:'
     ];
 
     $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, $url);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_POST, true);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
-    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+    curl_setopt_array($ch, [
+        CURLOPT_URL               => $url,
+        CURLOPT_POST              => true,
+        CURLOPT_POSTFIELDS        => json_encode($payload, JSON_UNESCAPED_SLASHES),
+        CURLOPT_RETURNTRANSFER    => true,
+        CURLOPT_HTTPHEADER        => $headers,
+        CURLOPT_IPRESOLVE         => CURL_IPRESOLVE_V4,      // Avoid IPv6 DNS resolution delays
+        CURLOPT_TCP_NODELAY       => 1,                      // Send TCP packets immediately without Nagle buffering
+        CURLOPT_HTTP_VERSION      => CURL_HTTP_VERSION_1_1,  // Reliable fast HTTP/1.1
+        CURLOPT_CONNECTTIMEOUT_MS => 1500,                   // 1.5s connection timeout
+        CURLOPT_TIMEOUT_MS        => 3000,                   // 3.0s total execution timeout
+        CURLOPT_DNS_CACHE_TIMEOUT => 300,                    // Cache DNS lookup for 5 minutes
+        CURLOPT_NOSIGNAL          => 1                       // Millisecond timeout safety in PHP
+    ]);
 
     $result    = curl_exec($ch);
     $httpCode  = curl_getinfo($ch, CURLINFO_HTTP_CODE);
@@ -122,6 +144,12 @@ function sendOTPviaMSG91($mobile, $otpCode, $name = 'User', $site_name = 'Aleya.
     if ($httpCode != 200) {
         return 'MSG91 API Error: ' . $result;
     }
+
+    $respData = json_decode((string)$result, true);
+    if (isset($respData['type']) && strtolower($respData['type']) === 'error') {
+        return 'MSG91 API Error: ' . ($respData['message'] ?? $result);
+    }
+
     return true;
 }
 function sendOTPviaEmail($email, $otpCode, $name = 'User', $site_name = 'Blumox Technologies')

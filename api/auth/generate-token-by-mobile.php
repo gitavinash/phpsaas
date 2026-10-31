@@ -89,8 +89,10 @@ if ($checkUser = mysqli_query($connection, "SELECT user_id, user_email, user_sal
         setcookie('user_meta', base64_encode($site_access_meta), $cookieOptions);
         setcookie('user_type', base64_encode($user_type), $cookieOptions);
         setcookie('site_app', base64_encode(SITE_APP), $cookieOptions);
+        setcookie('isLogin', '1', $cookieOptions);
 
         $_COOKIE['user_data'] = base64_encode($user_salt_key);
+        $_COOKIE['isLogin'] = '1';
 
         if (headers_sent($file, $line)) {
             error_log("Headers already sent in $file on line $line. Cookies may not work.");
