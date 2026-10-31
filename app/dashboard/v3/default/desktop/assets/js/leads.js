@@ -30,6 +30,7 @@
     selectedLeads: new Set(),
     isLoading: false,
     eventsBound: false,
+    isSyncingFilters: false,
     activeAjaxRequest: null,
     isAdmin: false,
     appElement: null,
@@ -422,9 +423,25 @@
     bindEvents: function () {
       const self = this;
 
+      // Unbind previous event handlers to prevent duplication across SPA transitions
+      $(document).off(".v3LeadsEvents");
+      $("#leadTableSearch").off(".v3Leads");
+      $("#clearLeadSearchBtn").off(".v3Leads");
+      $("#filterLeadStatus").off(".v3Leads");
+      $("#filterLeadAgent").off(".v3Leads");
+      $("#filterLeadSource").off(".v3Leads");
+      $("#filterLeadInterest").off(".v3Leads");
+      $("#filterLeadResponse").off(".v3Leads");
+      $("#btnResetLeadFilters").off(".v3Leads");
+      $("#selectAllLeads").off(".v3Leads");
+      $("#btnApplyBulkAction").off(".v3Leads");
+      $("#leadsPerPage").off(".v3Leads");
+      $("#leadsPrevPage").off(".v3Leads");
+      $("#leadsNextPage").off(".v3Leads");
+
       // 1. Debounced Search Input
       let searchTimeout;
-      $("#leadTableSearch").on("input", function () {
+      $("#leadTableSearch").on("input.v3Leads", function () {
         const val = $(this).val().trim();
         clearTimeout(searchTimeout);
         $("#clearLeadSearchBtn").toggle(val.length > 0);
@@ -435,7 +452,7 @@
         }, 300);
       });
 
-      $("#clearLeadSearchBtn").on("click", function () {
+      $("#clearLeadSearchBtn").on("click.v3Leads", function () {
         $("#leadTableSearch").val("");
         $(this).hide();
         self.activeSearch = "";
@@ -444,7 +461,8 @@
       });
 
       // 2. Filter Dropdowns Change
-      $("#filterLeadStatus").on("change", function () {
+      $("#filterLeadStatus").on("change.v3Leads", function () {
+        if (self.isSyncingFilters) return;
         const val = $(this).val();
         if (self.activeStatus === val) return;
         self.activeStatus = val;
@@ -452,7 +470,8 @@
         self.loadLeads();
       });
 
-      $("#filterLeadAgent").on("change", function () {
+      $("#filterLeadAgent").on("change.v3Leads", function () {
+        if (self.isSyncingFilters) return;
         const val = $(this).val();
         if (self.activeAgent === val) return;
         self.activeAgent = val;
@@ -460,7 +479,8 @@
         self.loadLeads();
       });
 
-      $("#filterLeadSource").on("change", function () {
+      $("#filterLeadSource").on("change.v3Leads", function () {
+        if (self.isSyncingFilters) return;
         const val = $(this).val();
         if (self.activeSource === val) return;
         self.activeSource = val;
@@ -468,7 +488,8 @@
         self.loadLeads();
       });
 
-      $("#filterLeadInterest").on("change", function () {
+      $("#filterLeadInterest").on("change.v3Leads", function () {
+        if (self.isSyncingFilters) return;
         const val = $(this).val();
         if (self.activeInterest === val) return;
         self.activeInterest = val;
@@ -476,16 +497,26 @@
         self.loadLeads();
       });
 
-      $("#filterLeadResponse").on("change", function () {
+      $("#filterLeadResponse").on("change.v3Leads", function () {
+        if (self.isSyncingFilters) return;
         const val = $(this).val();
-        if (self.activeResponse === val) return;
-        self.activeResponse = val;
+        if (val === "due_today" || val === "overdue") {
+          self.activeFollowup = val;
+          self.activeResponse = "all";
+        } else if (val === "all") {
+          self.activeResponse = "all";
+          self.activeFollowup = "all";
+        } else {
+          self.activeResponse = val;
+          self.activeFollowup = "all";
+        }
         self.currentPage = 1;
         self.loadLeads();
       });
 
       // 3. Reset All Filters Button
-      $("#btnResetLeadFilters").on("click", function () {
+      $("#btnResetLeadFilters").on("click.v3Leads", function () {
+        self.isSyncingFilters = true;
         $("#leadTableSearch").val("");
         $("#clearLeadSearchBtn").hide();
         $("#filterLeadDateRange").val("");
@@ -501,6 +532,7 @@
         if (typeof $.fn.select2 !== "undefined") {
           $("#filterLeadStatus, #filterLeadAgent, #filterLeadSource, #filterLeadInterest, #filterLeadResponse").trigger("change.select2");
         }
+        self.isSyncingFilters = false;
 
         self.activeSearch = "";
         self.activeStatus = "all";
@@ -530,65 +562,109 @@
       });
 
       // 3b. Empty State Reset Button Click
-      $(document).on("click", "#btnEmptyStateReset", function () {
+      $(document).on("click.v3LeadsEvents", "#btnEmptyStateReset", function () {
         $("#btnResetLeadFilters").trigger("click");
       });
 
       // 4. Quick KPI Cards Filter Click
-      $(document).on("click", ".lead-kpi-filter-btn", function () {
-        const status = $(this).data("status");
-        const interest = $(this).data("interest");
-        const followup = $(this).data("followup");
-        const response = $(this).data("response");
-
-        if (interest !== undefined) {
-          const intStr = String(interest);
-          self.activeInterest = (self.activeInterest === intStr) ? "all" : intStr;
-          $("#filterLeadInterest").val(self.activeInterest);
-          if (typeof $.fn.select2 !== "undefined") $("#filterLeadInterest").trigger("change.select2");
-          self.currentPage = 1;
-          self.loadLeads();
-          return;
-        }
-
-        if (followup !== undefined) {
-          const foStr = String(followup);
-          self.activeFollowup = (self.activeFollowup === foStr) ? "all" : foStr;
-          self.currentPage = 1;
-          self.loadLeads();
-          return;
-        }
-
-        if (response !== undefined) {
-          const respStr = String(response);
-          self.activeResponse = (self.activeResponse === respStr) ? "all" : respStr;
-          $("#filterLeadResponse").val(self.activeResponse);
-          if (typeof $.fn.select2 !== "undefined") $("#filterLeadResponse").trigger("change.select2");
-          self.currentPage = 1;
-          self.loadLeads();
-          return;
-        }
+      $(document).on("click.v3LeadsEvents", ".lead-kpi-filter-btn", function (e) {
+        e.preventDefault();
+        const $btn = $(this);
+        const status = $btn.data("status");
+        const interest = $btn.data("interest");
+        const followup = $btn.data("followup");
+        const response = $btn.data("response");
 
         if (status !== undefined) {
           const statusStr = String(status);
-          self.activeStatus = (self.activeStatus === statusStr && statusStr !== "all") ? "all" : statusStr;
-          $("#filterLeadStatus").val(self.activeStatus);
-          if (typeof $.fn.select2 !== "undefined") {
-            $("#filterLeadStatus").trigger("change.select2");
+          if (statusStr === "all") {
+            // View All Leads: Reset all quick filter dimensions
+            self.activeStatus = "all";
+            self.activeInterest = "all";
+            self.activeFollowup = "all";
+            self.activeResponse = "all";
+          } else {
+            const isAlreadyActive = (
+              self.activeStatus === statusStr &&
+              self.activeInterest === "all" &&
+              self.activeFollowup === "all" &&
+              self.activeResponse === "all"
+            );
+            if (isAlreadyActive) {
+              self.activeStatus = "all";
+            } else {
+              self.activeStatus = statusStr;
+              self.activeInterest = "all";
+              self.activeFollowup = "all";
+              self.activeResponse = "all";
+            }
           }
-          self.currentPage = 1;
-          self.loadLeads();
+        } else if (interest !== undefined) {
+          const intStr = String(interest);
+          const isAlreadyActive = (
+            self.activeInterest === intStr &&
+            self.activeStatus === "all" &&
+            self.activeFollowup === "all" &&
+            self.activeResponse === "all"
+          );
+          if (isAlreadyActive) {
+            self.activeInterest = "all";
+          } else {
+            self.activeInterest = intStr;
+            self.activeStatus = "all";
+            self.activeFollowup = "all";
+            self.activeResponse = "all";
+          }
+        } else if (followup !== undefined) {
+          const foStr = String(followup);
+          const isAlreadyActive = (
+            self.activeFollowup === foStr &&
+            self.activeStatus === "all" &&
+            self.activeInterest === "all" &&
+            self.activeResponse === "all"
+          );
+          if (isAlreadyActive) {
+            self.activeFollowup = "all";
+          } else {
+            self.activeFollowup = foStr;
+            self.activeStatus = "all";
+            self.activeInterest = "all";
+            self.activeResponse = "all";
+          }
+        } else if (response !== undefined) {
+          const respStr = String(response);
+          const isAlreadyActive = (
+            self.activeResponse === respStr &&
+            self.activeStatus === "all" &&
+            self.activeInterest === "all" &&
+            self.activeFollowup === "all"
+          );
+          if (isAlreadyActive) {
+            self.activeResponse = "all";
+          } else {
+            self.activeResponse = respStr;
+            self.activeStatus = "all";
+            self.activeInterest = "all";
+            self.activeFollowup = "all";
+          }
         }
+
+        // Synchronize toolbar dropdowns safely (without re-triggering AJAX)
+        self.syncFilterDropdowns();
+
+        // Load data with page reset
+        self.currentPage = 1;
+        self.loadLeads();
       });
 
       // 5. Select All Checkbox
-      $("#selectAllLeads").on("change", function () {
+      $("#selectAllLeads").on("change.v3Leads", function () {
         const isChecked = $(this).is(":checked");
         $(".lead-row-checkbox").prop("checked", isChecked).trigger("change");
       });
 
       // 6. Individual Row Checkbox
-      $(document).on("change", ".lead-row-checkbox", function () {
+      $(document).on("change.v3LeadsEvents", ".lead-row-checkbox", function () {
         const id = $(this).val();
         const $row = $(this).closest("tr");
         if ($(this).is(":checked")) {
@@ -602,7 +678,7 @@
       });
 
       // 7. Apply Bulk Actions
-      $("#btnApplyBulkAction").on("click", function () {
+      $("#btnApplyBulkAction").on("click.v3Leads", function () {
         const action = $("#bulkActionSelect").val();
         if (!action) {
           if (typeof popUpMessage === "function") {
@@ -625,7 +701,7 @@
       });
 
       // 8. Inline Agent Assignment Change
-      $(document).on("change", ".inline-agent-select", function () {
+      $(document).on("change.v3LeadsEvents", ".inline-agent-select", function () {
         const $select = $(this);
         const leadId = $select.data("lead-id");
         const newAgentId = $select.val();
@@ -722,13 +798,13 @@
       });
 
       // 9. Pagination Events
-      $("#leadsPerPage").on("change", function () {
+      $("#leadsPerPage").on("change.v3Leads", function () {
         self.limit = parseInt($(this).val(), 10) || 10;
         self.currentPage = 1;
         self.loadLeads();
       });
 
-      $("#leadsPrevPage").on("click", function () {
+      $("#leadsPrevPage").on("click.v3Leads", function () {
         if (self.currentPage > 1) {
           self.currentPage--;
           self.loadLeads();
@@ -736,13 +812,13 @@
         }
       });
 
-      $("#leadsNextPage").on("click", function () {
+      $("#leadsNextPage").on("click.v3Leads", function () {
         self.currentPage++;
         self.loadLeads();
         self.scrollToTop();
       });
 
-      $(document).on("click", ".lead-page-btn", function (e) {
+      $(document).on("click.v3LeadsEvents", ".lead-page-btn", function (e) {
         e.preventDefault();
         const page = parseInt($(this).data("page"), 10);
         if (page > 0 && page !== self.currentPage) {
@@ -987,6 +1063,33 @@
       }
     },
 
+    syncFilterDropdowns: function () {
+      const self = this;
+      self.isSyncingFilters = true;
+
+      if ($("#filterLeadStatus").length) {
+        $("#filterLeadStatus").val(self.activeStatus || "all");
+      }
+      if ($("#filterLeadInterest").length) {
+        $("#filterLeadInterest").val(self.activeInterest || "all");
+      }
+      if ($("#filterLeadResponse").length) {
+        let respVal = "all";
+        if (self.activeFollowup === "due_today" || self.activeFollowup === "overdue") {
+          respVal = self.activeFollowup;
+        } else if (self.activeResponse && self.activeResponse !== "all") {
+          respVal = self.activeResponse;
+        }
+        $("#filterLeadResponse").val(respVal);
+      }
+
+      if (typeof $.fn.select2 !== "undefined") {
+        $("#filterLeadStatus, #filterLeadInterest, #filterLeadResponse").trigger("change.select2");
+      }
+
+      self.isSyncingFilters = false;
+    },
+
     renderKPIs: function (stats) {
       const self = this;
       $("#statTotalLeads").text(stats.total || 0);
@@ -1001,16 +1104,16 @@
 
       // Highlight active KPI filter card
       $(".lead-kpi-filter-btn").removeClass("active");
-      if (self.activeInterest && self.activeInterest !== "all") {
-        $(`.lead-kpi-filter-btn[data-interest="${self.activeInterest}"]`).addClass("active");
-      } else if (self.activeFollowup && self.activeFollowup !== "all") {
-        $(`.lead-kpi-filter-btn[data-followup="${self.activeFollowup}"]`).addClass("active");
-      } else if (self.activeResponse && self.activeResponse !== "all") {
-        $(`.lead-kpi-filter-btn[data-response="${self.activeResponse}"]`).addClass("active");
-      } else if (self.activeStatus && self.activeStatus !== "all") {
+      if (self.activeStatus === "all" && self.activeInterest === "all" && self.activeFollowup === "all" && self.activeResponse === "all") {
+        $('.lead-kpi-filter-btn[data-status="all"]').addClass("active");
+      } else if (self.activeStatus && self.activeStatus !== "all" && self.activeInterest === "all" && self.activeFollowup === "all" && self.activeResponse === "all") {
         $(`.lead-kpi-filter-btn[data-status="${self.activeStatus}"]`).addClass("active");
-      } else {
-        $(`.lead-kpi-filter-btn[data-status="all"]`).addClass("active");
+      } else if (self.activeInterest && self.activeInterest !== "all" && self.activeStatus === "all" && self.activeFollowup === "all" && self.activeResponse === "all") {
+        $(`.lead-kpi-filter-btn[data-interest="${self.activeInterest}"]`).addClass("active");
+      } else if (self.activeFollowup && self.activeFollowup !== "all" && self.activeStatus === "all" && self.activeInterest === "all" && self.activeResponse === "all") {
+        $(`.lead-kpi-filter-btn[data-followup="${self.activeFollowup}"]`).addClass("active");
+      } else if (self.activeResponse && self.activeResponse !== "all" && self.activeStatus === "all" && self.activeInterest === "all" && self.activeFollowup === "all") {
+        $(`.lead-kpi-filter-btn[data-response="${self.activeResponse}"]`).addClass("active");
       }
     },
 

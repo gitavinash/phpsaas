@@ -126,7 +126,7 @@ $statusFilter = "";
 $rawStatus = isset($reqData['status']) ? trim((string)$reqData['status']) : (isset($reqData['leadStatus']) ? trim((string)$reqData['leadStatus']) : '');
 if ($rawStatus !== '' && $rawStatus !== 'all') {
     if (strpos($rawStatus, ',') !== false) {
-        $stParts = array_filter(array_map('intval', explode(',', $rawStatus)), function($v) {
+        $stParts = array_filter(array_map('intval', explode(',', $rawStatus)), function ($v) {
             return $v >= 0;
         });
         if (!empty($stParts)) {
@@ -136,10 +136,10 @@ if ($rawStatus !== '' && $rawStatus !== 'all') {
         // Status 16 (Cancelled) and status 4 (historical failed/cancelled) both represent cancelled enquiries
         $statusFilter = " AND e.enquiry_status IN (4, 16)";
     } elseif ($rawStatus === '9' || $rawStatus === 'itinerary_sent' || $rawStatus === 'quote_sent') {
-        $statusFilter = " AND (e.enquiry_status = 9 OR (e.enquiry_status NOT IN (1, 6, 4, 5, 7, 15, 16, 17, 18) AND e.enquiry_id IN (SELECT quotation_ref_id FROM {$tblPrefix}quotation WHERE quotation_status = 0{$siteQuotationFilter})))";
+        $statusFilter = " AND (e.enquiry_status = 9 OR (e.enquiry_status NOT IN (1, 6, 4, 5, 7, 15, 16, 17, 18, 28, 29) AND e.enquiry_id IN (SELECT quotation_ref_id FROM {$tblPrefix}quotation WHERE quotation_status = 0 AND quotation_ref_id IS NOT NULL{$siteQuotationFilter})))";
     } elseif (in_array((int)$rawStatus, [0, 2, 3], true)) {
         $targetStatus = (int)$rawStatus;
-        $statusFilter = " AND e.enquiry_status = {$targetStatus} AND e.enquiry_id NOT IN (SELECT quotation_ref_id FROM {$tblPrefix}quotation WHERE quotation_status = 0{$siteQuotationFilter})";
+        $statusFilter = " AND e.enquiry_status = {$targetStatus} AND e.enquiry_id NOT IN (SELECT quotation_ref_id FROM {$tblPrefix}quotation WHERE quotation_status = 0 AND quotation_ref_id IS NOT NULL{$siteQuotationFilter})";
     } else {
         $targetStatus = (int)$rawStatus;
         $statusFilter = " AND e.enquiry_status = {$targetStatus}";
@@ -171,6 +171,9 @@ if ($hasCrmCols && $rawInterest !== '' && $rawInterest !== 'all') {
     $interestFilter = " AND e.enquiry_interest_level = '{$escInterest}'";
 }
 
+// Common closed status IDs consistent with isClosedLeadStatus()
+$closedStatusIds = '1, 4, 5, 8, 11, 12, 13, 14, 15, 16, 17, 18, 28, 29';
+
 // Response Indicator Filter
 $responseFilter = "";
 $rawResp = isset($reqData['response_status']) ? trim((string)$reqData['response_status']) : (isset($reqData['response']) ? trim((string)$reqData['response']) : '');
@@ -178,33 +181,38 @@ if ($hasCrmCols && $rawResp !== '' && $rawResp !== 'all') {
     if ($rawResp === 'no_activity') {
         $responseFilter = " AND (e.enquiry_last_contacted_at IS NULL AND e.enquiry_last_customer_response_at IS NULL)";
     } elseif ($rawResp === 'awaiting_response') {
-        $responseFilter = " AND e.enquiry_last_contacted_at > DATE_SUB(NOW(), INTERVAL 24 HOUR) AND (e.enquiry_last_customer_response_at IS NULL OR e.enquiry_last_customer_response_at < e.enquiry_last_contacted_at) AND e.enquiry_status NOT IN (1, 4, 5, 8, 11, 12, 13, 14, 15, 16, 17, 18, 28, 29)";
+        $responseFilter = " AND e.enquiry_last_contacted_at > DATE_SUB(NOW(), INTERVAL 24 HOUR) AND (e.enquiry_last_customer_response_at IS NULL OR e.enquiry_last_customer_response_at < e.enquiry_last_contacted_at) AND e.enquiry_status NOT IN ({$closedStatusIds})";
     } elseif ($rawResp === 'responded') {
         $responseFilter = " AND e.enquiry_last_customer_response_at IS NOT NULL AND e.enquiry_last_customer_response_at >= COALESCE(e.enquiry_last_contacted_at, '1970-01-01')";
     } elseif ($rawResp === 'no_response_24h') {
-        $responseFilter = " AND e.enquiry_last_contacted_at <= DATE_SUB(NOW(), INTERVAL 24 HOUR) AND e.enquiry_last_contacted_at > DATE_SUB(NOW(), INTERVAL 48 HOUR) AND (e.enquiry_last_customer_response_at IS NULL OR e.enquiry_last_customer_response_at < e.enquiry_last_contacted_at) AND e.enquiry_status NOT IN (1, 4, 5, 8, 11, 12, 13, 14, 15, 16, 17, 18, 28, 29)";
+        $responseFilter = " AND e.enquiry_last_contacted_at <= DATE_SUB(NOW(), INTERVAL 24 HOUR) AND (e.enquiry_last_customer_response_at IS NULL OR e.enquiry_last_customer_response_at < e.enquiry_last_contacted_at) AND e.enquiry_status NOT IN ({$closedStatusIds})";
     } elseif ($rawResp === 'no_response_48h') {
-        $responseFilter = " AND e.enquiry_last_contacted_at <= DATE_SUB(NOW(), INTERVAL 48 HOUR) AND e.enquiry_last_contacted_at > DATE_SUB(NOW(), INTERVAL 7 DAY) AND (e.enquiry_last_customer_response_at IS NULL OR e.enquiry_last_customer_response_at < e.enquiry_last_contacted_at) AND e.enquiry_status NOT IN (1, 4, 5, 8, 11, 12, 13, 14, 15, 16, 17, 18, 28, 29)";
+        $responseFilter = " AND e.enquiry_last_contacted_at <= DATE_SUB(NOW(), INTERVAL 48 HOUR) AND (e.enquiry_last_customer_response_at IS NULL OR e.enquiry_last_customer_response_at < e.enquiry_last_contacted_at) AND e.enquiry_status NOT IN ({$closedStatusIds})";
     } elseif ($rawResp === 'no_response_7d') {
-        $responseFilter = " AND e.enquiry_last_contacted_at <= DATE_SUB(NOW(), INTERVAL 7 DAY) AND (e.enquiry_last_customer_response_at IS NULL OR e.enquiry_last_customer_response_at < e.enquiry_last_contacted_at) AND e.enquiry_status NOT IN (1, 4, 5, 8, 11, 12, 13, 14, 15, 16, 17, 18, 28, 29)";
+        $responseFilter = " AND e.enquiry_last_contacted_at <= DATE_SUB(NOW(), INTERVAL 7 DAY) AND (e.enquiry_last_customer_response_at IS NULL OR e.enquiry_last_customer_response_at < e.enquiry_last_contacted_at) AND e.enquiry_status NOT IN ({$closedStatusIds})";
     }
 }
 
 // Operational Follow-Up Filter
 $followupFilter = "";
 $rawFollowupF = isset($reqData['followup_filter']) ? trim((string)$reqData['followup_filter']) : '';
+// If follow-up schedule was selected in the response dropdown (due_today, overdue)
+if (empty($rawFollowupF) && in_array($rawResp, ['due_today', 'overdue'], true)) {
+    $rawFollowupF = $rawResp;
+}
+
 $todayStart = date('Y-m-d 00:00:00');
 $todayEnd   = date('Y-m-d 23:59:59');
 if ($rawFollowupF === 'due_today') {
-    $followupFilter = " AND e.enquiry_followup BETWEEN '{$todayStart}' AND '{$todayEnd}'";
+    $followupFilter = " AND e.enquiry_followup BETWEEN '{$todayStart}' AND '{$todayEnd}' AND e.enquiry_status NOT IN ({$closedStatusIds})";
 } elseif ($rawFollowupF === 'overdue') {
-    $followupFilter = " AND e.enquiry_followup < '{$todayStart}' AND e.enquiry_followup != '0000-00-00 00:00:00'";
+    $followupFilter = " AND e.enquiry_followup < '{$todayStart}' AND e.enquiry_followup != '0000-00-00 00:00:00' AND e.enquiry_status NOT IN ({$closedStatusIds})";
 } elseif ($hasCrmCols && $rawFollowupF === 'no_response_24h') {
-    $followupFilter = " AND e.enquiry_last_contacted_at <= DATE_SUB(NOW(), INTERVAL 24 HOUR) AND (e.enquiry_last_customer_response_at IS NULL OR e.enquiry_last_customer_response_at < e.enquiry_last_contacted_at) AND e.enquiry_status NOT IN (1, 4, 5, 8, 11, 12, 13, 14, 15, 16, 17, 18, 28, 29)";
+    $followupFilter = " AND e.enquiry_last_contacted_at <= DATE_SUB(NOW(), INTERVAL 24 HOUR) AND (e.enquiry_last_customer_response_at IS NULL OR e.enquiry_last_customer_response_at < e.enquiry_last_contacted_at) AND e.enquiry_status NOT IN ({$closedStatusIds})";
 } elseif ($hasCrmCols && $rawFollowupF === 'no_response_48h') {
-    $followupFilter = " AND e.enquiry_last_contacted_at <= DATE_SUB(NOW(), INTERVAL 48 HOUR) AND (e.enquiry_last_customer_response_at IS NULL OR e.enquiry_last_customer_response_at < e.enquiry_last_contacted_at) AND e.enquiry_status NOT IN (1, 4, 5, 8, 11, 12, 13, 14, 15, 16, 17, 18, 28, 29)";
+    $followupFilter = " AND e.enquiry_last_contacted_at <= DATE_SUB(NOW(), INTERVAL 48 HOUR) AND (e.enquiry_last_customer_response_at IS NULL OR e.enquiry_last_customer_response_at < e.enquiry_last_contacted_at) AND e.enquiry_status NOT IN ({$closedStatusIds})";
 } elseif ($hasCrmCols && $rawFollowupF === 'no_response_7d') {
-    $followupFilter = " AND e.enquiry_last_contacted_at <= DATE_SUB(NOW(), INTERVAL 7 DAY) AND (e.enquiry_last_customer_response_at IS NULL OR e.enquiry_last_customer_response_at < e.enquiry_last_contacted_at) AND e.enquiry_status NOT IN (1, 4, 5, 8, 11, 12, 13, 14, 15, 16, 17, 18, 28, 29)";
+    $followupFilter = " AND e.enquiry_last_contacted_at <= DATE_SUB(NOW(), INTERVAL 7 DAY) AND (e.enquiry_last_customer_response_at IS NULL OR e.enquiry_last_customer_response_at < e.enquiry_last_contacted_at) AND e.enquiry_status NOT IN ({$closedStatusIds})";
 }
 
 // Travel Date Range Filter
@@ -289,18 +297,18 @@ $statsQuery = "SELECT
     SUM(CASE WHEN (e.enquiry_status = 9 OR (e.enquiry_status NOT IN (1, 6, 4, 5, 7, 15, 16, 17, 18, 28, 29) AND q.quotation_id IS NOT NULL)) THEN 1 ELSE 0 END) AS itinerary_count,
     SUM(CASE WHEN e.enquiry_status = 6 THEN 1 ELSE 0 END) AS payment_count,
     SUM(CASE WHEN e.enquiry_status = 1 THEN 1 ELSE 0 END) AS confirmed_count,
-    SUM(CASE WHEN e.enquiry_status IN (4, 5, 7, 15, 16, 17, 18, 28, 29) THEN 1 ELSE 0 END) AS closed_count,
+    SUM(CASE WHEN e.enquiry_status IN ({$closedStatusIds}) THEN 1 ELSE 0 END) AS closed_count,
     " . ($hasCrmCols ? "SUM(CASE WHEN e.enquiry_interest_level = 'Hot' THEN 1 ELSE 0 END)" : "0") . " AS hot_count,
     " . ($hasCrmCols ? "SUM(CASE WHEN e.enquiry_interest_level = 'Warm' THEN 1 ELSE 0 END)" : "0") . " AS warm_count,
-    SUM(CASE WHEN e.enquiry_followup BETWEEN '{$todayStart}' AND '{$todayEnd}' THEN 1 ELSE 0 END) AS due_today_count,
-    SUM(CASE WHEN e.enquiry_followup < '{$todayStart}' AND e.enquiry_followup != '0000-00-00 00:00:00' AND e.enquiry_status NOT IN (1, 4, 5, 15, 16, 17, 18, 28, 29) THEN 1 ELSE 0 END) AS overdue_count,
-    " . ($hasCrmCols ? "SUM(CASE WHEN e.enquiry_last_contacted_at <= DATE_SUB(NOW(), INTERVAL 24 HOUR) AND (e.enquiry_last_customer_response_at IS NULL OR e.enquiry_last_customer_response_at < e.enquiry_last_contacted_at) AND e.enquiry_status NOT IN (1, 4, 5, 8, 11, 12, 13, 14, 15, 16, 17, 18, 28, 29) THEN 1 ELSE 0 END)" : "0") . " AS no_resp_24h_count,
-    " . ($hasCrmCols ? "SUM(CASE WHEN e.enquiry_last_contacted_at <= DATE_SUB(NOW(), INTERVAL 48 HOUR) AND (e.enquiry_last_customer_response_at IS NULL OR e.enquiry_last_customer_response_at < e.enquiry_last_contacted_at) AND e.enquiry_status NOT IN (1, 4, 5, 8, 11, 12, 13, 14, 15, 16, 17, 18, 28, 29) THEN 1 ELSE 0 END)" : "0") . " AS no_resp_48h_count
+    SUM(CASE WHEN e.enquiry_followup BETWEEN '{$todayStart}' AND '{$todayEnd}' AND e.enquiry_status NOT IN ({$closedStatusIds}) THEN 1 ELSE 0 END) AS due_today_count,
+    SUM(CASE WHEN e.enquiry_followup < '{$todayStart}' AND e.enquiry_followup != '0000-00-00 00:00:00' AND e.enquiry_status NOT IN ({$closedStatusIds}) THEN 1 ELSE 0 END) AS overdue_count,
+    " . ($hasCrmCols ? "SUM(CASE WHEN e.enquiry_last_contacted_at <= DATE_SUB(NOW(), INTERVAL 24 HOUR) AND (e.enquiry_last_customer_response_at IS NULL OR e.enquiry_last_customer_response_at < e.enquiry_last_contacted_at) AND e.enquiry_status NOT IN ({$closedStatusIds}) THEN 1 ELSE 0 END)" : "0") . " AS no_resp_24h_count,
+    " . ($hasCrmCols ? "SUM(CASE WHEN e.enquiry_last_contacted_at <= DATE_SUB(NOW(), INTERVAL 48 HOUR) AND (e.enquiry_last_customer_response_at IS NULL OR e.enquiry_last_customer_response_at < e.enquiry_last_contacted_at) AND e.enquiry_status NOT IN ({$closedStatusIds}) THEN 1 ELSE 0 END)" : "0") . " AS no_resp_48h_count
 FROM {$tblPrefix}enquiry e
 LEFT JOIN (
     SELECT quotation_ref_id, MIN(quotation_id) AS quotation_id
     FROM {$tblPrefix}quotation
-    WHERE quotation_status = 0{$siteQuotationFilter}
+    WHERE quotation_status = 0 AND quotation_ref_id IS NOT NULL{$siteQuotationFilter}
     GROUP BY quotation_ref_id
 ) q ON e.enquiry_id = q.quotation_ref_id
 WHERE {$siteFilter}{$userFilter}{$statsDateFilter}{$sourceFilter}";
@@ -425,8 +433,9 @@ if (isset($connection) && ($res = mysqli_query($connection, $leadsQuery))) {
             if ($fTs && date('Y', $fTs) > 2000) {
                 $now = time();
                 $isToday = (date('Y-m-d', $fTs) === date('Y-m-d', $now));
-                $isOverdue = ($fTs < $now && !$isToday);
-                $badge = $isOverdue ? 'overdue' : ($isToday ? 'today' : 'upcoming');
+                $isClosed = isClosedLeadStatus($effectiveStatus);
+                $isOverdue = ($fTs < $now && !$isToday && !$isClosed);
+                $badge = $isClosed ? 'none' : ($isOverdue ? 'overdue' : ($isToday ? 'today' : 'upcoming'));
                 $nextFollowupData = [
                     'is_scheduled'   => true,
                     'datetime'       => date('Y-m-d H:i:s', $fTs),
@@ -434,9 +443,9 @@ if (isset($connection) && ($res = mysqli_query($connection, $leadsQuery))) {
                     'due_formatted'  => date('d M Y, h:i A', $fTs),
                     'due_at'         => date('d M Y, h:i A', $fTs),
                     'badge'          => $badge,
-                    'badge_label'    => $isOverdue ? 'Overdue' : ($isToday ? 'Due Today' : 'Upcoming'),
+                    'badge_label'    => $isClosed ? 'Closed' : ($isOverdue ? 'Overdue' : ($isToday ? 'Due Today' : 'Upcoming')),
                     'is_overdue'     => $isOverdue,
-                    'is_today'       => $isToday,
+                    'is_today'       => ($isToday && !$isClosed),
                 ];
             }
         }
@@ -484,7 +493,7 @@ if (isset($connection) && ($res = mysqli_query($connection, $leadsQuery))) {
             'agent_id'            => $agentId,
             'agent_name'          => $agentName,
             'recent_note_type'    => trim($row['enquiry_notes_meta_type'] ?? ''),
-            'recent_note'         => (function() use ($row) {
+            'recent_note'         => (function () use ($row) {
                 $type = trim($row['enquiry_notes_meta_type'] ?? '');
                 $val  = trim($row['enquiry_notes_meta_value'] ?? '');
                 if (stripos($val, 'Lead status updated to Itinerary') !== false || (stripos($val, 'Itinerary / Quotation Sent') !== false && ($type === 'status' || stripos($val, 'Lead status') !== false))) {
