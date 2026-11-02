@@ -709,6 +709,36 @@ function getWorkflowModuleCatalog()
                 'color' => '#8b5cf6',
                 'badge' => 'Developer',
                 'description' => 'Listen for custom webhooks from Zapier, Make.com, n8n, or external landing pages.'
+            ],
+            [
+                'id' => 'booking_confirmed',
+                'category' => 'trigger',
+                'title' => 'Booking Confirmed',
+                'subtitle' => 'Advance deposit paid & voucher issued',
+                'icon' => 'fi-rr-check-circle',
+                'color' => '#10b981',
+                'badge' => 'Booking Ops',
+                'description' => 'Triggers when a tour package booking is confirmed and voucher is issued.'
+            ],
+            [
+                'id' => 'lead_idle_timeout',
+                'category' => 'trigger',
+                'title' => 'Follow-up Overdue',
+                'subtitle' => 'Lead inactive for 24h, 48h, or 3 days',
+                'icon' => 'fi-rr-alarm-clock',
+                'color' => '#f97316',
+                'badge' => 'SLA & Retention',
+                'description' => 'Fires when no note, call, or stage update occurs within SLA threshold.'
+            ],
+            [
+                'id' => 'trip_completed',
+                'category' => 'trigger',
+                'title' => 'Trip Completed / Returned',
+                'subtitle' => 'Traveler returned home from tour',
+                'icon' => 'fi-rr-plane-arrival',
+                'color' => '#3b82f6',
+                'badge' => 'Post-Trip Ops',
+                'description' => 'Executes when traveler completes trip to collect reviews and offer rewards.'
             ]
         ],
         'actions' => [
@@ -801,6 +831,46 @@ function getWorkflowModuleCatalog()
                 'color' => '#6366f1',
                 'badge' => 'Integrations',
                 'description' => 'Transmits customer and workflow data to Zapier, Google Sheets, or custom API.'
+            ],
+            [
+                'id' => 'send_whatsapp_buttons',
+                'category' => 'action',
+                'title' => 'WhatsApp Quick Buttons',
+                'subtitle' => 'Interactive 3-button response menu',
+                'icon' => 'fi-rr-menu-dots',
+                'color' => '#059669',
+                'badge' => 'Interactive WA',
+                'description' => 'Dispatches WhatsApp message with clickable Quick Action buttons.'
+            ],
+            [
+                'id' => 'send_email',
+                'category' => 'action',
+                'title' => 'Send Email Proposal',
+                'subtitle' => 'Branded email with attached PDF itinerary',
+                'icon' => 'fi-rr-envelope',
+                'color' => '#2563eb',
+                'badge' => 'Email Ops',
+                'description' => 'Dispatches tailored proposal email with attached voucher or PDF brochure.'
+            ],
+            [
+                'id' => 'notify_internal_team',
+                'category' => 'action',
+                'title' => 'Internal Team Alert',
+                'subtitle' => 'Bell notification or team alert',
+                'icon' => 'fi-rr-bell-ring',
+                'color' => '#ef4444',
+                'badge' => 'Team Alert',
+                'description' => 'Sends instant alert to assigned agent or sales manager when hot lead engages.'
+            ],
+            [
+                'id' => 'request_feedback',
+                'category' => 'action',
+                'title' => 'Request Review & Feedback',
+                'subtitle' => 'Post-trip Google / TripAdvisor review',
+                'icon' => 'fi-rr-star',
+                'color' => '#eab308',
+                'badge' => 'Reputation',
+                'description' => 'Sends automated review invitation link with loyalty discount incentive.'
             ]
         ],
         'logic' => [
@@ -823,6 +893,16 @@ function getWorkflowModuleCatalog()
                 'color' => '#64748b',
                 'badge' => 'Timing',
                 'description' => 'Pauses workflow execution before executing subsequent follow-up steps.'
+            ],
+            [
+                'id' => 'working_hours_check',
+                'category' => 'logic',
+                'title' => 'Working Hours Router',
+                'subtitle' => 'Route day hours vs after-hours night bot',
+                'icon' => 'fi-rr-clock',
+                'color' => '#6366f1',
+                'badge' => 'Work Hours',
+                'description' => 'Routes workflow based on whether inquiry arrived during office operating hours.'
             ]
         ]
     ];
@@ -1316,6 +1396,50 @@ switch ($action) {
                         ];
                         break;
 
+                    case 'booking_confirmed':
+                        $pkgType = $config['package_type'] ?? 'all';
+                        $minVal = floatval($config['min_amount'] ?? 0);
+                        $friendlyHeadline = 'Booking Confirmed';
+                        $friendlySummary = 'Tour booking confirmed & voucher generated for ' . ($context['name'] ?? 'Traveler');
+                        $friendlyIcon = 'fi-rr-check-circle';
+                        $friendlyColor = '#10b981';
+                        $friendlyPill = 'Voucher Issued';
+                        $stepMessage = 'Simulated booking confirmation: Deposit cleared and booking voucher issued.';
+                        $stepDetails = [
+                            'traveler' => $context['name'] ?? 'Traveler',
+                            'package_type' => $pkgType,
+                            'status' => 'confirmed'
+                        ];
+                        break;
+
+                    case 'lead_idle_timeout':
+                        $idleHours = $config['idle_hours'] ?? '24';
+                        $friendlyHeadline = 'Follow-up Overdue (' . $idleHours . 'h)';
+                        $friendlySummary = 'Lead has been inactive without agent touch for ' . $idleHours . ' hours';
+                        $friendlyIcon = 'fi-rr-alarm-clock';
+                        $friendlyColor = '#f97316';
+                        $friendlyPill = $idleHours . 'h Inactive';
+                        $stepMessage = 'SLA monitor triggered: Inactivity threshold exceeded for ' . ($context['name'] ?? 'Lead') . '.';
+                        $stepDetails = [
+                            'idle_hours' => $idleHours,
+                            'alert_manager' => ($config['alert_manager'] ?? '1') === '1'
+                        ];
+                        break;
+
+                    case 'trip_completed':
+                        $friendlyHeadline = 'Trip Completed: ' . ($context['name'] ?? 'Traveler');
+                        $friendlySummary = 'Traveler completed vacation to ' . ($context['destination'] ?? 'Destination') . ' and returned safely';
+                        $friendlyIcon = 'fi-rr-plane-arrival';
+                        $friendlyColor = '#3b82f6';
+                        $friendlyPill = 'Trip Returned';
+                        $stepMessage = 'Trip completed: Return date arrived. Initiated post-trip operations.';
+                        $stepDetails = [
+                            'traveler' => $context['name'] ?? 'Traveler',
+                            'destination' => $context['destination'] ?? 'Destination',
+                            'returned' => true
+                        ];
+                        break;
+
                     case 'lead_created':
                     default:
                         $source = $context['source'] ?? 'Facebook Lead Ads';
@@ -1339,76 +1463,95 @@ switch ($action) {
                         break;
                 }
             } elseif ($nodeCategory === 'logic') {
-                $field = $config['field'] ?? 'destination';
-                $operator = $config['operator'] ?? 'contains';
-                $expected = trim($config['value'] ?? '');
-
-                // Resolve target value from context
-                $valToCheck = '';
-                if ($field === 'destination') {
-                    $valToCheck = $context['destination'] ?? '';
-                } elseif ($field === 'source') {
-                    $valToCheck = $context['source'] ?? '';
-                } elseif ($field === 'budget') {
-                    $valToCheck = $context['budget'] ?? '';
-                } elseif ($field === 'pax') {
-                    $valToCheck = $context['pax'] ?? '2';
-                } elseif ($field === 'message_content' || $field === 'message') {
-                    $valToCheck = $context['message'] ?? '';
+                $logicType = $node['action_type'] ?? 'condition_branch';
+                if ($logicType === 'working_hours_check') {
+                    $start = $config['start_time'] ?? '09:30';
+                    $end = $config['end_time'] ?? '19:30';
+                    $match = true; // In simulation test, office hours evaluation
+                    $stepStatus = 'success';
+                    $friendlyColor = '#6366f1';
+                    $friendlyIcon = 'fi-rr-clock';
+                    $friendlyHeadline = 'Office Hours Active (' . $start . ' - ' . $end . ')';
+                    $friendlySummary = 'Simulated inquiry arrived during working hours. Routing to Day Team.';
+                    $friendlyPill = 'Day Route Active';
+                    $stepMessage = 'Evaluated office operating hours (' . $start . ' to ' . $end . '): OPEN. Routing flow along YES branch.';
+                    $stepDetails = [
+                        'start_time' => $start,
+                        'end_time' => $end,
+                        'is_open' => true,
+                        'branch' => 'yes'
+                    ];
                 } else {
-                    $valToCheck = $context[$field] ?? '';
-                }
+                    $field = $config['field'] ?? 'destination';
+                    $operator = $config['operator'] ?? 'contains';
+                    $expected = trim($config['value'] ?? '');
 
-                $match = false;
-
-                if ($operator === 'contains') {
-                    if ($expected === '') {
-                        $match = true;
+                    // Resolve target value from context
+                    $valToCheck = '';
+                    if ($field === 'destination') {
+                        $valToCheck = $context['destination'] ?? '';
+                    } elseif ($field === 'source') {
+                        $valToCheck = $context['source'] ?? '';
+                    } elseif ($field === 'budget') {
+                        $valToCheck = $context['budget'] ?? '';
+                    } elseif ($field === 'pax') {
+                        $valToCheck = $context['pax'] ?? '2';
+                    } elseif ($field === 'message_content' || $field === 'message') {
+                        $valToCheck = $context['message'] ?? '';
                     } else {
-                        $terms = array_map('trim', explode(',', strtolower($expected)));
-                        $targetLower = strtolower($valToCheck);
-                        foreach ($terms as $t) {
-                            if ($t !== '' && strpos($targetLower, $t) !== false) {
-                                $match = true;
-                                break;
+                        $valToCheck = $context[$field] ?? '';
+                    }
+
+                    $match = false;
+                    if ($operator === 'contains') {
+                        if ($expected === '') {
+                            $match = true;
+                        } else {
+                            $terms = array_map('trim', explode(',', strtolower($expected)));
+                            $targetLower = strtolower($valToCheck);
+                            foreach ($terms as $t) {
+                                if ($t !== '' && strpos($targetLower, $t) !== false) {
+                                    $match = true;
+                                    break;
+                                }
                             }
                         }
+                    } elseif ($operator === 'equals') {
+                        $match = (strcasecmp(trim($valToCheck), $expected) === 0);
+                    } elseif ($operator === 'gt' || $operator === 'lt') {
+                        $numVal = floatval(preg_replace('/[^\d.]/', '', (string)$valToCheck));
+                        $numExpected = floatval(preg_replace('/[^\d.]/', '', (string)$expected));
+                        $match = ($operator === 'gt') ? ($numVal > $numExpected) : ($numVal < $numExpected);
+                    } elseif ($operator === 'not_empty') {
+                        $match = !empty(trim((string)$valToCheck));
+                    } else {
+                        $match = true;
                     }
-                } elseif ($operator === 'equals') {
-                    $match = (strcasecmp(trim($valToCheck), $expected) === 0);
-                } elseif ($operator === 'gt' || $operator === 'lt') {
-                    $numVal = floatval(preg_replace('/[^\d.]/', '', (string)$valToCheck));
-                    $numExpected = floatval(preg_replace('/[^\d.]/', '', (string)$expected));
-                    $match = ($operator === 'gt') ? ($numVal > $numExpected) : ($numVal < $numExpected);
-                } elseif ($operator === 'not_empty') {
-                    $match = !empty(trim((string)$valToCheck));
-                } else {
-                    $match = true;
+
+                    $stepStatus = $match ? 'success' : 'condition_false';
+                    $friendlyColor = '#f59e0b';
+                    $friendlyIcon = 'fi-rr-code-fork';
+
+                    if ($match) {
+                        $friendlyHeadline = 'Condition Met: ' . ($config['branch_yes_label'] ?? 'Branch YES');
+                        $friendlySummary = 'Field "' . $field . '" (' . $valToCheck . ') matched: ' . $operator . ' "' . $expected . '"';
+                        $friendlyPill = 'Branch YES Active';
+                        $stepMessage = 'Condition evaluated to TRUE. Routing flow along YES branch.';
+                    } else {
+                        $friendlyHeadline = 'Condition Unmet: ' . ($config['branch_no_label'] ?? 'Branch NO');
+                        $friendlySummary = 'Field "' . $field . '" (' . $valToCheck . ') did not match: ' . $operator . ' "' . $expected . '"';
+                        $friendlyPill = 'Branch NO Active';
+                        $stepMessage = 'Condition evaluated to FALSE. Routing flow along NO branch.';
+                    }
+
+                    $stepDetails = [
+                        'evaluated_field' => $field,
+                        'condition_met' => $match,
+                        'actual_value' => $valToCheck,
+                        'operator' => $operator,
+                        'expected_value' => $expected
+                    ];
                 }
-
-                $stepStatus = $match ? 'success' : 'condition_false';
-                $friendlyColor = '#f59e0b';
-                $friendlyIcon = 'fi-rr-code-fork';
-
-                if ($match) {
-                    $friendlyHeadline = 'Condition Met: ' . ($config['branch_yes_label'] ?? 'Branch YES');
-                    $friendlySummary = 'Field "' . $field . '" (' . $valToCheck . ') matched: ' . $operator . ' "' . $expected . '"';
-                    $friendlyPill = 'Branch YES Active';
-                    $stepMessage = 'Condition evaluated to TRUE. Routing flow along YES branch.';
-                } else {
-                    $friendlyHeadline = 'Condition Unmet: ' . ($config['branch_no_label'] ?? 'Branch NO');
-                    $friendlySummary = 'Field "' . $field . '" (' . $valToCheck . ') did not match: ' . $operator . ' "' . $expected . '"';
-                    $friendlyPill = 'Branch NO Active';
-                    $stepMessage = 'Condition evaluated to FALSE. Routing flow along NO branch.';
-                }
-
-                $stepDetails = [
-                    'evaluated_field' => $field,
-                    'condition_met' => $match,
-                    'actual_value' => $valToCheck,
-                    'operator' => $operator,
-                    'expected_value' => $expected
-                ];
             } else {
                 // Action node
                 $actionType = $node['action_type'] ?? 'action';
@@ -1627,6 +1770,54 @@ switch ($action) {
                         $friendlyColor = '#6366f1';
                         $friendlyPill = 'HTTP 200';
                         $stepDetails = ['response_code' => 200, 'time_ms' => 124, 'url' => $url];
+                        break;
+
+                    case 'send_whatsapp_buttons':
+                        $hText = $config['header_text'] ?? 'Trip Proposal Update';
+                        $btn1 = $config['btn1'] ?? 'Confirm Booking';
+                        $btn2 = $config['btn2'] ?? 'Talk to Expert';
+                        $btn3 = $config['btn3'] ?? 'Modify Dates';
+                        $stepMessage = 'Dispatched interactive WhatsApp menu with 3 Quick Action buttons to ' . ($context['phone'] ?? '+91 98765 43210');
+                        $friendlyHeadline = 'WhatsApp Quick Buttons Sent';
+                        $friendlySummary = 'Sent 3 buttons: "' . $btn1 . '", "' . $btn2 . '", "' . $btn3 . '"';
+                        $friendlyIcon = 'fi-rr-menu-dots';
+                        $friendlyColor = '#059669';
+                        $friendlyPill = '3 Buttons';
+                        $stepDetails = ['recipient' => $context['phone'] ?? '+91 98765 43210', 'header' => $hText, 'buttons' => [$btn1, $btn2, $btn3]];
+                        break;
+
+                    case 'send_email':
+                        $subject = str_replace(['{name}', '{destination}', '{company}'], [$context['name'] ?? 'Traveler', $context['destination'] ?? 'Destination', defined('SITE_NAME') ? SITE_NAME : 'Aleya Support'], $config['subject'] ?? 'Tour Proposal & Itinerary');
+                        $stepMessage = 'HTML tour proposal email dispatched with PDF attachment to ' . ($context['email'] ?? 'guest@example.com');
+                        $friendlyHeadline = 'Email Proposal Sent';
+                        $friendlySummary = 'Sent: "' . $subject . '" to ' . ($context['email'] ?? 'guest@example.com');
+                        $friendlyIcon = 'fi-rr-envelope';
+                        $friendlyColor = '#2563eb';
+                        $friendlyPill = 'Email Delivered';
+                        $stepDetails = ['recipient' => $context['email'] ?? 'guest@example.com', 'subject' => $subject, 'has_pdf' => ($config['attach_pdf'] ?? '1') === '1'];
+                        break;
+
+                    case 'notify_internal_team':
+                        $priority = $config['priority'] ?? 'high';
+                        $channel = $config['channel'] ?? 'all';
+                        $stepMessage = 'Internal alert dispatched (' . strtoupper($priority) . ') via ' . $channel . ' to Sales Specialists.';
+                        $friendlyHeadline = 'Team Alert Triggered';
+                        $friendlySummary = 'Dispatched alert for ' . ($context['name'] ?? 'Traveler') . ' (' . $priority . ' priority)';
+                        $friendlyIcon = 'fi-rr-bell-ring';
+                        $friendlyColor = '#ef4444';
+                        $friendlyPill = strtoupper($priority) . ' Alert';
+                        $stepDetails = ['priority' => $priority, 'channel' => $channel, 'target' => 'Assigned Agent & Manager'];
+                        break;
+
+                    case 'request_feedback':
+                        $platform = $config['platform'] ?? 'google_review';
+                        $stepMessage = 'Automated review & feedback request sent for ' . $platform . ' with loyalty incentive.';
+                        $friendlyHeadline = 'Review Request Sent';
+                        $friendlySummary = 'Sent review invitation via ' . $platform . ' to ' . ($context['name'] ?? 'Traveler');
+                        $friendlyIcon = 'fi-rr-star';
+                        $friendlyColor = '#eab308';
+                        $friendlyPill = 'Review Link';
+                        $stepDetails = ['platform' => $platform, 'recipient' => $context['phone'] ?? '+91 98765 43210', 'incentive' => $config['incentive'] ?? 'Loyalty Voucher'];
                         break;
 
                     default:

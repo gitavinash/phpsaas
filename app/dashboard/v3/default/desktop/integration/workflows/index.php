@@ -137,6 +137,13 @@ $appName = !empty($app_title) ? $app_title : (defined('SITE_APP_NAME') ? SITE_AP
                         <i class="fi fi-rr-plus"></i> <span>Add Step</span>
                     </button>
                     <span class="tool-divider"></span>
+                    <button type="button" class="canvas-tool-btn" id="btnCanvasUndo" title="Undo (Cmd/Ctrl+Z)" disabled>
+                        <i class="fi fi-rr-undo"></i>
+                    </button>
+                    <button type="button" class="canvas-tool-btn" id="btnCanvasRedo" title="Redo (Cmd/Ctrl+Shift+Z)" disabled>
+                        <i class="fi fi-rr-redo"></i>
+                    </button>
+                    <span class="tool-divider"></span>
                     <button type="button" class="canvas-tool-btn" id="btnAutoAlignFlowchart" title="Auto-Organize Flowchart (Tidy Layout)">
                         <i class="fi fi-rr-align-center"></i> <span>Auto Align</span>
                     </button>
@@ -209,8 +216,8 @@ $appName = !empty($app_title) ? $app_title : (defined('SITE_APP_NAME') ? SITE_AP
                                 <button type="button" class="btn-add-module" title="Add to Canvas"><i class="fi fi-rr-plus"></i></button>
                             </div>
 
-                            <div class="palette-item module-trigger" draggable="true" data-type="trigger" data-event="whatsapp_incoming" data-title="WhatsApp Chat Received" data-subtitle="Keyword match or new message" data-icon="fi-rr-comment-dots" data-color="#8b5cf6">
-                                <span class="palette-item-icon violet"><i class="fi fi-rr-comment-dots"></i></span>
+                            <div class="palette-item module-trigger" draggable="true" data-type="trigger" data-event="whatsapp_incoming" data-title="WhatsApp Chat Received" data-subtitle="Keyword match or new message" data-icon="fi-rr-comment-dots" data-color="#10b981">
+                                <span class="palette-item-icon emerald"><i class="fi fi-rr-comment-dots"></i></span>
                                 <div class="palette-item-info">
                                     <strong>WhatsApp Chat Inbound</strong>
                                     <span>Keyword match or message</span>
@@ -218,8 +225,8 @@ $appName = !empty($app_title) ? $app_title : (defined('SITE_APP_NAME') ? SITE_AP
                                 <button type="button" class="btn-add-module" title="Add to Canvas"><i class="fi fi-rr-plus"></i></button>
                             </div>
 
-                            <div class="palette-item module-trigger" draggable="true" data-type="trigger" data-event="payment_received" data-title="Payment Captured" data-subtitle="Razorpay, PhonePe, UPI" data-icon="fi-rr-badge-percent" data-color="#8b5cf6">
-                                <span class="palette-item-icon violet"><i class="fi fi-rr-badge-percent"></i></span>
+                            <div class="palette-item module-trigger" draggable="true" data-type="trigger" data-event="payment_received" data-title="Payment Captured" data-subtitle="Razorpay, PhonePe, UPI" data-icon="fi-rr-badge-percent" data-color="#f59e0b">
+                                <span class="palette-item-icon amber"><i class="fi fi-rr-badge-percent"></i></span>
                                 <div class="palette-item-info">
                                     <strong>Payment Captured</strong>
                                     <span>Advance deposit or full fee</span>
@@ -227,11 +234,56 @@ $appName = !empty($app_title) ? $app_title : (defined('SITE_APP_NAME') ? SITE_AP
                                 <button type="button" class="btn-add-module" title="Add to Canvas"><i class="fi fi-rr-plus"></i></button>
                             </div>
 
-                            <div class="palette-item module-trigger" draggable="true" data-type="trigger" data-event="lead_stage_changed" data-title="Lead Stage Changed" data-subtitle="When pipeline milestone updates" data-icon="fi-rr-refresh" data-color="#8b5cf6">
-                                <span class="palette-item-icon violet"><i class="fi fi-rr-refresh"></i></span>
+                            <div class="palette-item module-trigger" draggable="true" data-type="trigger" data-event="lead_stage_changed" data-title="Lead Stage Changed" data-subtitle="When pipeline milestone updates" data-icon="fi-rr-refresh" data-color="#06b6d4">
+                                <span class="palette-item-icon cyan"><i class="fi fi-rr-refresh"></i></span>
                                 <div class="palette-item-info">
                                     <strong>Pipeline Stage Update</strong>
                                     <span>Lead status changed</span>
+                                </div>
+                                <button type="button" class="btn-add-module" title="Add to Canvas"><i class="fi fi-rr-plus"></i></button>
+                            </div>
+
+                            <div class="palette-item module-trigger" draggable="true" data-type="trigger" data-event="itinerary_viewed" data-title="Itinerary Link Viewed" data-subtitle="Customer opened proposal brochure" data-icon="fi-rr-eye" data-color="#ec4899">
+                                <span class="palette-item-icon pink"><i class="fi fi-rr-eye"></i></span>
+                                <div class="palette-item-info">
+                                    <strong>Itinerary Viewed Online</strong>
+                                    <span>Proposal opened &amp; read</span>
+                                </div>
+                                <button type="button" class="btn-add-module" title="Add to Canvas"><i class="fi fi-rr-plus"></i></button>
+                            </div>
+
+                            <div class="palette-item module-trigger" draggable="true" data-type="trigger" data-event="booking_confirmed" data-title="Booking Confirmed" data-subtitle="Advance deposit paid &amp; voucher issued" data-icon="fi-rr-check-circle" data-color="#10b981">
+                                <span class="palette-item-icon emerald"><i class="fi fi-rr-check-circle"></i></span>
+                                <div class="palette-item-info">
+                                    <strong>Booking Confirmed</strong>
+                                    <span>Deposit paid &amp; voucher issued</span>
+                                </div>
+                                <button type="button" class="btn-add-module" title="Add to Canvas"><i class="fi fi-rr-plus"></i></button>
+                            </div>
+
+                            <div class="palette-item module-trigger" draggable="true" data-type="trigger" data-event="lead_idle_timeout" data-title="Follow-up Overdue" data-subtitle="Lead inactive for 24h, 48h, 3 days" data-icon="fi-rr-alarm-clock" data-color="#f97316">
+                                <span class="palette-item-icon orange"><i class="fi fi-rr-alarm-clock"></i></span>
+                                <div class="palette-item-info">
+                                    <strong>Follow-up Overdue</strong>
+                                    <span>SLA inactive lead alert</span>
+                                </div>
+                                <button type="button" class="btn-add-module" title="Add to Canvas"><i class="fi fi-rr-plus"></i></button>
+                            </div>
+
+                            <div class="palette-item module-trigger" draggable="true" data-type="trigger" data-event="trip_completed" data-title="Trip Completed / Returned" data-subtitle="Traveler returned home from tour" data-icon="fi-rr-plane-arrival" data-color="#3b82f6">
+                                <span class="palette-item-icon blue"><i class="fi fi-rr-plane-arrival"></i></span>
+                                <div class="palette-item-info">
+                                    <strong>Trip Completed</strong>
+                                    <span>Traveler returned home</span>
+                                </div>
+                                <button type="button" class="btn-add-module" title="Add to Canvas"><i class="fi fi-rr-plus"></i></button>
+                            </div>
+
+                            <div class="palette-item module-trigger" draggable="true" data-type="trigger" data-event="webhook_received" data-title="Inbound Webhook" data-subtitle="JSON payload from Zapier/Make" data-icon="fi-rr-network-cloud" data-color="#6366f1">
+                                <span class="palette-item-icon indigo"><i class="fi fi-rr-network-cloud"></i></span>
+                                <div class="palette-item-info">
+                                    <strong>Inbound Webhook</strong>
+                                    <span>External JSON POST ping</span>
                                 </div>
                                 <button type="button" class="btn-add-module" title="Add to Canvas"><i class="fi fi-rr-plus"></i></button>
                             </div>
@@ -253,8 +305,26 @@ $appName = !empty($app_title) ? $app_title : (defined('SITE_APP_NAME') ? SITE_AP
                                 <button type="button" class="btn-add-module" title="Add to Canvas"><i class="fi fi-rr-plus"></i></button>
                             </div>
 
-                            <div class="palette-item module-action" draggable="true" data-type="action" data-action="send_itinerary" data-title="Dispatch Tour Itinerary" data-subtitle="Destination PDF brochure &amp; quotes" data-icon="fi-rr-document-signed" data-color="#10b981">
-                                <span class="palette-item-icon emerald"><i class="fi fi-rr-document-signed"></i></span>
+                            <div class="palette-item module-action" draggable="true" data-type="action" data-action="send_whatsapp_buttons" data-title="WhatsApp Quick Buttons" data-subtitle="Interactive 3-button response menu" data-icon="fi-rr-menu-dots" data-color="#059669">
+                                <span class="palette-item-icon teal"><i class="fi fi-rr-menu-dots"></i></span>
+                                <div class="palette-item-info">
+                                    <strong>WhatsApp Quick Buttons</strong>
+                                    <span>Interactive 3-button menu</span>
+                                </div>
+                                <button type="button" class="btn-add-module" title="Add to Canvas"><i class="fi fi-rr-plus"></i></button>
+                            </div>
+
+                            <div class="palette-item module-action" draggable="true" data-type="action" data-action="send_email" data-title="Send Email Proposal" data-subtitle="Branded email with attached PDF itinerary" data-icon="fi-rr-envelope" data-color="#2563eb">
+                                <span class="palette-item-icon blue"><i class="fi fi-rr-envelope"></i></span>
+                                <div class="palette-item-info">
+                                    <strong>Send Email Proposal</strong>
+                                    <span>Branded email with PDF voucher</span>
+                                </div>
+                                <button type="button" class="btn-add-module" title="Add to Canvas"><i class="fi fi-rr-plus"></i></button>
+                            </div>
+
+                            <div class="palette-item module-action" draggable="true" data-type="action" data-action="send_itinerary" data-title="Dispatch Tour Itinerary" data-subtitle="Destination PDF brochure &amp; quotes" data-icon="fi-rr-document-signed" data-color="#3b82f6">
+                                <span class="palette-item-icon blue"><i class="fi fi-rr-document-signed"></i></span>
                                 <div class="palette-item-info">
                                     <strong>Dispatch Tour Itinerary</strong>
                                     <span>Verified package PDF brochure</span>
@@ -263,7 +333,7 @@ $appName = !empty($app_title) ? $app_title : (defined('SITE_APP_NAME') ? SITE_AP
                             </div>
 
                             <div class="palette-item module-action" draggable="true" data-type="action" data-action="assign_agent" data-title="Distribute Lead (Round-Robin)" data-subtitle="Auto-assign to active sales agents" data-icon="fi-rr-users-alt" data-color="#0ea5e9">
-                                <span class="palette-item-icon blue"><i class="fi fi-rr-users-alt"></i></span>
+                                <span class="palette-item-icon cyan"><i class="fi fi-rr-users-alt"></i></span>
                                 <div class="palette-item-info">
                                     <strong>Assign Agent (Round-Robin)</strong>
                                     <span>Equal lead allocation</span>
@@ -289,8 +359,8 @@ $appName = !empty($app_title) ? $app_title : (defined('SITE_APP_NAME') ? SITE_AP
                                 <button type="button" class="btn-add-module" title="Add to Canvas"><i class="fi fi-rr-plus"></i></button>
                             </div>
 
-                            <div class="palette-item module-action" draggable="true" data-type="action" data-action="update_lead_stage" data-title="Update CRM Stage" data-subtitle="Advance lead in sales pipeline" data-icon="fi-rr-refresh" data-color="#3b82f6">
-                                <span class="palette-item-icon blue"><i class="fi fi-rr-refresh"></i></span>
+                            <div class="palette-item module-action" draggable="true" data-type="action" data-action="update_lead_stage" data-title="Update CRM Stage" data-subtitle="Advance lead in sales pipeline" data-icon="fi-rr-refresh" data-color="#8b5cf6">
+                                <span class="palette-item-icon violet"><i class="fi fi-rr-refresh"></i></span>
                                 <div class="palette-item-info">
                                     <strong>Update CRM Stage</strong>
                                     <span>Move lead in sales pipeline</span>
@@ -298,11 +368,38 @@ $appName = !empty($app_title) ? $app_title : (defined('SITE_APP_NAME') ? SITE_AP
                                 <button type="button" class="btn-add-module" title="Add to Canvas"><i class="fi fi-rr-plus"></i></button>
                             </div>
 
-                            <div class="palette-item module-action" draggable="true" data-type="action" data-action="payment_link" data-title="Generate Payment Link" data-subtitle="Token booking deposit link" data-icon="fi-rr-credit-card" data-color="#0ea5e9">
-                                <span class="palette-item-icon blue"><i class="fi fi-rr-credit-card"></i></span>
+                            <div class="palette-item module-action" draggable="true" data-type="action" data-action="payment_link" data-title="Generate Payment Link" data-subtitle="Token booking deposit link" data-icon="fi-rr-credit-card" data-color="#14b8a6">
+                                <span class="palette-item-icon teal"><i class="fi fi-rr-credit-card"></i></span>
                                 <div class="palette-item-info">
                                     <strong>Generate Payment Link</strong>
                                     <span>Token deposit or package fee</span>
+                                </div>
+                                <button type="button" class="btn-add-module" title="Add to Canvas"><i class="fi fi-rr-plus"></i></button>
+                            </div>
+
+                            <div class="palette-item module-action" draggable="true" data-type="action" data-action="notify_internal_team" data-title="Internal Team Alert" data-subtitle="Bell notification or team alert" data-icon="fi-rr-bell-ring" data-color="#ef4444">
+                                <span class="palette-item-icon rose"><i class="fi fi-rr-bell-ring"></i></span>
+                                <div class="palette-item-info">
+                                    <strong>Internal Team Alert</strong>
+                                    <span>Hot lead alert for sales</span>
+                                </div>
+                                <button type="button" class="btn-add-module" title="Add to Canvas"><i class="fi fi-rr-plus"></i></button>
+                            </div>
+
+                            <div class="palette-item module-action" draggable="true" data-type="action" data-action="request_feedback" data-title="Request Review &amp; Feedback" data-subtitle="Post-trip Google / TripAdvisor review" data-icon="fi-rr-star" data-color="#eab308">
+                                <span class="palette-item-icon yellow"><i class="fi fi-rr-star"></i></span>
+                                <div class="palette-item-info">
+                                    <strong>Request Review &amp; Feedback</strong>
+                                    <span>Post-trip Google Maps rating</span>
+                                </div>
+                                <button type="button" class="btn-add-module" title="Add to Canvas"><i class="fi fi-rr-plus"></i></button>
+                            </div>
+
+                            <div class="palette-item module-action" draggable="true" data-type="action" data-action="internal_note" data-title="Add Internal Timeline Note" data-subtitle="Log audit trail entry in CRM" data-icon="fi-rr-document" data-color="#64748b">
+                                <span class="palette-item-icon slate"><i class="fi fi-rr-document"></i></span>
+                                <div class="palette-item-info">
+                                    <strong>Internal Timeline Note</strong>
+                                    <span>Log audit entry in CRM</span>
                                 </div>
                                 <button type="button" class="btn-add-module" title="Add to Canvas"><i class="fi fi-rr-plus"></i></button>
                             </div>
@@ -338,6 +435,15 @@ $appName = !empty($app_title) ? $app_title : (defined('SITE_APP_NAME') ? SITE_AP
                                 <div class="palette-item-info">
                                     <strong>Delay / Wait Cadence</strong>
                                     <span>Simulate typing or wait 24h</span>
+                                </div>
+                                <button type="button" class="btn-add-module" title="Add to Canvas"><i class="fi fi-rr-plus"></i></button>
+                            </div>
+
+                            <div class="palette-item module-logic" draggable="true" data-type="logic" data-action="working_hours_check" data-title="Working Hours Router" data-subtitle="Route day hours vs after-hours night bot" data-icon="fi-rr-clock" data-color="#6366f1">
+                                <span class="palette-item-icon indigo"><i class="fi fi-rr-clock"></i></span>
+                                <div class="palette-item-info">
+                                    <strong>Working Hours Router</strong>
+                                    <span>Day team vs Night bot</span>
                                 </div>
                                 <button type="button" class="btn-add-module" title="Add to Canvas"><i class="fi fi-rr-plus"></i></button>
                             </div>
@@ -420,29 +526,47 @@ $appName = !empty($app_title) ? $app_title : (defined('SITE_APP_NAME') ? SITE_AP
                 <!-- Drawer Scrollable Form -->
                 <div class="drawer-body">
                     
-                    <!-- Module Type Switcher (Change step type easily) -->
-                    <div class="drawer-form-group module-type-switcher-group">
-                        <label class="drawer-label" for="drawerModuleTypeSelect">Step Module Type</label>
-                        <select id="drawerModuleTypeSelect" class="drawer-select selectjs2 selectJS2">
-                            <!-- Populated dynamically via JS with all triggers, actions, and logic -->
-                        </select>
-                        <span class="drawer-help-text">Switch module type without losing flowchart connections.</span>
+                    <!-- Section 1: Overview & Step Identity -->
+                    <div class="drawer-section-card">
+                        <div class="drawer-section-header">
+                            <i class="fi fi-rr-info"></i>
+                            <span>Step Details</span>
+                        </div>
+                        <div class="drawer-form-group">
+                            <label class="drawer-label" for="drawerInputTitle">Step Label / Name</label>
+                            <input type="text" id="drawerInputTitle" class="drawer-input" placeholder="e.g. New Lead Ingested">
+                        </div>
+                        <div class="drawer-form-group">
+                            <label class="drawer-label" for="drawerInputSubtitle">Description / Subtitle</label>
+                            <input type="text" id="drawerInputSubtitle" class="drawer-input" placeholder="e.g. Facebook Ads, Web Forms &amp; Website">
+                            <span class="drawer-help-text">Visible on the flowchart card summary.</span>
+                        </div>
                     </div>
 
-                    <!-- Common Fields: Step Name & Summary -->
-                    <div class="drawer-form-group">
-                        <label class="drawer-label" for="drawerInputTitle">Step Label</label>
-                        <input type="text" id="drawerInputTitle" class="drawer-input" placeholder="e.g. Send Welcome Greeting">
+                    <!-- Section 2: Step Functional Parameters & Rules -->
+                    <div class="drawer-section-card">
+                        <div class="drawer-section-header">
+                            <i class="fi fi-rr-sliders"></i>
+                            <span id="drawerSectionRulesTitle">Step Rules &amp; Options</span>
+                        </div>
+                        <div class="drawer-dynamic-fields" id="drawerDynamicFields">
+                            <!-- Custom controls generated dynamically by JS -->
+                        </div>
                     </div>
 
-                    <div class="drawer-form-group">
-                        <label class="drawer-label" for="drawerInputSubtitle">Description / Subtitle</label>
-                        <input type="text" id="drawerInputSubtitle" class="drawer-input" placeholder="e.g. Ingest from Facebook Form">
-                    </div>
-
-                    <!-- Dynamic Fields Container (Populated based on node type) -->
-                    <div class="drawer-dynamic-fields" id="drawerDynamicFields">
-                        <!-- Custom controls generated dynamically by JS -->
+                    <!-- Section 3: Change Module Type (Advanced) -->
+                    <div class="drawer-section-card drawer-type-switcher-card">
+                        <div class="drawer-section-header">
+                            <i class="fi fi-rr-shuffle"></i>
+                            <span>Change Step Type</span>
+                        </div>
+                        <div class="drawer-form-group module-type-switcher-group">
+                            <label class="drawer-label" for="drawerModuleTypeSelect">Convert to Another Module</label>
+                            <select id="drawerModuleTypeSelect" class="drawer-select selectjs2 selectJS2">
+                                <!-- Populated dynamically via JS with all triggers, actions, and logic -->
+                            </select>
+                            <span class="drawer-help-text">Switch module type without losing flowchart connections.</span>
+                        </div>
                     </div>
 
                 </div>
@@ -474,10 +598,10 @@ $appName = !empty($app_title) ? $app_title : (defined('SITE_APP_NAME') ? SITE_AP
                 </div>
                 <button type="button" class="popover-close-btn" id="btnCloseQuickAddPopover" title="Close"><i class="fi fi-rr-cross"></i></button>
             </div>
-            <div class="popover-categories-bar">
+            <div class="popover-categories-bar" id="quickAddCategoryTabs">
                 <button type="button" class="popover-cat-btn active" data-cat="all">All Modules</button>
-                <button type="button" class="popover-cat-btn" data-cat="trigger"><i class="fi fi-rr-bolt"></i> Triggers</button>
-                <button type="button" class="popover-cat-btn" data-cat="action"><i class="fi fi-rr-play-alt"></i> Actions</button>
+                <button type="button" class="popover-cat-btn" data-cat="triggers"><i class="fi fi-rr-bolt"></i> Triggers</button>
+                <button type="button" class="popover-cat-btn" data-cat="actions"><i class="fi fi-rr-play-alt"></i> Actions</button>
                 <button type="button" class="popover-cat-btn" data-cat="logic"><i class="fi fi-rr-code-fork"></i> Logic</button>
             </div>
             <div class="popover-items-list" id="quickAddItemsList">
@@ -576,6 +700,11 @@ $appName = !empty($app_title) ? $app_title : (defined('SITE_APP_NAME') ? SITE_AP
                 <div class="modal-templates-grid" id="modalTemplatesList">
                     <!-- Populated via JS -->
                 </div>
+            </div>
+            <div class="modal-card-footer">
+                <button type="button" class="btn-v3-action" id="btnModalFooterScratch">
+                    <i class="fi fi-rr-paint-brush"></i> <span>Build Blank Flow from Scratch</span>
+                </button>
             </div>
         </div>
     </div>
