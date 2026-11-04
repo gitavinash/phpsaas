@@ -88,24 +88,18 @@ if (!function_exists('v3FormatFbQuestionLabel')) {
     {
         $label = trim($label, " ?:;,-_");
         $low = strtolower($label);
-        if (strpos($low, 'how many people') !== false || strpos($low, 'no of persons') !== false || strpos($low, 'travelling') !== false || strpos($low, 'passengers') !== false) {
         if (strpos($low, 'how many') !== false || strpos($low, 'person') !== false || strpos($low, 'people') !== false || strpos($low, 'travelling') !== false || strpos($low, 'passengers') !== false || strpos($low, 'pax') !== false || strpos($low, 'adult') !== false) {
             return 'Travelers';
         }
-        if (strpos($low, 'when are you planning') !== false || strpos($low, 'travel date') !== false || strpos($low, 'planning') !== false) {
-            return 'Timeline';
         if (strpos($low, 'when') !== false || strpos($low, 'planning') !== false || strpos($low, 'travel date') !== false || strpos($low, 'timeline') !== false || strpos($low, 'month') !== false || strpos($low, 'date') !== false) {
             return 'Travel Date';
         }
-        if (strpos($low, 'destination') !== false || strpos($low, 'where') !== false) {
         if (strpos($low, 'destination') !== false || strpos($low, 'where') !== false || strpos($low, 'package') !== false || strpos($low, 'place') !== false) {
             return 'Destination';
         }
-        if (strpos($low, 'budget') !== false) {
         if (strpos($low, 'budget') !== false || strpos($low, 'price') !== false || strpos($low, 'cost') !== false) {
             return 'Budget';
         }
-        if (strpos($low, 'duration') !== false) {
         if (strpos($low, 'duration') !== false || strpos($low, 'days') !== false || strpos($low, 'nights') !== false) {
             return 'Duration';
         }
@@ -279,8 +273,6 @@ if ($action === 'get_leads') {
         $metaData = json_decode($metaResp, true);
         if (!empty($metaData['leads_count'])) {
             $campaignTotalLeads = max($campaignTotalLeads, (int)$metaData['leads_count']);
-            // update in db cache
-            mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "fb_forms SET fb_forms_leads_count = {$campaignTotalLeads} WHERE fb_forms_id = '" . mysqli_real_escape_string($connection, $formId) . "' AND fb_forms_site_id = {$siteId}");
             // update in db cache if column exists
             $chkCol = mysqli_query($connection, "SHOW COLUMNS FROM " . TABLE_PREFIX . "fb_forms LIKE 'fb_forms_leads_count'");
             if ($chkCol && mysqli_num_rows($chkCol) > 0) {
@@ -478,7 +470,6 @@ if ($action === 'get_leads') {
             'id'             => $leadIdVal,
             'created_time'   => $createdTime,
             'full_name'      => $fullName,
-            'initial'        => strtoupper(substr($fullName, 0, 1)),
             'initial'        => $initials,
             'destination'    => $leadDest,
             'phone'          => $isDigitalMarketing ? '' : $phoneVal,
@@ -605,17 +596,6 @@ if ($action === 'sync_forms') {
             $leadsCount = (int)($form['leads_count'] ?? 0);
             $createdAt  = !empty($form['created_time']) ? date('Y-m-d H:i:s', strtotime($form['created_time'])) : date('Y-m-d H:i:s');
 
-            mysqli_query(
-                $connection,
-                "INSERT INTO " . TABLE_PREFIX . "fb_forms 
-                (fb_forms_id, fb_forms_site_id, fb_forms_page_id, fb_forms_name, fb_forms_status, fb_forms_leads_count, fb_forms_created_at, fb_forms_last_sync) 
-                VALUES('{$formId}', '{$siteId}', '{$pageId}', '{$formName}', '{$status}', {$leadsCount}, '{$createdAt}', NOW())
-                ON DUPLICATE KEY UPDATE 
-                    fb_forms_name='{$formName}', 
-                    fb_forms_status='{$status}',
-                    fb_forms_leads_count=IF({$leadsCount} > 0, {$leadsCount}, fb_forms_leads_count),
-                    fb_forms_last_sync=NOW()"
-            );
             if ($hasLeadsCountCol) {
                 mysqli_query(
                     $connection,
