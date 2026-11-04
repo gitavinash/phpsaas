@@ -2262,14 +2262,14 @@
       $(document).off("click.fbSyncForms").on("click.fbSyncForms", "#btnSyncFbForms, #btnSyncFbFormsEmpty", function (e) {
         e.preventDefault();
         const $btn = $(this);
-        const targetPageId = $btn.data("page-id") || pageId;
+        const targetPageId = $btn.data("page-id") || $btn.attr("data-page-id") || pageId || ($("#fbFormsPageApp").data("page-id")) || ($("#fbFormsPageApp").attr("data-page-id")) || "";
         if (!targetPageId) return;
 
         const originalHtml = $btn.html();
         $btn.prop("disabled", true).addClass("is-loading").html('<i class="fi fi-rr-spinner spinner"></i> <span>Syncing Forms...</span>');
 
         $.ajax({
-          url: "/api/v3/integration/facebook.php",
+          url: "/api/v3/integration/facebook/?action=sync_forms&page_id=" + encodeURIComponent(targetPageId),
           method: "POST",
           data: JSON.stringify({
             action: "sync_forms",
@@ -2288,12 +2288,17 @@
                 window.location.reload();
               }, 600);
             } else {
-              self.showToast((res && res.msg) || "Failed to synchronize forms from Facebook.", "error");
+              self.showToast((res && (res.message || res.msg)) || "Failed to synchronize forms from Facebook.", "error");
             }
           },
-          error: function () {
+          error: function (xhr) {
             $btn.prop("disabled", false).removeClass("is-loading").html(originalHtml);
-            self.showToast("Network error synchronizing Facebook forms.", "error");
+            let errMsg = "Network error synchronizing Facebook forms.";
+            try {
+              const parsed = JSON.parse(xhr.responseText);
+              if (parsed && (parsed.message || parsed.msg)) errMsg = parsed.message || parsed.msg;
+            } catch (err) {}
+            self.showToast(errMsg, "error");
           }
         });
       });
@@ -2352,7 +2357,7 @@
         if (cursorBefore) params.before = cursorBefore;
 
         $.ajax({
-          url: "/api/v3/integration/facebook.php",
+          url: "/api/v3/integration/facebook/?action=get_leads",
           method: "GET",
           data: params,
           dataType: "json",
@@ -2377,7 +2382,7 @@
               $("#leadPrevPageBtn").prop("disabled", !pag.has_prev);
               $("#leadNextPageBtn").prop("disabled", !pag.has_next);
 
-              if (pag.total) {
+              if (pag.total !== undefined) {
                 $("#headerCampaignLeadsBadge").html('<i class="fi fi-rr-users"></i> ' + formatNumber(pag.total) + ' Campaign Leads');
                 $("#kpiTotalCampaignLeads").text(formatNumber(pag.total));
                 $("#tableHeaderLeadCount").text(formatNumber(pag.total) + " Campaign Leads");
@@ -2390,23 +2395,44 @@
               }
             } else {
               $tbody.html(
-                '<tr><td colspan="7" class="text-center py-4">' +
-                  '<div style="padding:24px; color:#e11d48;">' +
-                    '<i class="fi fi-rr-exclamation" style="font-size:24px;"></i>' +
-                    '<p style="margin:8px 0 0;">' + ((res && res.msg) || "Failed to load leads from Facebook.") + '</p>' +
+                '<tr><td colspan="7" class="v3-table-empty-td">' +
+                  '<div class="v3-table-empty-state is-error">' +
+                    '<div class="v3-table-empty-icon">' +
+                      '<i class="fi fi-rr-exclamation"></i>' +
+                    '</div>' +
+                    '<h4>Unable to Retrieve Leads</h4>' +
+                    '<p>' + ((res && (res.message || res.msg)) || "Failed to load leads from Facebook.") + '</p>' +
+                    '<div class="v3-table-empty-actions">' +
+                      '<button type="button" class="v3-btn-secondary" id="btnRetryFetchLeads">' +
+                        '<i class="fi fi-rr-refresh"></i> <span>Retry Fetch</span>' +
+                      '</button>' +
+                    '</div>' +
                   '</div>' +
                 '</td></tr>'
               );
               $("#leadPrevPageBtn, #leadNextPageBtn").prop("disabled", false);
             }
           },
-          error: function () {
+          error: function (xhr) {
             isLoading = false;
+            let errMsg = "Network error communicating with leads API.";
+            try {
+              const parsed = JSON.parse(xhr.responseText);
+              if (parsed && (parsed.message || parsed.msg)) errMsg = parsed.message || parsed.msg;
+            } catch (e) {}
             $tbody.html(
-              '<tr><td colspan="7" class="text-center py-4">' +
-                '<div style="padding:24px; color:#e11d48;">' +
-                  '<i class="fi fi-rr-exclamation" style="font-size:24px;"></i>' +
-                  '<p style="margin:8px 0 0;">Network error communicating with leads API.</p>' +
+              '<tr><td colspan="7" class="v3-table-empty-td">' +
+                '<div class="v3-table-empty-state is-error">' +
+                  '<div class="v3-table-empty-icon">' +
+                    '<i class="fi fi-rr-exclamation"></i>' +
+                  '</div>' +
+                  '<h4>Unable to Retrieve Leads</h4>' +
+                  '<p>' + errMsg + '</p>' +
+                  '<div class="v3-table-empty-actions">' +
+                    '<button type="button" class="v3-btn-secondary" id="btnRetryFetchLeads">' +
+                      '<i class="fi fi-rr-refresh"></i> <span>Retry Fetch</span>' +
+                    '</button>' +
+                  '</div>' +
                 '</div>' +
               '</td></tr>'
             );
@@ -2420,7 +2446,24 @@
         $tbody.empty();
 
         if (!leads.length) {
-          $tbody.html('<tr><td colspan="7" class="text-center py-4" style="color:#64748b; padding:30px;">No leads found on this page.</td></tr>');
+          $tbody.html(
+            '<tr>' +
+              '<td colspan="7" class="v3-table-empty-td">' +
+                '<div class="v3-table-empty-state">' +
+                  '<div class="v3-table-empty-icon">' +
+                    '<i class="fi fi-rr-users"></i>' +
+                  '</div>' +
+                  '<h4>No Leads Received Yet</h4>' +
+                  '<p>This Facebook Lead Ad form has not captured any submissions yet. Once prospects submit this form on Facebook or Instagram, leads will stream directly into this table in real time.</p>' +
+                  '<div class="v3-table-empty-actions">' +
+                    '<button type="button" class="v3-btn-secondary" id="btnEmptyRefreshLeads">' +
+                      '<i class="fi fi-rr-refresh"></i> <span>Refresh Leads Now</span>' +
+                    '</button>' +
+                  '</div>' +
+                '</div>' +
+              '</td>' +
+            '</tr>'
+          );
           return;
         }
 
@@ -2606,7 +2649,7 @@
         $group.html('<span class="v3-sync-badge is-pending"><i class="fi fi-rr-spinner spinner"></i> <span>Syncing...</span></span>');
 
         $.ajax({
-          url: "/api/v3/integration/facebook.php",
+          url: "/api/v3/integration/facebook/?action=sync_single_lead",
           method: "POST",
           data: JSON.stringify({
             action: "sync_single_lead",

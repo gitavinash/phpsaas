@@ -411,9 +411,8 @@ $isDigitalMarketing = (isset($site_access_type) && $site_access_type === 'digita
             </div>
         </div>
 
-        <?php if (!empty($leads)) { ?>
-            <!-- Leads Table Card -->
-            <div class="v3-table-card">
+        <!-- Leads Table Card -->
+        <div class="v3-table-card">
                 <div class="v3-table-card-header">
                     <div class="v3-table-card-header-left">
                         <i class="fi fi-rr-form v3-form-card-icon color-blue"></i>
@@ -443,7 +442,8 @@ $isDigitalMarketing = (isset($site_access_type) && $site_access_type === 'digita
                         </thead>
                         <tbody id="fbLeadsTableBody">
                             <?php
-                            foreach ($leads as $lead) {
+                            if (!empty($leads)) {
+                                foreach ($leads as $lead) {
                                 $createdTime = !empty($lead['created_time']) ? date('d M Y, h:i A', strtotime($lead['created_time'])) : 'N/A';
                                 $leadIdVal   = $lead['id'] ?? 'N/A';
 
@@ -653,40 +653,49 @@ $isDigitalMarketing = (isset($site_access_type) && $site_access_type === 'digita
                                         </button>
                                     </td>
                                 </tr>
+                            <?php } 
+                            } else { ?>
+                                <tr>
+                                    <td colspan="7" class="v3-table-empty-td">
+                                        <div class="v3-table-empty-state">
+                                            <div class="v3-table-empty-icon">
+                                                <i class="fi fi-rr-users"></i>
+                                            </div>
+                                            <h4>No Leads Captured in this Form Yet</h4>
+                                            <p>This Facebook Lead Ad form has not received any prospect submissions yet. As soon as users submit the form on Facebook or Instagram, leads will arrive here in real time via live webhooks.</p>
+                                            <div class="v3-table-empty-actions">
+                                                <button type="button" class="v3-btn-secondary" id="btnEmptyRefreshLeads" title="Check for new leads from Facebook">
+                                                    <i class="fi fi-rr-refresh"></i> <span>Refresh Leads Now</span>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
                             <?php } ?>
                         </tbody>
                     </table>
                 </div>
 
-                <!-- Table Pagination Bar: Max 20 Leads Per Request -->
-                <div class="v3-table-pagination-bar" id="leadPaginationBar">
-                    <div class="v3-pagination-info" id="leadPaginationInfo">
-                        Showing <?php echo $startIdx; ?> to <?php echo $endIdx; ?> of <?php echo number_format($totalCampaignLeads); ?> campaign leads
+                <?php if (!empty($leads)) { ?>
+                    <!-- Table Pagination Bar: Max 20 Leads Per Request -->
+                    <div class="v3-table-pagination-bar" id="leadPaginationBar">
+                        <div class="v3-pagination-info" id="leadPaginationInfo">
+                            Showing <?php echo $startIdx; ?> to <?php echo $endIdx; ?> of <?php echo number_format($totalCampaignLeads); ?> campaign leads
+                        </div>
+                        <div class="v3-pagination-controls" id="leadPaginationControls">
+                            <button type="button" class="v3-page-btn" id="leadPrevPageBtn" <?php echo ($currentPage <= 1 && empty($beforeCursor)) ? 'disabled' : ''; ?> title="Previous 20 Leads">
+                                <i class="fi fi-rr-angle-small-left"></i> Previous
+                            </button>
+                            <span class="v3-page-indicator" id="leadPageIndicator">
+                                Page <?php echo $currentPage; ?> of <?php echo $totalPages; ?>
+                            </span>
+                            <button type="button" class="v3-page-btn" id="leadNextPageBtn" <?php echo (!$hasNext && $currentPage >= $totalPages) ? 'disabled' : ''; ?> title="Next 20 Leads">
+                                Next <i class="fi fi-rr-angle-small-right"></i>
+                            </button>
+                        </div>
                     </div>
-                    <div class="v3-pagination-controls" id="leadPaginationControls">
-                        <button type="button" class="v3-page-btn" id="leadPrevPageBtn" <?php echo ($currentPage <= 1 && empty($beforeCursor)) ? 'disabled' : ''; ?> title="Previous 20 Leads">
-                            <i class="fi fi-rr-angle-small-left"></i> Previous
-                        </button>
-                        <span class="v3-page-indicator" id="leadPageIndicator">
-                            Page <?php echo $currentPage; ?> of <?php echo $totalPages; ?>
-                        </span>
-                        <button type="button" class="v3-page-btn" id="leadNextPageBtn" <?php echo (!$hasNext && $currentPage >= $totalPages) ? 'disabled' : ''; ?> title="Next 20 Leads">
-                            Next <i class="fi fi-rr-angle-small-right"></i>
-                        </button>
-                    </div>
-                </div>
+                <?php } ?>
             </div>
-        <?php } else { ?>
-            <!-- Empty Leads State -->
-            <div class="integration-empty-state">
-                <i class="fi fi-rr-users empty-icon"></i>
-                <h4>No Leads Captured Yet</h4>
-                <p>New inquiries submitted on your Facebook ad forms will automatically stream into this list in real-time.</p>
-                <button type="button" class="v3-btn-primary" id="btnEmptyRefreshLeads">
-                    <i class="fi fi-rr-refresh"></i> Refresh Leads Now
-                </button>
-            </div>
-        <?php } ?>
     <?php } ?>
 
     <!-- Full Lead Details Modal -->

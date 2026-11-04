@@ -8860,7 +8860,7 @@
         $btn.prop("disabled", true).html('<i class="fi fi-rr-spinner spinner-rotate"></i> Generating Link...');
 
         $.ajax({
-          url: "/api/v3/leads/payment-link.php",
+          url: "/api/v3/leads/payment-link/",
           type: "POST",
           dataType: "json",
           data: {

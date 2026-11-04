@@ -68,7 +68,7 @@
       this.lastFetchedRange = daterange;
       this.currentDateRange = daterange || "";
 
-      const apiUrl = "/api/v3/dashboard/marketing.php" + (daterange ? "?daterange=" + encodeURIComponent(daterange) : "");
+      const apiUrl = "/api/v3/dashboard/marketing/" + (daterange ? "?daterange=" + encodeURIComponent(daterange) : "");
 
       $.ajax({
         url: apiUrl,

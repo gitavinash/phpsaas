@@ -70,6 +70,14 @@ $isDigitalMarketing = ($accessType === 'digital_marketing');
 
 // Parse request input
 $reqData = $_POST;
+// Parse request input (support JSON body, POST fields, and GET query parameters)
+$reqData = [];
+if (!empty($_GET) && is_array($_GET)) {
+    $reqData = array_merge($reqData, $_GET);
+}
+if (!empty($_POST) && is_array($_POST)) {
+    $reqData = array_merge($reqData, $_POST);
+}
 $rawInput = file_get_contents('php://input');
 if (!empty($rawInput)) {
     $decoded = json_decode($rawInput, true);
@@ -79,6 +87,25 @@ if (!empty($rawInput)) {
 }
 $reqData = array_merge($_GET, $_REQUEST, $reqData);
 $action = $reqData['action'] ?? 'get_leads';
+
+// Explicitly retrieve action from any source (query param, JSON body, post field)
+$action = trim((string)($reqData['action'] ?? ($_GET['action'] ?? ($_POST['action'] ?? ''))));
+
+// Smart fallback: If action is missing, infer from parameters or return error
+if (empty($action)) {
+    if (!empty($reqData['form_id']) || !empty($_GET['form_id'])) {
+        $action = 'get_leads';
+    } elseif (!empty($reqData['page_id']) || !empty($_GET['page_id'])) {
+        $action = 'sync_forms';
+    } else {
+        http_response_code(400);
+        echo json_encode([
+            'status' => 'error',
+            'msg' => 'Action parameter is required.'
+        ]);
+        exit;
+    }
+}
 
 /**
  * Format FB Question Label
@@ -223,6 +250,7 @@ if (!function_exists('v3CheckLeadsCrmSyncMap')) {
 // =========================================================================
 if ($action === 'get_leads') {
     $formId = trim((string)($reqData['form_id'] ?? ''));
+    $formId = trim((string)($reqData['form_id'] ?? ($_GET['form_id'] ?? ($_POST['form_id'] ?? ''))));
     $page   = max(1, (int)($reqData['page'] ?? 1));
     $limit  = min(20, max(1, (int)($reqData['limit'] ?? 20))); // Max 20 leads per fetch
     $after  = !empty($reqData['after']) ? trim($reqData['after']) : null;
@@ -531,6 +559,7 @@ if ($action === 'get_leads') {
 // =========================================================================
 if ($action === 'sync_forms') {
     $pageId = trim((string)($reqData['page_id'] ?? ''));
+    $pageId = trim((string)($reqData['page_id'] ?? ($_GET['page_id'] ?? ($_POST['page_id'] ?? ''))));
 
     if (empty($pageId)) {
         http_response_code(400);
@@ -685,6 +714,8 @@ if ($action === 'sync_forms') {
 if ($action === 'sync_single_lead') {
     $formId = trim((string)($reqData['form_id'] ?? ''));
     $leadId = trim((string)($reqData['lead_id'] ?? ''));
+    $formId = trim((string)($reqData['form_id'] ?? ($_GET['form_id'] ?? ($_POST['form_id'] ?? ''))));
+    $leadId = trim((string)($reqData['lead_id'] ?? ($_GET['lead_id'] ?? ($_POST['lead_id'] ?? ''))));
     $leadPayloadRaw = $reqData['lead_data'] ?? null;
 
     if (empty($formId) || empty($leadId)) {

@@ -288,7 +288,7 @@
       `);
 
       $.ajax({
-        url: "/api/v3/whatsapp/templates.php?action=list",
+        url: "/api/v3/whatsapp/templates/?action=list",
         method: "GET",
         dataType: "json",
         success: function (res) {
@@ -665,7 +665,7 @@
       $btn.prop("disabled", true).html('<i class="fi fi-rr-spinner wa-spin"></i> Saving...');
 
       $.ajax({
-        url: "/api/v3/whatsapp/templates.php?action=save",
+        url: "/api/v3/whatsapp/templates/?action=save",
         method: "POST",
         contentType: "application/json",
         data: JSON.stringify({
@@ -699,7 +699,7 @@
     setAsDefault: function (templateId, fromMatrix) {
       const self = this;
       $.ajax({
-        url: "/api/v3/whatsapp/templates.php?action=set_default",
+        url: "/api/v3/whatsapp/templates/?action=set_default",
         method: "POST",
         contentType: "application/json",
         data: JSON.stringify({ template_id: templateId }),
@@ -736,7 +736,7 @@
 
       const doDelete = function () {
         $.ajax({
-          url: "/api/v3/whatsapp/templates.php?action=delete",
+          url: "/api/v3/whatsapp/templates/?action=delete",
           method: "POST",
           contentType: "application/json",
           data: JSON.stringify({ template_id: templateId }),
@@ -808,7 +808,7 @@
         return;
       }
       $.ajax({
-        url: `/api/v3/whatsapp/templates.php?action=preview&template_id=${templateId}&lead_id=${leadId || 0}`,
+        url: `/api/v3/whatsapp/templates/?action=preview&template_id=${templateId}&lead_id=${leadId || 0}`,
         method: "GET",
         dataType: "json",
         success: function (res) {
@@ -822,7 +822,7 @@
     searchLeads: function (q) {
       const self = this;
       $.ajax({
-        url: `/api/v3/whatsapp/templates.php?action=leads_search&q=${encodeURIComponent(q || "")}`,
+        url: `/api/v3/whatsapp/templates/?action=leads_search&q=${encodeURIComponent(q || "")}`,
         method: "GET",
         dataType: "json",
         success: function (res) {
@@ -882,7 +882,7 @@
       $btn.prop("disabled", true).html('<i class="fi fi-rr-spinner wa-spin"></i> Sending message...');
 
       $.ajax({
-        url: "/api/v3/whatsapp/templates.php?action=send",
+        url: "/api/v3/whatsapp/templates/?action=send",
         method: "POST",
         contentType: "application/json",
         data: JSON.stringify({

@@ -1408,7 +1408,7 @@
 
         checkDefaultWhatsAppDevice: function (callback) {
             $.ajax({
-                url: "/api/v3/whatsapp/messages.php?action=check_default_device",
+                url: "/api/v3/whatsapp/messages/?action=check_default_device",
                 type: "GET",
                 dataType: "json",
                 cache: false,
