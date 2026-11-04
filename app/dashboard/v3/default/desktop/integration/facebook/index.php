@@ -102,11 +102,18 @@ if (isset($new) && isset($accessToken)) {
 }
 
 // Ensure required database schema exists safely
-$hasLeadsCountCol = false;
-$checkFormsCol = mysqli_query($connection, "SHOW COLUMNS FROM " . TABLE_PREFIX . "fb_forms LIKE 'fb_forms_leads_count'");
-if ($checkFormsCol && mysqli_num_rows($checkFormsCol) > 0) {
-    $hasLeadsCountCol = true;
-} else {
+$formsCols = [];
+$checkFormsCols = mysqli_query($connection, "SHOW COLUMNS FROM " . TABLE_PREFIX . "fb_forms");
+if ($checkFormsCols) {
+    while ($c = mysqli_fetch_assoc($checkFormsCols)) {
+        $formsCols[$c['Field']] = true;
+    }
+}
+$hasLeadsCountCol = !empty($formsCols['fb_forms_leads_count']);
+$hasFormsLastSyncCol = !empty($formsCols['fb_forms_last_sync']);
+$hasFormsCreatedCol = !empty($formsCols['fb_forms_created_at']);
+
+if (!$hasLeadsCountCol) {
     // Attempt auto-migration
     @mysqli_query($connection, "ALTER TABLE " . TABLE_PREFIX . "fb_forms ADD COLUMN fb_forms_leads_count INT DEFAULT 0");
     $checkFormsCol2 = mysqli_query($connection, "SHOW COLUMNS FROM " . TABLE_PREFIX . "fb_forms LIKE 'fb_forms_leads_count'");
@@ -115,16 +122,30 @@ if ($checkFormsCol && mysqli_num_rows($checkFormsCol) > 0) {
     }
 }
 
+// Check fb_pages columns safely
+$pageCols = [];
+$checkPageCols = mysqli_query($connection, "SHOW COLUMNS FROM " . TABLE_PREFIX . "fb_pages");
+if ($checkPageCols) {
+    while ($c = mysqli_fetch_assoc($checkPageCols)) {
+        $pageCols[$c['Field']] = true;
+    }
+}
+$hasPageLastSyncCol = !empty($pageCols['fb_page_last_sync']);
+
 // Fetch connected pages with aggregated form and lead counts
 $leadsCountExpr = $hasLeadsCountCol ? "SUM(COALESCE(fb_forms_leads_count, 0))" : "0";
+$formsSyncExpr = $hasFormsLastSyncCol ? "MAX(fb_forms_last_sync)" : ($hasFormsCreatedCol ? "MAX(fb_forms_created_at)" : "NULL");
+
 $pageListQuery = "SELECT p.*, 
        COALESCE(f.forms_count, 0) AS forms_count,
-       COALESCE(f.total_leads, 0) AS total_leads
+       COALESCE(f.total_leads, 0) AS total_leads,
+       f.latest_form_sync
 FROM " . TABLE_PREFIX . "fb_pages p
 LEFT JOIN (
     SELECT fb_forms_page_id, 
            COUNT(*) AS forms_count, 
-           {$leadsCountExpr} AS total_leads 
+           {$leadsCountExpr} AS total_leads,
+           {$formsSyncExpr} AS latest_form_sync
     FROM " . TABLE_PREFIX . "fb_forms 
     WHERE fb_forms_site_id = " . SITE_ID . "
     GROUP BY fb_forms_page_id
@@ -274,96 +295,79 @@ if ($checkTokenRes && mysqli_num_rows($checkTokenRes) > 0) {
                 $formsCount = (int)$pageData['forms_count'];
                 $leadsCount = (int)$pageData['total_leads'];
 
-                $lastSyncFormatted = 'Not Synced';
+                $lastSyncRaw = null;
                 if (!empty($pageData['fb_page_last_sync'])) {
-                    $lastSyncFormatted = date('d M, h:i A', strtotime($pageData['fb_page_last_sync']));
+                    $lastSyncRaw = $pageData['fb_page_last_sync'];
+                } elseif (!empty($pageData['latest_form_sync'])) {
+                    $lastSyncRaw = $pageData['latest_form_sync'];
+                }
+
+                $lastSyncFormatted = 'Not Synced';
+                if (!empty($lastSyncRaw)) {
+                    $lastSyncFormatted = date('d M, h:i A', strtotime($lastSyncRaw));
                 }
             ?>
                 <div class="fb-page-card"
                     data-page-id="<?php echo htmlspecialchars($pageId); ?>"
                     data-page-name="<?php echo htmlspecialchars($pageName); ?>"
                     data-page-category="<?php echo htmlspecialchars($category); ?>">
-                                <!-- Top Meta Brand Stripe -->
-                                <div class="fb-card-top-stripe"></div>
+                    
+                    <!-- Top Row: Avatar + Subscribed Badge -->
+                    <div class="fb-card-top-row">
+                        <div class="fb-page-avatar <?php echo $avatarClass; ?>">
+                            <span class="fb-avatar-letter"><?php echo htmlspecialchars($pageInitial); ?></span>
+                        </div>
+                        <div class="fb-card-subscribed-badge" title="Subscribed to Real-Time Meta Webhooks">
+                            <span class="fb-card-dot"></span>
+                            <span>Subscribed</span>
+                        </div>
+                    </div>
 
-                                <div class="fb-card-inner">
-                                    <!-- Header: Avatar + Title + Status -->
-                                    <div class="fb-card-header-row">
-                                        <div class="fb-card-identity">
-                                            <div class="fb-page-avatar <?php echo $avatarClass; ?>">
-                                                <span class="fb-avatar-letter"><?php echo htmlspecialchars($pageInitial); ?></span>
-                                                <span class="fb-avatar-meta-badge" title="Verified Meta Connected Page">
-                                                    <i class="fi fi-rr-check"></i>
-                                                </span>
-                                            </div>
-                                                    <div class="fb-card-title-group">
-                                                        <h3 class="fb-page-title" title="<?php echo htmlspecialchars($pageName); ?>"><?php echo htmlspecialchars($pageName); ?></h3>
-                                                        <div class="fb-page-subtitle-row">
-                                                            <span class="fb-category-pill"><?php echo htmlspecialchars($category); ?></span>
-                                                            <span class="fb-dot-sep">•</span>
-                                                            <div class="fb-page-id-chip" title="Facebook Page ID (Click to copy)">
-                                                                <span class="id-label">ID</span>
-                                                                <span class="id-val"><?php echo htmlspecialchars($pageId); ?></span>
-                                                                <button type="button" class="btn-copy-id-chip btn-copy-lead-id" data-copy="<?php echo htmlspecialchars($pageId); ?>" title="Copy Page ID">
-                                                                    <i class="fi fi-rr-copy"></i>
-                                                                </button>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                    <span class="v3-status-badge status-active fb-card-status-badge" title="Subscribed to Real-Time Meta Webhooks">
-                                                        <span class="status-pulse-dot"></span> Subscribed
-                                                    </span>
-                                            </div>
+                    <!-- Page Info: Title + Category -->
+                    <div class="fb-card-info-group">
+                        <h3 class="fb-card-title" title="<?php echo htmlspecialchars($pageName); ?>"><?php echo htmlspecialchars($pageName); ?></h3>
+                        <span class="fb-card-category-pill"><?php echo htmlspecialchars($category); ?></span>
+                    </div>
 
-                                                    <!-- 2 Prominent Metric Tiles -->
-                                                    <div class="fb-page-metrics-grid">
-                                                        <div class="fb-metric-tile blue">
-                                                            <div class="fb-tile-icon-wrap blue">
-                                                                <i class="fi fi-rr-form"></i>
-                                                            </div>
-                                                            <div class="fb-tile-content">
-                                                                <span class="fb-tile-val"><?php echo number_format($formsCount); ?></span>
-                                                                <span class="fb-tile-label">Lead Forms</span>
-                                                            </div>
-                                                        </div>
+                    <!-- 3-Column Stats Box -->
+                    <div class="fb-card-stats-box">
+                        <div class="fb-card-stat-cell">
+                            <span class="fb-card-stat-label">FORMS</span>
+                            <span class="fb-card-stat-val"><?php echo number_format($formsCount); ?></span>
+                        </div>
+                        <div class="fb-card-stat-cell">
+                            <span class="fb-card-stat-label">TOTAL LEADS</span>
+                            <span class="fb-card-stat-val"><?php echo number_format($leadsCount); ?></span>
+                        </div>
+                        <div class="fb-card-stat-cell fb-card-stat-sync">
+                            <span class="fb-card-stat-label">LAST SYNC</span>
+                            <span class="fb-card-stat-val val-date" title="<?php echo htmlspecialchars($lastSyncFormatted); ?>"><?php echo htmlspecialchars($lastSyncFormatted); ?></span>
+                        </div>
+                    </div>
 
-                                                            <div class="fb-metric-tile emerald">
-                                                                <div class="fb-tile-icon-wrap emerald">
-                                                                    <i class="fi fi-rr-users"></i>
-                                                                </div>
-                                                                <div class="fb-tile-content">
-                                                                    <span class="fb-tile-val"><?php echo number_format($leadsCount); ?></span>
-                                                                    <span class="fb-tile-label">Total Leads</span>
-                                                                </div>
-                                                            </div>
-                                                        </div>
+                    <!-- Page ID Row -->
+                    <div class="fb-card-id-row">
+                        <span class="fb-card-id-label">Page ID</span>
+                        <div class="fb-card-id-pill fb-page-id-chip" title="Click to copy Page ID">
+                            <span class="id-val fb-card-id-text"><?php echo htmlspecialchars($pageId); ?></span>
+                            <button type="button" class="btn-copy-id-chip btn-copy-lead-id" data-copy="<?php echo htmlspecialchars($pageId); ?>" title="Copy Page ID">
+                                <i class="fi fi-rr-copy"></i>
+                            </button>
+                        </div>
+                    </div>
 
-                                                            <!-- Sync Health & Timestamp Strip -->
-                                                            <div class="fb-page-sync-strip">
-                                                                <span class="sync-time-text">
-                                                                    <i class="fi fi-rr-clock-three"></i> Last Synced: <strong><?php echo htmlspecialchars($lastSyncFormatted); ?></strong>
-                                                                </span>
-                                                                <span class="sync-health-tag">
-                                                                    <span class="status-pulse-dot"></span> Live Ingestion
-                                                                </span>
-                                                            </div>
-                                                        </div>
-
-                                                        <!-- Card Action Footer -->
-                                                        <div class="fb-page-footer">
-                                                                <a href="/dashboard/integration/facebook/page/?id=<?php echo urlencode($pageId); ?>&name=<?php echo urlencode($pageName); ?>" class="btn-fb-view-forms" title="View all lead forms for <?php echo htmlspecialchars($pageName); ?>">
-                                                                    <i class="fi fi-rr-form"></i>
-                                                                    <span>View Lead Forms</span>
-                                                                    <span class="btn-fb-badge"><?php echo $formsCount; ?></span>
-                                                                    <i class="fi fi-rr-arrow-right btn-fb-arrow"></i>
-                                                                </a>
-                                                                    <a href="https://www.facebook.com/<?php echo urlencode($pageId); ?>" target="_blank" rel="noopener noreferrer" class="btn-fb-external" title="Open Page on Facebook">
-                                                                        <i class="fi fi-rr-arrow-up-right-from-square"></i>
-                                                                    </a>
-                                                        </div>
-                                                    </div>
-                                                <?php } ?>
+                    <!-- Action Buttons Row -->
+                    <div class="fb-card-actions-row">
+                        <a href="/dashboard/integration/facebook/page/?id=<?php echo urlencode($pageId); ?>&name=<?php echo urlencode($pageName); ?>" class="btn-fb-view-leadforms" title="View Lead Forms for <?php echo htmlspecialchars($pageName); ?>">
+                            <i class="fi fi-rr-form"></i>
+                            <span>View Lead Forms (<?php echo $formsCount; ?>)</span>
+                        </a>
+                        <a href="https://www.facebook.com/<?php echo urlencode($pageId); ?>" target="_blank" rel="noopener noreferrer" class="btn-fb-open-external" title="Open Page on Facebook">
+                            <i class="fi fi-rr-arrow-up-right-from-square"></i>
+                        </a>
+                    </div>
+                </div>
+            <?php } ?>
                                                 <div class="fb-pages-no-results" id="fbPagesNoResults">
                                                     <i class="fi fi-rr-search"></i> No Facebook pages found matching your search.
                                                 </div>

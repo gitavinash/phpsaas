@@ -577,15 +577,27 @@ if ($action === 'sync_forms') {
 
     $syncedCount = 0;
     if (!empty($allForms)) {
-        $hasLeadsCountCol = false;
-        $chkCol = mysqli_query($connection, "SHOW COLUMNS FROM " . TABLE_PREFIX . "fb_forms LIKE 'fb_forms_leads_count'");
-        if ($chkCol && mysqli_num_rows($chkCol) > 0) {
-            $hasLeadsCountCol = true;
-        } else {
+        $formsCols = [];
+        $chkCol = mysqli_query($connection, "SHOW COLUMNS FROM " . TABLE_PREFIX . "fb_forms");
+        if ($chkCol) {
+            while ($c = mysqli_fetch_assoc($chkCol)) {
+                $formsCols[$c['Field']] = true;
+            }
+        }
+        if (empty($formsCols['fb_forms_leads_count'])) {
             @mysqli_query($connection, "ALTER TABLE " . TABLE_PREFIX . "fb_forms ADD COLUMN fb_forms_leads_count INT DEFAULT 0");
-            $chkCol2 = mysqli_query($connection, "SHOW COLUMNS FROM " . TABLE_PREFIX . "fb_forms LIKE 'fb_forms_leads_count'");
-            if ($chkCol2 && mysqli_num_rows($chkCol2) > 0) {
-                $hasLeadsCountCol = true;
+        }
+        if (empty($formsCols['fb_forms_last_sync'])) {
+            @mysqli_query($connection, "ALTER TABLE " . TABLE_PREFIX . "fb_forms ADD COLUMN fb_forms_last_sync DATETIME DEFAULT NULL");
+        }
+        if (empty($formsCols['fb_forms_created_at'])) {
+            @mysqli_query($connection, "ALTER TABLE " . TABLE_PREFIX . "fb_forms ADD COLUMN fb_forms_created_at DATETIME DEFAULT NULL");
+        }
+        $chkCol2 = mysqli_query($connection, "SHOW COLUMNS FROM " . TABLE_PREFIX . "fb_forms");
+        $formsCols = [];
+        if ($chkCol2) {
+            while ($c = mysqli_fetch_assoc($chkCol2)) {
+                $formsCols[$c['Field']] = true;
             }
         }
 
@@ -596,30 +608,35 @@ if ($action === 'sync_forms') {
             $leadsCount = (int)($form['leads_count'] ?? 0);
             $createdAt  = !empty($form['created_time']) ? date('Y-m-d H:i:s', strtotime($form['created_time'])) : date('Y-m-d H:i:s');
 
-            if ($hasLeadsCountCol) {
-                mysqli_query(
-                    $connection,
-                    "INSERT INTO " . TABLE_PREFIX . "fb_forms 
-                    (fb_forms_id, fb_forms_site_id, fb_forms_page_id, fb_forms_name, fb_forms_status, fb_forms_leads_count, fb_forms_created_at, fb_forms_last_sync) 
-                    VALUES('{$formId}', '{$siteId}', '{$pageId}', '{$formName}', '{$status}', {$leadsCount}, '{$createdAt}', NOW())
-                    ON DUPLICATE KEY UPDATE 
-                        fb_forms_name='{$formName}', 
-                        fb_forms_status='{$status}',
-                        fb_forms_leads_count=IF({$leadsCount} > 0, {$leadsCount}, fb_forms_leads_count),
-                        fb_forms_last_sync=NOW()"
-                );
-            } else {
-                mysqli_query(
-                    $connection,
-                    "INSERT INTO " . TABLE_PREFIX . "fb_forms 
-                    (fb_forms_id, fb_forms_site_id, fb_forms_page_id, fb_forms_name, fb_forms_status, fb_forms_created_at, fb_forms_last_sync) 
-                    VALUES('{$formId}', '{$siteId}', '{$pageId}', '{$formName}', '{$status}', '{$createdAt}', NOW())
-                    ON DUPLICATE KEY UPDATE 
-                        fb_forms_name='{$formName}', 
-                        fb_forms_status='{$status}',
-                        fb_forms_last_sync=NOW()"
-                );
+            $insertFields = ['fb_forms_id', 'fb_forms_site_id', 'fb_forms_page_id', 'fb_forms_name', 'fb_forms_status'];
+            $insertValues = ["'{$formId}'", "'{$siteId}'", "'{$pageId}'", "'{$formName}'", "'{$status}'"];
+            $updateFields = ["fb_forms_name='{$formName}'", "fb_forms_status='{$status}'"];
+
+            if (!empty($formsCols['fb_forms_leads_count'])) {
+                $insertFields[] = 'fb_forms_leads_count';
+                $insertValues[] = "{$leadsCount}";
+                $updateFields[] = "fb_forms_leads_count=IF({$leadsCount} > 0, {$leadsCount}, fb_forms_leads_count)";
             }
+            if (!empty($formsCols['fb_forms_created_at'])) {
+                $insertFields[] = 'fb_forms_created_at';
+                $insertValues[] = "'{$createdAt}'";
+            }
+            if (!empty($formsCols['fb_forms_last_sync'])) {
+                $insertFields[] = 'fb_forms_last_sync';
+                $insertValues[] = "NOW()";
+                $updateFields[] = "fb_forms_last_sync=NOW()";
+            }
+
+            $fieldsStr = implode(', ', $insertFields);
+            $valsStr = implode(', ', $insertValues);
+            $updatesStr = implode(', ', $updateFields);
+
+            mysqli_query(
+                $connection,
+                "INSERT INTO " . TABLE_PREFIX . "fb_forms ({$fieldsStr}) 
+                VALUES({$valsStr})
+                ON DUPLICATE KEY UPDATE {$updatesStr}"
+            );
             $syncedCount++;
         }
 
@@ -635,14 +652,23 @@ if ($action === 'sync_forms') {
         curl_close($ch);
     }
 
-    // Update page last sync timestamp
-    mysqli_query(
-        $connection,
-        "UPDATE " . TABLE_PREFIX . "fb_pages 
-         SET fb_page_last_sync = NOW() 
-         WHERE fb_page_id = '" . mysqli_real_escape_string($connection, $pageId) . "' 
-           AND fb_page_site_id = {$siteId}"
-    );
+    // Update page last sync timestamp safely
+    $pageCols = [];
+    $chkPg = mysqli_query($connection, "SHOW COLUMNS FROM " . TABLE_PREFIX . "fb_pages");
+    if ($chkPg) {
+        while ($c = mysqli_fetch_assoc($chkPg)) {
+            $pageCols[$c['Field']] = true;
+        }
+    }
+    if (!empty($pageCols['fb_page_last_sync'])) {
+        mysqli_query(
+            $connection,
+            "UPDATE " . TABLE_PREFIX . "fb_pages 
+             SET fb_page_last_sync = NOW() 
+             WHERE fb_page_id = '" . mysqli_real_escape_string($connection, $pageId) . "' 
+               AND fb_page_site_id = {$siteId}"
+        );
+    }
 
     echo json_encode([
         'status'           => 'success',
