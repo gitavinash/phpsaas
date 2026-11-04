@@ -19435,71 +19435,251 @@ input[type="date"]:hover::-webkit-calendar-picker-indicator {
   color: #64748b;
 }
 
-.fb-lead-responses-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  max-width: 320px;
+.lead-customer-name {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 3px 0;
+  line-height: 1.25;
 }
 
-.fb-response-tag {
+.lead-sub-chips {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.v3-lead-dest-chip {
   display: inline-flex;
   align-items: center;
   gap: 4px;
+  background: #f0fdfa;
+  color: #0f766e;
+  border: 1px solid #99f6e4;
+  border-radius: 4px;
+  padding: 1px 6px;
+  font-size: 10.5px;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.v3-lead-dest-chip i {
+  font-size: 9.5px;
+  color: #0d9488;
+}
+
+.v3-lead-source-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: #f1f5f9;
+  color: #475569;
+  border: 1px solid #e2e8f0;
+  border-radius: 4px;
+  padding: 1px 6px;
+  font-size: 10.5px;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.v3-lead-source-chip i {
+  font-size: 9.5px;
+  color: #1877f2;
+}
+
+.fb-contact-phone-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.fb-wa-action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
+  background: #25d366;
+  color: #ffffff !important;
+  font-size: 11px;
+  text-decoration: none !important;
+  transition: all 0.15s ease;
+  box-shadow: 0 1px 2px rgba(37, 211, 102, 0.25);
+  flex-shrink: 0;
+}
+
+.fb-wa-action-btn:hover {
+  background: #1ebe5d;
+  transform: scale(1.08);
+  box-shadow: 0 2px 5px rgba(37, 211, 102, 0.4);
+}
+
+.v3-response-pills-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  max-width: 280px;
+}
+
+.v3-response-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
   background: #f8fafc;
   border: 1px solid #e2e8f0;
   border-radius: 6px;
-  padding: 4px 9px;
-  font-size: 12px;
-  line-height: 1.3;
-  transition: all 0.15s ease;
+  padding: 2px 7px;
+  font-size: 11.5px;
+  line-height: 1.35;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
 }
 
-.fb-response-tag:hover {
-  background: #f1f5f9;
-  border-color: #cbd5e1;
-}
-
-.fb-response-tag .tag-q {
+.v3-response-chip .chip-label {
   color: #64748b;
   font-weight: 600;
-  font-size: 11px;
+  font-size: 10.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
 }
 
-.fb-response-tag .tag-a {
-  color: #0284c7;
+.v3-response-chip .chip-val {
+  color: #0f172a;
   font-weight: 600;
-  font-size: 12px;
 }
 
-.fb-more-responses-btn {
+.v3-response-chip.is-default {
+  color: #94a3b8;
+  font-style: italic;
+  font-weight: normal;
+}
+
+.v3-chip-more {
   display: inline-flex;
   align-items: center;
-  padding: 4px 8px;
+  padding: 1px 6px;
   background: #eff6ff;
   color: #1d4ed8;
   border: 1px solid #bfdbfe;
+  border-radius: 4px;
+  font-size: 10.5px;
+  font-weight: 600;
+  cursor: pointer;
+  align-self: flex-start;
+  margin-top: 1px;
+}
+
+.v3-chip-more:hover {
+  background: #dbeafe;
+}
+
+/* CRM Sync Status Group - Clean, Dashboard-Native Presentation */
+.v3-crm-sync-status-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  align-items: flex-start;
+}
+
+.v3-sync-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 8px;
+  border-radius: 9999px;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.v3-sync-badge.is-synced {
+  background: #ecfdf5;
+  color: #065f46;
+  border: 1px solid #a7f3d0;
+}
+
+.v3-sync-badge.is-pending {
+  background: #fffbeb;
+  color: #92400e;
+  border: 1px solid #fde68a;
+}
+
+.v3-sync-badge .status-pulse-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #10b981;
+}
+
+.v3-sync-badge .status-pulse-dot.dot-amber {
+  background: #f59e0b;
+}
+
+.v3-crm-link-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 8px;
+  background: #ffffff;
+  color: #0284c7;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  text-decoration: none !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.v3-crm-link-chip:hover {
+  background: #f0f9ff;
+  border-color: #38bdf8;
+  color: #0369a1;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 5px rgba(2, 132, 199, 0.15);
+}
+
+.v3-crm-link-chip i {
+  font-size: 9.5px;
+  color: #0284c7;
+}
+
+.btn-v3-sync-now {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 9px;
+  background: #0284c7;
+  color: #ffffff !important;
+  border: 1px solid #0284c7;
   border-radius: 6px;
   font-size: 11px;
   font-weight: 600;
   cursor: pointer;
-  text-decoration: none;
-  line-height: 1.3;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+  box-shadow: 0 1px 2px rgba(2, 132, 199, 0.2);
 }
 
-.fb-more-responses-btn:hover {
-  background: #dbeafe;
-  color: #1e40af;
+.btn-v3-sync-now:hover {
+  background: #0369a1;
+  border-color: #0369a1;
+  transform: translateY(-1px);
 }
 
-/* FB Lead Ads Sync & Pagination Enhancements */
-.fb-sync-status-cell {
-  display: flex;
-  align-items: center;
-  gap: 6px;
+.btn-v3-sync-now:disabled,
+.btn-v3-sync-now.is-loading {
+  opacity: 0.65;
+  cursor: not-allowed;
+  transform: none;
 }
 
-/* Unified CRM Sync Pill System */
+/* Backward-compatible .v3-crm-sync-pill */
 .v3-crm-sync-pill {
   display: inline-flex;
   align-items: center;
@@ -19519,86 +19699,9 @@ input[type="date"]:hover::-webkit-calendar-picker-indicator {
   border-color: #bbf7d0;
 }
 
-.v3-crm-sync-pill.is-synced .v3-sync-status-tag {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  color: #15803d;
-  font-weight: 600;
-  font-size: 11.5px;
-}
-
-.v3-crm-sync-pill.is-synced .v3-sync-enquiry-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  padding: 3px 7px;
-  background: #ffffff;
-  color: #0284c7;
-  border: 1px solid #bae6fd;
-  border-radius: 6px;
-  font-weight: 700;
-  font-size: 11px;
-  text-decoration: none;
-  box-shadow: 0 1px 2px rgba(2, 132, 199, 0.08);
-  transition: all 0.15s ease;
-}
-
-.v3-crm-sync-pill.is-synced .v3-sync-enquiry-link:hover {
-  background: #0284c7;
-  color: #ffffff;
-  border-color: #0284c7;
-  box-shadow: 0 2px 5px rgba(2, 132, 199, 0.25);
-  transform: translateY(-1px);
-}
-
-.v3-crm-sync-pill.is-synced .v3-sync-enquiry-link i {
-  font-size: 10px;
-}
-
 .v3-crm-sync-pill.is-pending {
   background: #fffbeb;
   border-color: #fde68a;
-}
-
-.v3-crm-sync-pill.is-pending .v3-sync-status-tag {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  color: #b45309;
-  font-weight: 600;
-  font-size: 11.5px;
-}
-
-.v3-crm-sync-pill.is-pending .v3-sync-action-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  padding: 3px 9px;
-  background: #0284c7;
-  color: #ffffff;
-  border: 1px solid #0284c7;
-  border-radius: 6px;
-  font-weight: 600;
-  font-size: 11px;
-  cursor: pointer;
-  box-shadow: 0 1px 2px rgba(2, 132, 199, 0.18);
-  transition: all 0.15s ease;
-  line-height: 1.2;
-}
-
-.v3-crm-sync-pill.is-pending .v3-sync-action-btn:hover {
-  background: #0369a1;
-  border-color: #0369a1;
-  box-shadow: 0 2px 5px rgba(2, 132, 199, 0.28);
-  transform: translateY(-1px);
-}
-
-.v3-crm-sync-pill.is-pending .v3-sync-action-btn:disabled,
-.v3-crm-sync-pill.is-pending .v3-sync-action-btn.is-loading {
-  opacity: 0.65;
-  cursor: not-allowed;
-  transform: none;
 }
 
 .v3-crm-sync-pill.is-syncing {
@@ -19694,44 +19797,7 @@ input[type="date"]:hover::-webkit-calendar-picker-indicator {
   font-weight: 500;
 }
 
-/* Scoped FB Page Cards & Actions */
-.btn-fb-view-forms {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  padding: 8px 16px;
-  background: #1877f2;
-  color: #ffffff !important;
-  border: 1px solid #1877f2;
-  border-radius: 8px;
-  font-size: 13px;
-  font-weight: 600;
-  text-decoration: none !important;
-  cursor: pointer;
-  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
-  box-shadow: 0 1px 3px rgba(24, 119, 242, 0.25);
-  white-space: nowrap;
-  width: 100%;
-}
-
-.btn-fb-view-forms:hover {
-  background: #166fe5;
-  border-color: #166fe5;
-  color: #ffffff !important;
-  box-shadow: 0 4px 12px rgba(24, 119, 242, 0.35);
-  transform: translateY(-1px);
-}
-
-.btn-fb-view-forms i {
-  font-size: 13px;
-  transition: transform 0.15s ease;
-}
-
-.btn-fb-view-forms:hover i {
-  transform: translateX(3px);
-}
-
+/* Scoped Table CRM Links */
 .v3-table-crm-link {
   display: inline-flex;
   align-items: center;

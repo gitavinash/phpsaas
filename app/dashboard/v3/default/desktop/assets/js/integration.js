@@ -2442,7 +2442,14 @@
 
           let contactHtml = "";
           if (lead.phone) {
-            contactHtml += '<a href="tel:' + escapeHtml(lead.phone) + '" class="fb-contact-link phone"><i class="fi fi-rr-phone-call"></i> <span>' + escapeHtml(lead.phone) + '</span></a>';
+            const cleanWa = String(lead.phone).replace(/[^0-9]/g, "");
+            const waNum = (cleanWa.length === 10) ? ("91" + cleanWa) : cleanWa;
+            const waUrl = "https://wa.me/" + waNum + "?text=" + encodeURIComponent("Hello " + (lead.full_name || "") + ", thank you for your enquiry on Facebook. How may we assist you?");
+            contactHtml += 
+              '<div class="fb-contact-phone-row">' +
+                '<a href="tel:' + escapeHtml(lead.phone) + '" class="fb-contact-link phone"><i class="fi fi-rr-phone-call"></i> <span>' + escapeHtml(lead.phone) + '</span></a>' +
+                '<a href="' + waUrl + '" target="_blank" rel="noopener noreferrer" class="fb-wa-action-btn" title="Chat on WhatsApp"><i class="fi fi-brands-whatsapp"></i></a>' +
+              '</div>';
           }
           if (lead.email) {
             contactHtml += '<a href="mailto:' + escapeHtml(lead.email) + '" class="fb-contact-link email"><i class="fi fi-rr-envelope"></i> <span>' + escapeHtml(lead.email) + '</span></a>';
@@ -2455,13 +2462,13 @@
           if (lead.questions && lead.questions.length > 0) {
             const firstTwo = lead.questions.slice(0, 2);
             firstTwo.forEach(function (q) {
-              respHtml += '<span class="fb-response-tag"><span class="tag-q">' + escapeHtml(q.label) + ':</span> <span class="tag-a">' + escapeHtml(q.val) + '</span></span> ';
+              respHtml += '<span class="v3-response-chip" title="' + escapeHtml(q.label + ': ' + q.val) + '"><span class="chip-label">' + escapeHtml(q.label) + ':</span> <span class="chip-val">' + escapeHtml(q.val) + '</span></span> ';
             });
             if (lead.questions.length > 2) {
-              respHtml += '<button type="button" class="fb-more-responses-btn btn-view-lead-modal" data-lead="' + jsonEncoded + '" title="Click to view all responses">+' + (lead.questions.length - 2) + ' more</button>';
+              respHtml += '<button type="button" class="v3-chip-more btn-view-lead-modal" data-lead="' + jsonEncoded + '" title="Click to view all responses">+' + (lead.questions.length - 2) + ' more</button>';
             }
           } else {
-            respHtml = '<span class="v3-badge v3-badge-gray">Standard Inquiry</span>';
+            respHtml = '<span class="v3-response-chip is-default">Default Ad Capture</span>';
           }
 
           // Dynamic Avatar Color Variant
@@ -2485,31 +2492,35 @@
           let crmSyncHtml = "";
           if (lead.is_synced) {
             crmSyncHtml =
-              '<div class="v3-crm-sync-pill is-synced" title="Lead successfully ingested into CRM">' +
-                '<span class="v3-sync-status-tag">' +
+              '<div class="v3-crm-sync-status-group">' +
+                '<span class="v3-sync-badge is-synced" title="Lead successfully ingested into CRM">' +
                   '<span class="status-pulse-dot"></span>' +
-                  '<span>Synced</span>' +
+                  '<span>Synced to CRM</span>' +
                 '</span>' +
                 (lead.crm_enquiry_id
-                  ? '<a href="/dashboard/leads/view/?id=' + lead.crm_enquiry_id + '" class="v3-sync-enquiry-link" title="Open Enquiry #' + lead.crm_enquiry_id + ' in CRM">' +
-                      '<span class="enquiry-tag">#' + lead.crm_enquiry_id + '</span>' +
+                  ? '<a href="/dashboard/leads/view/?id=' + lead.crm_enquiry_id + '" class="v3-crm-link-chip" title="Open Enquiry #' + lead.crm_enquiry_id + ' in CRM">' +
                       '<i class="fi fi-rr-arrow-up-right-from-square"></i>' +
+                      '<span>Enquiry #' + lead.crm_enquiry_id + '</span>' +
                     '</a>'
                   : '') +
               '</div>';
           } else {
             crmSyncHtml =
-              '<div class="v3-crm-sync-pill is-pending" title="Lead pending CRM ingestion">' +
-                '<span class="v3-sync-status-tag">' +
-                  '<span class="status-pulse-dot"></span>' +
-                  '<span>Not Synced</span>' +
+              '<div class="v3-crm-sync-status-group">' +
+                '<span class="v3-sync-badge is-pending" title="Lead pending CRM ingestion">' +
+                  '<span class="status-pulse-dot dot-amber"></span>' +
+                  '<span>Not in CRM</span>' +
                 '</span>' +
-                '<button type="button" class="v3-sync-action-btn btn-sync-lead-crm" data-lead-id="' + escapeHtml(lead.id) + '" data-form-id="' + escapeHtml($wrap.attr("data-form-id") || "") + '" title="Push lead into CRM immediately">' +
+                '<button type="button" class="btn-v3-sync-now btn-sync-lead-crm" data-lead-id="' + escapeHtml(lead.id) + '" data-form-id="' + escapeHtml($wrap.attr("data-form-id") || "") + '" title="Push lead into CRM immediately">' +
                   '<i class="fi fi-rr-cloud-upload"></i>' +
-                  '<span>Sync Now</span>' +
+                  '<span>Sync to CRM</span>' +
                 '</button>' +
               '</div>';
           }
+
+          const destBadge = lead.destination
+            ? '<span class="v3-lead-dest-chip" title="Destination: ' + escapeHtml(lead.destination) + '"><i class="fi fi-rr-map-marker"></i> ' + escapeHtml(lead.destination) + '</span>'
+            : '<span class="v3-lead-source-chip"><i class="fi fi-brands-facebook"></i> Meta Lead</span>';
 
           const rowHtml =
             '<tr class="fb-lead-row" data-lead-id="' + escapeHtml(lead.id) + '">' +
@@ -2523,13 +2534,13 @@
                 '<div class="v3-table-form-cell">' +
                   '<div class="fb-lead-avatar ' + avatarClass + '">' + escapeHtml(lead.initial || "F") + '</div>' +
                   '<div class="v3-table-form-info">' +
-                    '<h4>' + escapeHtml(lead.full_name) + '</h4>' +
-                    '<span>Facebook Prospect</span>' +
+                    '<h4 class="lead-customer-name" title="' + escapeHtml(lead.full_name) + '">' + escapeHtml(lead.full_name) + '</h4>' +
+                    '<div class="lead-sub-chips">' + destBadge + '</div>' +
                   '</div>' +
                 '</div>' +
               '</td>' +
               '<td><div class="fb-contact-cell">' + contactHtml + '</div></td>' +
-              '<td><div class="fb-lead-responses-list">' + respHtml + '</div></td>' +
+              '<td><div class="v3-response-pills-wrap">' + respHtml + '</div></td>' +
               '<td>' + leadIdHtml + '</td>' +
               '<td class="crm-sync-status-cell">' + crmSyncHtml + '</td>' +
               '<td class="text-end">' +
@@ -2590,9 +2601,9 @@
         const formId = $btn.data("form-id") || $wrap.attr("data-form-id") || "";
         if (!leadId || !formId) return;
 
-        const $pill = $btn.closest(".v3-crm-sync-pill");
+        const $group = $btn.closest(".v3-crm-sync-status-group");
         $btn.prop("disabled", true).addClass("is-loading");
-        $pill.removeClass("is-pending").addClass("is-syncing").html('<i class="fi fi-rr-spinner spinner"></i> <span>Syncing...</span>');
+        $group.html('<span class="v3-sync-badge is-pending"><i class="fi fi-rr-spinner spinner"></i> <span>Syncing...</span></span>');
 
         $.ajax({
           url: "/api/v3/integration/facebook.php",
@@ -2606,35 +2617,35 @@
           dataType: "json",
           success: function (res) {
             if (res && res.status === "success" && res.enquiry_id) {
-              const $cell = $pill.closest(".crm-sync-status-cell");
+              const $cell = $group.closest(".crm-sync-status-cell");
               $cell.html(
-                '<div class="v3-crm-sync-pill is-synced" title="Lead successfully ingested into CRM">' +
-                  '<span class="v3-sync-status-tag">' +
+                '<div class="v3-crm-sync-status-group">' +
+                  '<span class="v3-sync-badge is-synced" title="Lead successfully ingested into CRM">' +
                     '<span class="status-pulse-dot"></span>' +
-                    '<span>Synced</span>' +
+                    '<span>Synced to CRM</span>' +
                   '</span>' +
-                  '<a href="/dashboard/leads/view/?id=' + res.enquiry_id + '" class="v3-sync-enquiry-link" title="Open Enquiry #' + res.enquiry_id + ' in CRM">' +
-                    '<span class="enquiry-tag">#' + res.enquiry_id + '</span>' +
+                  '<a href="/dashboard/leads/view/?id=' + res.enquiry_id + '" class="v3-crm-link-chip" title="Open Enquiry #' + res.enquiry_id + ' in CRM">' +
                     '<i class="fi fi-rr-arrow-up-right-from-square"></i>' +
+                    '<span>Enquiry #' + res.enquiry_id + '</span>' +
                   '</a>' +
                 '</div>'
               );
               self.showToast(res.message || "Lead #" + res.enquiry_id + " synced to CRM.", "success");
             } else {
-              $pill.removeClass("is-syncing").addClass("is-pending").html(
-                '<span class="v3-sync-status-tag"><span class="status-pulse-dot"></span><span>Not Synced</span></span>' +
-                '<button type="button" class="v3-sync-action-btn btn-sync-lead-crm" data-lead-id="' + escapeHtml(leadId) + '" data-form-id="' + escapeHtml(formId) + '" title="Push lead into CRM immediately">' +
-                  '<i class="fi fi-rr-cloud-upload"></i> <span>Sync Now</span>' +
+              $group.html(
+                '<span class="v3-sync-badge is-pending" title="Lead pending CRM ingestion"><span class="status-pulse-dot dot-amber"></span><span>Not in CRM</span></span>' +
+                '<button type="button" class="btn-v3-sync-now btn-sync-lead-crm" data-lead-id="' + escapeHtml(leadId) + '" data-form-id="' + escapeHtml(formId) + '" title="Push lead into CRM immediately">' +
+                  '<i class="fi fi-rr-cloud-upload"></i> <span>Push to CRM</span>' +
                 '</button>'
               );
               self.showToast((res && res.msg) || "Failed to sync lead into CRM.", "error");
             }
           },
           error: function () {
-            $pill.removeClass("is-syncing").addClass("is-pending").html(
-              '<span class="v3-sync-status-tag"><span class="status-pulse-dot"></span><span>Not Synced</span></span>' +
-              '<button type="button" class="v3-sync-action-btn btn-sync-lead-crm" data-lead-id="' + escapeHtml(leadId) + '" data-form-id="' + escapeHtml(formId) + '" title="Push lead into CRM immediately">' +
-                '<i class="fi fi-rr-cloud-upload"></i> <span>Sync Now</span>' +
+            $group.html(
+              '<span class="v3-sync-badge is-pending" title="Lead pending CRM ingestion"><span class="status-pulse-dot dot-amber"></span><span>Not in CRM</span></span>' +
+              '<button type="button" class="btn-v3-sync-now btn-sync-lead-crm" data-lead-id="' + escapeHtml(leadId) + '" data-form-id="' + escapeHtml(formId) + '" title="Push lead into CRM immediately">' +
+                '<i class="fi fi-rr-cloud-upload"></i> <span>Push to CRM</span>' +
               '</button>'
             );
             self.showToast("Network error syncing lead to CRM.", "error");

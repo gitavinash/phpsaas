@@ -35,20 +35,23 @@ function formatFbQuestionLabel($label)
 {
     $label = trim($label, " ?:;,-_");
     $low = strtolower($label);
-    if (strpos($low, 'how many people') !== false || strpos($low, 'no of persons') !== false || strpos($low, 'travelling') !== false || strpos($low, 'passengers') !== false) {
+    if (strpos($low, 'how many') !== false || strpos($low, 'person') !== false || strpos($low, 'people') !== false || strpos($low, 'travelling') !== false || strpos($low, 'passengers') !== false || strpos($low, 'pax') !== false || strpos($low, 'adult') !== false) {
         return 'Travelers';
     }
-    if (strpos($low, 'when are you planning') !== false || strpos($low, 'travel date') !== false || strpos($low, 'planning') !== false) {
-        return 'Timeline';
+    if (strpos($low, 'when') !== false || strpos($low, 'planning') !== false || strpos($low, 'travel date') !== false || strpos($low, 'timeline') !== false || strpos($low, 'month') !== false || strpos($low, 'date') !== false) {
+        return 'Travel Date';
     }
-    if (strpos($low, 'destination') !== false || strpos($low, 'where') !== false) {
+    if (strpos($low, 'destination') !== false || strpos($low, 'where') !== false || strpos($low, 'package') !== false || strpos($low, 'place') !== false) {
         return 'Destination';
     }
-    if (strpos($low, 'budget') !== false) {
+    if (strpos($low, 'budget') !== false || strpos($low, 'price') !== false || strpos($low, 'cost') !== false) {
         return 'Budget';
     }
-    if (strpos($low, 'duration') !== false) {
+    if (strpos($low, 'duration') !== false || strpos($low, 'days') !== false || strpos($low, 'nights') !== false) {
         return 'Duration';
+    }
+    if (strpos($low, 'city') !== false || strpos($low, 'location') !== false || strpos($low, 'departure') !== false || strpos($low, 'from') !== false) {
+        return 'City';
     }
     return ucwords(str_replace(['_', '-'], ' ', $label));
 }
@@ -60,7 +63,7 @@ function formatFbResponseVal($val)
     return ucwords(trim($clean));
 }
 
-// 1. Get Campaign Total Leads
+// 1. Get Campaign Total Leads safely
 $totalCampaignLeads = (int)($formRow['fb_forms_leads_count'] ?? 0);
 if ($formRow && !empty($pageAccessToken)) {
     $metaUrl = "https://graph.facebook.com/v19.0/{$formId}?fields=id,name,status,leads_count,created_time&access_token=" . urlencode($pageAccessToken);
@@ -75,7 +78,10 @@ if ($formRow && !empty($pageAccessToken)) {
     $metaData = json_decode($metaResp, true);
     if (!empty($metaData['leads_count'])) {
         $totalCampaignLeads = max($totalCampaignLeads, (int)$metaData['leads_count']);
-        mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "fb_forms SET fb_forms_leads_count = {$totalCampaignLeads} WHERE fb_forms_id = '" . mysqli_real_escape_string($connection, $formId) . "' AND fb_forms_site_id = " . SITE_ID);
+        $chkCol = mysqli_query($connection, "SHOW COLUMNS FROM " . TABLE_PREFIX . "fb_forms LIKE 'fb_forms_leads_count'");
+        if ($chkCol && mysqli_num_rows($chkCol) > 0) {
+            mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "fb_forms SET fb_forms_leads_count = {$totalCampaignLeads} WHERE fb_forms_id = '" . mysqli_real_escape_string($connection, $formId) . "' AND fb_forms_site_id = " . SITE_ID);
+        }
     }
 }
 
@@ -473,9 +479,26 @@ $isDigitalMarketing = (isset($site_access_type) && $site_access_type === 'digita
                                     $fullName = 'Facebook Lead #' . substr($leadIdVal, -4);
                                 }
 
-                                $initial = strtoupper(substr($fullName, 0, 1));
+                                $nameWords = preg_split('/\s+/', trim($fullName));
+                                if (count($nameWords) >= 2 && !empty($nameWords[0]) && !empty($nameWords[1])) {
+                                    $initials = strtoupper(substr($nameWords[0], 0, 1) . substr($nameWords[1], 0, 1));
+                                } else {
+                                    $initials = strtoupper(substr($fullName, 0, 1));
+                                }
+
                                 $avatarVariants = ['avatar-blue', 'avatar-indigo', 'avatar-purple', 'avatar-emerald', 'avatar-amber'];
                                 $avatarClass = $avatarVariants[abs(crc32($fullName)) % 5];
+
+                                // Detect Destination if available
+                                $leadDest = '';
+                                if (!empty($customResponses)) {
+                                    foreach ($customResponses as $cr) {
+                                        if ($cr['label'] === 'Destination' && !empty($cr['val']) && strlen($cr['val']) <= 25) {
+                                            $leadDest = $cr['val'];
+                                            break;
+                                        }
+                                    }
+                                }
 
                                 // Determine CRM Sync Status
                                 $isSynced = false;
@@ -497,6 +520,12 @@ $isDigitalMarketing = (isset($site_access_type) && $site_access_type === 'digita
                                         $crmEnquiryId = (int)$syncMap['email_' . strtolower(trim($emailVal))];
                                     }
                                 }
+
+                                // WhatsApp Link preparation
+                                $cleanWa = preg_replace('/[^0-9]/', '', $phoneVal);
+                                $waNum = (strlen($cleanWa) === 10) ? ('91' . $cleanWa) : $cleanWa;
+                                $waText = urlencode("Hello " . $fullName . ", thank you for inquiring about " . $formDisplayName . " on Facebook. How may we assist you?");
+                                $waUrl = "https://wa.me/{$waNum}?text={$waText}";
 
                                 // JSON payload for modal
                                 $leadPayload = [
@@ -521,11 +550,21 @@ $isDigitalMarketing = (isset($site_access_type) && $site_access_type === 'digita
                                     <td>
                                         <div class="v3-table-form-cell">
                                             <div class="fb-lead-avatar <?php echo $avatarClass; ?>">
-                                                <?php echo htmlspecialchars($initial); ?>
+                                                <?php echo htmlspecialchars($initials); ?>
                                             </div>
                                             <div class="v3-table-form-info">
-                                                <h4><?php echo htmlspecialchars($fullName); ?></h4>
-                                                <span>Facebook Prospect</span>
+                                                <h4 class="lead-customer-name" title="<?php echo htmlspecialchars($fullName); ?>"><?php echo htmlspecialchars($fullName); ?></h4>
+                                                <div class="lead-sub-chips">
+                                                    <?php if (!empty($leadDest)) { ?>
+                                                        <span class="v3-lead-dest-chip" title="Destination: <?php echo htmlspecialchars($leadDest); ?>">
+                                                            <i class="fi fi-rr-map-marker"></i> <?php echo htmlspecialchars($leadDest); ?>
+                                                        </span>
+                                                    <?php } else { ?>
+                                                        <span class="v3-lead-source-chip">
+                                                            <i class="fi fi-brands-facebook"></i> Meta Lead
+                                                        </span>
+                                                    <?php } ?>
+                                                </div>
                                             </div>
                                         </div>
                                     </td>
@@ -535,9 +574,14 @@ $isDigitalMarketing = (isset($site_access_type) && $site_access_type === 'digita
                                                 <span class="v3-badge v3-badge-gray" title="Contact details protected for digital marketing">Protected</span>
                                             <?php } else { ?>
                                                 <?php if (!empty($phoneVal)) { ?>
-                                                    <a href="tel:<?php echo htmlspecialchars($phoneVal); ?>" class="fb-contact-link phone">
-                                                        <i class="fi fi-rr-phone-call"></i> <span><?php echo htmlspecialchars($phoneVal); ?></span>
-                                                    </a>
+                                                    <div class="fb-contact-phone-row">
+                                                        <a href="tel:<?php echo htmlspecialchars($phoneVal); ?>" class="fb-contact-link phone">
+                                                            <i class="fi fi-rr-phone-call"></i> <span><?php echo htmlspecialchars($phoneVal); ?></span>
+                                                        </a>
+                                                        <a href="<?php echo $waUrl; ?>" target="_blank" rel="noopener noreferrer" class="fb-wa-action-btn" title="Chat on WhatsApp">
+                                                            <i class="fi fi-brands-whatsapp"></i>
+                                                        </a>
+                                                    </div>
                                                 <?php } ?>
                                                 <?php if (!empty($emailVal)) { ?>
                                                     <a href="mailto:<?php echo htmlspecialchars($emailVal); ?>" class="fb-contact-link email" title="<?php echo htmlspecialchars($emailVal); ?>">
@@ -551,21 +595,21 @@ $isDigitalMarketing = (isset($site_access_type) && $site_access_type === 'digita
                                         </div>
                                     </td>
                                     <td>
-                                        <div class="fb-lead-responses-list">
+                                        <div class="v3-response-pills-wrap">
                                             <?php if (!empty($customResponses)) {
                                                 foreach (array_slice($customResponses, 0, 2) as $resp) { ?>
-                                                    <span class="fb-response-tag">
-                                                        <span class="tag-q"><?php echo htmlspecialchars(formatFbQuestionLabel($resp['label'])); ?>:</span>
-                                                        <span class="tag-a"><?php echo htmlspecialchars(formatFbResponseVal($resp['val'])); ?></span>
+                                                    <span class="v3-response-chip" title="<?php echo htmlspecialchars($resp['label'] . ': ' . $resp['val']); ?>">
+                                                        <span class="chip-label"><?php echo htmlspecialchars($resp['label']); ?>:</span>
+                                                        <span class="chip-val"><?php echo htmlspecialchars($resp['val']); ?></span>
                                                     </span>
                                                 <?php }
                                                 if (count($customResponses) > 2) { ?>
-                                                    <button type="button" class="fb-more-responses-btn btn-view-lead-modal" data-lead="<?php echo $jsonEncodedLead; ?>" title="Click to view all responses">
+                                                    <button type="button" class="v3-chip-more btn-view-lead-modal" data-lead="<?php echo $jsonEncodedLead; ?>" title="Click to view all responses">
                                                         +<?php echo (count($customResponses) - 2); ?> more
                                                     </button>
                                                 <?php }
                                             } else { ?>
-                                                <span class="v3-badge v3-badge-gray">Standard Inquiry</span>
+                                                <span class="v3-response-chip is-default">Default Ad Capture</span>
                                             <?php } ?>
                                         </div>
                                     </td>
@@ -580,27 +624,25 @@ $isDigitalMarketing = (isset($site_access_type) && $site_access_type === 'digita
                                     <!-- Lead Sync to CRM Column -->
                                     <td class="crm-sync-status-cell">
                                         <?php if ($isSynced) { ?>
-                                            <div class="v3-crm-sync-pill is-synced" title="Lead successfully ingested into CRM">
-                                                <span class="v3-sync-status-tag">
-                                                    <span class="status-pulse-dot"></span>
-                                                    <span>Synced</span>
+                                            <div class="v3-crm-sync-status-group">
+                                                <span class="v3-sync-badge is-synced" title="Lead successfully ingested into CRM">
+                                                    <span class="status-pulse-dot"></span> Synced to CRM
                                                 </span>
                                                 <?php if (!empty($crmEnquiryId)) { ?>
-                                                    <a href="/dashboard/leads/view/?id=<?php echo $crmEnquiryId; ?>" class="v3-sync-enquiry-link" title="Open Enquiry #<?php echo $crmEnquiryId; ?> in CRM">
-                                                        <span class="enquiry-tag">#<?php echo $crmEnquiryId; ?></span>
+                                                    <a href="/dashboard/leads/view/?id=<?php echo $crmEnquiryId; ?>" class="v3-crm-link-chip" title="Open Enquiry #<?php echo $crmEnquiryId; ?> in CRM">
                                                         <i class="fi fi-rr-arrow-up-right-from-square"></i>
+                                                        <span>Enquiry #<?php echo $crmEnquiryId; ?></span>
                                                     </a>
                                                 <?php } ?>
                                             </div>
                                         <?php } else { ?>
-                                            <div class="v3-crm-sync-pill is-pending" title="Lead pending CRM ingestion">
-                                                <span class="v3-sync-status-tag">
-                                                    <span class="status-pulse-dot"></span>
-                                                    <span>Not Synced</span>
+                                            <div class="v3-crm-sync-status-group">
+                                                <span class="v3-sync-badge is-pending" title="Lead pending CRM ingestion">
+                                                    <span class="status-pulse-dot dot-amber"></span> Not in CRM
                                                 </span>
-                                                <button type="button" class="v3-sync-action-btn btn-sync-lead-crm" data-lead-id="<?php echo htmlspecialchars($leadIdVal); ?>" data-form-id="<?php echo htmlspecialchars($formId); ?>" title="Push lead into CRM immediately">
+                                                <button type="button" class="btn-v3-sync-now btn-sync-lead-crm" data-lead-id="<?php echo htmlspecialchars($leadIdVal); ?>" data-form-id="<?php echo htmlspecialchars($formId); ?>" title="Push lead into CRM immediately">
                                                     <i class="fi fi-rr-cloud-upload"></i>
-                                                    <span>Sync Now</span>
+                                                    <span>Push to CRM</span>
                                                 </button>
                                             </div>
                                         <?php } ?>

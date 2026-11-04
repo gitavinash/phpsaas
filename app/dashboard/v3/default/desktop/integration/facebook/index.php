@@ -60,7 +60,7 @@ function getFacebookPageList($connection, $extendedToken, $access_token)
             }
         }
     }
-    ?>
+?>
     <div class="package-page-wrapper fb-integration-wrapper">
         <div class="fb-sync-loading-box">
             <div class="v3-leads-table-loader">
@@ -74,7 +74,7 @@ function getFacebookPageList($connection, $extendedToken, $access_token)
         </div>
     </div>
     <meta http-equiv="refresh" content="3;url=/dashboard/integration/facebook/">
-    <?php
+<?php
     exit();
 }
 
@@ -101,7 +101,22 @@ if (isset($new) && isset($accessToken)) {
     }
 }
 
+// Ensure required database schema exists safely
+$hasLeadsCountCol = false;
+$checkFormsCol = mysqli_query($connection, "SHOW COLUMNS FROM " . TABLE_PREFIX . "fb_forms LIKE 'fb_forms_leads_count'");
+if ($checkFormsCol && mysqli_num_rows($checkFormsCol) > 0) {
+    $hasLeadsCountCol = true;
+} else {
+    // Attempt auto-migration
+    @mysqli_query($connection, "ALTER TABLE " . TABLE_PREFIX . "fb_forms ADD COLUMN fb_forms_leads_count INT DEFAULT 0");
+    $checkFormsCol2 = mysqli_query($connection, "SHOW COLUMNS FROM " . TABLE_PREFIX . "fb_forms LIKE 'fb_forms_leads_count'");
+    if ($checkFormsCol2 && mysqli_num_rows($checkFormsCol2) > 0) {
+        $hasLeadsCountCol = true;
+    }
+}
+
 // Fetch connected pages with aggregated form and lead counts
+$leadsCountExpr = $hasLeadsCountCol ? "SUM(COALESCE(fb_forms_leads_count, 0))" : "0";
 $pageListQuery = "SELECT p.*, 
        COALESCE(f.forms_count, 0) AS forms_count,
        COALESCE(f.total_leads, 0) AS total_leads
@@ -109,7 +124,7 @@ FROM " . TABLE_PREFIX . "fb_pages p
 LEFT JOIN (
     SELECT fb_forms_page_id, 
            COUNT(*) AS forms_count, 
-           SUM(fb_forms_leads_count) AS total_leads 
+           {$leadsCountExpr} AS total_leads 
     FROM " . TABLE_PREFIX . "fb_forms 
     WHERE fb_forms_site_id = " . SITE_ID . "
     GROUP BY fb_forms_page_id
@@ -248,9 +263,9 @@ if ($checkTokenRes && mysqli_num_rows($checkTokenRes) > 0) {
 
         <!-- Pages Grid -->
         <div class="fb-pages-grid" id="fbPagesGrid">
-            <?php 
+            <?php
             $avatarColors = ['avatar-blue', 'avatar-indigo', 'avatar-purple', 'avatar-emerald', 'avatar-amber'];
-            foreach ($pages as $index => $pageData) { 
+            foreach ($pages as $index => $pageData) {
                 $pageName = $pageData['fb_page_name'] ?? 'Facebook Page';
                 $pageId = $pageData['fb_page_id'];
                 $pageInitial = strtoupper(substr($pageName, 0, 1));
@@ -258,162 +273,161 @@ if ($checkTokenRes && mysqli_num_rows($checkTokenRes) > 0) {
                 $category = !empty($pageData['fb_page_category']) ? $pageData['fb_page_category'] : 'Business Page';
                 $formsCount = (int)$pageData['forms_count'];
                 $leadsCount = (int)$pageData['total_leads'];
-                
+
                 $lastSyncFormatted = 'Not Synced';
                 if (!empty($pageData['fb_page_last_sync'])) {
                     $lastSyncFormatted = date('d M, h:i A', strtotime($pageData['fb_page_last_sync']));
                 }
             ?>
-                <div class="fb-page-card" 
-                     data-page-id="<?php echo htmlspecialchars($pageId); ?>" 
-                     data-page-name="<?php echo htmlspecialchars($pageName); ?>" 
-                     data-page-category="<?php echo htmlspecialchars($category); ?>">
-                    
-                    <!-- Top Meta Brand Stripe -->
-                    <div class="fb-card-top-stripe"></div>
+                <div class="fb-page-card"
+                    data-page-id="<?php echo htmlspecialchars($pageId); ?>"
+                    data-page-name="<?php echo htmlspecialchars($pageName); ?>"
+                    data-page-category="<?php echo htmlspecialchars($category); ?>">
+                                <!-- Top Meta Brand Stripe -->
+                                <div class="fb-card-top-stripe"></div>
 
-                    <div class="fb-card-inner">
-                        <!-- Header: Avatar + Title + Status -->
-                        <div class="fb-card-header-row">
-                            <div class="fb-card-identity">
-                                <div class="fb-page-avatar <?php echo $avatarClass; ?>">
-                                    <span class="fb-avatar-letter"><?php echo htmlspecialchars($pageInitial); ?></span>
-                                    <span class="fb-avatar-meta-badge" title="Verified Meta Connected Page">
-                                        <i class="fi fi-rr-check"></i>
-                                    </span>
-                                </div>
-                                <div class="fb-card-title-group">
-                                    <h3 class="fb-page-title" title="<?php echo htmlspecialchars($pageName); ?>"><?php echo htmlspecialchars($pageName); ?></h3>
-                                    <div class="fb-page-subtitle-row">
-                                        <span class="fb-category-pill"><?php echo htmlspecialchars($category); ?></span>
-                                        <span class="fb-dot-sep">•</span>
-                                        <div class="fb-page-id-chip" title="Facebook Page ID (Click to copy)">
-                                            <span class="id-label">ID</span>
-                                            <span class="id-val"><?php echo htmlspecialchars($pageId); ?></span>
-                                            <button type="button" class="btn-copy-id-chip btn-copy-lead-id" data-copy="<?php echo htmlspecialchars($pageId); ?>" title="Copy Page ID">
-                                                <i class="fi fi-rr-copy"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <span class="v3-status-badge status-active fb-card-status-badge" title="Subscribed to Real-Time Meta Webhooks">
-                                <span class="status-pulse-dot"></span> Subscribed
-                            </span>
-                        </div>
+                                <div class="fb-card-inner">
+                                    <!-- Header: Avatar + Title + Status -->
+                                    <div class="fb-card-header-row">
+                                        <div class="fb-card-identity">
+                                            <div class="fb-page-avatar <?php echo $avatarClass; ?>">
+                                                <span class="fb-avatar-letter"><?php echo htmlspecialchars($pageInitial); ?></span>
+                                                <span class="fb-avatar-meta-badge" title="Verified Meta Connected Page">
+                                                    <i class="fi fi-rr-check"></i>
+                                                </span>
+                                            </div>
+                                                    <div class="fb-card-title-group">
+                                                        <h3 class="fb-page-title" title="<?php echo htmlspecialchars($pageName); ?>"><?php echo htmlspecialchars($pageName); ?></h3>
+                                                        <div class="fb-page-subtitle-row">
+                                                            <span class="fb-category-pill"><?php echo htmlspecialchars($category); ?></span>
+                                                            <span class="fb-dot-sep">•</span>
+                                                            <div class="fb-page-id-chip" title="Facebook Page ID (Click to copy)">
+                                                                <span class="id-label">ID</span>
+                                                                <span class="id-val"><?php echo htmlspecialchars($pageId); ?></span>
+                                                                <button type="button" class="btn-copy-id-chip btn-copy-lead-id" data-copy="<?php echo htmlspecialchars($pageId); ?>" title="Copy Page ID">
+                                                                    <i class="fi fi-rr-copy"></i>
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                    <span class="v3-status-badge status-active fb-card-status-badge" title="Subscribed to Real-Time Meta Webhooks">
+                                                        <span class="status-pulse-dot"></span> Subscribed
+                                                    </span>
+                                            </div>
 
-                        <!-- 2 Prominent Metric Tiles -->
-                        <div class="fb-page-metrics-grid">
-                            <div class="fb-metric-tile blue">
-                                <div class="fb-tile-icon-wrap blue">
-                                    <i class="fi fi-rr-form"></i>
-                                </div>
-                                <div class="fb-tile-content">
-                                    <span class="fb-tile-val"><?php echo number_format($formsCount); ?></span>
-                                    <span class="fb-tile-label">Lead Forms</span>
-                                </div>
-                            </div>
+                                                    <!-- 2 Prominent Metric Tiles -->
+                                                    <div class="fb-page-metrics-grid">
+                                                        <div class="fb-metric-tile blue">
+                                                            <div class="fb-tile-icon-wrap blue">
+                                                                <i class="fi fi-rr-form"></i>
+                                                            </div>
+                                                            <div class="fb-tile-content">
+                                                                <span class="fb-tile-val"><?php echo number_format($formsCount); ?></span>
+                                                                <span class="fb-tile-label">Lead Forms</span>
+                                                            </div>
+                                                        </div>
 
-                            <div class="fb-metric-tile emerald">
-                                <div class="fb-tile-icon-wrap emerald">
-                                    <i class="fi fi-rr-users"></i>
-                                </div>
-                                <div class="fb-tile-content">
-                                    <span class="fb-tile-val"><?php echo number_format($leadsCount); ?></span>
-                                    <span class="fb-tile-label">Total Leads</span>
-                                </div>
-                            </div>
-                        </div>
+                                                            <div class="fb-metric-tile emerald">
+                                                                <div class="fb-tile-icon-wrap emerald">
+                                                                    <i class="fi fi-rr-users"></i>
+                                                                </div>
+                                                                <div class="fb-tile-content">
+                                                                    <span class="fb-tile-val"><?php echo number_format($leadsCount); ?></span>
+                                                                    <span class="fb-tile-label">Total Leads</span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
 
-                        <!-- Sync Health & Timestamp Strip -->
-                        <div class="fb-page-sync-strip">
-                            <span class="sync-time-text">
-                                <i class="fi fi-rr-clock-three"></i> Last Synced: <strong><?php echo htmlspecialchars($lastSyncFormatted); ?></strong>
-                            </span>
-                            <span class="sync-health-tag">
-                                <span class="status-pulse-dot"></span> Live Ingestion
-                            </span>
-                        </div>
-                    </div>
+                                                            <!-- Sync Health & Timestamp Strip -->
+                                                            <div class="fb-page-sync-strip">
+                                                                <span class="sync-time-text">
+                                                                    <i class="fi fi-rr-clock-three"></i> Last Synced: <strong><?php echo htmlspecialchars($lastSyncFormatted); ?></strong>
+                                                                </span>
+                                                                <span class="sync-health-tag">
+                                                                    <span class="status-pulse-dot"></span> Live Ingestion
+                                                                </span>
+                                                            </div>
+                                                        </div>
 
-                    <!-- Card Action Footer -->
-                    <div class="fb-page-footer">
-                        <a href="/dashboard/integration/facebook/page/?id=<?php echo urlencode($pageId); ?>&name=<?php echo urlencode($pageName); ?>" class="btn-fb-view-forms" title="View all lead forms for <?php echo htmlspecialchars($pageName); ?>">
-                            <i class="fi fi-rr-form"></i>
-                            <span>View Lead Forms</span>
-                            <span class="btn-fb-badge"><?php echo $formsCount; ?></span>
-                            <i class="fi fi-rr-arrow-right btn-fb-arrow"></i>
-                        </a>
-                        <a href="https://www.facebook.com/<?php echo urlencode($pageId); ?>" target="_blank" rel="noopener noreferrer" class="btn-fb-external" title="Open Page on Facebook">
-                            <i class="fi fi-rr-arrow-up-right-from-square"></i>
-                        </a>
-                    </div>
-                </div>
-            <?php } ?>
-            <div class="fb-pages-no-results" id="fbPagesNoResults">
-                <i class="fi fi-rr-search"></i> No Facebook pages found matching your search.
-            </div>
-        </div>
+                                                        <!-- Card Action Footer -->
+                                                        <div class="fb-page-footer">
+                                                                <a href="/dashboard/integration/facebook/page/?id=<?php echo urlencode($pageId); ?>&name=<?php echo urlencode($pageName); ?>" class="btn-fb-view-forms" title="View all lead forms for <?php echo htmlspecialchars($pageName); ?>">
+                                                                    <i class="fi fi-rr-form"></i>
+                                                                    <span>View Lead Forms</span>
+                                                                    <span class="btn-fb-badge"><?php echo $formsCount; ?></span>
+                                                                    <i class="fi fi-rr-arrow-right btn-fb-arrow"></i>
+                                                                </a>
+                                                                    <a href="https://www.facebook.com/<?php echo urlencode($pageId); ?>" target="_blank" rel="noopener noreferrer" class="btn-fb-external" title="Open Page on Facebook">
+                                                                        <i class="fi fi-rr-arrow-up-right-from-square"></i>
+                                                                    </a>
+                                                        </div>
+                                                    </div>
+                                                <?php } ?>
+                                                <div class="fb-pages-no-results" id="fbPagesNoResults">
+                                                    <i class="fi fi-rr-search"></i> No Facebook pages found matching your search.
+                                                </div>
+                                                </div>
 
-        <!-- Integration Capabilities Strip -->
-        <div class="fb-features-section">
-            <div class="fb-features-header">
-                <h4>Facebook Integration Capabilities</h4>
-                <p>Enterprise pipeline features active for your connected Meta advertising accounts.</p>
-            </div>
-            <div class="fb-features-grid">
-                <div class="fb-feature-card">
-                    <div class="fb-feature-icon blue">
-                        <i class="fi fi-rr-bolt"></i>
-                    </div>
-                    <div class="fb-feature-body">
-                        <h5>Instant Webhook Streaming</h5>
-                        <p>New prospects submitting instant forms on Facebook and Instagram are ingested directly into CRM within seconds.</p>
-                    </div>
-                </div>
+                                                <!-- Integration Capabilities Strip -->
+                                                <div class="fb-features-section">
+                                                    <div class="fb-features-header">
+                                                        <h4>Facebook Integration Capabilities</h4>
+                                                        <p>Enterprise pipeline features active for your connected Meta advertising accounts.</p>
+                                                    </div>
+                                                    <div class="fb-features-grid">
+                                                        <div class="fb-feature-card">
+                                                            <div class="fb-feature-icon blue">
+                                                                <i class="fi fi-rr-bolt"></i>
+                                                            </div>
+                                                            <div class="fb-feature-body">
+                                                                <h5>Instant Webhook Streaming</h5>
+                                                                <p>New prospects submitting instant forms on Facebook and Instagram are ingested directly into CRM within seconds.</p>
+                                                            </div>
+                                                        </div>
 
-                <div class="fb-feature-card">
-                    <div class="fb-feature-icon emerald">
-                        <i class="fi fi-rr-shield-check"></i>
-                    </div>
-                    <div class="fb-feature-body">
-                        <h5>Smart Deduplication</h5>
-                        <p>Phone numbers and emails are automatically matched to prevent duplicate inquiries and link directly to active leads.</p>
-                    </div>
-                </div>
+                                                        <div class="fb-feature-card">
+                                                            <div class="fb-feature-icon emerald">
+                                                                <i class="fi fi-rr-shield-check"></i>
+                                                            </div>
+                                                            <div class="fb-feature-body">
+                                                                <h5>Smart Deduplication</h5>
+                                                                <p>Phone numbers and emails are automatically matched to prevent duplicate inquiries and link directly to active leads.</p>
+                                                            </div>
+                                                        </div>
 
-                <div class="fb-feature-card">
-                    <div class="fb-feature-icon purple">
-                        <i class="fi fi-rr-paper-plane"></i>
-                    </div>
-                    <div class="fb-feature-body">
-                        <h5>Automated Lead Routing</h5>
-                        <p>Inquiries stream straight into the lead pipeline for instant sales team assignment and automated WhatsApp follow-ups.</p>
-                    </div>
-                </div>
+                                                        <div class="fb-feature-card">
+                                                            <div class="fb-feature-icon purple">
+                                                                <i class="fi fi-rr-paper-plane"></i>
+                                                            </div>
+                                                            <div class="fb-feature-body">
+                                                                <h5>Automated Lead Routing</h5>
+                                                                <p>Inquiries stream straight into the lead pipeline for instant sales team assignment and automated WhatsApp follow-ups.</p>
+                                                            </div>
+                                                        </div>
 
-                <div class="fb-feature-card">
-                    <div class="fb-feature-icon amber">
-                        <i class="fi fi-rr-lock"></i>
-                    </div>
-                    <div class="fb-feature-body">
-                        <h5>Enterprise Meta Security</h5>
-                        <p>Backed by official Meta Graph API v19.0, encrypted extended tokens, multi-tenant isolation, and role-based PII protection.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    <?php } else { ?>
-        <!-- Not Connected Hero State -->
-        <div class="fb-connect-hero">
-            <div class="integration-brand-logo brand-facebook v3-connect-hero-logo">
-                <img src="/app/dashboard/v3/default/desktop/assets/images/integration/facebook.svg" alt="Facebook">
-            </div>
-            <h3>Connect Your Facebook Advertising Account</h3>
-            <p>Authorize Aleya to securely receive instant leads from your Facebook &amp; Instagram lead ad campaigns with automated webhook syncing.</p>
-            <a href="<?php echo $reconnectURL; ?>" class="btn-fb-connect">
-                <i class="fi fi-rr-link-alt"></i> Connect Facebook Account
-            </a>
-        </div>
-    <?php } ?>
-</div>
+                                                        <div class="fb-feature-card">
+                                                            <div class="fb-feature-icon amber">
+                                                                <i class="fi fi-rr-lock"></i>
+                                                            </div>
+                                                            <div class="fb-feature-body">
+                                                                <h5>Enterprise Meta Security</h5>
+                                                                <p>Backed by official Meta Graph API v19.0, encrypted extended tokens, multi-tenant isolation, and role-based PII protection.</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            <?php } else { ?>
+                                                <!-- Not Connected Hero State -->
+                                                <div class="fb-connect-hero">
+                                                    <div class="integration-brand-logo brand-facebook v3-connect-hero-logo">
+                                                        <img src="/app/dashboard/v3/default/desktop/assets/images/integration/facebook.svg" alt="Facebook">
+                                                    </div>
+                                                    <h3>Connect Your Facebook Advertising Account</h3>
+                                                    <p>Authorize Aleya to securely receive instant leads from your Facebook &amp; Instagram lead ad campaigns with automated webhook syncing.</p>
+                                                    <a href="<?php echo $reconnectURL; ?>" class="btn-fb-connect">
+                                                        <i class="fi fi-rr-link-alt"></i> Connect Facebook Account
+                                                    </a>
+                                                </div>
+                                            <?php } ?>
+                                            </div>
