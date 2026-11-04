@@ -68,8 +68,6 @@ $userId     = defined('USER_ID')      ? (int) USER_ID : 0;
 $accessType = isset($site_access_type) ? $site_access_type : 'customer';
 $isDigitalMarketing = ($accessType === 'digital_marketing');
 
-// Parse request input
-$reqData = $_POST;
 // Parse request input (support JSON body, POST fields, and GET query parameters)
 $reqData = [];
 if (!empty($_GET) && is_array($_GET)) {
@@ -85,8 +83,6 @@ if (!empty($rawInput)) {
         $reqData = array_merge($reqData, $decoded);
     }
 }
-$reqData = array_merge($_GET, $_REQUEST, $reqData);
-$action = $reqData['action'] ?? 'get_leads';
 
 // Explicitly retrieve action from any source (query param, JSON body, post field)
 $action = trim((string)($reqData['action'] ?? ($_GET['action'] ?? ($_POST['action'] ?? ''))));
@@ -249,7 +245,6 @@ if (!function_exists('v3CheckLeadsCrmSyncMap')) {
 // ACTION: get_leads (Max 20 leads per request, with campaign total & CRM sync)
 // =========================================================================
 if ($action === 'get_leads') {
-    $formId = trim((string)($reqData['form_id'] ?? ''));
     $formId = trim((string)($reqData['form_id'] ?? ($_GET['form_id'] ?? ($_POST['form_id'] ?? ''))));
     $page   = max(1, (int)($reqData['page'] ?? 1));
     $limit  = min(20, max(1, (int)($reqData['limit'] ?? 20))); // Max 20 leads per fetch
@@ -558,7 +553,6 @@ if ($action === 'get_leads') {
 // ACTION: sync_forms (Sync all Lead Forms for a Page from Facebook)
 // =========================================================================
 if ($action === 'sync_forms') {
-    $pageId = trim((string)($reqData['page_id'] ?? ''));
     $pageId = trim((string)($reqData['page_id'] ?? ($_GET['page_id'] ?? ($_POST['page_id'] ?? ''))));
 
     if (empty($pageId)) {
@@ -712,8 +706,6 @@ if ($action === 'sync_forms') {
 // ACTION: sync_single_lead (Push a Facebook lead directly into CRM enquiry)
 // =========================================================================
 if ($action === 'sync_single_lead') {
-    $formId = trim((string)($reqData['form_id'] ?? ''));
-    $leadId = trim((string)($reqData['lead_id'] ?? ''));
     $formId = trim((string)($reqData['form_id'] ?? ($_GET['form_id'] ?? ($_POST['form_id'] ?? ''))));
     $leadId = trim((string)($reqData['lead_id'] ?? ($_GET['lead_id'] ?? ($_POST['lead_id'] ?? ''))));
     $leadPayloadRaw = $reqData['lead_data'] ?? null;
