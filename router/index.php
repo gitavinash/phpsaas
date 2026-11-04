@@ -235,7 +235,7 @@ switch ($urlStructure[0]) {
 		break;
 
 	case 'webhook':
-		require_once 'webhook/';
+		require_once 'webhook.php';
 		break;
 
 	case 'amp':
