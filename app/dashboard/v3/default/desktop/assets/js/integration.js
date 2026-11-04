@@ -23,6 +23,8 @@
     init: function () {
       this.initHub();
       this.initPluginForms();
+      this.initFacebookPagesOverview();
+      this.initFacebookPageForms();
       this.initFacebookFormLeads();
 
       if (!this.eventsBound) {
@@ -2170,117 +2172,492 @@
 
 
     // -------------------------------------------------------------
-    // Facebook Form Leads Viewer (Search, Pagination, Details Modal)
+    // Facebook Pages Overview Manager (Live Search & Fast Copy)
+    // -------------------------------------------------------------
+    initFacebookPagesOverview: function () {
+      const $app = $("#fbIntegrationApp");
+      if (!$app.length) return;
+
+      const self = this;
+
+      // Live search filter across connected Facebook pages
+      $(document).off("input.fbPageSearch").on("input.fbPageSearch", "#fbPageSearchInput", function () {
+        const query = ($(this).val() || "").toLowerCase().trim();
+        const $cards = $app.find(".fb-page-card");
+        let visibleCount = 0;
+
+        $cards.each(function () {
+          const $card = $(this);
+          const name = ($card.attr("data-page-name") || "").toLowerCase();
+          const pageId = ($card.attr("data-page-id") || "").toLowerCase();
+          const category = ($card.attr("data-page-category") || "").toLowerCase();
+
+          if (!query || name.indexOf(query) > -1 || pageId.indexOf(query) > -1 || category.indexOf(query) > -1) {
+            $card.show();
+            visibleCount++;
+          } else {
+            $card.hide();
+          }
+        });
+
+        const $noResults = $("#fbPagesNoResults");
+        if (visibleCount === 0 && query) {
+          $noResults.show();
+        } else {
+          $noResults.hide();
+        }
+      });
+
+      // One-click copy for Page ID chip
+      $(document).off("click.fbCopyPageId").on("click.fbCopyPageId", ".btn-copy-id-chip, .fb-page-id-chip", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        const $chip = $(this).closest(".fb-page-id-chip");
+        const $btn = $chip.find(".btn-copy-id-chip");
+        const text = $btn.attr("data-copy") || $chip.find(".id-val").text().trim();
+        if (!text) return;
+
+        if (navigator.clipboard) {
+          navigator.clipboard.writeText(text).then(function () {
+            $btn.html('<i class="fi fi-rr-check"></i>');
+            self.showToast("Copied Page ID: " + text, "success");
+            setTimeout(function () {
+              $btn.html('<i class="fi fi-rr-copy"></i>');
+            }, 1800);
+          });
+        }
+      });
+    },
+
+
+    // -------------------------------------------------------------
+    // Facebook Page Forms Manager (Search & Real-Time Sync)
+    // -------------------------------------------------------------
+    initFacebookPageForms: function () {
+      const $app = $("#fbFormsPageApp");
+      if (!$app.length) return;
+
+      const self = this;
+      const pageId = $app.data("page-id") || "";
+
+      // Real-time table search for forms
+      $(document).off("input.fbFormSearch").on("input.fbFormSearch", "#fbFormSearchInput", function () {
+        const query = ($(this).val() || "").toLowerCase().trim();
+        const $rows = $("#fbFormsTableBody tr.fb-form-row");
+
+        $rows.each(function () {
+          const text = $(this).text().toLowerCase();
+          if (!query || text.indexOf(query) > -1) {
+            $(this).show();
+          } else {
+            $(this).hide();
+          }
+        });
+
+        const visibleCount = $("#fbFormsTableBody tr.fb-form-row:visible").length;
+        $("#formsCountBadge").text(visibleCount + " Active");
+      });
+
+      // Sync lead forms from Facebook via AJAX
+      $(document).off("click.fbSyncForms").on("click.fbSyncForms", "#btnSyncFbForms, #btnSyncFbFormsEmpty", function (e) {
+        e.preventDefault();
+        const $btn = $(this);
+        const targetPageId = $btn.data("page-id") || pageId;
+        if (!targetPageId) return;
+
+        const originalHtml = $btn.html();
+        $btn.prop("disabled", true).addClass("is-loading").html('<i class="fi fi-rr-spinner spinner"></i> <span>Syncing Forms...</span>');
+
+        $.ajax({
+          url: "/api/v3/integration/facebook.php",
+          method: "POST",
+          data: JSON.stringify({
+            action: "sync_forms",
+            page_id: targetPageId
+          }),
+          contentType: "application/json",
+          dataType: "json",
+          success: function (res) {
+            $btn.prop("disabled", false).removeClass("is-loading").html(originalHtml);
+            if (res && res.status === "success") {
+              if (res.last_sync_time) {
+                $("#fbPageLastSyncBadge").html('<i class="fi fi-rr-refresh"></i> Last Synced: Just now');
+              }
+              self.showToast(res.message || "Lead Forms synchronized from Facebook.", "success");
+              setTimeout(function () {
+                window.location.reload();
+              }, 600);
+            } else {
+              self.showToast((res && res.msg) || "Failed to synchronize forms from Facebook.", "error");
+            }
+          },
+          error: function () {
+            $btn.prop("disabled", false).removeClass("is-loading").html(originalHtml);
+            self.showToast("Network error synchronizing Facebook forms.", "error");
+          }
+        });
+      });
+    },
+
+    // -------------------------------------------------------------
+    // Facebook Form Leads Viewer (Pagination, 20 Leads Fetch, CRM Sync)
     // -------------------------------------------------------------
     initFacebookFormLeads: function () {
       const $wrap = $("#fbFormLeadsApp");
       if (!$wrap.length) return;
 
       const self = this;
-      let currentPage = 1;
-      const pageSize = 10;
-      const $rows = $("#fbLeadsTableBody tr.fb-lead-row");
+      let isLoading = false;
 
-      function renderPagination() {
-        const searchTerm = ($("#leadSearchInput").val() || "").toLowerCase().trim();
-        let visibleRows = [];
+      function formatNumber(num) {
+        return (num || 0).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      }
+
+      function escapeHtml(str) {
+        if (!str) return "";
+        return String(str)
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#039;");
+      }
+
+      function fetchPageLeads(targetPage, cursorAfter, cursorBefore) {
+        if (isLoading) return;
+        isLoading = true;
+
+        const formId = $wrap.attr("data-form-id") || "";
+        const limit = 20;
+
+        const $tbody = $("#fbLeadsTableBody");
+        $tbody.html(
+          '<tr><td colspan="7" class="text-center py-4">' +
+            '<div class="v3-table-loader-wrap">' +
+              '<i class="fi fi-rr-spinner spinner v3-loader-spinner-icon"></i>' +
+              '<span class="v3-table-loader-text">Fetching next set of leads from Facebook...</span>' +
+            '</div>' +
+          '</td></tr>'
+        );
+
+        $("#leadPrevPageBtn, #leadNextPageBtn").prop("disabled", true);
+
+        const params = {
+          action: "get_leads",
+          form_id: formId,
+          page: targetPage,
+          limit: limit
+        };
+        if (cursorAfter) params.after = cursorAfter;
+        if (cursorBefore) params.before = cursorBefore;
+
+        $.ajax({
+          url: "/api/v3/integration/facebook.php",
+          method: "GET",
+          data: params,
+          dataType: "json",
+          success: function (res) {
+            isLoading = false;
+            if (res && res.status === "success" && Array.isArray(res.data)) {
+              renderLeadRows(res.data);
+
+              // Update pagination state
+              const pag = res.pagination || {};
+              $wrap.attr("data-current-page", pag.page || targetPage);
+              $wrap.attr("data-after", pag.after || "");
+              $wrap.attr("data-before", pag.before || "");
+
+              $("#leadPaginationInfo").text(
+                "Showing " + (pag.start || 0) + " to " + (pag.end || 0) + " of " + formatNumber(pag.total || 0) + " campaign leads"
+              );
+              $("#leadPageIndicator").text(
+                "Page " + (pag.page || targetPage) + " of " + (pag.total_pages || 1)
+              );
+
+              $("#leadPrevPageBtn").prop("disabled", !pag.has_prev);
+              $("#leadNextPageBtn").prop("disabled", !pag.has_next);
+
+              if (pag.total) {
+                $("#headerCampaignLeadsBadge").html('<i class="fi fi-rr-users"></i> ' + formatNumber(pag.total) + ' Campaign Leads');
+                $("#kpiTotalCampaignLeads").text(formatNumber(pag.total));
+                $("#tableHeaderLeadCount").text(formatNumber(pag.total) + " Campaign Leads");
+              }
+
+              // Update URL state without reloading
+              const newUrl = window.location.pathname + "?id=" + encodeURIComponent(formId) + "&page=" + (pag.page || targetPage) + (pag.after ? "&after=" + encodeURIComponent(pag.after) : "");
+              if (window.history && window.history.pushState) {
+                window.history.pushState(null, "", newUrl);
+              }
+            } else {
+              $tbody.html(
+                '<tr><td colspan="7" class="text-center py-4">' +
+                  '<div style="padding:24px; color:#e11d48;">' +
+                    '<i class="fi fi-rr-exclamation" style="font-size:24px;"></i>' +
+                    '<p style="margin:8px 0 0;">' + ((res && res.msg) || "Failed to load leads from Facebook.") + '</p>' +
+                  '</div>' +
+                '</td></tr>'
+              );
+              $("#leadPrevPageBtn, #leadNextPageBtn").prop("disabled", false);
+            }
+          },
+          error: function () {
+            isLoading = false;
+            $tbody.html(
+              '<tr><td colspan="7" class="text-center py-4">' +
+                '<div style="padding:24px; color:#e11d48;">' +
+                  '<i class="fi fi-rr-exclamation" style="font-size:24px;"></i>' +
+                  '<p style="margin:8px 0 0;">Network error communicating with leads API.</p>' +
+                '</div>' +
+              '</td></tr>'
+            );
+            $("#leadPrevPageBtn, #leadNextPageBtn").prop("disabled", false);
+          }
+        });
+      }
+
+      function renderLeadRows(leads) {
+        const $tbody = $("#fbLeadsTableBody");
+        $tbody.empty();
+
+        if (!leads.length) {
+          $tbody.html('<tr><td colspan="7" class="text-center py-4" style="color:#64748b; padding:30px;">No leads found on this page.</td></tr>');
+          return;
+        }
+
+        leads.forEach(function (lead) {
+          const leadPayload = {
+            id: lead.id,
+            created_time: lead.created_time,
+            full_name: lead.full_name,
+            phone: lead.phone,
+            email: lead.email,
+            questions: lead.questions,
+            is_synced: lead.is_synced,
+            crm_enquiry_id: lead.crm_enquiry_id
+          };
+          const jsonEncoded = encodeURIComponent(JSON.stringify(leadPayload));
+          const timeParts = (lead.created_time || "N/A").split(",");
+          const datePart = timeParts[0] || "N/A";
+          const hourPart = timeParts[1] ? timeParts[1].trim() : "";
+
+          let contactHtml = "";
+          if (lead.phone) {
+            contactHtml += '<a href="tel:' + escapeHtml(lead.phone) + '" class="fb-contact-link phone"><i class="fi fi-rr-phone-call"></i> <span>' + escapeHtml(lead.phone) + '</span></a>';
+          }
+          if (lead.email) {
+            contactHtml += '<a href="mailto:' + escapeHtml(lead.email) + '" class="fb-contact-link email"><i class="fi fi-rr-envelope"></i> <span>' + escapeHtml(lead.email) + '</span></a>';
+          }
+          if (!lead.phone && !lead.email) {
+            contactHtml = '<span class="fb-contact-empty">—</span>';
+          }
+
+          let respHtml = "";
+          if (lead.questions && lead.questions.length > 0) {
+            const firstTwo = lead.questions.slice(0, 2);
+            firstTwo.forEach(function (q) {
+              respHtml += '<span class="fb-response-tag"><span class="tag-q">' + escapeHtml(q.label) + ':</span> <span class="tag-a">' + escapeHtml(q.val) + '</span></span> ';
+            });
+            if (lead.questions.length > 2) {
+              respHtml += '<button type="button" class="fb-more-responses-btn btn-view-lead-modal" data-lead="' + jsonEncoded + '" title="Click to view all responses">+' + (lead.questions.length - 2) + ' more</button>';
+            }
+          } else {
+            respHtml = '<span class="v3-badge v3-badge-gray">Standard Inquiry</span>';
+          }
+
+          // Dynamic Avatar Color Variant
+          const avatarVariants = ['avatar-blue', 'avatar-indigo', 'avatar-purple', 'avatar-emerald', 'avatar-amber'];
+          let charSum = 0;
+          for (let c = 0; c < (lead.full_name || "").length; c++) {
+            charSum += lead.full_name.charCodeAt(c);
+          }
+          const avatarClass = avatarVariants[charSum % 5];
+
+          // Lead ID with One-Click Copy
+          const leadIdHtml =
+            '<div class="v3-lead-id-wrap">' +
+              '<span class="v3-code-pill" title="Lead ID: ' + escapeHtml(lead.id) + '">' + escapeHtml(lead.id) + '</span>' +
+              '<button type="button" class="v3-copy-chip-btn btn-copy-lead-id" data-copy="' + escapeHtml(lead.id) + '" title="Copy Lead ID">' +
+                '<i class="fi fi-rr-copy"></i>' +
+              '</button>' +
+            '</div>';
+
+          // CRM Sync Column HTML
+          let crmSyncHtml = "";
+          if (lead.is_synced) {
+            crmSyncHtml =
+              '<div class="v3-crm-sync-pill is-synced" title="Lead successfully ingested into CRM">' +
+                '<span class="v3-sync-status-tag">' +
+                  '<span class="status-pulse-dot"></span>' +
+                  '<span>Synced</span>' +
+                '</span>' +
+                (lead.crm_enquiry_id
+                  ? '<a href="/dashboard/leads/view/?id=' + lead.crm_enquiry_id + '" class="v3-sync-enquiry-link" title="Open Enquiry #' + lead.crm_enquiry_id + ' in CRM">' +
+                      '<span class="enquiry-tag">#' + lead.crm_enquiry_id + '</span>' +
+                      '<i class="fi fi-rr-arrow-up-right-from-square"></i>' +
+                    '</a>'
+                  : '') +
+              '</div>';
+          } else {
+            crmSyncHtml =
+              '<div class="v3-crm-sync-pill is-pending" title="Lead pending CRM ingestion">' +
+                '<span class="v3-sync-status-tag">' +
+                  '<span class="status-pulse-dot"></span>' +
+                  '<span>Not Synced</span>' +
+                '</span>' +
+                '<button type="button" class="v3-sync-action-btn btn-sync-lead-crm" data-lead-id="' + escapeHtml(lead.id) + '" data-form-id="' + escapeHtml($wrap.attr("data-form-id") || "") + '" title="Push lead into CRM immediately">' +
+                  '<i class="fi fi-rr-cloud-upload"></i>' +
+                  '<span>Sync Now</span>' +
+                '</button>' +
+              '</div>';
+          }
+
+          const rowHtml =
+            '<tr class="fb-lead-row" data-lead-id="' + escapeHtml(lead.id) + '">' +
+              '<td>' +
+                '<div class="fb-lead-date-box">' +
+                  '<span class="lead-date">' + escapeHtml(datePart) + '</span>' +
+                  '<span class="lead-time"><i class="fi fi-rr-clock-three"></i> ' + escapeHtml(hourPart) + '</span>' +
+                '</div>' +
+              '</td>' +
+              '<td>' +
+                '<div class="v3-table-form-cell">' +
+                  '<div class="fb-lead-avatar ' + avatarClass + '">' + escapeHtml(lead.initial || "F") + '</div>' +
+                  '<div class="v3-table-form-info">' +
+                    '<h4>' + escapeHtml(lead.full_name) + '</h4>' +
+                    '<span>Facebook Prospect</span>' +
+                  '</div>' +
+                '</div>' +
+              '</td>' +
+              '<td><div class="fb-contact-cell">' + contactHtml + '</div></td>' +
+              '<td><div class="fb-lead-responses-list">' + respHtml + '</div></td>' +
+              '<td>' + leadIdHtml + '</td>' +
+              '<td class="crm-sync-status-cell">' + crmSyncHtml + '</td>' +
+              '<td class="text-end">' +
+                '<button type="button" class="v3-btn-table-action btn-view-lead-modal" data-lead="' + jsonEncoded + '" title="Open Full Lead Profile">' +
+                  '<i class="fi fi-rr-eye"></i> <span>View Details</span>' +
+                '</button>' +
+              '</td>' +
+            '</tr>';
+
+          $tbody.append(rowHtml);
+        });
+      }
+
+      // Next Page Click Handler
+      $(document).off("click.fbLeadNext").on("click.fbLeadNext", "#leadNextPageBtn", function (e) {
+        e.preventDefault();
+        const curPage = parseInt($wrap.attr("data-current-page") || "1", 10);
+        const nextCursor = $wrap.attr("data-after") || "";
+        fetchPageLeads(curPage + 1, nextCursor, null);
+      });
+
+      // Previous Page Click Handler
+      $(document).off("click.fbLeadPrev").on("click.fbLeadPrev", "#leadPrevPageBtn", function (e) {
+        e.preventDefault();
+        const curPage = parseInt($wrap.attr("data-current-page") || "1", 10);
+        const prevCursor = $wrap.attr("data-before") || "";
+        if (curPage > 1) {
+          fetchPageLeads(curPage - 1, null, prevCursor);
+        }
+      });
+
+      // Refresh / Retry Leads Button Handlers
+      $(document).off("click.fbRefreshLeads").on("click.fbRefreshLeads", "#btnRefreshFbLeads, #btnRetryFetchLeads, #btnEmptyRefreshLeads", function (e) {
+        e.preventDefault();
+        fetchPageLeads(1, null, null);
+      });
+
+      // Client-side quick filter on current 20 leads
+      $(document).off("input.fbLeadSearch").on("input.fbLeadSearch", "#leadSearchInput", function () {
+        const query = ($(this).val() || "").toLowerCase().trim();
+        const $rows = $("#fbLeadsTableBody tr.fb-lead-row");
 
         $rows.each(function () {
           const text = $(this).text().toLowerCase();
-          if (!searchTerm || text.indexOf(searchTerm) > -1) {
-            visibleRows.push($(this));
+          if (!query || text.indexOf(query) > -1) {
+            $(this).show();
           } else {
             $(this).hide();
           }
         });
-
-        const totalFiltered = visibleRows.length;
-        const totalPages = Math.max(1, Math.ceil(totalFiltered / pageSize));
-
-        if (currentPage > totalPages) currentPage = totalPages;
-        if (currentPage < 1) currentPage = 1;
-
-        const startIdx = (currentPage - 1) * pageSize;
-        const endIdx = startIdx + pageSize;
-
-        visibleRows.forEach(function ($row, idx) {
-          if (idx >= startIdx && idx < endIdx) {
-            $row.show();
-          } else {
-            $row.hide();
-          }
-        });
-
-        // Update info text
-        const displayStart = totalFiltered > 0 ? startIdx + 1 : 0;
-        const displayEnd = Math.min(endIdx, totalFiltered);
-        $("#leadPaginationInfo").text(
-          "Showing " + displayStart + " to " + displayEnd + " of " + totalFiltered + " leads"
-        );
-
-        // Render page buttons
-        const $controls = $("#leadPaginationControls");
-        $controls.empty();
-
-        if (totalPages > 1) {
-          const $prevBtn = $(
-            '<button type="button" class="v3-page-btn" ' +
-              (currentPage === 1 ? "disabled" : "") +
-              '><i class="fi fi-rr-angle-small-left"></i></button>'
-          );
-          $prevBtn.on("click", function () {
-            if (currentPage > 1) {
-              currentPage--;
-              renderPagination();
-            }
-          });
-          $controls.append($prevBtn);
-
-          for (let p = 1; p <= totalPages; p++) {
-            if (p === 1 || p === totalPages || (p >= currentPage - 1 && p <= currentPage + 1)) {
-              const $pBtn = $(
-                '<button type="button" class="v3-page-btn ' +
-                  (p === currentPage ? "active" : "") +
-                  '">' +
-                  p +
-                  "</button>"
-              );
-              (function (pageNumber) {
-                $pBtn.on("click", function () {
-                  currentPage = pageNumber;
-                  renderPagination();
-                });
-              })(p);
-              $controls.append($pBtn);
-            } else if (
-              (p === currentPage - 2 && p > 1) ||
-              (p === currentPage + 2 && p < totalPages)
-            ) {
-              $controls.append('<span style="color:#94a3b8; padding:0 4px;">...</span>');
-            }
-          }
-
-          const $nextBtn = $(
-            '<button type="button" class="v3-page-btn " ' +
-              (currentPage === totalPages ? "disabled" : "") +
-              '><i class="fi fi-rr-angle-small-right"></i></button>'
-          );
-          $nextBtn.on("click", function () {
-            if (currentPage < totalPages) {
-              currentPage++;
-              renderPagination();
-            }
-          });
-          $controls.append($nextBtn);
-        }
-      }
-
-      $("#leadSearchInput").on("input", function () {
-        currentPage = 1;
-        renderPagination();
       });
 
-      renderPagination();
+      // Sync Single Lead to CRM
+      $(document).off("click.fbSyncLead").on("click.fbSyncLead", ".btn-sync-lead-crm", function (e) {
+        e.preventDefault();
+        const $btn = $(this);
+        const leadId = $btn.data("lead-id");
+        const formId = $btn.data("form-id") || $wrap.attr("data-form-id") || "";
+        if (!leadId || !formId) return;
+
+        const $pill = $btn.closest(".v3-crm-sync-pill");
+        $btn.prop("disabled", true).addClass("is-loading");
+        $pill.removeClass("is-pending").addClass("is-syncing").html('<i class="fi fi-rr-spinner spinner"></i> <span>Syncing...</span>');
+
+        $.ajax({
+          url: "/api/v3/integration/facebook.php",
+          method: "POST",
+          data: JSON.stringify({
+            action: "sync_single_lead",
+            form_id: formId,
+            lead_id: leadId
+          }),
+          contentType: "application/json",
+          dataType: "json",
+          success: function (res) {
+            if (res && res.status === "success" && res.enquiry_id) {
+              const $cell = $pill.closest(".crm-sync-status-cell");
+              $cell.html(
+                '<div class="v3-crm-sync-pill is-synced" title="Lead successfully ingested into CRM">' +
+                  '<span class="v3-sync-status-tag">' +
+                    '<span class="status-pulse-dot"></span>' +
+                    '<span>Synced</span>' +
+                  '</span>' +
+                  '<a href="/dashboard/leads/view/?id=' + res.enquiry_id + '" class="v3-sync-enquiry-link" title="Open Enquiry #' + res.enquiry_id + ' in CRM">' +
+                    '<span class="enquiry-tag">#' + res.enquiry_id + '</span>' +
+                    '<i class="fi fi-rr-arrow-up-right-from-square"></i>' +
+                  '</a>' +
+                '</div>'
+              );
+              self.showToast(res.message || "Lead #" + res.enquiry_id + " synced to CRM.", "success");
+            } else {
+              $pill.removeClass("is-syncing").addClass("is-pending").html(
+                '<span class="v3-sync-status-tag"><span class="status-pulse-dot"></span><span>Not Synced</span></span>' +
+                '<button type="button" class="v3-sync-action-btn btn-sync-lead-crm" data-lead-id="' + escapeHtml(leadId) + '" data-form-id="' + escapeHtml(formId) + '" title="Push lead into CRM immediately">' +
+                  '<i class="fi fi-rr-cloud-upload"></i> <span>Sync Now</span>' +
+                '</button>'
+              );
+              self.showToast((res && res.msg) || "Failed to sync lead into CRM.", "error");
+            }
+          },
+          error: function () {
+            $pill.removeClass("is-syncing").addClass("is-pending").html(
+              '<span class="v3-sync-status-tag"><span class="status-pulse-dot"></span><span>Not Synced</span></span>' +
+              '<button type="button" class="v3-sync-action-btn btn-sync-lead-crm" data-lead-id="' + escapeHtml(leadId) + '" data-form-id="' + escapeHtml(formId) + '" title="Push lead into CRM immediately">' +
+                '<i class="fi fi-rr-cloud-upload"></i> <span>Sync Now</span>' +
+              '</button>'
+            );
+            self.showToast("Network error syncing lead to CRM.", "error");
+          }
+        });
+      });
+
+      // Copy Lead ID chip handler
+      $(document).off("click.fbCopyLeadId").on("click.fbCopyLeadId", ".btn-copy-lead-id", function (e) {
+        e.preventDefault();
+        const $btn = $(this);
+        const text = $btn.attr("data-copy") || "";
+        if (!text) return;
+        if (navigator.clipboard) {
+          navigator.clipboard.writeText(text).then(function () {
+            $btn.addClass("copied").html('<i class="fi fi-rr-check"></i>');
+            self.showToast("Copied ID: " + text, "success");
+            setTimeout(function () {
+              $btn.removeClass("copied").html('<i class="fi fi-rr-copy"></i>');
+            }, 1800);
+          });
+        }
+      });
 
       // View Details Modal Handler
       $(document).off("click.fbLeadModal").on("click.fbLeadModal", ".btn-view-lead-modal", function () {
@@ -2293,30 +2670,50 @@
           $("#fbModalLeadId").text(lead.id || "N/A");
           $("#fbModalCreatedTime").text(lead.created_time || "N/A");
 
+          const $syncBadge = $("#fbModalSyncStatus");
+          if (lead.is_synced) {
+            $syncBadge.html(
+              '<div class="v3-crm-sync-pill is-synced">' +
+                '<span class="v3-sync-status-tag"><span class="status-pulse-dot"></span><span>Synced</span></span>' +
+                (lead.crm_enquiry_id
+                  ? '<a href="/dashboard/leads/view/?id=' + lead.crm_enquiry_id + '" class="v3-sync-enquiry-link" title="Open in CRM"><span class="enquiry-tag">#' + lead.crm_enquiry_id + '</span> <i class="fi fi-rr-arrow-up-right-from-square"></i></a>'
+                  : '') +
+              '</div>'
+            );
+            $("#fbModalCrmLeadBtn").attr("href", "/dashboard/leads/view/?id=" + lead.crm_enquiry_id);
+          } else {
+            $syncBadge.html(
+              '<div class="v3-crm-sync-pill is-pending">' +
+                '<span class="v3-sync-status-tag"><span class="status-pulse-dot"></span><span>Not Synced</span></span>' +
+              '</div>'
+            );
+            $("#fbModalCrmLeadBtn").attr("href", "/dashboard/leads/list/");
+          }
+
           const $contactCard = $("#fbModalContactInfo");
           $contactCard.empty();
 
           if (lead.phone) {
             $contactCard.append(
-              '<div style="display:flex; align-items:center; gap:8px;">' +
-                '<i class="fi fi-rr-phone-call" style="color:#0284c7;"></i>' +
-                '<span>Phone: <a href="tel:' + lead.phone + '" style="font-weight:600; color:#0f172a; text-decoration:none;">' + lead.phone + '</a></span>' +
-                '<button type="button" class="btn-copy-mini" data-copy="' + lead.phone + '" style="background:none; border:none; color:#64748b; cursor:pointer;" title="Copy Phone"><i class="fi fi-rr-copy"></i></button>' +
+              '<div class="fb-modal-contact-row">' +
+                '<i class="fi fi-rr-phone-call fb-modal-contact-icon"></i>' +
+                '<span class="fb-modal-contact-text">Phone: <a href="tel:' + escapeHtml(lead.phone) + '">' + escapeHtml(lead.phone) + '</a></span>' +
+                '<button type="button" class="btn-copy-mini fb-modal-btn-copy" data-copy="' + escapeHtml(lead.phone) + '" title="Copy Phone"><i class="fi fi-rr-copy"></i></button>' +
               '</div>'
             );
           }
           if (lead.email) {
             $contactCard.append(
-              '<div style="display:flex; align-items:center; gap:8px; margin-top:6px;">' +
-                '<i class="fi fi-rr-envelope" style="color:#0284c7;"></i>' +
-                '<span>Email: <a href="mailto:' + lead.email + '" style="font-weight:600; color:#0f172a; text-decoration:none;">' + lead.email + '</a></span>' +
-                '<button type="button" class="btn-copy-mini" data-copy="' + lead.email + '" style="background:none; border:none; color:#64748b; cursor:pointer;" title="Copy Email"><i class="fi fi-rr-copy"></i></button>' +
+              '<div class="fb-modal-contact-row">' +
+                '<i class="fi fi-rr-envelope fb-modal-contact-icon"></i>' +
+                '<span class="fb-modal-contact-text">Email: <a href="mailto:' + escapeHtml(lead.email) + '">' + escapeHtml(lead.email) + '</a></span>' +
+                '<button type="button" class="btn-copy-mini fb-modal-btn-copy" data-copy="' + escapeHtml(lead.email) + '" title="Copy Email"><i class="fi fi-rr-copy"></i></button>' +
               '</div>'
             );
           }
           if (!lead.phone && !lead.email) {
             $contactCard.append(
-              '<div style="color:#64748b; font-size:12.5px; font-style:italic;">Contact details are not available or restricted for this role.</div>'
+              '<div class="fb-modal-contact-empty">Contact details are not available or restricted for this role.</div>'
             );
           }
 
@@ -2327,14 +2724,14 @@
             lead.questions.forEach(function (q) {
               $qaList.append(
                 '<div class="fb-modal-qa-card">' +
-                  '<div class="qa-q">' + (q.label || "Question") + '</div>' +
-                  '<div class="qa-a">' + (q.val || "—") + '</div>' +
+                  '<div class="qa-q">' + escapeHtml(q.label || "Question") + '</div>' +
+                  '<div class="qa-a">' + escapeHtml(q.val || "—") + '</div>' +
                 '</div>'
               );
             });
           } else {
             $qaList.append(
-              '<div style="font-size:13px; color:#94a3b8; text-align:center; padding:12px;">No additional question responses in this submission.</div>'
+              '<div class="fb-modal-qa-empty">No additional question responses in this submission.</div>'
             );
           }
 
@@ -2345,14 +2742,14 @@
       });
 
       // Dismiss Modal
-      $(document).on("click", "#fbModalCloseBtn, .btn-modal-dismiss, #fbLeadDetailsModalOverlay", function (e) {
+      $(document).off("click.fbModalDismiss").on("click.fbModalDismiss", "#fbModalCloseBtn, .btn-modal-dismiss, #fbLeadDetailsModalOverlay", function (e) {
         if (e.target === this || $(this).is("#fbModalCloseBtn") || $(this).hasClass("btn-modal-dismiss")) {
           $("#fbLeadDetailsModalOverlay").removeClass("is-active active").hide();
         }
       });
 
       // Copy mini button inside modal
-      $(document).on("click", ".btn-copy-mini", function () {
+      $(document).off("click.fbCopyMini").on("click.fbCopyMini", ".btn-copy-mini", function () {
         const text = $(this).attr("data-copy");
         if (text && navigator.clipboard) {
           navigator.clipboard.writeText(text).then(function () {

@@ -2,7 +2,10 @@
 // Workspace Rule Compliant: V3 Facebook Form Leads Viewer & KPI Analytics
 
 $formId = isset($id) ? $id : (isset($_GET['id']) ? $_GET['id'] : '');
-$sync   = (isset($_GET['sync']) && $_GET['sync'] === 'true');
+$currentPage = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
+$limit = 20; // Maximum 20 leads per fetch
+$afterCursor = isset($_GET['after']) ? trim($_GET['after']) : null;
+$beforeCursor = isset($_GET['before']) ? trim($_GET['before']) : null;
 
 // Check valid form and join parent page
 $checkFormQuery = mysqli_query(
@@ -19,9 +22,14 @@ $formRow = ($checkFormQuery && mysqli_num_rows($checkFormQuery) > 0) ? mysqli_fe
 $formDisplayName = $formRow ? $formRow['fb_forms_name'] : 'Lead Form';
 $pageDisplayName = $formRow ? $formRow['fb_page_name'] : 'Facebook Page';
 $pageId = $formRow ? $formRow['fb_page_id'] : '';
+$pageAccessToken = $formRow ? $formRow['fb_page_access_token'] : '';
 
 $leads = [];
 $fetchError = '';
+$nextCursor = null;
+$prevCursor = null;
+$hasNext = false;
+$hasPrev = ($currentPage > 1);
 
 function formatFbQuestionLabel($label)
 {
@@ -52,72 +60,190 @@ function formatFbResponseVal($val)
     return ucwords(trim($clean));
 }
 
-if ($formRow && !empty($formRow['fb_page_access_token'])) {
-    function fetchFacebookFormLeads($formId, $pageAccessToken, $limit = 100)
-    {
-        $allLeads   = [];
-        $after      = null;
-        $fetched    = 0;
-        $perRequest = min($limit, 50);
+// 1. Get Campaign Total Leads
+$totalCampaignLeads = (int)($formRow['fb_forms_leads_count'] ?? 0);
+if ($formRow && !empty($pageAccessToken)) {
+    $metaUrl = "https://graph.facebook.com/v19.0/{$formId}?fields=id,name,status,leads_count,created_time&access_token=" . urlencode($pageAccessToken);
+    $ch = curl_init();
+    curl_setopt_array($ch, [
+        CURLOPT_URL => $metaUrl,
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_TIMEOUT => 10,
+    ]);
+    $metaResp = curl_exec($ch);
+    curl_close($ch);
+    $metaData = json_decode($metaResp, true);
+    if (!empty($metaData['leads_count'])) {
+        $totalCampaignLeads = max($totalCampaignLeads, (int)$metaData['leads_count']);
+        mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "fb_forms SET fb_forms_leads_count = {$totalCampaignLeads} WHERE fb_forms_id = '" . mysqli_real_escape_string($connection, $formId) . "' AND fb_forms_site_id = " . SITE_ID);
+    }
+}
 
-        do {
-            $params = [
-                'access_token' => $pageAccessToken,
-                'limit'        => $perRequest,
-                'fields'       => 'id,created_time,field_data'
-            ];
-            if ($after) {
-                $params['after'] = $after;
-            }
+// Also get CRM leads count
+$escFormDisplayName = mysqli_real_escape_string($connection, $formDisplayName);
+$crmCountRes = mysqli_query($connection, "SELECT COUNT(*) as c FROM " . TABLE_PREFIX . "enquiry WHERE enquiry_site_id = " . SITE_ID . " AND (enquiry_subject = '{$escFormDisplayName}' OR enquiry_message LIKE '%{$formId}%')");
+$crmCount = ($crmCountRes) ? (int)(mysqli_fetch_assoc($crmCountRes)['c'] ?? 0) : 0;
+$totalCampaignLeads = max($totalCampaignLeads, $crmCount);
+$totalPages = max(1, (int)ceil($totalCampaignLeads / $limit));
 
-            $url = "https://graph.facebook.com/v19.0/{$formId}/leads?" . http_build_query($params);
-
-            $ch = curl_init();
-            curl_setopt_array($ch, [
-                CURLOPT_URL            => $url,
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_TIMEOUT        => 30,
-            ]);
-
-            $response = curl_exec($ch);
-            if (curl_errno($ch)) {
-                $err = curl_error($ch);
-                curl_close($ch);
-                return ['error' => $err, 'leads' => $allLeads];
-            }
-            curl_close($ch);
-
-            $data = json_decode($response, true);
-
-            if (isset($data['error'])) {
-                return ['error' => $data['error']['message'] ?? 'API error', 'leads' => $allLeads];
-            }
-
-            if (!empty($data['data']) && is_array($data['data'])) {
-                foreach ($data['data'] as $lead) {
-                    if ($fetched >= $limit) break 2;
-                    $allLeads[] = $lead;
-                    $fetched++;
-                }
-            }
-
-            $after = $data['paging']['cursors']['after'] ?? null;
-        } while ($after && $fetched < $limit);
-
-        return ['error' => null, 'leads' => $allLeads];
+// 2. Fetch maximum 20 leads
+if ($formRow && !empty($pageAccessToken)) {
+    $params = [
+        'access_token' => $pageAccessToken,
+        'limit'        => $limit,
+        'fields'       => 'id,created_time,field_data'
+    ];
+    if ($afterCursor) {
+        $params['after'] = $afterCursor;
+    } elseif ($beforeCursor) {
+        $params['before'] = $beforeCursor;
     }
 
-    $leadResult = fetchFacebookFormLeads($formId, $formRow['fb_page_access_token'], 100);
-    $leads = $leadResult['leads'] ?? [];
-    $fetchError = $leadResult['error'] ?? '';
+    $url = "https://graph.facebook.com/v19.0/{$formId}/leads?" . http_build_query($params);
+    $ch = curl_init();
+    curl_setopt_array($ch, [
+        CURLOPT_URL            => $url,
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_TIMEOUT        => 30,
+    ]);
+    $response = curl_exec($ch);
+    $curlErr = curl_error($ch);
+    curl_close($ch);
+
+    if (!$curlErr && !empty($response)) {
+        $data = json_decode($response, true);
+        if (isset($data['error'])) {
+            $fetchError = $data['error']['message'] ?? 'Meta API error';
+        } elseif (!empty($data['data']) && is_array($data['data'])) {
+            $leads = $data['data'];
+            $nextCursor = $data['paging']['cursors']['after'] ?? null;
+            $prevCursor = $data['paging']['cursors']['before'] ?? null;
+            $hasNext = !empty($data['paging']['next']);
+            if (!empty($data['paging']['previous'])) {
+                $hasPrev = true;
+            }
+        }
+    } else {
+        $fetchError = $curlErr ?: 'Unable to connect to Facebook Graph API.';
+    }
+}
+
+// Fallback: If FB returned error or empty, but CRM has captured leads for this form
+if (empty($leads) && $crmCount > 0) {
+    $offset = ($currentPage - 1) * $limit;
+    $crmRes = mysqli_query(
+        $connection,
+        "SELECT * FROM " . TABLE_PREFIX . "enquiry 
+         WHERE enquiry_site_id = " . SITE_ID . " 
+           AND (enquiry_subject = '{$escFormDisplayName}' OR enquiry_message LIKE '%{$formId}%') 
+         ORDER BY enquiry_id DESC 
+         LIMIT {$limit} OFFSET {$offset}"
+    );
+    if ($crmRes) {
+        while ($cRow = mysqli_fetch_assoc($crmRes)) {
+            $parsedMsg = json_decode($cRow['enquiry_message'], true);
+            $lId   = (!empty($parsedMsg['id'])) ? $parsedMsg['id'] : ('crm_' . $cRow['enquiry_id']);
+            $cTime = (!empty($parsedMsg['created_time'])) ? $parsedMsg['created_time'] : $cRow['enquiry_time'];
+            $fData = (!empty($parsedMsg['field_data'])) ? $parsedMsg['field_data'] : [];
+
+            if (empty($fData)) {
+                $fData = [
+                    ['name' => 'full_name', 'values' => [$cRow['enquiry_first_name']]],
+                    ['name' => 'phone_number', 'values' => [$cRow['enquiry_mobile']]],
+                    ['name' => 'email', 'values' => [$cRow['enquiry_email']]],
+                ];
+            }
+
+            $leads[] = [
+                'id'             => $lId,
+                'created_time'   => $cTime,
+                'field_data'     => $fData,
+                'crm_enquiry_id' => (int)$cRow['enquiry_id'],
+                'crm_fallback'   => true
+            ];
+        }
+        $hasNext = ($offset + $limit) < $crmCount;
+        $fetchError = ''; // Clear error so table displays cached CRM leads cleanly
+    }
+}
+
+// 3. Match CRM Sync Status
+$syncMap = [];
+if (!empty($leads)) {
+    $leadIds = [];
+    $mobiles = [];
+    $emails  = [];
+
+    foreach ($leads as $l) {
+        if (!empty($l['id'])) {
+            $leadIds[] = mysqli_real_escape_string($connection, $l['id']);
+        }
+        if (!empty($l['field_data']) && is_array($l['field_data'])) {
+            foreach ($l['field_data'] as $f) {
+                $fName = strtolower(trim($f['name'] ?? ''));
+                $fVal  = is_array($f['values'] ?? '') ? implode('', $f['values']) : ($f['values'] ?? '');
+                $fVal  = trim((string)$fVal);
+                if (empty($fVal)) continue;
+
+                if (in_array($fName, ['phone_number', 'phone', 'mobile_number', 'mobile', 'whatsapp_number'])) {
+                    $cleanMob = preg_replace('/[^0-9]/', '', $fVal);
+                    if (strlen($cleanMob) >= 10) {
+                        $mobiles[] = mysqli_real_escape_string($connection, substr($cleanMob, -10));
+                    }
+                }
+                if (in_array($fName, ['email', 'email_address', 'your_email'])) {
+                    $emails[] = mysqli_real_escape_string($connection, strtolower($fVal));
+                }
+            }
+        }
+    }
+
+    $conditions = [];
+    foreach ($leadIds as $lid) {
+        $conditions[] = "enquiry_message LIKE '%" . $lid . "%'";
+    }
+    if (!empty($mobiles)) {
+        $mobilesUnique = array_unique($mobiles);
+        $conditions[] = "RIGHT(REPLACE(REPLACE(enquiry_mobile, ' ', ''), '+91', ''), 10) IN ('" . implode("','", $mobilesUnique) . "')";
+    }
+    if (!empty($emails)) {
+        $emailsUnique = array_unique($emails);
+        $conditions[] = "LOWER(enquiry_email) IN ('" . implode("','", $emailsUnique) . "')";
+    }
+
+    if (!empty($conditions)) {
+        $sql = "SELECT enquiry_id, enquiry_mobile, enquiry_email, enquiry_message, enquiry_time 
+                FROM " . TABLE_PREFIX . "enquiry 
+                WHERE enquiry_site_id = " . SITE_ID . " 
+                  AND (" . implode(" OR ", $conditions) . ")
+                ORDER BY enquiry_id DESC";
+        $res = mysqli_query($connection, $sql);
+        if ($res) {
+            while ($row = mysqli_fetch_assoc($res)) {
+                $enqId = (int)$row['enquiry_id'];
+                foreach ($leadIds as $lid) {
+                    if (strpos($row['enquiry_message'], $lid) !== false) {
+                        $syncMap[$lid] = $enqId;
+                    }
+                }
+                $cleanRowMob = substr(preg_replace('/[^0-9]/', '', $row['enquiry_mobile']), -10);
+                if (!empty($cleanRowMob)) {
+                    $syncMap['mob_' . $cleanRowMob] = $enqId;
+                }
+                $cleanRowEmail = strtolower(trim($row['enquiry_email']));
+                if (!empty($cleanRowEmail)) {
+                    $syncMap['email_' . $cleanRowEmail] = $enqId;
+                }
+            }
+        }
+    }
 }
 
 // KPI Calculations
-$totalLeadsCount = count($leads);
+$fetchedLeadsCount = count($leads);
 $latestLeadTime = 'N/A';
 $firstLeadTime  = 'N/A';
 $hasPhoneCount  = 0;
-$hasEmailCount  = 0;
 
 if (!empty($leads)) {
     $timestamps = [];
@@ -129,13 +255,9 @@ if (!empty($leads)) {
             foreach ($l['field_data'] as $f) {
                 $fName = strtolower($f['name'] ?? '');
                 $fVal  = is_array($f['values'] ?? '') ? implode('', $f['values']) : ($f['values'] ?? '');
-                if (!empty($fVal)) {
-                    if (in_array($fName, ['phone_number', 'phone', 'mobile_number', 'mobile', 'whatsapp_number'])) {
-                        $hasPhoneCount++;
-                    }
-                    if (in_array($fName, ['email', 'email_address', 'your_email'])) {
-                        $hasEmailCount++;
-                    }
+                if (!empty($fVal) && in_array($fName, ['phone_number', 'phone', 'mobile_number', 'mobile', 'whatsapp_number'])) {
+                    $hasPhoneCount++;
+                    break;
                 }
             }
         }
@@ -146,10 +268,26 @@ if (!empty($leads)) {
         $firstLeadTime  = date('d M Y, h:i A', end($timestamps));
     }
 }
-$phoneRate = ($totalLeadsCount > 0) ? round(($hasPhoneCount / $totalLeadsCount) * 100) : 0;
+$phoneRate = ($fetchedLeadsCount > 0) ? round(($hasPhoneCount / $fetchedLeadsCount) * 100) : 0;
+
+// Pagination range info
+$startIdx = $totalCampaignLeads > 0 ? (($currentPage - 1) * $limit) + 1 : 0;
+$endIdx   = min($startIdx + $fetchedLeadsCount - 1, $totalCampaignLeads);
+if ($startIdx > $endIdx) {
+    $startIdx = $endIdx > 0 ? 1 : 0;
+}
+$isDigitalMarketing = (isset($site_access_type) && $site_access_type === 'digital_marketing');
 ?>
 
-<div class="package-page-wrapper fb-integration-wrapper" id="fbFormLeadsApp">
+<div class="package-page-wrapper fb-integration-wrapper" id="fbFormLeadsApp"
+    data-form-id="<?php echo htmlspecialchars($formId); ?>"
+    data-page-id="<?php echo htmlspecialchars($pageId); ?>"
+    data-current-page="<?php echo $currentPage; ?>"
+    data-total-leads="<?php echo $totalCampaignLeads; ?>"
+    data-limit="<?php echo $limit; ?>"
+    data-after="<?php echo htmlspecialchars($nextCursor ?? ''); ?>"
+    data-before="<?php echo htmlspecialchars($prevCursor ?? ''); ?>">
+
     <!-- Header Banner -->
     <div class="package-header-bar">
         <div class="package-header-left">
@@ -162,6 +300,10 @@ $phoneRate = ($totalLeadsCount > 0) ? round(($hasPhoneCount / $totalLeadsCount) 
                     <span class="pkg-theme-pill pkg-theme-standard"><?php echo htmlspecialchars($pageDisplayName); ?></span>
                     <span class="pkg-duration-badge">
                         <i class="fi fi-rr-form"></i> Form ID: <?php echo htmlspecialchars($formId); ?>
+                    </span>
+                    <!-- Total Campaign Leads in Header -->
+                    <span class="pkg-duration-badge pkg-location-badge" id="headerCampaignLeadsBadge" title="Total inquiries captured across this campaign">
+                        <i class="fi fi-rr-users"></i> <?php echo number_format($totalCampaignLeads); ?> Campaign Leads
                     </span>
                     <span class="v3-status-badge status-active">
                         <span class="status-pulse-dot"></span> Live Ingestion
@@ -179,9 +321,9 @@ $phoneRate = ($totalLeadsCount > 0) ? round(($hasPhoneCount / $totalLeadsCount) 
                     <i class="fi fi-rr-arrow-left"></i> <span>All Pages</span>
                 </a>
             <?php } ?>
-            <a href="<?php echo str_replace('&sync=true', '', ACTIVE_URL); ?>&sync=true" class="v3-btn-primary" title="Refresh Leads from Facebook">
+            <button type="button" class="v3-btn-primary" id="btnRefreshFbLeads" title="Refresh Latest Leads">
                 <i class="fi fi-rr-refresh"></i> <span>Refresh Leads</span>
-            </a>
+            </button>
         </div>
     </div>
 
@@ -206,23 +348,23 @@ $phoneRate = ($totalLeadsCount > 0) ? round(($hasPhoneCount / $totalLeadsCount) 
                 </div>
             </div>
             <div class="fb-sync-banner-right">
-                <a href="<?php echo str_replace('&sync=true', '', ACTIVE_URL); ?>&sync=true" class="v3-btn-primary">
+                <button type="button" class="v3-btn-primary" id="btnRetryFetchLeads">
                     <i class="fi fi-rr-refresh"></i> Retry Fetch
-                </a>
+                </button>
             </div>
         </div>
     <?php } else { ?>
         <!-- KPI Metrics Grid -->
         <div class="v3-kpi-grid">
-            <!-- 1. Total Leads -->
+            <!-- 1. Total Campaign Leads -->
             <div class="v3-kpi-card">
                 <div class="v3-kpi-icon-wrap blue">
                     <i class="fi fi-rr-users"></i>
                 </div>
                 <div class="v3-kpi-info">
-                    <span class="v3-kpi-label">Total Leads Received</span>
-                    <span class="v3-kpi-val"><?php echo number_format($totalLeadsCount); ?></span>
-                    <span class="v3-kpi-sub">From Facebook Lead Ads</span>
+                    <span class="v3-kpi-label">Total Leads in Campaign</span>
+                    <span class="v3-kpi-val" id="kpiTotalCampaignLeads"><?php echo number_format($totalCampaignLeads); ?></span>
+                    <span class="v3-kpi-sub">Total Facebook Lead Ad submissions</span>
                 </div>
             </div>
 
@@ -233,32 +375,32 @@ $phoneRate = ($totalLeadsCount > 0) ? round(($hasPhoneCount / $totalLeadsCount) 
                 </div>
                 <div class="v3-kpi-info">
                     <span class="v3-kpi-label">Latest Lead</span>
-                    <span class="v3-kpi-val v3-kpi-val-time"><?php echo htmlspecialchars($latestLeadTime); ?></span>
+                    <span class="v3-kpi-val v3-kpi-val-time" id="kpiLatestLeadTime"><?php echo htmlspecialchars($latestLeadTime); ?></span>
                     <span class="v3-kpi-sub">Most recent submission</span>
                 </div>
             </div>
 
-            <!-- 3. First Lead -->
+            <!-- 3. Campaign Inception -->
             <div class="v3-kpi-card">
                 <div class="v3-kpi-icon-wrap purple">
                     <i class="fi fi-rr-calendar-clock"></i>
                 </div>
                 <div class="v3-kpi-info">
                     <span class="v3-kpi-label">Campaign First Lead</span>
-                    <span class="v3-kpi-val v3-kpi-val-time"><?php echo htmlspecialchars($firstLeadTime); ?></span>
+                    <span class="v3-kpi-val v3-kpi-val-time" id="kpiFirstLeadTime"><?php echo htmlspecialchars($firstLeadTime); ?></span>
                     <span class="v3-kpi-sub">Campaign inception</span>
                 </div>
             </div>
 
-            <!-- 4. Verified Phone Rate -->
+            <!-- 4. Contact Validity -->
             <div class="v3-kpi-card">
                 <div class="v3-kpi-icon-wrap amber">
                     <i class="fi fi-rr-phone-call"></i>
                 </div>
                 <div class="v3-kpi-info">
                     <span class="v3-kpi-label">Contact Validity</span>
-                    <span class="v3-kpi-val"><?php echo $phoneRate; ?>%</span>
-                    <span class="v3-kpi-sub"><?php echo $hasPhoneCount; ?> Verified Phone Numbers</span>
+                    <span class="v3-kpi-val" id="kpiPhoneRate"><?php echo $phoneRate; ?>%</span>
+                    <span class="v3-kpi-sub" id="kpiPhoneCount"><?php echo $hasPhoneCount; ?> Verified Phone Numbers</span>
                 </div>
             </div>
         </div>
@@ -270,12 +412,12 @@ $phoneRate = ($totalLeadsCount > 0) ? round(($hasPhoneCount / $totalLeadsCount) 
                     <div class="v3-table-card-header-left">
                         <i class="fi fi-rr-form v3-form-card-icon color-blue"></i>
                         <h3>Captured Form Inquiries</h3>
-                        <span class="v3-badge v3-badge-blue"><?php echo $totalLeadsCount; ?> Total</span>
+                        <span class="v3-badge v3-badge-blue" id="tableHeaderLeadCount"><?php echo number_format($totalCampaignLeads); ?> Campaign Leads</span>
                     </div>
                     <div>
                         <div class="integration-search-box m-0">
                             <i class="fi fi-rr-search"></i>
-                            <input type="text" id="leadSearchInput" placeholder="<?php echo ((isset($site_access_type) && $site_access_type === 'digital_marketing') ? 'Search leads by name, id...' : 'Search leads by name, phone, email...'); ?>" class="integration-search-input v3-search-input-compact">
+                            <input type="text" id="leadSearchInput" placeholder="<?php echo ($isDigitalMarketing ? 'Search leads by name, id...' : 'Search leads by name, phone, email...'); ?>" class="integration-search-input v3-search-input-compact">
                         </div>
                     </div>
                 </div>
@@ -289,16 +431,16 @@ $phoneRate = ($totalLeadsCount > 0) ? round(($hasPhoneCount / $totalLeadsCount) 
                                 <th>Contact Details</th>
                                 <th>Form Responses</th>
                                 <th>Lead ID</th>
+                                <th>Lead Sync to CRM</th>
                                 <th class="text-end">Action</th>
                             </tr>
                         </thead>
                         <tbody id="fbLeadsTableBody">
-                            <?php 
-                            $isDigitalMarketing = (isset($site_access_type) && $site_access_type === 'digital_marketing');
+                            <?php
                             foreach ($leads as $lead) {
                                 $createdTime = !empty($lead['created_time']) ? date('d M Y, h:i A', strtotime($lead['created_time'])) : 'N/A';
-                                $leadIdVal = $lead['id'] ?? 'N/A';
-                                
+                                $leadIdVal   = $lead['id'] ?? 'N/A';
+
                                 $fullName = '';
                                 $emailVal = '';
                                 $phoneVal = '';
@@ -317,11 +459,11 @@ $phoneRate = ($totalLeadsCount > 0) ? round(($hasPhoneCount / $totalLeadsCount) 
                                         } elseif (in_array($fieldName, ['phone_number', 'phone', 'mobile_number', 'mobile', 'whatsapp_number'])) {
                                             $phoneVal = $isDigitalMarketing ? '' : $fieldValStr;
                                         } else {
-                                            $cleanKey = ucwords(str_replace(['_', '-'], ' ', $fieldName));
-                                            $isContactField = preg_match('/(phone|mobile|email|contact|whatsapp)/i', $fieldName);
+                                            $cleanKey = formatFbQuestionLabel($fieldName);
+                                            $isContactField = (bool)preg_match('/(phone|mobile|email|contact|whatsapp)/i', $fieldName);
                                             $customResponses[] = [
                                                 'label' => $cleanKey,
-                                                'val'   => ($isDigitalMarketing && $isContactField) ? '[Protected]' : $fieldValStr
+                                                'val'   => ($isDigitalMarketing && $isContactField) ? '[Protected]' : formatFbResponseVal($fieldValStr)
                                             ];
                                         }
                                     }
@@ -332,19 +474,44 @@ $phoneRate = ($totalLeadsCount > 0) ? round(($hasPhoneCount / $totalLeadsCount) 
                                 }
 
                                 $initial = strtoupper(substr($fullName, 0, 1));
-                                
+                                $avatarVariants = ['avatar-blue', 'avatar-indigo', 'avatar-purple', 'avatar-emerald', 'avatar-amber'];
+                                $avatarClass = $avatarVariants[abs(crc32($fullName)) % 5];
+
+                                // Determine CRM Sync Status
+                                $isSynced = false;
+                                $crmEnquiryId = null;
+
+                                if (!empty($lead['crm_enquiry_id'])) {
+                                    $isSynced = true;
+                                    $crmEnquiryId = (int)$lead['crm_enquiry_id'];
+                                } elseif (!empty($syncMap[$leadIdVal])) {
+                                    $isSynced = true;
+                                    $crmEnquiryId = (int)$syncMap[$leadIdVal];
+                                } else {
+                                    $cleanMob = substr(preg_replace('/[^0-9]/', '', $phoneVal), -10);
+                                    if (!empty($cleanMob) && !empty($syncMap['mob_' . $cleanMob])) {
+                                        $isSynced = true;
+                                        $crmEnquiryId = (int)$syncMap['mob_' . $cleanMob];
+                                    } elseif (!empty($emailVal) && !empty($syncMap['email_' . strtolower(trim($emailVal))])) {
+                                        $isSynced = true;
+                                        $crmEnquiryId = (int)$syncMap['email_' . strtolower(trim($emailVal))];
+                                    }
+                                }
+
                                 // JSON payload for modal
                                 $leadPayload = [
-                                    'id'           => $leadIdVal,
-                                    'created_time' => $createdTime,
-                                    'full_name'    => $fullName,
-                                    'phone'        => $isDigitalMarketing ? '' : $phoneVal,
-                                    'email'        => $isDigitalMarketing ? '' : $emailVal,
-                                    'questions'    => $customResponses
+                                    'id'             => $leadIdVal,
+                                    'created_time'   => $createdTime,
+                                    'full_name'      => $fullName,
+                                    'phone'          => $isDigitalMarketing ? '' : $phoneVal,
+                                    'email'          => $isDigitalMarketing ? '' : $emailVal,
+                                    'questions'      => $customResponses,
+                                    'is_synced'      => $isSynced,
+                                    'crm_enquiry_id' => $crmEnquiryId
                                 ];
                                 $jsonEncodedLead = rawurlencode(json_encode($leadPayload));
-                                ?>
-                                <tr class="fb-lead-row">
+                            ?>
+                                <tr class="fb-lead-row" data-lead-id="<?php echo htmlspecialchars($leadIdVal); ?>">
                                     <td>
                                         <div class="fb-lead-date-box">
                                             <span class="lead-date"><?php echo htmlspecialchars(explode(',', $createdTime)[0]); ?></span>
@@ -353,7 +520,7 @@ $phoneRate = ($totalLeadsCount > 0) ? round(($hasPhoneCount / $totalLeadsCount) 
                                     </td>
                                     <td>
                                         <div class="v3-table-form-cell">
-                                            <div class="fb-lead-avatar">
+                                            <div class="fb-lead-avatar <?php echo $avatarClass; ?>">
                                                 <?php echo htmlspecialchars($initial); ?>
                                             </div>
                                             <div class="v3-table-form-info">
@@ -373,7 +540,7 @@ $phoneRate = ($totalLeadsCount > 0) ? round(($hasPhoneCount / $totalLeadsCount) 
                                                     </a>
                                                 <?php } ?>
                                                 <?php if (!empty($emailVal)) { ?>
-                                                    <a href="mailto:<?php echo htmlspecialchars($emailVal); ?>" class="fb-contact-link email">
+                                                    <a href="mailto:<?php echo htmlspecialchars($emailVal); ?>" class="fb-contact-link email" title="<?php echo htmlspecialchars($emailVal); ?>">
                                                         <i class="fi fi-rr-envelope"></i> <span><?php echo htmlspecialchars($emailVal); ?></span>
                                                     </a>
                                                 <?php } ?>
@@ -385,13 +552,13 @@ $phoneRate = ($totalLeadsCount > 0) ? round(($hasPhoneCount / $totalLeadsCount) 
                                     </td>
                                     <td>
                                         <div class="fb-lead-responses-list">
-                                            <?php if (!empty($customResponses)) { 
+                                            <?php if (!empty($customResponses)) {
                                                 foreach (array_slice($customResponses, 0, 2) as $resp) { ?>
                                                     <span class="fb-response-tag">
                                                         <span class="tag-q"><?php echo htmlspecialchars(formatFbQuestionLabel($resp['label'])); ?>:</span>
                                                         <span class="tag-a"><?php echo htmlspecialchars(formatFbResponseVal($resp['val'])); ?></span>
                                                     </span>
-                                                <?php } 
+                                                <?php }
                                                 if (count($customResponses) > 2) { ?>
                                                     <button type="button" class="fb-more-responses-btn btn-view-lead-modal" data-lead="<?php echo $jsonEncodedLead; ?>" title="Click to view all responses">
                                                         +<?php echo (count($customResponses) - 2); ?> more
@@ -403,11 +570,44 @@ $phoneRate = ($totalLeadsCount > 0) ? round(($hasPhoneCount / $totalLeadsCount) 
                                         </div>
                                     </td>
                                     <td>
-                                        <span class="v3-code-pill"><?php echo htmlspecialchars($leadIdVal); ?></span>
+                                        <div class="v3-lead-id-wrap">
+                                            <span class="v3-code-pill" title="Lead ID: <?php echo htmlspecialchars($leadIdVal); ?>"><?php echo htmlspecialchars($leadIdVal); ?></span>
+                                            <button type="button" class="v3-copy-chip-btn btn-copy-lead-id" data-copy="<?php echo htmlspecialchars($leadIdVal); ?>" title="Copy Lead ID">
+                                                <i class="fi fi-rr-copy"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                    <!-- Lead Sync to CRM Column -->
+                                    <td class="crm-sync-status-cell">
+                                        <?php if ($isSynced) { ?>
+                                            <div class="v3-crm-sync-pill is-synced" title="Lead successfully ingested into CRM">
+                                                <span class="v3-sync-status-tag">
+                                                    <span class="status-pulse-dot"></span>
+                                                    <span>Synced</span>
+                                                </span>
+                                                <?php if (!empty($crmEnquiryId)) { ?>
+                                                    <a href="/dashboard/leads/view/?id=<?php echo $crmEnquiryId; ?>" class="v3-sync-enquiry-link" title="Open Enquiry #<?php echo $crmEnquiryId; ?> in CRM">
+                                                        <span class="enquiry-tag">#<?php echo $crmEnquiryId; ?></span>
+                                                        <i class="fi fi-rr-arrow-up-right-from-square"></i>
+                                                    </a>
+                                                <?php } ?>
+                                            </div>
+                                        <?php } else { ?>
+                                            <div class="v3-crm-sync-pill is-pending" title="Lead pending CRM ingestion">
+                                                <span class="v3-sync-status-tag">
+                                                    <span class="status-pulse-dot"></span>
+                                                    <span>Not Synced</span>
+                                                </span>
+                                                <button type="button" class="v3-sync-action-btn btn-sync-lead-crm" data-lead-id="<?php echo htmlspecialchars($leadIdVal); ?>" data-form-id="<?php echo htmlspecialchars($formId); ?>" title="Push lead into CRM immediately">
+                                                    <i class="fi fi-rr-cloud-upload"></i>
+                                                    <span>Sync Now</span>
+                                                </button>
+                                            </div>
+                                        <?php } ?>
                                     </td>
                                     <td class="text-end">
                                         <button type="button" class="v3-btn-table-action btn-view-lead-modal" data-lead="<?php echo $jsonEncodedLead; ?>" title="Open Full Lead Profile">
-                                            <i class="fi fi-rr-eye"></i> View Details
+                                            <i class="fi fi-rr-eye"></i> <span>View Details</span>
                                         </button>
                                     </td>
                                 </tr>
@@ -416,12 +616,22 @@ $phoneRate = ($totalLeadsCount > 0) ? round(($hasPhoneCount / $totalLeadsCount) 
                     </table>
                 </div>
 
-                <!-- Table Pagination Footer -->
-                <div class="v3-table-pagination-bar">
+                <!-- Table Pagination Bar: Max 20 Leads Per Request -->
+                <div class="v3-table-pagination-bar" id="leadPaginationBar">
                     <div class="v3-pagination-info" id="leadPaginationInfo">
-                        Showing 1 to 10 of <?php echo $totalLeadsCount; ?> leads
+                        Showing <?php echo $startIdx; ?> to <?php echo $endIdx; ?> of <?php echo number_format($totalCampaignLeads); ?> campaign leads
                     </div>
-                    <div class="v3-pagination-controls" id="leadPaginationControls"></div>
+                    <div class="v3-pagination-controls" id="leadPaginationControls">
+                        <button type="button" class="v3-page-btn" id="leadPrevPageBtn" <?php echo ($currentPage <= 1 && empty($beforeCursor)) ? 'disabled' : ''; ?> title="Previous 20 Leads">
+                            <i class="fi fi-rr-angle-small-left"></i> Previous
+                        </button>
+                        <span class="v3-page-indicator" id="leadPageIndicator">
+                            Page <?php echo $currentPage; ?> of <?php echo $totalPages; ?>
+                        </span>
+                        <button type="button" class="v3-page-btn" id="leadNextPageBtn" <?php echo (!$hasNext && $currentPage >= $totalPages) ? 'disabled' : ''; ?> title="Next 20 Leads">
+                            Next <i class="fi fi-rr-angle-small-right"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
         <?php } else { ?>
@@ -430,9 +640,9 @@ $phoneRate = ($totalLeadsCount > 0) ? round(($hasPhoneCount / $totalLeadsCount) 
                 <i class="fi fi-rr-users empty-icon"></i>
                 <h4>No Leads Captured Yet</h4>
                 <p>New inquiries submitted on your Facebook ad forms will automatically stream into this list in real-time.</p>
-                <a href="<?php echo str_replace('&sync=true', '', ACTIVE_URL); ?>&sync=true" class="v3-btn-primary">
+                <button type="button" class="v3-btn-primary" id="btnEmptyRefreshLeads">
                     <i class="fi fi-rr-refresh"></i> Refresh Leads Now
-                </a>
+                </button>
             </div>
         <?php } ?>
     <?php } ?>
@@ -463,9 +673,13 @@ $phoneRate = ($totalLeadsCount > 0) ? round(($hasPhoneCount / $totalLeadsCount) 
                             <span class="v3-modal-meta-label">Lead ID</span>
                             <span class="v3-code-pill" id="fbModalLeadId">#</span>
                         </div>
-                        <div class="v3-modal-meta-row">
+                        <div class="v3-modal-meta-row mb-6">
                             <span class="v3-modal-meta-label">Captured Time</span>
                             <span class="v3-modal-meta-val" id="fbModalCreatedTime">—</span>
+                        </div>
+                        <div class="v3-modal-meta-row">
+                            <span class="v3-modal-meta-label">CRM Sync</span>
+                            <span id="fbModalSyncStatus" class="v3-modal-meta-val">—</span>
                         </div>
                     </div>
                 </div>
@@ -488,12 +702,11 @@ $phoneRate = ($totalLeadsCount > 0) ? round(($hasPhoneCount / $totalLeadsCount) 
                     Close
                 </button>
                 <?php if (!$isDigitalMarketing) { ?>
-                <a href="/dashboard/leads/list/" class="v3-btn-primary">
-                    <i class="fi fi-rr-arrow-right"></i> <span>Open CRM Leads</span>
-                </a>
+                    <a href="/dashboard/leads/list/" class="v3-btn-primary" id="fbModalCrmLeadBtn">
+                        <i class="fi fi-rr-arrow-right"></i> <span>Open in CRM</span>
+                    </a>
                 <?php } ?>
             </div>
         </div>
     </div>
 </div>
-
