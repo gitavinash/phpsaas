@@ -139,10 +139,10 @@ $displayRole = $roleTitles[$userRole] ?? 'Administrator';
                 </button>
             </div>
             <div class="cp-filters-wrap">
-                <select class="cp-select v3-form-select cp-select2" id="cpFilterSiteApp" data-placeholder="All Applications" data-width="170px">
+                <select class="cp-select v3-form-select selectJS2 cp-select2" id="cpFilterSiteApp" data-placeholder="All Applications" data-width="170px">
                     <option value="">All Applications</option>
                 </select>
-                <select class="cp-select v3-form-select cp-select2" id="cpFilterSitePlan" data-placeholder="All Plans" data-width="160px">
+                <select class="cp-select v3-form-select selectJS2 cp-select2" id="cpFilterSitePlan" data-placeholder="All Plans" data-width="160px">
                     <option value="">All Subscription Plans</option>
                     <option value="Professional SaaS">Professional SaaS</option>
                     <option value="Enterprise Suite">Enterprise Suite</option>
@@ -150,13 +150,13 @@ $displayRole = $roleTitles[$userRole] ?? 'Administrator';
                     <option value="Starter Launch">Starter Launch</option>
                     <option value="Custom Dedicated">Custom Dedicated</option>
                 </select>
-                <select class="cp-select v3-form-select cp-select2" id="cpFilterSiteStatus" data-placeholder="All Status" data-width="145px">
+                <select class="cp-select v3-form-select selectJS2 cp-select2" id="cpFilterSiteStatus" data-placeholder="All Status" data-width="145px">
                     <option value="">All Statuses</option>
                     <option value="1">Active / Live</option>
                     <option value="0">Suspended</option>
                     <option value="expiring">Expiring Soon</option>
                 </select>
-                <select class="cp-select v3-form-select cp-select2" id="cpSortSites" data-placeholder="Sort Sites" data-width="165px">
+                <select class="cp-select v3-form-select selectJS2 cp-select2" id="cpSortSites" data-placeholder="Sort Sites" data-width="165px">
                     <option value="newest">Newest Provisioned</option>
                     <option value="oldest">Oldest First</option>
                     <option value="expiry_asc">Expiry Date (Soonest)</option>
@@ -270,7 +270,7 @@ $displayRole = $roleTitles[$userRole] ?? 'Administrator';
                             </div>
                         </div>
                         <div class="cp-form-group flex-1">
-                            <select class="cp-form-select cp-select2 cp-modal-select2" id="remBillingIntervalSelect" data-placeholder="Billing Cycle">
+                            <select class="cp-form-select selectJS2 cp-select2 cp-modal-select2" id="remBillingIntervalSelect" data-placeholder="Billing Cycle" data-width="100%">
                                 <option value="yearly">Yearly Renewal</option>
                                 <option value="monthly">Monthly Renewal</option>
                                 <option value="quarterly">Quarterly Renewal</option>
@@ -401,7 +401,7 @@ $displayRole = $roleTitles[$userRole] ?? 'Administrator';
                         </div>
                         <div class="cp-form-group flex-1">
                             <label for="mscSiteDashVersionSelect">Dashboard Version</label>
-                            <select class="cp-form-select cp-select2 cp-modal-select2" id="mscSiteDashVersionSelect" data-placeholder="Dashboard Version">
+                            <select class="cp-form-select selectJS2 cp-select2 cp-modal-select2" id="mscSiteDashVersionSelect" data-placeholder="Dashboard Version" data-width="100%">
                                 <option value="3">V3 (Modern SPA Framework)</option>
                                 <option value="2">V2 (Classic Dashboard)</option>
                             </select>
@@ -411,13 +411,13 @@ $displayRole = $roleTitles[$userRole] ?? 'Administrator';
                     <div class="cp-form-row">
                         <div class="cp-form-group flex-1">
                             <label for="mscSiteAppSelect">Application Module</label>
-                            <select class="cp-form-select cp-select2 cp-modal-select2" id="mscSiteAppSelect" data-placeholder="Select Application">
+                            <select class="cp-form-select selectJS2 cp-select2 cp-modal-select2" id="mscSiteAppSelect" data-placeholder="Select Application" data-width="100%">
                                 <!-- Populated dynamically -->
                             </select>
                         </div>
                         <div class="cp-form-group flex-1">
                             <label for="mscSiteThemeSelect">Active Theme Preset</label>
-                            <select class="cp-form-select cp-select2 cp-modal-select2" id="mscSiteThemeSelect" data-placeholder="Select Theme">
+                            <select class="cp-form-select selectJS2 cp-select2 cp-modal-select2" id="mscSiteThemeSelect" data-placeholder="Select Theme" data-width="100%">
                                 <!-- Populated dynamically -->
                             </select>
                         </div>
@@ -466,8 +466,8 @@ $displayRole = $roleTitles[$userRole] ?? 'Administrator';
                         </div>
                     </div>
 
-                    <!-- Quota Inputs with Quick Preset Pills -->
-                    <div class="cp-meter-group">
+                    <!-- Row 1: License Quota Inputs with Quick Preset Pills -->
+                    <div class="cp-form-row">
                         <div class="cp-form-group cp-input-with-presets">
                             <label for="mscUserLimitInput">Team Members License Limit *</label>
                             <input type="number" class="cp-form-input" id="mscUserLimitInput" required min="1" value="10">
@@ -492,25 +492,21 @@ $displayRole = $roleTitles[$userRole] ?? 'Administrator';
                         </div>
                     </div>
 
+                    <!-- Row 2: Storage Quota & Expiry Date (Both with matched preset pills) -->
                     <div class="cp-form-row">
-                        <div class="cp-form-group flex-1">
+                        <div class="cp-form-group cp-input-with-presets">
                             <label for="mscStorageLimitInput">Storage Quota (MB)</label>
                             <input type="number" class="cp-form-input" id="mscStorageLimitInput" value="5120" min="100">
+                            <div class="cp-preset-pills">
+                                <button type="button" class="cp-preset-pill btn-set-msc-storage-preset" data-val="1024">1 GB</button>
+                                <button type="button" class="cp-preset-pill btn-set-msc-storage-preset" data-val="2048">2 GB</button>
+                                <button type="button" class="cp-preset-pill btn-set-msc-storage-preset" data-val="5120">5 GB</button>
+                                <button type="button" class="cp-preset-pill btn-set-msc-storage-preset" data-val="10240">10 GB</button>
+                                <button type="button" class="cp-preset-pill btn-set-msc-storage-preset" data-val="25600">25 GB</button>
+                            </div>
                         </div>
-                        <div class="cp-form-group flex-1">
-                            <label for="mscPlanSelect">Subscription Plan Tier</label>
-                            <select class="cp-form-select cp-select2 cp-modal-select2" id="mscPlanSelect" data-placeholder="Select Plan Tier">
-                                <option value="Professional SaaS">Professional SaaS</option>
-                                <option value="Enterprise Suite">Enterprise Suite</option>
-                                <option value="Growth Plan">Growth Plan</option>
-                                <option value="Starter Launch">Starter Launch</option>
-                                <option value="Custom Dedicated">Custom Dedicated</option>
-                            </select>
-                        </div>
-                    </div>
 
-                    <div class="cp-form-row">
-                        <div class="cp-form-group flex-1 cp-input-with-presets">
+                        <div class="cp-form-group cp-input-with-presets">
                             <label for="mscExpiryInput">Subscription Expiry Date</label>
                             <input type="date" class="cp-form-input" id="mscExpiryInput">
                             <div class="cp-preset-pills">
@@ -521,10 +517,24 @@ $displayRole = $roleTitles[$userRole] ?? 'Administrator';
                                 <button type="button" class="cp-preset-pill btn-msc-extend-date" data-months="lifetime">Lifetime</button>
                             </div>
                         </div>
+                    </div>
+
+                    <!-- Row 3: Plan Tier & Operational Status (Both selectJS2 dropdowns) -->
+                    <div class="cp-form-row">
+                        <div class="cp-form-group flex-1">
+                            <label for="mscPlanSelect">Subscription Plan Tier</label>
+                            <select class="cp-form-select selectJS2 cp-select2 cp-modal-select2" id="mscPlanSelect" data-placeholder="Select Plan Tier" data-width="100%">
+                                <option value="Professional SaaS">Professional SaaS</option>
+                                <option value="Enterprise Suite">Enterprise Suite</option>
+                                <option value="Growth Plan">Growth Plan</option>
+                                <option value="Starter Launch">Starter Launch</option>
+                                <option value="Custom Dedicated">Custom Dedicated</option>
+                            </select>
+                        </div>
 
                         <div class="cp-form-group flex-1">
                             <label for="mscSiteStatusSelect">Operational Status</label>
-                            <select class="cp-form-select cp-select2 cp-modal-select2" id="mscSiteStatusSelect" data-placeholder="Select Status">
+                            <select class="cp-form-select selectJS2 cp-select2 cp-modal-select2" id="mscSiteStatusSelect" data-placeholder="Select Status" data-width="100%">
                                 <option value="1">Active / Live (Accessible)</option>
                                 <option value="0">Suspended / Deactivated (Blocked)</option>
                             </select>
@@ -571,7 +581,7 @@ $displayRole = $roleTitles[$userRole] ?? 'Administrator';
                         <div class="cp-form-row">
                             <div class="cp-form-group flex-1">
                                 <label for="mscBillingIntervalSelect">Active Billing Cycle</label>
-                                <select class="cp-form-select cp-select2 cp-modal-select2" id="mscBillingIntervalSelect" data-placeholder="Billing Cycle">
+                                <select class="cp-form-select selectJS2 cp-select2 cp-modal-select2" id="mscBillingIntervalSelect" data-placeholder="Billing Cycle" data-width="100%">
                                     <option value="yearly">Yearly (Annual Renewal)</option>
                                     <option value="monthly">Monthly (Recurring Monthly)</option>
                                     <option value="quarterly">Quarterly (Every 3 Months)</option>
@@ -580,7 +590,7 @@ $displayRole = $roleTitles[$userRole] ?? 'Administrator';
                             </div>
                             <div class="cp-form-group flex-1">
                                 <label for="mscCurrencySelect">Billing Currency</label>
-                                <select class="cp-form-select cp-select2 cp-modal-select2" id="mscCurrencySelect" data-placeholder="Currency">
+                                <select class="cp-form-select selectJS2 cp-select2 cp-modal-select2" id="mscCurrencySelect" data-placeholder="Currency" data-width="100%">
                                     <option value="INR">INR (₹) - Indian Rupee</option>
                                     <option value="USD">USD ($) - US Dollar</option>
                                     <option value="EUR">EUR (€) - Euro</option>
@@ -774,13 +784,13 @@ $displayRole = $roleTitles[$userRole] ?? 'Administrator';
                 </div>
                 <div class="cp-form-group">
                     <label for="siteAppSelect">Application Module *</label>
-                    <select class="cp-form-select cp-select2 cp-modal-select2" id="siteAppSelect" required data-placeholder="Select Application">
+                    <select class="cp-form-select selectJS2 cp-select2 cp-modal-select2" id="siteAppSelect" required data-placeholder="Select Application" data-width="100%">
                         <option value="">Select Application</option>
                     </select>
                 </div>
                 <div class="cp-form-group">
                     <label for="siteThemeSelect">Initial Theme Preset</label>
-                    <select class="cp-form-select cp-select2 cp-modal-select2" id="siteThemeSelect" data-placeholder="Select Theme Preset">
+                    <select class="cp-form-select selectJS2 cp-select2 cp-modal-select2" id="siteThemeSelect" data-placeholder="Select Theme Preset" data-width="100%">
                         <option value="0">Default System Theme</option>
                     </select>
                 </div>
@@ -790,7 +800,7 @@ $displayRole = $roleTitles[$userRole] ?? 'Administrator';
                 </div>
                 <div class="cp-form-group">
                     <label for="sitePartnerSelect">Referring Partner (Optional)</label>
-                    <select class="cp-form-select cp-select2 cp-modal-select2" id="sitePartnerSelect" data-placeholder="Select Referring Partner">
+                    <select class="cp-form-select selectJS2 cp-select2 cp-modal-select2" id="sitePartnerSelect" data-placeholder="Select Referring Partner" data-width="100%">
                         <option value="0">No Partner / Direct</option>
                     </select>
                 </div>

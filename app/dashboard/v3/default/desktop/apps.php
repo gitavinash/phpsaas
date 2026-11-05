@@ -301,7 +301,7 @@ $displayRole = $roleTitles[$userRole] ?? 'Administrator';
                 <div class="cp-form-row">
                     <div class="cp-form-group cp-form-col">
                         <label for="appStatusSelect">Operational Status</label>
-                        <select class="cp-form-select cp-select2 cp-modal-select2" id="appStatusSelect" data-placeholder="Select Status">
+                        <select class="cp-form-select selectJS2 cp-select2 cp-modal-select2" id="appStatusSelect" data-placeholder="Select Status" data-width="100%">
                             <option value="1">Active (Live &amp; Operational)</option>
                             <option value="0">Inactive (Disabled / Suspended)</option>
                         </select>
@@ -309,7 +309,7 @@ $displayRole = $roleTitles[$userRole] ?? 'Administrator';
 
                     <div class="cp-form-group cp-form-col">
                         <label for="appVisibilitySelect">Catalog Visibility</label>
-                        <select class="cp-form-select cp-select2 cp-modal-select2" id="appVisibilitySelect" data-placeholder="Select Visibility">
+                        <select class="cp-form-select selectJS2 cp-select2 cp-modal-select2" id="appVisibilitySelect" data-placeholder="Select Visibility" data-width="100%">
                             <option value="1">Visible in Provisioning Catalog</option>
                             <option value="0">Internal / Hidden Module</option>
                         </select>

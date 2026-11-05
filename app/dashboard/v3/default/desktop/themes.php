@@ -144,15 +144,15 @@ $displayRole = $roleTitles[$userRole] ?? 'Administrator';
                 </button>
             </div>
             <div class="cp-filters-wrap">
-                <select class="cp-select v3-form-select cp-select2" id="cpFilterThemeApp" data-placeholder="All Applications" data-width="180px">
+                <select class="cp-select v3-form-select selectJS2 cp-select2" id="cpFilterThemeApp" data-placeholder="All Applications" data-width="180px">
                     <option value="">All Applications</option>
                 </select>
-                <select class="cp-select v3-form-select cp-select2" id="cpFilterThemeStatus" data-placeholder="All Status" data-width="145px">
+                <select class="cp-select v3-form-select selectJS2 cp-select2" id="cpFilterThemeStatus" data-placeholder="All Status" data-width="145px">
                     <option value="">Status: All</option>
                     <option value="1">Active Only</option>
                     <option value="0">Archived</option>
                 </select>
-                <select class="cp-select v3-form-select cp-select2" id="cpSortThemes" data-placeholder="Sort Themes" data-width="165px">
+                <select class="cp-select v3-form-select selectJS2 cp-select2" id="cpSortThemes" data-placeholder="Sort Themes" data-width="165px">
                     <option value="newest">Sort: Newest First</option>
                     <option value="oldest">Sort: Oldest First</option>
                     <option value="title_asc">Sort: Title (A-Z)</option>
@@ -227,7 +227,7 @@ $displayRole = $roleTitles[$userRole] ?? 'Administrator';
             <div class="cp-modal-body">
                 <div class="cp-form-group">
                     <label for="themeAppSelect">Parent Application *</label>
-                    <select class="cp-form-select v3-form-select cp-select2 cp-modal-select2" id="themeAppSelect" required data-placeholder="Select Parent App">
+                    <select class="cp-form-select v3-form-select selectJS2 cp-select2 cp-modal-select2" id="themeAppSelect" required data-placeholder="Select Parent App" data-width="100%">
                         <option value="">Select Parent App</option>
                     </select>
                 </div>
