@@ -65,7 +65,7 @@ $displayRole = $roleTitles[$userRole] ?? 'Administrator';
                 <input type="text" class="cp-search-input" id="cpSearchUsers" placeholder="Search name, email, or mobile...">
             </div>
             <div class="cp-filters-wrap">
-                <select class="cp-select" id="cpFilterUserRole">
+                <select class="cp-select cp-select2" id="cpFilterUserRole" data-placeholder="All Roles" data-width="170px">
                     <option value="">All Roles</option>
                     <option value="administrator">System Administrator</option>
                     <option value="partner">Partner / Referral</option>
@@ -124,7 +124,7 @@ $displayRole = $roleTitles[$userRole] ?? 'Administrator';
                 </div>
                 <div class="cp-form-group">
                     <label for="userRoleSelect">Role &amp; Permissions *</label>
-                    <select class="cp-form-select" id="userRoleSelect" required>
+                    <select class="cp-form-select cp-select2 cp-modal-select2" id="userRoleSelect" required data-placeholder="Select Role">
                         <option value="administrator">System Administrator</option>
                         <option value="partner">Partner / Referral</option>
                         <option value="sales">Sales Executive</option>

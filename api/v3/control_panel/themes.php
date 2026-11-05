@@ -40,12 +40,22 @@ if ($method === 'GET') {
     }
     $whereSql = !empty($where) ? "WHERE " . implode(' AND ', $where) : "";
 
+    $sort = isset($_GET['sort']) ? trim($_GET['sort']) : 'newest';
+    $orderBy = "t.theme_id DESC";
+    if ($sort === 'oldest') {
+        $orderBy = "t.theme_id ASC";
+    } elseif ($sort === 'title_asc') {
+        $orderBy = "t.theme_title ASC";
+    } elseif ($sort === 'most_sites') {
+        $orderBy = "sites_using_theme DESC, t.theme_id DESC";
+    }
+
     $sql = "SELECT t.*, a.app_title, a.app_path,
             (SELECT COUNT(*) FROM {$tblPrefix}site s WHERE s.site_theme_id = t.theme_id) as sites_using_theme
             FROM {$tblPrefix}theme t
             LEFT JOIN {$tblPrefix}app a ON t.theme_app_id = a.app_id
             {$whereSql}
-            ORDER BY t.theme_id DESC";
+            ORDER BY {$orderBy}";
 
     $res = mysqli_query($connection, $sql);
     $themes = [];
@@ -67,9 +77,35 @@ if ($method === 'GET') {
         }
     }
 
+    // Global KPI Metrics for Themes
+    $metrics = [
+        'total' => 0,
+        'active' => 0,
+        'inactive' => 0,
+        'apps' => 0,
+        'sites' => 0
+    ];
+    $mQ = mysqli_query($connection, "SELECT 
+        COUNT(*) as total,
+        SUM(CASE WHEN theme_status = 1 THEN 1 ELSE 0 END) as active,
+        SUM(CASE WHEN theme_status = 0 THEN 1 ELSE 0 END) as inactive,
+        COUNT(DISTINCT theme_app_id) as apps
+        FROM {$tblPrefix}theme");
+    if ($mQ && $mR = mysqli_fetch_assoc($mQ)) {
+        $metrics['total'] = (int)$mR['total'];
+        $metrics['active'] = (int)$mR['active'];
+        $metrics['inactive'] = (int)$mR['inactive'];
+        $metrics['apps'] = (int)$mR['apps'];
+    }
+    $sQ = mysqli_query($connection, "SELECT COUNT(*) as total FROM {$tblPrefix}site WHERE site_theme_id > 0");
+    if ($sQ && $sR = mysqli_fetch_assoc($sQ)) {
+        $metrics['sites'] = (int)$sR['total'];
+    }
+
     echo json_encode([
         'status' => 'success',
         'data' => $themes,
+        'metrics' => $metrics,
         'total' => count($themes)
     ]);
     exit();

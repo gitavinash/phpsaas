@@ -65,7 +65,7 @@ $displayRole = $roleTitles[$userRole] ?? 'Administrator';
                 <input type="text" class="cp-search-input" id="cpSearchInvoices" placeholder="Search invoice #, domain, or client...">
             </div>
             <div class="cp-filters-wrap">
-                <select class="cp-select" id="cpFilterInvoiceStatus">
+                <select class="cp-select cp-select2" id="cpFilterInvoiceStatus" data-placeholder="All Status" data-width="160px">
                     <option value="">All Status</option>
                     <option value="paid">Paid</option>
                     <option value="unpaid">Unpaid</option>
@@ -111,7 +111,7 @@ $displayRole = $roleTitles[$userRole] ?? 'Administrator';
             <div class="cp-modal-body">
                 <div class="cp-form-group">
                     <label for="invSiteSelect">Client Site *</label>
-                    <select class="cp-form-select" id="invSiteSelect" required>
+                    <select class="cp-form-select cp-select2 cp-modal-select2" id="invSiteSelect" required data-placeholder="Select Client Site">
                         <option value="">Select Client Site</option>
                     </select>
                 </div>
@@ -133,7 +133,7 @@ $displayRole = $roleTitles[$userRole] ?? 'Administrator';
                 </div>
                 <div class="cp-form-group">
                     <label for="invPartnerSelect">Credited Partner (For referral commission)</label>
-                    <select class="cp-form-select" id="invPartnerSelect">
+                    <select class="cp-form-select cp-select2 cp-modal-select2" id="invPartnerSelect" data-placeholder="Select Partner">
                         <option value="0">Direct / No Partner</option>
                     </select>
                 </div>

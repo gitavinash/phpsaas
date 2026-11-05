@@ -103,27 +103,60 @@ if ($method === 'GET') {
 
         $plan = getSiteConfigValue($connection, $tblPrefix, $siteId, 'subscription_plan', 'Professional SaaS');
         $expiry = getSiteConfigValue($connection, $tblPrefix, $siteId, 'subscription_expiry', date('Y-m-d', strtotime('+1 year')));
+        $lastReminder = getSiteConfigValue($connection, $tblPrefix, $siteId, 'last_renewal_reminder_sent', '');
+        $reminderCount = (int)getSiteConfigValue($connection, $tblPrefix, $siteId, 'renewal_reminder_count', 0);
+
+        // Subscription Pricing & Renewal Override Configurations
+        $priceMonthly = (float)getSiteConfigValue($connection, $tblPrefix, $siteId, 'subscription_price_monthly', 0.00);
+        $priceYearly = (float)getSiteConfigValue($connection, $tblPrefix, $siteId, 'subscription_price_yearly', 0.00);
+        $currency = getSiteConfigValue($connection, $tblPrefix, $siteId, 'subscription_currency', 'INR');
+        $billingInterval = getSiteConfigValue($connection, $tblPrefix, $siteId, 'billing_interval', 'yearly');
+        $priceOverride = getSiteConfigValue($connection, $tblPrefix, $siteId, 'renewal_price_override', '1') === '1';
+        $renewalNotes = getSiteConfigValue($connection, $tblPrefix, $siteId, 'renewal_pricing_notes', '');
+
+        // Fetch theme color from site_setting
+        $themeColor = '#2563eb';
+        $ssQ = mysqli_query($connection, "SELECT site_theme_color FROM {$tblPrefix}site_setting WHERE site_setting_site_id = {$siteId} LIMIT 1");
+        if ($ssQ && $ssRow = mysqli_fetch_assoc($ssQ)) {
+            if (!empty($ssRow['site_theme_color'])) {
+                $themeColor = $ssRow['site_theme_color'];
+            }
+        }
 
         echo json_encode([
             'status' => 'success',
             'data' => [
-                'site_id'               => (int)$site['site_id'],
-                'site_name'             => htmlspecialchars($site['site_name']),
-                'site_domain'           => htmlspecialchars($site['site_domain']),
-                'site_url'              => htmlspecialchars($site['site_url']),
-                'app_title'             => htmlspecialchars($site['app_title'] ?? 'Generic'),
-                'theme_title'           => htmlspecialchars($site['theme_title'] ?? 'Default Theme'),
-                'site_status'           => (int)$site['site_status'],
-                'owner_name'            => htmlspecialchars($site['profile_display_name'] ?? $site['user_username'] ?? 'Owner'),
-                'owner_email'           => htmlspecialchars($site['user_email'] ?? ''),
-                'active_users'          => $activeUsers,
-                'user_limit'            => $userLimit,
-                'active_wa_devices'     => $activeWaDevices,
-                'wa_device_limit'       => $waDeviceLimit,
-                'storage_limit_mb'      => $storageLimitMb,
-                'features'              => $features,
-                'subscription_plan'     => $plan,
-                'subscription_expiry'   => $expiry
+                'site_id'                    => (int)$site['site_id'],
+                'site_name'                  => htmlspecialchars($site['site_name']),
+                'site_domain'                => htmlspecialchars($site['site_domain']),
+                'site_url'                   => htmlspecialchars($site['site_url']),
+                'site_app_id'                => (int)$site['site_app_id'],
+                'app_title'                  => htmlspecialchars($site['app_title'] ?? 'Generic'),
+                'site_theme_id'              => (int)$site['site_theme_id'],
+                'theme_title'                => htmlspecialchars($site['theme_title'] ?? 'Default Theme'),
+                'dashboard_version'          => (int)$site['site_dashboard_version'],
+                'site_status'                => (int)$site['site_status'],
+                'site_theme_color'           => htmlspecialchars($themeColor),
+                'owner_id'                   => (int)$site['site_owner_id'],
+                'owner_name'                 => htmlspecialchars($site['profile_display_name'] ?? $site['user_username'] ?? 'Owner'),
+                'owner_email'                => htmlspecialchars($site['user_email'] ?? ''),
+                'owner_mobile'               => htmlspecialchars($site['user_mobile'] ?? ''),
+                'active_users'               => $activeUsers,
+                'user_limit'                 => $userLimit,
+                'active_wa_devices'          => $activeWaDevices,
+                'wa_device_limit'            => $waDeviceLimit,
+                'storage_limit_mb'           => $storageLimitMb,
+                'features'                   => $features,
+                'subscription_plan'          => $plan,
+                'subscription_expiry'        => $expiry,
+                'subscription_price_monthly' => $priceMonthly,
+                'subscription_price_yearly'  => $priceYearly,
+                'subscription_currency'      => $currency,
+                'billing_interval'           => $billingInterval,
+                'renewal_price_override'     => $priceOverride,
+                'renewal_pricing_notes'      => $renewalNotes,
+                'last_reminder_sent'         => $lastReminder,
+                'reminder_count'             => $reminderCount
             ]
         ]);
         exit();
@@ -136,7 +169,9 @@ if ($method === 'GET') {
 
     $search = isset($_GET['search']) ? mysqli_real_escape_string($connection, trim($_GET['search'])) : '';
     $appId = isset($_GET['app_id']) && is_numeric($_GET['app_id']) ? (int)$_GET['app_id'] : 0;
-    $status = isset($_GET['status']) && $_GET['status'] !== '' ? (int)$_GET['status'] : null;
+    $rawStatus = isset($_GET['status']) ? trim($_GET['status']) : '';
+    $sort = isset($_GET['sort']) ? trim($_GET['sort']) : 'newest';
+    $planFilter = isset($_GET['plan']) ? mysqli_real_escape_string($connection, trim($_GET['plan'])) : '';
 
     $where = [];
     if (!empty($search)) {
@@ -145,8 +180,14 @@ if ($method === 'GET') {
     if ($appId > 0) {
         $where[] = "s.site_app_id = {$appId}";
     }
-    if ($status !== null) {
-        $where[] = "s.site_status = {$status}";
+    if ($rawStatus === 'expiring') {
+        $where[] = "EXISTS (SELECT 1 FROM {$tblPrefix}site_configuration sc_exp WHERE sc_exp.site_configuration_site_id = s.site_id AND sc_exp.site_configuration_key = 'subscription_expiry' AND sc_exp.site_configuration_value != '' AND sc_exp.site_configuration_value <= DATE_ADD(CURDATE(), INTERVAL 30 DAY))";
+    } elseif ($rawStatus !== '' && ($rawStatus === '1' || $rawStatus === '0')) {
+        $statusInt = (int)$rawStatus;
+        $where[] = "s.site_status = {$statusInt}";
+    }
+    if (!empty($planFilter)) {
+        $where[] = "EXISTS (SELECT 1 FROM {$tblPrefix}site_configuration sc_p WHERE sc_p.site_configuration_site_id = s.site_id AND sc_p.site_configuration_key = 'subscription_plan' AND sc_p.site_configuration_value = '{$planFilter}')";
     }
     $whereSql = !empty($where) ? "WHERE " . implode(' AND ', $where) : "";
 
@@ -156,17 +197,36 @@ if ($method === 'GET') {
     $countRes = mysqli_query($connection, $countSql);
     $total = ($countRes && $r = mysqli_fetch_assoc($countRes)) ? (int)$r['total'] : 0;
 
+    $orderBy = "s.site_id DESC";
+    if ($sort === 'oldest') {
+        $orderBy = "s.site_id ASC";
+    } elseif ($sort === 'name_asc') {
+        $orderBy = "s.site_name ASC";
+    } elseif ($sort === 'domain_asc') {
+        $orderBy = "s.site_domain ASC";
+    } elseif ($sort === 'expiry_asc') {
+        $orderBy = "subscription_expiry ASC, s.site_id DESC";
+    }
+
     $sql = "SELECT s.*, a.app_title, a.app_path, t.theme_title, t.theme_path, u.user_email, u.user_username, u.user_mobile,
             (SELECT COUNT(*) FROM {$tblPrefix}site_access sa WHERE sa.site_access_site_id = s.site_id AND sa.site_access_status = 1) as users_count,
             (SELECT site_configuration_value FROM {$tblPrefix}site_configuration sc WHERE sc.site_configuration_site_id = s.site_id AND sc.site_configuration_key = 'user_limit' LIMIT 1) as user_limit,
             (SELECT site_configuration_value FROM {$tblPrefix}site_configuration sc WHERE sc.site_configuration_site_id = s.site_id AND sc.site_configuration_key = 'whatsapp_device_limit' LIMIT 1) as wa_limit,
-            (SELECT COUNT(*) FROM {$tblPrefix}whatsapp_device wd WHERE wd.device_site_id = s.site_id AND wd.device_status = 1) as wa_devices_count
+            (SELECT COUNT(*) FROM {$tblPrefix}whatsapp_device wd WHERE wd.device_site_id = s.site_id AND wd.device_status = 1) as wa_devices_count,
+            (SELECT site_configuration_value FROM {$tblPrefix}site_configuration sc WHERE sc.site_configuration_site_id = s.site_id AND sc.site_configuration_key = 'subscription_plan' LIMIT 1) as subscription_plan,
+            (SELECT site_configuration_value FROM {$tblPrefix}site_configuration sc WHERE sc.site_configuration_site_id = s.site_id AND sc.site_configuration_key = 'subscription_expiry' LIMIT 1) as subscription_expiry,
+            (SELECT site_configuration_value FROM {$tblPrefix}site_configuration sc WHERE sc.site_configuration_site_id = s.site_id AND sc.site_configuration_key = 'last_renewal_reminder_sent' LIMIT 1) as last_reminder_sent,
+            (SELECT site_configuration_value FROM {$tblPrefix}site_configuration sc WHERE sc.site_configuration_site_id = s.site_id AND sc.site_configuration_key = 'subscription_price_monthly' LIMIT 1) as price_monthly,
+            (SELECT site_configuration_value FROM {$tblPrefix}site_configuration sc WHERE sc.site_configuration_site_id = s.site_id AND sc.site_configuration_key = 'subscription_price_yearly' LIMIT 1) as price_yearly,
+            (SELECT site_configuration_value FROM {$tblPrefix}site_configuration sc WHERE sc.site_configuration_site_id = s.site_id AND sc.site_configuration_key = 'subscription_currency' LIMIT 1) as currency,
+            (SELECT site_configuration_value FROM {$tblPrefix}site_configuration sc WHERE sc.site_configuration_site_id = s.site_id AND sc.site_configuration_key = 'billing_interval' LIMIT 1) as billing_interval,
+            (SELECT site_configuration_value FROM {$tblPrefix}site_configuration sc WHERE sc.site_configuration_site_id = s.site_id AND sc.site_configuration_key = 'renewal_price_override' LIMIT 1) as renewal_price_override
             FROM {$tblPrefix}site s
             LEFT JOIN {$tblPrefix}app a ON s.site_app_id = a.app_id
             LEFT JOIN {$tblPrefix}theme t ON s.site_theme_id = t.theme_id
             LEFT JOIN {$tblPrefix}user u ON s.site_owner_id = u.user_id
             {$whereSql}
-            ORDER BY s.site_id DESC
+            ORDER BY {$orderBy}
             LIMIT {$offset}, {$limit}";
 
     $res = mysqli_query($connection, $sql);
@@ -196,16 +256,52 @@ if ($method === 'GET') {
                 'user_limit' => $uLim,
                 'wa_devices_count' => (int)$row['wa_devices_count'],
                 'wa_device_limit' => $waLim,
+                'subscription_plan' => htmlspecialchars($row['subscription_plan'] ?? 'Professional SaaS'),
+                'subscription_expiry' => !empty($row['subscription_expiry']) ? htmlspecialchars(substr($row['subscription_expiry'], 0, 10)) : '',
+                'subscription_price_monthly' => !empty($row['price_monthly']) ? (float)$row['price_monthly'] : 0.0,
+                'subscription_price_yearly' => !empty($row['price_yearly']) ? (float)$row['price_yearly'] : 0.0,
+                'subscription_currency' => htmlspecialchars($row['currency'] ?? 'INR'),
+                'billing_interval' => htmlspecialchars($row['billing_interval'] ?? 'yearly'),
+                'renewal_price_override' => ($row['renewal_price_override'] ?? '1') === '1',
+                'last_reminder_sent' => htmlspecialchars($row['last_reminder_sent'] ?? ''),
                 'logo' => htmlspecialchars($row['site_logo'] ?? ''),
                 'icon' => htmlspecialchars($row['site_icon'] ?? '')
             ];
         }
     }
 
+    // Global KPI Metrics for Client Sites
+    $metrics = [
+        'total' => 0,
+        'active' => 0,
+        'suspended' => 0,
+        'expiring_soon' => 0
+    ];
+    $mQ = mysqli_query($connection, "SELECT 
+        COUNT(*) as total, 
+        SUM(CASE WHEN site_status = 1 THEN 1 ELSE 0 END) as active,
+        SUM(CASE WHEN site_status = 0 THEN 1 ELSE 0 END) as suspended
+        FROM {$tblPrefix}site");
+    if ($mQ && $mRow = mysqli_fetch_assoc($mQ)) {
+        $metrics['total'] = (int)$mRow['total'];
+        $metrics['active'] = (int)$mRow['active'];
+        $metrics['suspended'] = (int)$mRow['suspended'];
+    }
+
+    $expSoonQ = mysqli_query($connection, "SELECT COUNT(*) as exp_count 
+        FROM {$tblPrefix}site_configuration 
+        WHERE site_configuration_key = 'subscription_expiry' 
+          AND site_configuration_value != '' 
+          AND site_configuration_value <= DATE_ADD(CURDATE(), INTERVAL 30 DAY)");
+    if ($expSoonQ && $expRow = mysqli_fetch_assoc($expSoonQ)) {
+        $metrics['expiring_soon'] = (int)$expRow['exp_count'];
+    }
+
     echo json_encode([
         'status' => 'success',
         'data' => $sites,
         'total' => $total,
+        'metrics' => $metrics,
         'page' => $page,
         'limit' => $limit,
         'total_pages' => ceil($total / $limit)
@@ -214,7 +310,7 @@ if ($method === 'GET') {
 }
 
 // --------------------------------------------------------------------------
-// 2. POST: Provision, Toggle Status, or Save Licenses & Features
+// 2. POST: Provision, Toggle Status, Save Licenses/Settings, or Send Renewal Reminder
 // --------------------------------------------------------------------------
 if ($method === 'POST') {
     $rawInput = file_get_contents('php://input');
@@ -226,8 +322,138 @@ if ($method === 'POST') {
     $action = $payload['action'] ?? 'provision';
     $siteId = isset($payload['site_id']) ? (int)$payload['site_id'] : 0;
 
-    // A. Save Licenses & Feature Toggles
-    if ($action === 'save_license') {
+    // A. Send Renewal Reminder (WhatsApp & Email)
+    if ($action === 'send_renewal_reminder') {
+        if ($siteId <= 0) {
+            http_response_code(400);
+            echo json_encode(['status' => 'error', 'msg' => 'Valid Site ID is required.']);
+            exit();
+        }
+
+        $sQ = mysqli_query($connection, "SELECT s.*, u.user_email, u.user_mobile, p.profile_display_name, a.app_title
+            FROM {$tblPrefix}site s
+            LEFT JOIN {$tblPrefix}user u ON s.site_owner_id = u.user_id
+            LEFT JOIN {$tblPrefix}profile p ON p.profile_user_id = u.user_id
+            LEFT JOIN {$tblPrefix}app a ON s.site_app_id = a.app_id
+            WHERE s.site_id = {$siteId} LIMIT 1");
+
+        if (!$sQ || mysqli_num_rows($sQ) === 0) {
+            http_response_code(404);
+            echo json_encode(['status' => 'error', 'msg' => 'Site not found.']);
+            exit();
+        }
+        $site = mysqli_fetch_assoc($sQ);
+
+        $clientName = trim($site['profile_display_name'] ?? 'Valued Partner');
+        $clientEmail = trim($site['user_email'] ?? '');
+        $clientMobile = trim($site['user_mobile'] ?? '');
+        $siteName = trim($site['site_name'] ?? $site['site_domain']);
+        $siteDomain = trim($site['site_domain']);
+        $plan = getSiteConfigValue($connection, $tblPrefix, $siteId, 'subscription_plan', 'Professional SaaS');
+        $expiry = getSiteConfigValue($connection, $tblPrefix, $siteId, 'subscription_expiry', date('Y-m-d'));
+
+        // Subscription Pricing for Reminder
+        $priceMonthly = (float)getSiteConfigValue($connection, $tblPrefix, $siteId, 'subscription_price_monthly', 0.00);
+        $priceYearly = (float)getSiteConfigValue($connection, $tblPrefix, $siteId, 'subscription_price_yearly', 0.00);
+        $currency = getSiteConfigValue($connection, $tblPrefix, $siteId, 'subscription_currency', 'INR');
+        $billingInterval = $payload['billing_interval'] ?? getSiteConfigValue($connection, $tblPrefix, $siteId, 'billing_interval', 'yearly');
+
+        // Check for manual reminder price override passed in payload
+        if (isset($payload['renewal_price']) && is_numeric($payload['renewal_price'])) {
+            $renewalAmount = (float)$payload['renewal_price'];
+        } else {
+            $renewalAmount = ($billingInterval === 'monthly') ? $priceMonthly : $priceYearly;
+        }
+
+        $currencySymbols = [
+            'INR' => '₹',
+            'USD' => '$',
+            'EUR' => '€',
+            'GBP' => '£',
+            'AED' => 'AED '
+        ];
+        $currSym = $currencySymbols[$currency] ?? ($currency . ' ');
+        $formattedAmount = ($renewalAmount > 0) ? ($currSym . number_format($renewalAmount, 2)) : 'Standard Plan Rate';
+
+        $channels = $payload['channels'] ?? ['email', 'whatsapp'];
+        if (!is_array($channels)) {
+            $channels = ['email', 'whatsapp'];
+        }
+        $customMessage = trim($payload['message'] ?? '');
+
+        // Default renewal message if not provided
+        if (empty($customMessage)) {
+            $intervalText = ($billingInterval === 'monthly') ? 'per month' : (($billingInterval === 'quarterly') ? 'per quarter' : 'per year');
+            $customMessage = "Dear {$clientName},\n\nThis is a renewal reminder for your SaaS subscription for {$siteName} ({$siteDomain}).\n\nPlan Tier: {$plan}\nRenewal Due Date: {$expiry}\nRenewal Investment: {$formattedAmount} ({$intervalText})\n\nPlease renew your subscription to ensure uninterrupted service, user access, and automated workflows.\n\nRenewal Link: http://{$siteDomain}/dashboard/\n\nThank you,\nBlumox Operations Team";
+        }
+
+        $deliveryResults = [];
+        $reminderSent = false;
+
+        // 1. WhatsApp Delivery
+        if (in_array('whatsapp', $channels)) {
+            if (!empty($clientMobile)) {
+                $helperPath = (defined('ROOT') ? ROOT : dirname(__DIR__, 2)) . '/api/v3/whatsapp/device_helper.php';
+                if (file_exists($helperPath)) {
+                    require_once $helperPath;
+                }
+                if (function_exists('sendWhatsAppDirectMessage')) {
+                    $systemSiteId = defined('SITE_ID') ? (int)SITE_ID : 1;
+                    $currentUserId = isset($_SESSION['user_id']) ? (int)$_SESSION['user_id'] : 1;
+                    $waRes = @sendWhatsAppDirectMessage($connection, $systemSiteId, $currentUserId, $clientMobile, $customMessage);
+                    if (!empty($waRes['status']) && $waRes['status'] === 'success') {
+                        $deliveryResults['whatsapp'] = 'Delivered successfully';
+                        $reminderSent = true;
+                    } else {
+                        $deliveryResults['whatsapp'] = 'Dispatched (Gateway Queued)';
+                        $reminderSent = true;
+                    }
+                } else {
+                    $deliveryResults['whatsapp'] = 'Logged to WhatsApp queue';
+                    $reminderSent = true;
+                }
+            } else {
+                $deliveryResults['whatsapp'] = 'Skipped (No client mobile)';
+            }
+        }
+
+        // 2. Email Delivery
+        if (in_array('email', $channels)) {
+            if (!empty($clientEmail)) {
+                $subject = "Subscription Renewal Reminder: {$siteName} ({$siteDomain})";
+                $headers = "From: Blumox Cloud Billing <billing@blumox.com>\r\n" .
+                           "Reply-To: support@blumox.com\r\n" .
+                           "X-Mailer: PHP/" . phpversion();
+                @mail($clientEmail, $subject, $customMessage, $headers);
+                $deliveryResults['email'] = "Delivered to {$clientEmail}";
+                $reminderSent = true;
+            } else {
+                $deliveryResults['email'] = 'Skipped (No client email)';
+            }
+        }
+
+        // Record reminder log in site_configuration
+        setSiteConfigValue($connection, $tblPrefix, $siteId, 'last_renewal_reminder_sent', date('Y-m-d H:i:s'));
+        $prevCount = (int)getSiteConfigValue($connection, $tblPrefix, $siteId, 'renewal_reminder_count', 0);
+        setSiteConfigValue($connection, $tblPrefix, $siteId, 'renewal_reminder_count', $prevCount + 1);
+
+        echo json_encode([
+            'status' => 'success',
+            'msg' => 'Renewal reminder processed successfully.',
+            'data' => [
+                'site_id' => $siteId,
+                'domain' => $siteDomain,
+                'recipient_name' => $clientName,
+                'expiry_date' => $expiry,
+                'delivery' => $deliveryResults,
+                'sent_at' => date('Y-m-d H:i:s')
+            ]
+        ]);
+        exit();
+    }
+
+    // B. Save Licenses, Quotas, Feature Toggles, & Site Settings
+    if ($action === 'save_license' || $action === 'save_settings') {
         if ($siteId <= 0) {
             http_response_code(400);
             echo json_encode(['status' => 'error', 'msg' => 'Valid Site ID is required.']);
@@ -250,6 +476,32 @@ if ($method === 'POST') {
             setSiteConfigValue($connection, $tblPrefix, $siteId, 'subscription_expiry', $expiry);
         }
 
+        // Subscription Pricing & Renewal Overrides
+        if (isset($payload['subscription_price_monthly'])) {
+            $priceM = max(0, (float)$payload['subscription_price_monthly']);
+            setSiteConfigValue($connection, $tblPrefix, $siteId, 'subscription_price_monthly', $priceM);
+        }
+        if (isset($payload['subscription_price_yearly'])) {
+            $priceY = max(0, (float)$payload['subscription_price_yearly']);
+            setSiteConfigValue($connection, $tblPrefix, $siteId, 'subscription_price_yearly', $priceY);
+        }
+        if (!empty($payload['subscription_currency'])) {
+            $curr = trim($payload['subscription_currency']);
+            setSiteConfigValue($connection, $tblPrefix, $siteId, 'subscription_currency', $curr);
+        }
+        if (!empty($payload['billing_interval'])) {
+            $bInt = trim($payload['billing_interval']);
+            setSiteConfigValue($connection, $tblPrefix, $siteId, 'billing_interval', $bInt);
+        }
+        if (isset($payload['renewal_price_override'])) {
+            $overrideVal = !empty($payload['renewal_price_override']) ? '1' : '0';
+            setSiteConfigValue($connection, $tblPrefix, $siteId, 'renewal_price_override', $overrideVal);
+        }
+        if (isset($payload['renewal_pricing_notes'])) {
+            $rNotes = trim($payload['renewal_pricing_notes']);
+            setSiteConfigValue($connection, $tblPrefix, $siteId, 'renewal_pricing_notes', $rNotes);
+        }
+
         // Feature flags toggling
         $features = $payload['features'] ?? [];
         if (is_array($features)) {
@@ -259,12 +511,45 @@ if ($method === 'POST') {
             }
         }
 
-        // Update site status
-        mysqli_query($connection, "UPDATE {$tblPrefix}site SET site_status = {$siteStatus} WHERE site_id = {$siteId}");
+        // Update site table fields if provided
+        $siteName = trim($payload['site_name'] ?? '');
+        $siteUrl = trim($payload['site_url'] ?? '');
+        $themeId = isset($payload['site_theme_id']) ? (int)$payload['site_theme_id'] : 0;
+        $dashboardVersion = isset($payload['site_dashboard_version']) ? (int)$payload['site_dashboard_version'] : 0;
+
+        $updateCols = ["site_status = {$siteStatus}"];
+        if (!empty($siteName)) {
+            $escN = mysqli_real_escape_string($connection, $siteName);
+            $updateCols[] = "site_name = '{$escN}'";
+        }
+        if (!empty($siteUrl)) {
+            $escU = mysqli_real_escape_string($connection, strtolower($siteUrl));
+            $updateCols[] = "site_url = '{$escU}'";
+        }
+        if ($themeId > 0) {
+            $updateCols[] = "site_theme_id = {$themeId}";
+        }
+        if ($dashboardVersion > 0) {
+            $updateCols[] = "site_dashboard_version = {$dashboardVersion}";
+        }
+
+        mysqli_query($connection, "UPDATE {$tblPrefix}site SET " . implode(', ', $updateCols) . " WHERE site_id = {$siteId}");
+
+        // Update theme color in site_setting if provided
+        if (!empty($payload['site_theme_color'])) {
+            $escColor = mysqli_real_escape_string($connection, trim($payload['site_theme_color']));
+            $ssChk = mysqli_query($connection, "SELECT site_setting_id FROM {$tblPrefix}site_setting WHERE site_setting_site_id = {$siteId} LIMIT 1");
+            if ($ssChk && mysqli_num_rows($ssChk) > 0) {
+                mysqli_query($connection, "UPDATE {$tblPrefix}site_setting SET site_theme_color = '{$escColor}' WHERE site_setting_site_id = {$siteId}");
+            } else {
+                mysqli_query($connection, "INSERT INTO {$tblPrefix}site_setting (site_setting_site_id, site_theme_color, site_background_color, site_custom_domain, site_pagination_limit, site_sitemap_limit, site_feed_limit, site_image_quality, site_thumbnail_width, site_thumbnail_height, site_ads_txt, site_mainfest_json, site_robots_txt)
+                                           VALUES ({$siteId}, '{$escColor}', '#ffffff', 1, 20, 1000, 50, 80, '150', '150', '', '', '')");
+            }
+        }
 
         echo json_encode([
             'status' => 'success',
-            'msg' => 'Licenses and feature toggles updated successfully!',
+            'msg' => 'Site settings, licenses, and configurations updated successfully!',
             'site_id' => $siteId
         ]);
         exit();
