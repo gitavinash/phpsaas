@@ -63,9 +63,14 @@ if ($isWaWebActive && isset($connection) && $connection && $siteId > 0) {
     }
 }
 
-// 5. WhatsApp CRM is only visible when plugin is enabled AND at least 1 device is connected
-$isWhatsAppCrmActive = ($isWaWebActive && $hasConnectedDevice);
+// 5. WhatsApp CRM is visible when plugin is enabled OR for administrators to link/sync devices
+$isUserAdmin = (isset($site_access_type) && ($site_access_type === 'administrator' || $site_access_type === 'admin')) || (defined('USER_TYPE') && USER_TYPE === 'administrator');
+$isWhatsAppCrmActive = ($isWaWebActive || $isUserAdmin || $hasConnectedDevice);
 $waVisibilityClass = $isWhatsAppCrmActive ? '' : ' is-hidden';
+
+$waStatusBadge = $hasConnectedDevice 
+    ? '<span class="aside-menu-pill badge-live">Live</span>' 
+    : '<span class="aside-menu-pill badge-sync">Sync</span>';
 
 $currentAsideUrl = defined('ADMIN_BASE_URL') ? ADMIN_BASE_URL : (defined('ACTIVE_URL') ? ACTIVE_URL : '');
 $isWaTemplatesPage = (strpos($currentAsideUrl, '/whatsapp/templates') !== false || strpos($currentAsideUrl, '/whatsapp-templates') !== false);
@@ -78,7 +83,7 @@ $isWaDevicePage = (strpos($currentAsideUrl, '/integration/whatsapp_web') !== fal
 </li>
 
 <li data-aside-plugin="whatsapp_web" class="<?php echo ($isWaInboxPage ? 'active' : '') . $waVisibilityClass; ?>">
-    <a href="/dashboard/whatsapp/"><i class="ri-whatsapp-line"></i> WhatsApp Inbox</a>
+    <a href="/dashboard/whatsapp/"><i class="ri-whatsapp-line"></i> WhatsApp Inbox <?php echo $waStatusBadge; ?></a>
     <div class="side-menu">
         <ul>
             <li><a href="/dashboard/whatsapp/"><i class="fi fi-rr-inbox-in"></i> All Conversations</a></li>

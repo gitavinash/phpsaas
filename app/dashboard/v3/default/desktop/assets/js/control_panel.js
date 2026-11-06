@@ -35,13 +35,14 @@
       if (typeof $.fn.select2 !== "function") return;
       try {
         let $selects;
+        const selQuery = "select.selectJS2, select.selectJS, select.cp-select2, select.cp-modal-select2, select.cp-form-select, select.v3-form-select, select";
         if (typeof selectorOrScope === "string") {
           const $target = $(selectorOrScope);
-          $selects = $target.is("select") ? $target : $target.find("select.cp-select2, select.cp-modal-select2, select.cp-form-select, select");
+          $selects = $target.is("select") ? $target : $target.find(selQuery);
         } else if (selectorOrScope instanceof jQuery) {
-          $selects = selectorOrScope.is("select") ? selectorOrScope : selectorOrScope.find("select.cp-select2, select.cp-modal-select2, select.cp-form-select, select");
+          $selects = selectorOrScope.is("select") ? selectorOrScope : selectorOrScope.find(selQuery);
         } else {
-          $selects = $("select.cp-select2, select.cp-modal-select2, .cp-toolbar select, .cp-modal-box select, .cp-modal-dialog select");
+          $selects = $("select.selectJS2, select.selectJS, select.cp-select2, select.cp-modal-select2, .cp-toolbar select, .cp-modal-box select, .cp-modal-dialog select");
         }
 
         if (!$selects || !$selects.length) return;
@@ -49,6 +50,11 @@
         $selects.each(function () {
           const $el = $(this);
           if (!$el.is("select")) return;
+
+          // If inside a hidden tab or closed modal, postpone initialization until pane is shown
+          if ($el.closest(".cp-modal-backdrop:not(.active), .cp-modal-pane:not(.active)").length) {
+            return;
+          }
 
           // If already initialized on this element, safely destroy before re-initializing
           if ($el.hasClass("select2-hidden-accessible")) {
@@ -66,7 +72,7 @@
             } else if (isInToolbar) {
               width = "auto";
             } else {
-              width = "resolve";
+              width = "100%";
             }
           }
 
@@ -685,7 +691,9 @@
         $("#siteModalNavTabs .cp-modal-nav-tab").removeClass("active");
         $(this).addClass("active");
         $("#modalSiteSettingsConfig .cp-modal-pane").removeClass("active");
-        $(`#${paneId}`).addClass("active");
+        const $targetPane = $(`#${paneId}`);
+        $targetPane.addClass("active");
+        self.initSelect2($targetPane);
       });
 
       // Preset Pills for Team Members Limit in Config Modal
@@ -700,6 +708,13 @@
         e.preventDefault();
         const val = $(this).data("val");
         $("#mscWaLimitInput").val(val).trigger("change");
+      });
+
+      // Preset Pills for Storage Quota in Config Modal
+      $(document).on("click", ".btn-set-msc-storage-preset", function (e) {
+        e.preventDefault();
+        const val = $(this).data("val");
+        $("#mscStorageLimitInput").val(val).trigger("change");
       });
 
       $(document).on("input change", "#mscUserLimitInput, #mscWaLimitInput", function () {
@@ -2060,14 +2075,14 @@
           $("#mscSiteNameInput").val(d.site_name);
           $("#mscSiteDomainInput").val(d.site_domain);
           $("#mscSiteUrlInput").val(d.site_url);
-          $("#mscSiteDashVersionSelect").val(d.dashboard_version || 3);
+          $("#mscSiteDashVersionSelect").val(d.dashboard_version || 3).trigger("change.select2");
           const themeColor = d.site_theme_color || "#2563eb";
           $("#mscSiteThemeColorInput").val(themeColor);
           $("#mscSiteThemeColorHex").val(themeColor);
 
           // Populate Apps & Themes dropdowns
           self.loadAppDropdowns(false, function () {
-            $("#mscSiteAppSelect").val(d.site_app_id);
+            $("#mscSiteAppSelect").val(d.site_app_id).trigger("change.select2");
             self.loadThemesForSelect(d.site_app_id, "#mscSiteThemeSelect", d.site_theme_id);
           });
 
@@ -2075,9 +2090,9 @@
           $("#mscUserLimitInput").val(d.user_limit);
           $("#mscWaLimitInput").val(d.wa_device_limit);
           $("#mscStorageLimitInput").val(d.storage_limit_mb || 5120);
-          $("#mscPlanSelect").val(d.subscription_plan || "Professional SaaS");
+          $("#mscPlanSelect").val(d.subscription_plan || "Professional SaaS").trigger("change.select2");
           $("#mscExpiryInput").val(d.subscription_expiry ? d.subscription_expiry.substring(0, 10) : "");
-          $("#mscSiteStatusSelect").val(d.site_status);
+          $("#mscSiteStatusSelect").val(d.site_status).trigger("change.select2");
 
           // Subscription Pricing & Renewal Overrides
           const currSymbols = { INR: "₹", USD: "$", EUR: "€", GBP: "£", AED: "AED " };
@@ -2086,11 +2101,11 @@
           $("#mscPriceMonthlyInput").val(pMonthly > 0 ? pMonthly : "");
           $("#mscPriceYearlyInput").val(pYearly > 0 ? pYearly : "");
           const cur = d.subscription_currency || "INR";
-          $("#mscCurrencySelect").val(cur);
+          $("#mscCurrencySelect").val(cur).trigger("change.select2");
           const sym = currSymbols[cur] || (cur + " ");
           $("#mscCurrencyPrefixMonthly").text(sym);
           $("#mscCurrencyPrefixYearly").text(sym);
-          $("#mscBillingIntervalSelect").val(d.billing_interval || "yearly");
+          $("#mscBillingIntervalSelect").val(d.billing_interval || "yearly").trigger("change.select2");
           $("#mscPriceOverrideSwitch").prop("checked", d.renewal_price_override !== false);
           $("#mscRenewalNotesInput").val(d.renewal_pricing_notes || "");
 
@@ -2114,7 +2129,8 @@
           self.fetchSiteParameters(siteId);
 
           $("#modalSiteSettingsConfig").addClass("active");
-          self.initSelect2("#modalSiteSettingsConfig");
+          const $activePane = $("#modalSiteSettingsConfig .cp-modal-pane.active");
+          self.initSelect2($activePane.length ? $activePane : "#modalSiteSettingsConfig");
         }
       });
     },

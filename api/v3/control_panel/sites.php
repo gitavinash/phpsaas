@@ -319,8 +319,8 @@ if ($method === 'POST') {
         $payload = $_POST;
     }
 
-    $action = $payload['action'] ?? 'provision';
-    $siteId = isset($payload['site_id']) ? (int)$payload['site_id'] : 0;
+    $action = $payload['action'] ?? ($_GET['action'] ?? 'provision');
+    $siteId = isset($payload['site_id']) ? (int)$payload['site_id'] : (isset($_GET['site_id']) ? (int)$_GET['site_id'] : 0);
 
     // A. Send Renewal Reminder (WhatsApp & Email)
     if ($action === 'send_renewal_reminder') {
@@ -402,31 +402,186 @@ if ($method === 'POST') {
                     $currentUserId = isset($_SESSION['user_id']) ? (int)$_SESSION['user_id'] : 1;
                     $waRes = @sendWhatsAppDirectMessage($connection, $systemSiteId, $currentUserId, $clientMobile, $customMessage);
                     if (!empty($waRes['status']) && $waRes['status'] === 'success') {
-                        $deliveryResults['whatsapp'] = 'Delivered successfully';
+                        $deliveryResults['whatsapp'] = 'Delivered successfully via WhatsApp device';
                         $reminderSent = true;
                     } else {
-                        $deliveryResults['whatsapp'] = 'Dispatched (Gateway Queued)';
-                        $reminderSent = true;
+                        $waErr = !empty($waRes['msg']) ? $waRes['msg'] : 'Device not connected or offline';
+                        $deliveryResults['whatsapp'] = $waErr . ' (Sync device via WhatsApp CRM)';
                     }
                 } else {
-                    $deliveryResults['whatsapp'] = 'Logged to WhatsApp queue';
-                    $reminderSent = true;
+                    $deliveryResults['whatsapp'] = 'WhatsApp gateway helper unavailable';
                 }
             } else {
                 $deliveryResults['whatsapp'] = 'Skipped (No client mobile)';
             }
         }
 
-        // 2. Email Delivery
+        // 2. Email Delivery via SMTP & PHPMailer
         if (in_array('email', $channels)) {
             if (!empty($clientEmail)) {
                 $subject = "Subscription Renewal Reminder: {$siteName} ({$siteDomain})";
-                $headers = "From: Blumox Cloud Billing <billing@blumox.com>\r\n" .
-                           "Reply-To: support@blumox.com\r\n" .
-                           "X-Mailer: PHP/" . phpversion();
-                @mail($clientEmail, $subject, $customMessage, $headers);
-                $deliveryResults['email'] = "Delivered to {$clientEmail}";
-                $reminderSent = true;
+
+                // Resolve SMTP Settings (prioritize site 1, fallback site 29 or configured site)
+                $smtpRes = mysqli_query($connection, "SELECT site_configuration_key, site_configuration_value 
+                    FROM {$tblPrefix}site_configuration 
+                    WHERE site_configuration_site_id IN (1, 29) 
+                      AND (site_configuration_key LIKE 'email_smtp_%' OR site_configuration_key = 'enable_smtp_email') 
+                    ORDER BY (site_configuration_site_id = 1) DESC");
+                $smtpCfg = [];
+                if ($smtpRes) {
+                    while ($sRow = mysqli_fetch_assoc($smtpRes)) {
+                        if (!isset($smtpCfg[$sRow['site_configuration_key']])) {
+                            $smtpCfg[$sRow['site_configuration_key']] = $sRow['site_configuration_value'];
+                        }
+                    }
+                }
+
+                $smtpHost = !empty($smtpCfg['email_smtp_host']) ? $smtpCfg['email_smtp_host'] : 'smtp.zeptomail.in';
+                $smtpPort = !empty($smtpCfg['email_smtp_port']) ? (int)$smtpCfg['email_smtp_port'] : 587;
+                $smtpUser = !empty($smtpCfg['email_smtp_username']) ? $smtpCfg['email_smtp_username'] : 'emailapikey';
+                $smtpPass = !empty($smtpCfg['email_smtp_password']) ? $smtpCfg['email_smtp_password'] : '';
+                $smtpFromEmail = !empty($smtpCfg['email_smtp_email']) ? $smtpCfg['email_smtp_email'] : 'alerts@blumox.com';
+                $smtpFromName = !empty($smtpCfg['email_smtp_name']) ? $smtpCfg['email_smtp_name'] : 'Blumox Cloud Billing';
+                $smtpReplyEmail = !empty($smtpCfg['email_smtp_reply_email']) ? $smtpCfg['email_smtp_reply_email'] : 'support@blumox.com';
+                $smtpReplyName = !empty($smtpCfg['email_smtp_reply_name']) ? $smtpCfg['email_smtp_reply_name'] : 'Blumox Support';
+                $smtpSsl = strtolower($smtpCfg['email_smtp_ssl'] ?? 'tls');
+
+                // Build modern responsive HTML email body
+                $htmlBodyContent = nl2br(htmlspecialchars($customMessage));
+                $htmlEmail = "
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <meta charset='UTF-8'>
+                    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+                    <title>" . htmlspecialchars($subject) . "</title>
+                </head>
+                <body style='margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif; background-color: #f8fafc; color: #1e293b;'>
+                    <table width='100%' cellpadding='0' cellspacing='0' style='background-color: #f8fafc; padding: 32px 16px;'>
+                        <tr>
+                            <td align='center'>
+                                <table width='100%' cellpadding='0' cellspacing='0' style='max-width: 600px; background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(15, 23, 42, 0.05);'>
+                                    <tr>
+                                        <td style='padding: 24px 28px; background: #0f172a; color: #ffffff; text-align: left;'>
+                                            <h2 style='margin: 0; font-size: 19px; font-weight: 700; letter-spacing: -0.3px;'>Blumox Cloud &bull; Subscription Renewal</h2>
+                                            <p style='margin: 4px 0 0; font-size: 13px; color: #94a3b8;'>Tenant: <strong>" . htmlspecialchars($siteName) . "</strong> (" . htmlspecialchars($siteDomain) . ")</p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style='padding: 28px 28px 20px;'>
+                                            <div style='background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 20px; font-size: 14px; line-height: 1.65; color: #334155;'>
+                                                {$htmlBodyContent}
+                                            </div>
+                                            <div style='text-align: center; margin: 28px 0 16px;'>
+                                                <a href='http://" . htmlspecialchars($siteDomain) . "/dashboard/' target='_blank' style='display: inline-block; background-color: #2563eb; color: #ffffff; padding: 13px 32px; font-size: 14px; font-weight: 600; text-decoration: none; border-radius: 8px;'>Open Client Dashboard &rarr;</a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style='padding: 18px 28px; background-color: #f8fafc; border-top: 1px solid #f1f5f9; text-align: center; font-size: 12px; color: #64748b; line-height: 1.5;'>
+                                            <p style='margin: 0;'>Sent by <strong>Blumox Technologies</strong> Cloud Operations.<br>For billing queries, reply to this email or contact <a href='mailto:support@blumox.com' style='color: #2563eb; text-decoration: none;'>support@blumox.com</a>.</p>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </body>
+                </html>";
+
+                // Require PHPMailer files
+                $phpMailerBase = (defined('ROOT') ? ROOT : dirname(__DIR__, 2)) . '/lib/configuration/mail/';
+                if (file_exists($phpMailerBase . 'php_mailer.php')) {
+                    require_once $phpMailerBase . 'exception.php';
+                    require_once $phpMailerBase . 'php_mailer.php';
+                    require_once $phpMailerBase . 'smtp.php';
+                }
+
+                $emailSent = false;
+                $smtpError = '';
+
+                if (class_exists('\\PHPMailer\\PHPMailer\\PHPMailer') && !empty($smtpPass)) {
+                    try {
+                        $mail = new \PHPMailer\PHPMailer\PHPMailer(true);
+                        $mail->isSMTP();
+                        $mail->Host = $smtpHost;
+                        $mail->SMTPAuth = true;
+                        $mail->Username = $smtpUser;
+                        $mail->Password = $smtpPass;
+                        $mail->Port = $smtpPort;
+                        if ($smtpPort === 465 || $smtpSsl === 'ssl' || $smtpSsl === 'true') {
+                            $mail->SMTPSecure = \PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_SMTPS;
+                        } else {
+                            $mail->SMTPSecure = \PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_STARTTLS;
+                        }
+                        $mail->setFrom($smtpFromEmail, $smtpFromName);
+                        $mail->addAddress($clientEmail, $clientName);
+                        if (!empty($smtpReplyEmail) && filter_var($smtpReplyEmail, FILTER_VALIDATE_EMAIL)) {
+                            $mail->addReplyTo($smtpReplyEmail, $smtpReplyName);
+                        }
+                        $mail->isHTML(true);
+                        $mail->CharSet = 'UTF-8';
+                        $mail->Subject = $subject;
+                        $mail->Body    = $htmlEmail;
+                        $mail->AltBody = $customMessage;
+                        $mail->Timeout = 10;
+
+                        $mail->send();
+                        $emailSent = true;
+                        $deliveryResults['email'] = "Delivered to {$clientEmail} via SMTP";
+                        $reminderSent = true;
+                    } catch (\Exception $e) {
+                        $smtpError = $e->getMessage();
+                        // Fallback to ZeptoMail HTTP REST API (port 443)
+                        if (stripos($smtpHost, 'zeptomail') !== false && !empty($smtpPass)) {
+                            $zeptoKey = 'Zoho-enczapikey ' . $smtpPass;
+                            $zeptoPayload = json_encode([
+                                'from' => ['address' => $smtpFromEmail, 'name' => $smtpFromName],
+                                'to' => [['email_address' => ['address' => $clientEmail, 'name' => $clientName]]],
+                                'subject' => $subject,
+                                'htmlbody' => $htmlEmail
+                            ]);
+                            $ch = curl_init('https://api.zeptomail.in/v1.1/email');
+                            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                            curl_setopt($ch, CURLOPT_POST, true);
+                            curl_setopt($ch, CURLOPT_POSTFIELDS, $zeptoPayload);
+                            curl_setopt($ch, CURLOPT_HTTPHEADER, [
+                                'Accept: application/json',
+                                'Content-Type: application/json',
+                                'Authorization: ' . $zeptoKey
+                            ]);
+                            curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+                            $zRes = curl_exec($ch);
+                            $zCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+                            curl_close($ch);
+                            if ($zCode >= 200 && $zCode < 300) {
+                                $emailSent = true;
+                                $deliveryResults['email'] = "Delivered to {$clientEmail} via ZeptoMail API";
+                                $reminderSent = true;
+                            } else {
+                                $deliveryResults['email'] = "SMTP error: {$smtpError} (Zepto API code: {$zCode})";
+                            }
+                        } else {
+                            $deliveryResults['email'] = "SMTP error: {$smtpError}";
+                        }
+                    }
+                }
+
+                if (!$emailSent) {
+                    // Fallback to mail() with proper headers
+                    $headers  = "MIME-Version: 1.0\r\n";
+                    $headers .= "Content-Type: text/html; charset=UTF-8\r\n";
+                    $headers .= "From: {$smtpFromName} <{$smtpFromEmail}>\r\n";
+                    $headers .= "Reply-To: {$smtpReplyEmail}\r\n";
+                    $headers .= "X-Mailer: PHP/" . phpversion();
+                    $sent = @mail($clientEmail, $subject, $htmlEmail, $headers);
+                    if ($sent) {
+                        $deliveryResults['email'] = "Delivered to {$clientEmail} via server mail";
+                        $reminderSent = true;
+                    } elseif (empty($deliveryResults['email'])) {
+                        $deliveryResults['email'] = "Delivery failed: {$smtpError}";
+                    }
+                }
             } else {
                 $deliveryResults['email'] = 'Skipped (No client email)';
             }

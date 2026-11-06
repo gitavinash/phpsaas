@@ -65,7 +65,7 @@ $displayRole = $roleTitles[$userRole] ?? 'Administrator';
                 <input type="text" class="cp-search-input" id="cpSearchCommissions" placeholder="Search partner or referred site...">
             </div>
             <div class="cp-filters-wrap">
-                <select class="cp-select cp-select2" id="cpFilterCommissionStatus" data-placeholder="All Status" data-width="160px">
+                <select class="cp-select selectJS2 cp-select2" id="cpFilterCommissionStatus" data-placeholder="All Status" data-width="160px">
                     <option value="">All Status</option>
                     <option value="pending">Pending</option>
                     <option value="approved">Approved</option>
@@ -112,13 +112,13 @@ $displayRole = $roleTitles[$userRole] ?? 'Administrator';
             <div class="cp-modal-body">
                 <div class="cp-form-group">
                     <label for="manualCommPartnerSelect">Partner Account *</label>
-                    <select class="cp-form-select cp-select2 cp-modal-select2" id="manualCommPartnerSelect" required data-placeholder="Select Partner">
+                    <select class="cp-form-select selectJS2 cp-select2 cp-modal-select2" id="manualCommPartnerSelect" required data-placeholder="Select Partner" data-width="100%">
                         <option value="">Select Partner</option>
                     </select>
                 </div>
                 <div class="cp-form-group">
                     <label for="manualCommSiteSelect">Referred Site *</label>
-                    <select class="cp-form-select cp-select2 cp-modal-select2" id="manualCommSiteSelect" required data-placeholder="Select Site">
+                    <select class="cp-form-select selectJS2 cp-select2 cp-modal-select2" id="manualCommSiteSelect" required data-placeholder="Select Site" data-width="100%">
                         <option value="">Select Site</option>
                     </select>
                 </div>

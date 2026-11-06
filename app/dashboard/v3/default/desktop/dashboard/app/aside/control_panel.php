@@ -22,8 +22,29 @@ $isInvoicesActive = (strpos($currentBase, '/invoices') !== false);
 $isCommissionsActive = (strpos($currentBase, '/commissions') !== false);
 $isConfigActive = (strpos($currentBase, '/configurations') !== false);
 $isSettingsActive = (strpos($currentBase, '/setting') !== false);
+$isWaInboxActive = (strpos($currentBase, '/whatsapp') !== false && strpos($currentBase, '/whatsapp/templates') === false && strpos($currentBase, '/integration') === false);
+$isWaDeviceActive = (strpos($currentBase, '/integration/whatsapp_web') !== false);
+$isWaTemplatesActive = (strpos($currentBase, '/whatsapp/templates') !== false || strpos($currentBase, '/whatsapp-templates') !== false);
 
-$isOverviewActive = (!$isAppsActive && !$isThemesActive && !$isSitesActive && !$isUsersActive && !$isInvoicesActive && !$isCommissionsActive && !$isConfigActive && !$isSettingsActive);
+$isOverviewActive = (!$isAppsActive && !$isThemesActive && !$isSitesActive && !$isUsersActive && !$isInvoicesActive && !$isCommissionsActive && !$isConfigActive && !$isSettingsActive && !$isWaInboxActive && !$isWaDeviceActive && !$isWaTemplatesActive);
+
+// WhatsApp Device Status for Sidebar Pill
+$siteId = defined('SITE_ID') ? (int)SITE_ID : 1;
+$prefix = defined('TABLE_PREFIX') ? TABLE_PREFIX : 'isw_';
+$deviceStatusText = 'Sync';
+$deviceBadgeClass = 'badge-sync';
+if (isset($connection) && $connection && $siteId > 0) {
+    $devCheckQ = @mysqli_query($connection, "SELECT device_status FROM {$prefix}whatsapp_device WHERE device_site_id = {$siteId} ORDER BY (device_status = 'connected') DESC LIMIT 1");
+    if ($devCheckQ && $dRow = mysqli_fetch_assoc($devCheckQ)) {
+        if ($dRow['device_status'] === 'connected') {
+            $deviceStatusText = 'Live';
+            $deviceBadgeClass = 'badge-live';
+        } elseif ($dRow['device_status'] === 'qr_ready') {
+            $deviceStatusText = 'Scan QR';
+            $deviceBadgeClass = 'badge-qr';
+        }
+    }
+}
 
 ?>
 
@@ -78,6 +99,44 @@ $isOverviewActive = (!$isAppsActive && !$isThemesActive && !$isSitesActive && !$
     <a href="/dashboard/commissions/"><i class="fi fi-rr-hand-holding-usd"></i> Partner Commissions</a>
 </li>
 <?php } ?>
+
+<!-- Communications & WhatsApp CRM -->
+<li class="header-section-name">
+    <p>WhatsApp CRM<span>Live Inbox, Sync &amp; Alerts</span></p>
+</li>
+
+<li class="<?php echo ($isWaInboxActive ? 'active' : ''); ?>">
+    <a href="/dashboard/whatsapp/">
+        <i class="fi fi-brands-whatsapp"></i> WhatsApp Inbox
+        <span class="aside-menu-pill <?php echo $deviceBadgeClass; ?>"><?php echo $deviceStatusText; ?></span>
+    </a>
+    <div class="side-menu">
+        <ul>
+            <li><a href="/dashboard/whatsapp/"><i class="fi fi-rr-inbox-in"></i> All Conversations</a></li>
+            <li><a href="/dashboard/whatsapp/?filter=unread"><i class="fi fi-rr-envelope-dot"></i> Unread Chats</a></li>
+            <li><a href="/dashboard/whatsapp/?filter=leads"><i class="fi fi-rr-bullseye-arrow"></i> CRM Leads</a></li>
+            <li><a href="/dashboard/integration/whatsapp_web/"><i class="fi fi-rr-qr-scan"></i> Linked Device (QR Sync)</a></li>
+            <li><a href="/dashboard/whatsapp/templates/"><i class="fi fi-rr-document-signed"></i> Reminders &amp; Templates</a></li>
+        </ul>
+    </div>
+    <div class="bottom-menu">
+        <ul>
+            <li><a href="/dashboard/whatsapp/"><i class="fi fi-rr-inbox-in"></i> All Conversations</a></li>
+            <li><a href="/dashboard/whatsapp/?filter=unread"><i class="fi fi-rr-envelope-dot"></i> Unread Chats</a></li>
+            <li><a href="/dashboard/whatsapp/?filter=leads"><i class="fi fi-rr-bullseye-arrow"></i> CRM Leads</a></li>
+            <li><a href="/dashboard/integration/whatsapp_web/"><i class="fi fi-rr-qr-scan"></i> Linked Device (QR Sync)</a></li>
+            <li><a href="/dashboard/whatsapp/templates/"><i class="fi fi-rr-document-signed"></i> Reminders &amp; Templates</a></li>
+        </ul>
+    </div>
+</li>
+
+<li class="<?php echo ($isWaDeviceActive ? 'active' : ''); ?>">
+    <a href="/dashboard/integration/whatsapp_web/"><i class="fi fi-rr-qr-scan"></i> Linked Device (QR Sync)</a>
+</li>
+
+<li class="<?php echo ($isWaTemplatesActive ? 'active' : ''); ?>">
+    <a href="/dashboard/whatsapp/templates/"><i class="fi fi-rr-bell-ring"></i> Reminders &amp; Templates</a>
+</li>
 
 <!-- System Configuration -->
 <?php if ($isAdmin || $isSupport) { ?>

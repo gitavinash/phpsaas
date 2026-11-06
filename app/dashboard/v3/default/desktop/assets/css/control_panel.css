@@ -552,7 +552,7 @@
 
 .cp-modal-box .select2-container--default .select2-selection--single,
 .cp-modal-dialog .select2-container--default .select2-selection--single {
-  height: 40px !important;
+  height: 38px !important;
   border: 1px solid #cbd5e1 !important;
   border-radius: 8px !important;
   background-color: #ffffff !important;
@@ -563,7 +563,7 @@
 
 .cp-modal-box .select2-container--default .select2-selection--single .select2-selection__rendered,
 .cp-modal-dialog .select2-container--default .select2-selection--single .select2-selection__rendered {
-  line-height: 38px !important;
+  line-height: 36px !important;
   font-size: 13px !important;
   color: #0f172a !important;
   font-weight: 500 !important;
@@ -573,7 +573,7 @@
 
 .cp-modal-box .select2-container--default .select2-selection--single .select2-selection__arrow,
 .cp-modal-dialog .select2-container--default .select2-selection--single .select2-selection__arrow {
-  height: 38px !important;
+  height: 36px !important;
   right: 10px !important;
 }
 
@@ -1742,8 +1742,11 @@ table.dataTable thead th.no-sort:after {
 }
 
 .cp-form-row {
-  display: flex;
-  gap: 16px;
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 16px !important;
+  width: 100% !important;
+  align-items: start !important;
 }
 
 .cp-form-col {
@@ -1927,7 +1930,9 @@ table.dataTable thead th.no-sort:after {
 }
 
 .cp-modal-pane.active {
-  display: block;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 16px !important;
   animation: cpFadeIn 0.2s ease;
 }
 
@@ -2719,8 +2724,41 @@ a.cp-action-icon-btn:hover {
 }
 
 .cp-affix-input {
-  padding-left: 28px !important;
-  padding-right: 70px !important;
+  padding-left: 32px !important;
+  padding-right: 76px !important;
+  height: 38px !important;
+}
+
+/* WhatsApp Aside Navigation Pill & Indicator */
+nav.side-nav ul li a .aside-menu-pill {
+  display: inline-flex !important;
+  align-items: center !important;
+  margin-left: auto !important;
+  padding: 1px 7px !important;
+  border-radius: 9999px !important;
+  font-size: 10px !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.04em !important;
+  line-height: 1.4 !important;
+}
+
+nav.side-nav ul li a .aside-menu-pill.badge-live {
+  background: #ecfdf5 !important;
+  color: #059669 !important;
+  border: 1px solid #a7f3d0 !important;
+}
+
+nav.side-nav ul li a .aside-menu-pill.badge-sync {
+  background: #eff6ff !important;
+  color: #2563eb !important;
+  border: 1px solid #bfdbfe !important;
+}
+
+nav.side-nav ul li a .aside-menu-pill.badge-qr {
+  background: #fffbeb !important;
+  color: #d97706 !important;
+  border: 1px solid #fde68a !important;
 }
 
 /* Compact Reminder Pricing Override */
