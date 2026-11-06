@@ -123,13 +123,16 @@ if ($method === 'GET') {
             }
         }
 
+        $effDomain = !empty($site['site_domain']) ? trim($site['site_domain']) : (!empty($site['site_url']) ? trim($site['site_url']) : '');
+        $effName = !empty($site['site_name']) ? trim($site['site_name']) : (!empty($effDomain) ? $effDomain : 'Site #' . (int)$site['site_id']);
+
         echo json_encode([
             'status' => 'success',
             'data' => [
                 'site_id'                    => (int)$site['site_id'],
-                'site_name'                  => htmlspecialchars($site['site_name']),
-                'site_domain'                => htmlspecialchars($site['site_domain']),
-                'site_url'                   => htmlspecialchars($site['site_url']),
+                'site_name'                  => htmlspecialchars($effName),
+                'site_domain'                => htmlspecialchars($effDomain),
+                'site_url'                   => htmlspecialchars($site['site_url'] ?? ''),
                 'site_app_id'                => (int)$site['site_app_id'],
                 'app_title'                  => htmlspecialchars($site['app_title'] ?? 'Generic'),
                 'site_theme_id'              => (int)$site['site_theme_id'],
@@ -175,7 +178,7 @@ if ($method === 'GET') {
 
     $where = [];
     if (!empty($search)) {
-        $where[] = "(s.site_name LIKE '%{$search}%' OR s.site_domain LIKE '%{$search}%' OR s.site_url LIKE '%{$search}%' OR u.user_email LIKE '%{$search}%' OR u.user_username LIKE '%{$search}%')";
+        $where[] = "(s.site_name LIKE '%{$search}%' OR s.site_domain LIKE '%{$search}%' OR s.site_url LIKE '%{$search}%' OR u.user_email LIKE '%{$search}%' OR u.user_username LIKE '%{$search}%' OR u.user_mobile LIKE '%{$search}%' OR p.profile_display_name LIKE '%{$search}%')";
     }
     if ($appId > 0) {
         $where[] = "s.site_app_id = {$appId}";
@@ -193,6 +196,7 @@ if ($method === 'GET') {
 
     $countSql = "SELECT COUNT(*) as total FROM {$tblPrefix}site s 
                  LEFT JOIN {$tblPrefix}user u ON s.site_owner_id = u.user_id 
+                 LEFT JOIN {$tblPrefix}profile p ON p.profile_user_id = u.user_id 
                  {$whereSql}";
     $countRes = mysqli_query($connection, $countSql);
     $total = ($countRes && $r = mysqli_fetch_assoc($countRes)) ? (int)$r['total'] : 0;
@@ -208,7 +212,10 @@ if ($method === 'GET') {
         $orderBy = "subscription_expiry ASC, s.site_id DESC";
     }
 
-    $sql = "SELECT s.*, a.app_title, a.app_path, t.theme_title, t.theme_path, u.user_email, u.user_username, u.user_mobile,
+    $sql = "SELECT s.*, a.app_title, a.app_path, t.theme_title, t.theme_path, u.user_email, u.user_username, u.user_mobile, u.user_reg_time,
+            p.profile_display_name,
+            (SELECT site_installation_activation_time FROM {$tblPrefix}site_installation si WHERE si.site_installation_site_id = s.site_id ORDER BY site_installation_id DESC LIMIT 1) as activation_time,
+            (SELECT site_installation_expiry_date FROM {$tblPrefix}site_installation si WHERE si.site_installation_site_id = s.site_id ORDER BY site_installation_id DESC LIMIT 1) as installation_expiry_date,
             (SELECT COUNT(*) FROM {$tblPrefix}site_access sa WHERE sa.site_access_site_id = s.site_id AND sa.site_access_status = 1) as users_count,
             (SELECT site_configuration_value FROM {$tblPrefix}site_configuration sc WHERE sc.site_configuration_site_id = s.site_id AND sc.site_configuration_key = 'user_limit' LIMIT 1) as user_limit,
             (SELECT site_configuration_value FROM {$tblPrefix}site_configuration sc WHERE sc.site_configuration_site_id = s.site_id AND sc.site_configuration_key = 'whatsapp_device_limit' LIMIT 1) as wa_limit,
@@ -225,6 +232,7 @@ if ($method === 'GET') {
             LEFT JOIN {$tblPrefix}app a ON s.site_app_id = a.app_id
             LEFT JOIN {$tblPrefix}theme t ON s.site_theme_id = t.theme_id
             LEFT JOIN {$tblPrefix}user u ON s.site_owner_id = u.user_id
+            LEFT JOIN {$tblPrefix}profile p ON p.profile_user_id = u.user_id
             {$whereSql}
             ORDER BY {$orderBy}
             LIMIT {$offset}, {$limit}";
@@ -236,10 +244,29 @@ if ($method === 'GET') {
             $uLim = !empty($row['user_limit']) && is_numeric($row['user_limit']) ? (int)$row['user_limit'] : 10;
             $waLim = !empty($row['wa_limit']) && is_numeric($row['wa_limit']) ? (int)$row['wa_limit'] : 1;
 
+            $siteDomain = !empty($row['site_domain']) ? trim($row['site_domain']) : (!empty($row['site_url']) ? trim($row['site_url']) : '');
+            $rawName = !empty($row['site_name']) ? trim($row['site_name']) : '';
+            $siteName = !empty($rawName) ? $rawName : (!empty($siteDomain) ? $siteDomain : ('Site #' . (int)$row['site_id']));
+            $rawOwnerName = !empty($row['profile_display_name']) ? trim($row['profile_display_name']) : (!empty($row['user_username']) ? trim($row['user_username']) : '');
+
+            // Activation date calculation (installation activation time -> user reg time)
+            $rawAct = !empty($row['activation_time']) ? $row['activation_time'] : (!empty($row['user_reg_time']) ? $row['user_reg_time'] : '');
+            $activeDate = '';
+            if (!empty($rawAct) && $rawAct !== '0000-00-00 00:00:00' && $rawAct !== '0000-00-00') {
+                $activeDate = substr($rawAct, 0, 10);
+            }
+
+            // Expiry date calculation (config expiry -> installation expiry)
+            $rawExp = !empty($row['subscription_expiry']) ? $row['subscription_expiry'] : (!empty($row['installation_expiry_date']) ? $row['installation_expiry_date'] : '');
+            $expiryDate = '';
+            if (!empty($rawExp) && $rawExp !== '0000-00-00' && $rawExp !== '0000-00-00 00:00:00') {
+                $expiryDate = substr($rawExp, 0, 10);
+            }
+
             $sites[] = [
                 'id' => (int)$row['site_id'],
-                'name' => htmlspecialchars($row['site_name'] ?? ''),
-                'domain' => htmlspecialchars($row['site_domain'] ?? ''),
+                'name' => htmlspecialchars($siteName),
+                'domain' => htmlspecialchars($siteDomain),
                 'url' => htmlspecialchars($row['site_url'] ?? ''),
                 'app_id' => (int)$row['site_app_id'],
                 'app_title' => htmlspecialchars($row['app_title'] ?? 'Generic'),
@@ -248,16 +275,18 @@ if ($method === 'GET') {
                 'theme_title' => htmlspecialchars($row['theme_title'] ?? 'Default Theme'),
                 'dashboard_version' => (int)$row['site_dashboard_version'],
                 'owner_id' => (int)$row['site_owner_id'],
+                'owner_name' => htmlspecialchars($rawOwnerName),
+                'owner_username' => htmlspecialchars($row['user_username'] ?? ''),
                 'owner_email' => htmlspecialchars($row['user_email'] ?? ''),
-                'owner_name' => htmlspecialchars($row['user_username'] ?? ''),
                 'owner_mobile' => htmlspecialchars($row['user_mobile'] ?? ''),
+                'active_date' => $activeDate,
                 'status' => (int)$row['site_status'],
                 'users_count' => (int)$row['users_count'],
                 'user_limit' => $uLim,
                 'wa_devices_count' => (int)$row['wa_devices_count'],
                 'wa_device_limit' => $waLim,
                 'subscription_plan' => htmlspecialchars($row['subscription_plan'] ?? 'Professional SaaS'),
-                'subscription_expiry' => !empty($row['subscription_expiry']) ? htmlspecialchars(substr($row['subscription_expiry'], 0, 10)) : '',
+                'subscription_expiry' => $expiryDate,
                 'subscription_price_monthly' => !empty($row['price_monthly']) ? (float)$row['price_monthly'] : 0.0,
                 'subscription_price_yearly' => !empty($row['price_yearly']) ? (float)$row['price_yearly'] : 0.0,
                 'subscription_currency' => htmlspecialchars($row['currency'] ?? 'INR'),

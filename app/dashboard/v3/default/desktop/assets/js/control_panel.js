@@ -1567,34 +1567,88 @@
                 const userPct = s.user_limit > 0 ? Math.min(100, Math.round((s.users_count / s.user_limit) * 100)) : 0;
                 const userChipClass = userPct >= 100 ? "is-danger" : (userPct >= 80 ? "is-warning" : "");
                 const dashVer = s.dashboard_version || 3;
+                const effectiveDomain = (s.domain && s.domain.trim() !== "") ? s.domain.trim() : ((s.url && s.url.trim() !== "") ? s.url.trim() : "");
+                const siteDisplayName = (s.name && s.name.trim() !== "") ? s.name.trim() : (effectiveDomain || `Site #${s.id}`);
+
+                // Helper to format dates cleanly (e.g. 08 Oct 2026)
+                const formatDisplayDate = function (dateStr) {
+                  if (!dateStr || dateStr === "0000-00-00") return '<span class="cp-site-sub">—</span>';
+                  try {
+                    const parts = dateStr.split("-");
+                    if (parts.length === 3) {
+                      const d = new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10));
+                      if (!isNaN(d.getTime())) {
+                        return d.toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" });
+                      }
+                    }
+                    return dateStr;
+                  } catch (e) {
+                    return dateStr;
+                  }
+                };
+
+                const formattedActiveDate = formatDisplayDate(s.active_date);
+                const formattedExpiryDate = formatDisplayDate(s.subscription_expiry);
 
                 html += `<tr>
                   <td>
                     <div class="cp-site-title-row">
-                      <span class="cp-site-title" title="${s.name}">${s.name}</span>
+                      <strong class="cp-site-title" title="${siteDisplayName}">${siteDisplayName}</strong>
                       <span class="cp-version-badge" title="Dashboard Framework Version">V${dashVer}</span>
                     </div>
                     <div class="cp-site-domain-row">
-                      <a href="http://${s.domain}/dashboard/" target="_blank" class="cp-domain-link" title="Open ${s.domain}">
-                        ${s.domain} <i class="fi fi-rr-arrow-up-right-from-square"></i>
-                      </a>
+                      ${effectiveDomain ? `
+                        <a href="http://${effectiveDomain}/dashboard/" target="_blank" class="cp-domain-link" title="Open ${effectiveDomain}">
+                          ${effectiveDomain} <i class="fi fi-rr-arrow-up-right-from-square"></i>
+                        </a>
+                      ` : `<span class="cp-site-sub">No custom domain</span>`}
                       <span class="cp-site-id-badge" title="Site Tenant ID">#${s.id}</span>
                     </div>
                   </td>
                   <td>
-                    <div class="cp-app-tag" title="Application: ${s.app_title}">
-                      <i class="fi fi-rr-apps"></i> <span>${s.app_title || "Generic"}</span>
-                    </div>
-                    <div class="cp-site-sub cp-theme-sub" title="Theme: ${s.theme_title}">
-                      <i class="fi fi-rr-palette"></i> <span>${s.theme_title || "Default Theme"}</span>
+                    <div class="cp-owner-cell">
+                      <div class="cp-owner-name" title="${s.owner_name || 'Unassigned'}">
+                        <i class="fi fi-rr-user"></i> <span>${s.owner_name || 'Unassigned'}</span>
+                      </div>
+                      ${s.owner_mobile ? `
+                        <div class="cp-owner-contact cp-owner-mobile">
+                          <a href="tel:${s.owner_mobile}" title="Call ${s.owner_mobile}">
+                            <i class="fi fi-rr-phone-call"></i> ${s.owner_mobile}
+                          </a>
+                        </div>
+                      ` : ''}
+                      ${s.owner_email ? `
+                        <div class="cp-owner-contact cp-truncate-email">
+                          <a href="mailto:${s.owner_email}" title="Email ${s.owner_email}">
+                            <i class="fi fi-rr-envelope"></i> ${s.owner_email}
+                          </a>
+                        </div>
+                      ` : ''}
                     </div>
                   </td>
                   <td>
-                    <div class="cp-plan-row">
-                      <span class="cp-badge-plan" title="Plan: ${s.subscription_plan}">${s.subscription_plan}</span>
+                    <div class="cp-app-cell">
+                      <div class="cp-app-tag" title="Application: ${s.app_title || 'Generic'}">
+                        <i class="fi fi-rr-apps"></i> <span>${s.app_title || 'Generic'}</span>
+                      </div>
+                      <div class="cp-site-sub cp-theme-sub" title="Theme: ${s.theme_title || 'Default Theme'}">
+                        <i class="fi fi-rr-palette"></i> <span>${s.theme_title || 'Default Theme'}</span>
+                      </div>
                     </div>
-                    <div class="cp-expiry-row">
-                      ${expiryBadge}
+                  </td>
+                  <td>
+                    <div class="cp-dates-stack">
+                      <div class="cp-date-line active-date" title="Activated on ${formattedActiveDate}">
+                        <span class="cp-date-lbl">Active:</span>
+                        <span class="cp-date-txt">${formattedActiveDate}</span>
+                      </div>
+                      <div class="cp-date-line expire-date" title="Expires on ${formattedExpiryDate}">
+                        <span class="cp-date-lbl">Expires:</span>
+                        <span class="cp-date-txt">${formattedExpiryDate}</span>
+                      </div>
+                      <div class="cp-date-pill-row">
+                        ${expiryBadge}
+                      </div>
                     </div>
                   </td>
                   <td>
@@ -1606,28 +1660,27 @@
                         <i class="fi fi-brands-whatsapp"></i> ${s.wa_devices_count}/${s.wa_device_limit}
                       </span>
                     </div>
-                  </td>
-                  <td>
-                    <div class="cp-client-name" title="${s.owner_name || 'Unassigned'}">
-                      ${s.owner_name ? s.owner_name : '<span class="cp-site-sub">Unassigned</span>'}
+                    <div class="cp-plan-row">
+                      <span class="cp-badge-plan" title="Plan: ${s.subscription_plan}">
+                        ${s.subscription_plan}
+                      </span>
                     </div>
-                    ${s.owner_email ? `<div class="cp-site-sub cp-truncate-email" title="${s.owner_email}">${s.owner_email}</div>` : ""}
                   </td>
-                  <td>${statusPill}</td>
-                  <td class="text-right">
+                  <td class="text-center">${statusPill}</td>
+                  <td class="text-right cp-actions-cell">
                     <div class="cp-action-icon-group">
                       <button type="button" class="cp-action-icon-btn btn-view-site-details" 
                         data-id="${s.id}" 
-                        data-name="${s.name}" 
-                        data-domain="${s.domain}" 
+                        data-name="${siteDisplayName}" 
+                        data-domain="${effectiveDomain}" 
                         data-tooltip="View Site Details" 
                         title="View Site Details">
                         <i class="fi fi-rr-eye"></i>
                       </button>
                       <button type="button" class="cp-action-icon-btn btn-send-renewal-reminder ${s.last_reminder_sent ? 'is-reminded' : ''}" 
                         data-id="${s.id}" 
-                        data-name="${s.name}" 
-                        data-domain="${s.domain}" 
+                        data-name="${siteDisplayName}" 
+                        data-domain="${effectiveDomain}" 
                         data-plan="${s.subscription_plan}" 
                         data-expiry="${s.subscription_expiry}" 
                         data-client="${s.owner_name}" 
@@ -1645,8 +1698,8 @@
                       </button>
                       <button type="button" class="cp-action-icon-btn btn-manage-site-config" 
                         data-id="${s.id}" 
-                        data-name="${s.name}" 
-                        data-domain="${s.domain}" 
+                        data-name="${siteDisplayName}" 
+                        data-domain="${effectiveDomain}" 
                         data-tooltip="Site Settings &amp; Configuration" 
                         title="Site Settings &amp; Configuration">
                         <i class="fi fi-rr-settings-sliders"></i>
@@ -1658,11 +1711,17 @@
                         title="${isLive ? 'Suspend Tenant' : 'Activate Tenant'}">
                         <i class="fi ${isLive ? 'fi-rr-ban' : 'fi-rr-play'}"></i>
                       </button>
-                      <a href="http://${s.domain}/dashboard/" target="_blank" class="cp-action-icon-btn" 
-                        data-tooltip="Open Live Dashboard" 
-                        title="Open Live Dashboard">
-                        <i class="fi fi-rr-arrow-up-right-from-square"></i>
-                      </a>
+                      ${effectiveDomain ? `
+                        <a href="http://${effectiveDomain}/dashboard/" target="_blank" class="cp-action-icon-btn" 
+                          data-tooltip="Open Live Dashboard" 
+                          title="Open Live Dashboard">
+                          <i class="fi fi-rr-arrow-up-right-from-square"></i>
+                        </a>
+                      ` : `
+                        <span class="cp-action-icon-btn is-disabled" data-tooltip="No Custom Domain" title="No Custom Domain">
+                          <i class="fi fi-rr-minus"></i>
+                        </span>
+                      `}
                     </div>
                   </td>
                 </tr>`;
@@ -1711,7 +1770,7 @@
         })
         .fail(function (xhr, status) {
           if (status !== "abort") {
-            $("#cpSitesTbody").html('<tr><td colspan="8" class="text-center cp-table-empty-cell"><i class="fi fi-rr-cross-circle"></i><br>Error loading client sites. Please refresh.</td></tr>');
+            $("#cpSitesTbody").html('<tr><td colspan="7" class="text-center cp-table-empty-cell"><i class="fi fi-rr-cross-circle"></i><br>Error loading client sites. Please refresh.</td></tr>');
           }
         });
     },

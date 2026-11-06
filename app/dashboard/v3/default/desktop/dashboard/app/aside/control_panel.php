@@ -6,6 +6,11 @@
  * Strict V3 Rule: External CSS and External JS only, no inline handlers
  */
 
+// Mark WhatsApp aside section as loaded so header.php doesn't duplicate it
+if (!defined('ISW_WA_ASIDE_LOADED')) {
+    define('ISW_WA_ASIDE_LOADED', true);
+}
+
 $role = isset($site_access_type) ? strtolower(trim($site_access_type)) : 'administrator';
 $isAdmin = ($role === 'administrator');
 $isPartner = ($role === 'partner');

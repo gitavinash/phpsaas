@@ -172,12 +172,12 @@ $displayRole = $roleTitles[$userRole] ?? 'Administrator';
                 <thead>
                     <tr>
                         <th>Site &amp; Domain</th>
-                        <th>Application &amp; Theme</th>
-                        <th>Plan &amp; Expiry</th>
-                        <th>License Quotas</th>
-                        <th>Client</th>
-                        <th>Status</th>
-                        <th class="no-sort text-right">Actions</th>
+                        <th>Owner Details</th>
+                        <th>App</th>
+                        <th>Active &amp; Expire Dates</th>
+                        <th>Licence Details</th>
+                        <th class="text-center">Status</th>
+                        <th class="no-sort text-right cp-actions-header">Actions</th>
                     </tr>
                 </thead>
                 <tbody id="cpSitesTbody">
