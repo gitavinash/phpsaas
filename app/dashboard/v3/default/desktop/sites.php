@@ -174,7 +174,8 @@ $displayRole = $roleTitles[$userRole] ?? 'Administrator';
                         <th>Site &amp; Domain</th>
                         <th>Owner Details</th>
                         <th>App</th>
-                        <th>Active &amp; Expire Dates</th>
+                        <th>Active Date</th>
+                        <th>Expiry Date</th>
                         <th>Licence Details</th>
                         <th class="text-center">Status</th>
                         <th class="no-sort text-right cp-actions-header">Actions</th>
@@ -182,7 +183,7 @@ $displayRole = $roleTitles[$userRole] ?? 'Administrator';
                 </thead>
                 <tbody id="cpSitesTbody">
                     <tr>
-                        <td colspan="7" class="text-center cp-loading-cell">
+                        <td colspan="8" class="text-center cp-loading-cell">
                             <i class="fi fi-rr-spinner-alt cp-spin"></i> Loading client sites catalog...
                         </td>
                     </tr>

@@ -2231,6 +2231,17 @@ table.dataTable thead th.no-sort:after {
   border: 1px solid #ddd6fe;
 }
 
+.cp-expiry-pill.no-expiry {
+  background: #f1f5f9;
+  color: #475569;
+  border: 1px solid #e2e8f0;
+}
+
+.cp-expiry-pill.no-expiry i {
+  color: #64748b;
+  font-size: 11px;
+}
+
 .cp-badge-plan {
   display: inline-block;
   padding: 2px 8px;
@@ -2696,9 +2707,28 @@ table.dataTable thead th.no-sort:after {
   white-space: nowrap;
 }
 
-.cp-date-cell i {
-  color: #94a3b8;
+.cp-date-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  white-space: nowrap;
+}
+
+.cp-date-main {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   font-size: 12px;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.cp-date-cell.active-date .cp-date-main i {
+  color: #059669;
+}
+
+.cp-date-cell.expire-date .cp-date-main i {
+  color: #d97706;
 }
 
 .cp-dates-stack {

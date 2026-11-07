@@ -1960,9 +1960,10 @@
                 const statusPill = s.status == 1 ? '<span class="cp-status-pill active">Live</span>' : '<span class="cp-status-pill inactive">Suspended</span>';
                 const isLive = s.status == 1;
 
-                // Expiry Badge calculation
-                let expiryBadge = '<span class="cp-expiry-pill">No Expiry</span>';
-                if (s.subscription_expiry) {
+                // Expiry and Active Date calculation
+                const hasExpiry = Boolean(s.subscription_expiry && s.subscription_expiry !== "0000-00-00" && s.subscription_expiry.trim() !== "");
+                let expiryBadge = "";
+                if (hasExpiry) {
                   const expDate = new Date(s.subscription_expiry + "T00:00:00");
                   const today = new Date();
                   today.setHours(0, 0, 0, 0);
@@ -1972,13 +1973,14 @@
                   if (expDate.getFullYear() >= 2090) {
                     expiryBadge = '<span class="cp-expiry-pill lifetime" title="Lifetime Subscription"><i class="fi fi-rr-infinite"></i> Lifetime</span>';
                   } else if (diffDays < 0) {
-                    expiryBadge = `<span class="cp-expiry-pill expired" title="Subscription overdue since ${s.subscription_expiry}"><i class="fi fi-rr-exclamation"></i> Overdue ${Math.abs(diffDays)}d</span>`;
+                    expiryBadge = `<span class="cp-expiry-pill expired" title="Subscription overdue by ${Math.abs(diffDays)} days"><i class="fi fi-rr-exclamation"></i> Overdue ${Math.abs(diffDays)}d</span>`;
                   } else if (diffDays === 0) {
                     expiryBadge = `<span class="cp-expiry-pill expired" title="Expires today!"><i class="fi fi-rr-clock"></i> Due Today</span>`;
                   } else if (diffDays <= 30) {
-                    expiryBadge = `<span class="cp-expiry-pill warning" title="Renewal due on ${s.subscription_expiry}"><i class="fi fi-rr-clock"></i> Due in ${diffDays}d</span>`;
+                    expiryBadge = `<span class="cp-expiry-pill warning" title="Renewal due in ${diffDays} days"><i class="fi fi-rr-clock"></i> ${diffDays}d left</span>`;
                   } else {
-                    expiryBadge = `<span class="cp-expiry-pill active" title="Active until ${s.subscription_expiry}"><i class="fi fi-rr-calendar"></i> ${s.subscription_expiry}</span>`;
+                    // Only show days left when less than 1 month (<= 30 days)
+                    expiryBadge = "";
                   }
                 }
 
@@ -1989,9 +1991,9 @@
                 const effectiveDomain = (s.domain && s.domain.trim() !== "") ? s.domain.trim() : ((s.url && s.url.trim() !== "") ? s.url.trim() : "");
                 const siteDisplayName = (s.name && s.name.trim() !== "") ? s.name.trim() : (effectiveDomain || `Site #${s.id}`);
 
-                // Helper to format dates cleanly (e.g. 08 Oct 2026)
+                // Helper to format dates cleanly as text (e.g. 08 Oct 2026)
                 const formatDisplayDate = function (dateStr) {
-                  if (!dateStr || dateStr === "0000-00-00") return '<span class="cp-site-sub">—</span>';
+                  if (!dateStr || dateStr === "0000-00-00" || dateStr.trim() === "") return "—";
                   try {
                     const parts = dateStr.split("-");
                     if (parts.length === 3) {
@@ -2056,18 +2058,32 @@
                     </div>
                   </td>
                   <td>
-                    <div class="cp-dates-stack">
-                      <div class="cp-date-line active-date" title="Activated on ${formattedActiveDate}">
-                        <span class="cp-date-lbl">Active:</span>
-                        <span class="cp-date-txt">${formattedActiveDate}</span>
+                    <div class="cp-date-cell active-date">
+                      <div class="cp-date-main" title="${formattedActiveDate !== '—' ? 'Activated on ' + formattedActiveDate : 'No activation date recorded'}">
+                        <i class="fi fi-rr-calendar-check"></i>
+                        <span>${formattedActiveDate}</span>
                       </div>
-                      <div class="cp-date-line expire-date" title="Expires on ${formattedExpiryDate}">
-                        <span class="cp-date-lbl">Expires:</span>
-                        <span class="cp-date-txt">${formattedExpiryDate}</span>
-                      </div>
-                      <div class="cp-date-pill-row">
-                        ${expiryBadge}
-                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="cp-date-cell expire-date">
+                      ${hasExpiry ? `
+                        <div class="cp-date-main" title="Expires on ${formattedExpiryDate}">
+                          <i class="fi fi-rr-calendar-clock"></i>
+                          <span>${formattedExpiryDate}</span>
+                        </div>
+                        ${expiryBadge ? `
+                          <div class="cp-date-pill-row">
+                            ${expiryBadge}
+                          </div>
+                        ` : ''}
+                      ` : `
+                        <div class="cp-date-pill-row">
+                          <span class="cp-expiry-pill no-expiry" title="No expiration date configured">
+                            <i class="fi fi-rr-infinite"></i> No Expiry
+                          </span>
+                        </div>
+                      `}
                     </div>
                   </td>
                   <td>
@@ -2157,7 +2173,7 @@
                 </tr>`;
               });
             } else {
-              html = '<tr><td colspan="7" class="text-center cp-table-empty-cell"><i class="fi fi-rr-globe"></i><br>No client sites found matching criteria.</td></tr>';
+              html = '<tr><td colspan="8" class="text-center cp-table-empty-cell"><i class="fi fi-rr-globe"></i><br>No client sites found matching criteria.</td></tr>';
             }
 
             if ($.fn.DataTable && $.fn.DataTable.isDataTable("#cpSitesTable")) {
@@ -2448,7 +2464,7 @@
         } else if (diffDays <= 30) {
           badgeHtml = `<span class="cp-expiry-pill warning">Due in ${diffDays}d</span>`;
         } else {
-          badgeHtml = `<span class="cp-expiry-pill active">Valid (${diffDays}d left)</span>`;
+          badgeHtml = '<span class="cp-expiry-pill active">Active</span>';
         }
       }
       $("#remSumExpiryBadge").replaceWith($(badgeHtml).attr("id", "remSumExpiryBadge"));
