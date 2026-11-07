@@ -129,7 +129,7 @@ if ($method === 'GET') {
     // Users list
     $sql = "SELECT u.user_id, u.user_username, u.user_email, u.user_mobile, u.user_status, u.user_reg_time,
                    p.profile_display_name, p.profile_image,
-                   sa.site_access_id, sa.site_access_type, sa.site_access_site_id, sa.site_access_status,
+                   sa.site_access_id, sa.site_access_type, sa.site_access_site_id, sa.site_access_status, sa.site_access_meta,
                    s.site_name, s.site_domain
             FROM {$tblPrefix}user u
             INNER JOIN {$tblPrefix}site_access sa ON sa.site_access_user_id = u.user_id
@@ -144,6 +144,8 @@ if ($method === 'GET') {
     if ($res) {
         while ($row = mysqli_fetch_assoc($res)) {
             $isActive = ((int)$row['site_access_status'] === 1 && (int)$row['user_status'] === 1) ? 1 : 0;
+            $meta = !empty($row['site_access_meta']) ? @json_decode($row['site_access_meta'], true) : [];
+            $commRate = isset($meta['commission_rate']) ? (float)$meta['commission_rate'] : 10.0;
             $users[] = [
                 'id' => (int)$row['user_id'],
                 'site_access_id' => (int)$row['site_access_id'],
@@ -157,6 +159,7 @@ if ($method === 'GET') {
                 'site_domain' => htmlspecialchars($row['site_domain'] ?? $siteInfo['domain']),
                 'site_access_status' => (int)$row['site_access_status'],
                 'user_status' => (int)$row['user_status'],
+                'commission_rate' => $commRate,
                 'status' => $isActive,
                 'reg_time' => $row['user_reg_time'],
                 'image' => htmlspecialchars($row['profile_image'] ?? '')

@@ -1091,6 +1091,42 @@
       $(document).on("click", ".btn-assign-site-partner", function () {
         self.openAssignSitePartnerModal($(this));
       });
+
+      // When selecting a partner in Assign Referral Partner modal,
+      // fetch selected partner default commission value and set into Commission Rate (%)
+      $(document).on("change", "#aspPartnerSelect", function () {
+        const partnerId = parseInt($(this).val()) || 0;
+        if (partnerId > 0) {
+          const $selectedOpt = $(this).find("option:selected");
+          const optRate = $selectedOpt.data("commission-rate");
+          if (optRate !== undefined && optRate !== null && optRate !== "") {
+            $("#aspCommissionRateInput").val(parseFloat(optRate).toFixed(1));
+          } else {
+            self.fetchPartnerCommissionRate(partnerId, function (rate) {
+              $("#aspCommissionRateInput").val(parseFloat(rate).toFixed(1));
+            });
+          }
+        } else {
+          $("#aspCommissionRateInput").val("10.0");
+        }
+      });
+
+      // When selecting a partner in Record Partner Commission Accrual modal,
+      // fetch selected partner default commission value and set into Commission Rate (%)
+      $(document).on("change", "#manualCommPartnerSelect", function () {
+        const partnerId = parseInt($(this).val()) || 0;
+        if (partnerId > 0) {
+          const $selectedOpt = $(this).find("option:selected");
+          const optRate = $selectedOpt.data("commission-rate");
+          if (optRate !== undefined && optRate !== null && optRate !== "") {
+            $("#manualCommRateInput").val(parseFloat(optRate).toFixed(1));
+          } else {
+            self.fetchPartnerCommissionRate(partnerId, function (rate) {
+              $("#manualCommRateInput").val(parseFloat(rate).toFixed(1));
+            });
+          }
+        }
+      });
     },
 
     switchTab: function (tab) {
@@ -2085,6 +2121,7 @@
                         data-domain="${effectiveDomain}" 
                         data-partner-id="${s.partner_id || 0}" 
                         data-partner-name="${s.partner_name || ''}" 
+                        data-commission-rate="${s.commission_rate || ''}" 
                         data-tooltip="${s.partner_id > 0 ? 'Partner: ' + s.partner_name : 'Assign Referral Partner'}" 
                         title="${s.partner_id > 0 ? 'Partner: ' + s.partner_name : 'Assign Referral Partner'}">
                         <i class="fi fi-rr-handshake"></i>
@@ -3530,6 +3567,7 @@
                       data-domain="${c.site_domain}" 
                       data-partner-id="${effectivePartnerId}" 
                       data-partner-name="${res.partner ? res.partner.name : ''}" 
+                      data-commission-rate="${c.commission_rate || ''}" 
                       title="Change Referral Partner">
                       <i class="fi fi-rr-handshake"></i>
                     </button>
@@ -3690,23 +3728,37 @@
       const siteId = $btn.data("id");
       const siteName = $btn.data("name") || `Site #${siteId}`;
       const siteDomain = $btn.data("domain") || "";
-      const currentPartnerId = $btn.data("partner-id") || 0;
+      const currentPartnerId = parseInt($btn.data("partner-id")) || 0;
       const currentPartnerName = $btn.data("partner-name") || "";
+      const existingCommRate = $btn.data("commission-rate");
 
       $("#aspSiteIdInput").val(siteId);
       $("#aspSiteNameDisplay").text(siteName);
       $("#aspSiteDomainDisplay").text(siteDomain);
       $("#aspCurrentPartnerDisplay").text(currentPartnerId > 0 ? `Current Partner: ${currentPartnerName} (#${currentPartnerId})` : "Direct / No Partner Assigned");
-      $("#aspCommissionRateInput").val("10.0");
       $("#aspCommissionNotesInput").val("");
 
       const self = this;
+      const setInitialCommissionRate = function (pid) {
+        if (existingCommRate !== undefined && existingCommRate !== null && existingCommRate !== "") {
+          $("#aspCommissionRateInput").val(parseFloat(existingCommRate).toFixed(1));
+        } else if (pid > 0) {
+          self.fetchPartnerCommissionRate(pid, function (rate) {
+            $("#aspCommissionRateInput").val(parseFloat(rate).toFixed(1));
+          });
+        } else {
+          $("#aspCommissionRateInput").val("10.0");
+        }
+      };
+
       this.loadPartnerDropdowns(false, function () {
-        $("#aspPartnerSelect").val(currentPartnerId || "0").trigger("change");
+        $("#aspPartnerSelect").val(currentPartnerId || "0").trigger("change.select2");
+        setInitialCommissionRate(currentPartnerId);
         $("#modalAssignSitePartner").addClass("active");
         self.initSelect2("#modalAssignSitePartner");
       });
-      $("#aspPartnerSelect").val(currentPartnerId || "0").trigger("change");
+      $("#aspPartnerSelect").val(currentPartnerId || "0").trigger("change.select2");
+      setInitialCommissionRate(currentPartnerId);
       $("#modalAssignSitePartner").addClass("active");
       this.initSelect2("#modalAssignSitePartner");
     },
@@ -3968,6 +4020,43 @@
       });
     },
 
+    fetchPartnerCommissionRate: function (partnerId, callback) {
+      partnerId = parseInt(partnerId) || 0;
+      if (partnerId <= 0) {
+        if (typeof callback === "function") callback(10.0);
+        return;
+      }
+
+      // 1. Check in-memory partnersMap
+      if (this.partnersMap && this.partnersMap[partnerId]) {
+        const rate = this.partnersMap[partnerId].commission_rate;
+        if (rate !== undefined && rate !== null) {
+          if (typeof callback === "function") callback(parseFloat(rate));
+          return;
+        }
+      }
+
+      // 2. Check in-memory partnersList
+      if (this.partnersList && this.partnersList.length) {
+        const p = this.partnersList.find(function (item) { return item.id == partnerId; });
+        if (p && p.commission_rate !== undefined && p.commission_rate !== null) {
+          if (typeof callback === "function") callback(parseFloat(p.commission_rate));
+          return;
+        }
+      }
+
+      // 3. Fallback to API lookup
+      $.getJSON(`/api/v3/control_panel/partners/?partner_id=${partnerId}`, function (res) {
+        if (res.status === "success" && res.partner && res.partner.commission_rate !== undefined) {
+          if (typeof callback === "function") callback(parseFloat(res.partner.commission_rate));
+        } else {
+          if (typeof callback === "function") callback(10.0);
+        }
+      }).fail(function () {
+        if (typeof callback === "function") callback(10.0);
+      });
+    },
+
     loadPartnerDropdowns: function (force = false, callback) {
       if (typeof force === "function") {
         callback = force;
@@ -3978,14 +4067,17 @@
         return;
       }
       const self = this;
-      $.getJSON("/api/v3/control_panel/users/?role=partner&limit=100", function (res) {
+      $.getJSON("/api/v3/control_panel/partners/?limit=100", function (res) {
         if (res.status === "success" && res.data) {
           self.partnersList = res.data;
-          let pOpts = '<option value="0">Direct / No Partner</option>';
-          let pSelectOpts = '<option value="">Select Partner</option>';
+          self.partnersMap = {};
+          let pOpts = '<option value="0" data-commission-rate="10.0">Direct / No Partner</option>';
+          let pSelectOpts = '<option value="" data-commission-rate="10.0">Select Partner</option>';
           res.data.forEach(function (p) {
-            pOpts += `<option value="${p.id}">${p.display_name} (${p.email})</option>`;
-            pSelectOpts += `<option value="${p.id}">${p.display_name} (${p.email})</option>`;
+            self.partnersMap[p.id] = p;
+            const commRate = (p.commission_rate !== undefined && p.commission_rate !== null) ? p.commission_rate : 10.0;
+            pOpts += `<option value="${p.id}" data-commission-rate="${commRate}">${p.display_name} (${p.email})</option>`;
+            pSelectOpts += `<option value="${p.id}" data-commission-rate="${commRate}">${p.display_name} (${p.email})</option>`;
           });
           $("#sitePartnerSelect, #invPartnerSelect, #manualCommPartnerSelect, #aspPartnerSelect, #cpSwitchPartnerSelect").each(function () {
             if ($(this).hasClass("select2-hidden-accessible")) {

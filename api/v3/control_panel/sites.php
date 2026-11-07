@@ -233,7 +233,8 @@ if ($method === 'GET') {
             (SELECT site_configuration_value FROM {$tblPrefix}site_configuration sc WHERE sc.site_configuration_site_id = s.site_id AND sc.site_configuration_key = 'billing_interval' LIMIT 1) as billing_interval,
             (SELECT site_configuration_value FROM {$tblPrefix}site_configuration sc WHERE sc.site_configuration_site_id = s.site_id AND sc.site_configuration_key = 'renewal_price_override' LIMIT 1) as renewal_price_override,
             (SELECT site_configuration_value FROM {$tblPrefix}site_configuration sc WHERE sc.site_configuration_site_id = s.site_id AND sc.site_configuration_key = 'partner_id' LIMIT 1) as partner_id_cfg,
-            (SELECT cpc.commission_partner_id FROM {$tblPrefix}control_panel_commission cpc WHERE cpc.commission_site_id = s.site_id ORDER BY cpc.commission_id DESC LIMIT 1) as partner_id_comm
+            (SELECT cpc.commission_partner_id FROM {$tblPrefix}control_panel_commission cpc WHERE cpc.commission_site_id = s.site_id ORDER BY cpc.commission_id DESC LIMIT 1) as partner_id_comm,
+            (SELECT cpc.commission_rate_percent FROM {$tblPrefix}control_panel_commission cpc WHERE cpc.commission_site_id = s.site_id ORDER BY cpc.commission_id DESC LIMIT 1) as commission_rate_comm
             FROM {$tblPrefix}site s
             LEFT JOIN {$tblPrefix}app a ON s.site_app_id = a.app_id
             LEFT JOIN {$tblPrefix}theme t ON s.site_theme_id = t.theme_id
@@ -305,6 +306,7 @@ if ($method === 'GET') {
                     $pr = mysqli_query($connection, "SELECT COALESCE(p.profile_display_name, u.user_username, u.user_email) as pn FROM {$tblPrefix}user u LEFT JOIN {$tblPrefix}profile p ON p.profile_user_id = u.user_id WHERE u.user_id = {$pid} LIMIT 1");
                     return ($pr && $prow = mysqli_fetch_assoc($pr)) ? htmlspecialchars($prow['pn']) : '';
                 })() : '',
+                'commission_rate' => !empty($row['commission_rate_comm']) ? (float)$row['commission_rate_comm'] : null,
                 'logo' => htmlspecialchars($row['site_logo'] ?? ''),
                 'icon' => htmlspecialchars($row['site_icon'] ?? '')
             ];
