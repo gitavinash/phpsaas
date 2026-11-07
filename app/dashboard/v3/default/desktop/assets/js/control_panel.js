@@ -301,6 +301,27 @@
         self.toggleAppStatus(id, isChecked, $(this));
       });
 
+      // View App Active Sites Domains Modal
+      $(document).on("click", ".btn-view-app-domains", function (e) {
+        e.preventDefault();
+        const id = $(this).data("id");
+        const title = $(this).data("title") || "Application";
+        self.openAppDomainsModal(id, title);
+      });
+
+      // Filter Domains Inside Modal
+      $(document).on("input", "#inputFilterAppDomains", function () {
+        const q = $(this).val().toLowerCase().trim();
+        self.filterAppDomains(q);
+      });
+
+      // Toggle App Deletable Status
+      $(document).on("change", ".cp-app-deletable-toggle", function () {
+        const id = $(this).data("id");
+        const isChecked = $(this).is(":checked");
+        self.toggleAppDeletable(id, isChecked, $(this));
+      });
+
       // Apps Filter Pills & Sync with Select2
       $(document).on("click", "#cpAppStatusTabs .cp-filter-pill", function () {
         $("#cpAppStatusTabs .cp-filter-pill").removeClass("active");
@@ -1233,64 +1254,83 @@
             if (res.data && res.data.length) {
               res.data.forEach(function (app) {
                 const isLive = app.status == 1;
+                const isDeletable = app.is_deletable == 1;
                 const pColor = app.primary_color || "#2563eb";
                 const sColor = app.secondary_color || "#60a5fa";
                 const isVisible = app.visibility == 1;
+                const title = app.title || "Application";
+                const monogram = title.substring(0, 3).toUpperCase();
+                const desc = app.description || "Core SaaS business application module for multi-tenant deployments.";
 
-                // Grid Card
+                // Redesigned Card (Grid View)
                 gridHtml += `<div class="cp-app-item" data-app-id="${app.id}">
                   <div class="cp-app-color-bar" style="background: linear-gradient(90deg, ${pColor}, ${sColor});"></div>
                   <div class="cp-app-body">
-                    <div class="cp-app-card-header">
-                      <div class="cp-app-header-left">
-                        <div class="cp-app-icon-wrap" style="background: ${pColor};">
-                          ${app.image ? `<img src="${app.image}" class="cp-app-icon-img" alt="${app.title}" onerror="this.onerror=null;this.parentElement.innerHTML='<i class=\\'fi fi-rr-apps\\'></i>';">` : `<i class="fi fi-rr-apps"></i>`}
-                        </div>
-                        <div class="cp-app-title-group">
-                          <a href="javascript:void(0)" class="cp-app-title-link btn-edit-app" data-id="${app.id}" title="Modify ${app.title}">
-                            ${app.title}
+                    <!-- Top: Rectangular Logo on Left, Title & Meta on Right -->
+                    <div class="cp-app-header-row">
+                      <div class="cp-app-logo-rect">
+                        ${app.image ? `<img src="${app.image}" class="cp-app-logo-img" alt="${title}" onerror="this.onerror=null;this.parentElement.innerHTML='<div class=\\'cp-app-logo-fallback\\' style=\\'background: linear-gradient(135deg, ${pColor}, ${sColor});\\'><span>${monogram}</span></div>';">` : `<div class="cp-app-logo-fallback" style="background: linear-gradient(135deg, ${pColor}, ${sColor});"><span>${monogram}</span></div>`}
+                      </div>
+
+                      <div class="cp-app-header-meta">
+                        <div class="cp-app-title-top">
+                          <a href="javascript:void(0)" class="cp-app-title-link btn-edit-app" data-id="${app.id}" title="Edit ${title}">
+                            ${title}
                           </a>
+                          <span class="cp-app-vis-badge ${isVisible ? 'visible' : ''}">
+                            ${isVisible ? 'Catalog' : 'Internal'}
+                          </span>
+                        </div>
+
+                        <div class="cp-app-slug-row">
                           <span class="cp-app-id-pill">#APP-${app.id}</span>
+                          <div class="cp-app-code-pill" title="Path: /${app.path}/">
+                            <code>/${app.path}/</code>
+                            <button type="button" class="cp-btn-copy-slug" data-slug="${app.path}" title="Copy path slug">
+                              <i class="fi fi-rr-copy"></i>
+                            </button>
+                          </div>
                         </div>
                       </div>
-                      <span class="cp-app-vis-badge ${isVisible ? 'visible' : ''}">
-                        ${isVisible ? 'Catalog' : 'Internal'}
-                      </span>
                     </div>
 
-                    <div class="cp-app-code-pill">
-                      <span>/${app.path}/</span>
-                      <button type="button" class="cp-btn-copy-slug" data-slug="${app.path}" title="Copy slug to clipboard">
-                        <i class="fi fi-rr-copy"></i>
-                      </button>
-                    </div>
-
-                    <p class="cp-app-desc-clamp">${app.description || "Blumox Multi-Tenant Core Application Suite Module."}</p>
-
-                    <div class="cp-app-ecosystem">
-                      <a href="/dashboard/themes/?app_id=${app.id}" class="cp-app-eco-link themes" title="Browse Themes for ${app.title}">
-                        <i class="fi fi-rr-palette"></i> <strong>${app.themes_count}</strong> Themes
-                      </a>
-                      <a href="/dashboard/sites/?app_id=${app.id}" class="cp-app-eco-link sites" title="View Sites running ${app.title}">
-                        <i class="fi fi-rr-globe"></i> <strong>${app.sites_count}</strong> Sites
-                      </a>
+                    <!-- Below Image and Title: Description -->
+                    <div class="cp-app-desc-wrap">
+                      <p class="cp-app-desc-text" title="${desc}">${desc}</p>
                     </div>
                   </div>
 
+                  <!-- Bottom: Stats as CTA (Active Sites, Theme), Deletable Toggle, and Edit Button -->
                   <div class="cp-app-card-footer">
-                    <div class="cp-app-status-toggle-wrap">
-                      <label class="cp-toggle" title="Toggle Active / Inactive status">
-                        <input type="checkbox" class="cp-app-status-toggle" data-id="${app.id}" ${isLive ? 'checked' : ''}>
-                        <span class="cp-toggle-slider"></span>
-                      </label>
-                      <span class="cp-app-status-text ${isLive ? 'active' : 'inactive'}">
-                        ${isLive ? 'Active' : 'Inactive'}
-                      </span>
+                    <div class="cp-app-footer-stats">
+                      <button type="button" class="cp-app-stat-cta sites btn-view-app-domains" data-id="${app.id}" data-title="${title}" title="View active provisioned domains">
+                        <i class="fi fi-rr-globe"></i>
+                        <span><strong>${app.sites_count}</strong> Sites</span>
+                        <i class="fi fi-rr-angle-small-right"></i>
+                      </button>
+
+                      <a href="/dashboard/themes/?app_id=${app.id}" class="cp-app-stat-cta themes" title="Browse themes for ${title}">
+                        <i class="fi fi-rr-palette"></i>
+                        <span><strong>${app.themes_count}</strong> Themes</span>
+                      </a>
                     </div>
 
-                    <button type="button" class="cp-btn-edit-app btn-edit-app" data-id="${app.id}">
-                      <i class="fi fi-rr-edit"></i> Modify
-                    </button>
+                    <div class="cp-app-footer-actions">
+                      <div class="cp-app-deletable-wrap" title="Toggle whether this application can be deleted">
+                        <span class="cp-deletable-badge ${isDeletable ? 'deletable' : 'protected'}">
+                          ${isDeletable ? 'Deletable' : 'Protected'}
+                        </span>
+                        <label class="cp-toggle cp-toggle-sm" title="${isDeletable ? 'Click to protect app from deletion' : 'Click to allow deletion'}">
+                          <input type="checkbox" class="cp-app-deletable-toggle" data-id="${app.id}" ${isDeletable ? 'checked' : ''}>
+                          <span class="cp-toggle-slider"></span>
+                        </label>
+                      </div>
+
+                      <button type="button" class="cp-btn-edit-app btn-edit-app" data-id="${app.id}" title="Edit ${title}">
+                        <i class="fi fi-rr-edit"></i>
+                        <span>Edit</span>
+                      </button>
+                    </div>
                   </div>
                 </div>`;
 
@@ -1299,27 +1339,27 @@
                   <td><strong>#${app.id}</strong></td>
                   <td>
                     <div class="cp-app-header-left">
-                      <div class="cp-app-icon-wrap cp-app-icon-mini" style="background: ${pColor};">
-                        ${app.image ? `<img src="${app.image}" class="cp-app-icon-img" alt="${app.title}" onerror="this.onerror=null;this.parentElement.innerHTML='<i class=\\'fi fi-rr-apps\\'></i>';">` : `<i class="fi fi-rr-apps"></i>`}
+                      <div class="cp-app-logo-rect" style="width:70px;height:40px;padding:3px;">
+                        ${app.image ? `<img src="${app.image}" class="cp-app-logo-img" alt="${title}" onerror="this.onerror=null;this.parentElement.innerHTML='<div class=\\'cp-app-logo-fallback\\' style=\\'background: linear-gradient(135deg, ${pColor}, ${sColor});font-size:11px;\\'><span>${monogram}</span></div>';">` : `<div class="cp-app-logo-fallback" style="background: linear-gradient(135deg, ${pColor}, ${sColor});font-size:11px;"><span>${monogram}</span></div>`}
                       </div>
                       <div>
-                        <a href="javascript:void(0)" class="cp-site-title btn-edit-app" data-id="${app.id}"><strong>${app.title}</strong></a>
+                        <a href="javascript:void(0)" class="cp-site-title btn-edit-app" data-id="${app.id}"><strong>${title}</strong></a>
                         <span class="cp-site-sub"><code>/${app.path}/</code></span>
                       </div>
                     </div>
                   </td>
                   <td class="col-app-desc">
-                    <span class="cp-app-desc-clamp">${app.description || "--"}</span>
+                    <span class="cp-app-desc-clamp">${desc}</span>
                   </td>
                   <td>
-                    <a href="/dashboard/themes/?app_id=${app.id}" class="cp-app-eco-link themes">
+                    <a href="/dashboard/themes/?app_id=${app.id}" class="cp-app-stat-cta themes" title="Browse themes">
                       <i class="fi fi-rr-palette"></i> ${app.themes_count}
                     </a>
                   </td>
                   <td>
-                    <a href="/dashboard/sites/?app_id=${app.id}" class="cp-app-eco-link sites">
-                      <i class="fi fi-rr-globe"></i> ${app.sites_count}
-                    </a>
+                    <button type="button" class="cp-app-stat-cta sites btn-view-app-domains" data-id="${app.id}" data-title="${title}" title="View active provisioned sites">
+                      <i class="fi fi-rr-globe"></i> ${app.sites_count} Sites
+                    </button>
                   </td>
                   <td>
                     <span class="cp-color-chip" style="background: ${pColor};"></span>
@@ -1331,14 +1371,17 @@
                     </span>
                   </td>
                   <td>
-                    <label class="cp-toggle" title="Toggle status">
-                      <input type="checkbox" class="cp-app-status-toggle" data-id="${app.id}" ${isLive ? 'checked' : ''}>
-                      <span class="cp-toggle-slider"></span>
-                    </label>
+                    <div class="cp-app-deletable-wrap" title="Toggle deletable">
+                      <span class="cp-deletable-badge ${isDeletable ? 'deletable' : 'protected'}">${isDeletable ? 'Deletable' : 'Protected'}</span>
+                      <label class="cp-toggle cp-toggle-sm">
+                        <input type="checkbox" class="cp-app-deletable-toggle" data-id="${app.id}" ${isDeletable ? 'checked' : ''}>
+                        <span class="cp-toggle-slider"></span>
+                      </label>
+                    </div>
                   </td>
                   <td class="text-right">
-                    <button type="button" class="cp-btn-secondary btn-edit-app" data-id="${app.id}" title="Modify Details">
-                      <i class="fi fi-rr-edit"></i> Modify
+                    <button type="button" class="cp-btn-secondary btn-edit-app" data-id="${app.id}" title="Edit Details">
+                      <i class="fi fi-rr-edit"></i> Edit
                     </button>
                   </td>
                 </tr>`;
@@ -1533,6 +1576,147 @@
           $submitBtn.prop("disabled", false).find("span").text("Save Application");
           const err = xhr.responseJSON ? xhr.responseJSON.msg : "Error saving application.";
           swal("Error", err, "error");
+        }
+      });
+    },
+
+    openAppDomainsModal: function (appId, appTitle) {
+      const self = this;
+      appId = parseInt(appId) || 0;
+      if (appId <= 0) return;
+
+      $("#appDomainsModalHeading").text(appTitle || "Application Sites");
+      $("#appDomainsModalSubheading").text("Active client instances running this application");
+      $("#inputFilterAppDomains").val("");
+      $("#appDomainsCountBadge").text("Loading...");
+      $("#btnAppDomainsGoAllSites").attr("href", `/dashboard/sites/?app_id=${appId}`);
+      $("#appDomainsTbody").html('<tr><td colspan="5" class="text-center py-4"><i class="fi fi-rr-spinner-alt cp-spin"></i> Loading provisioned sites...</td></tr>');
+      $("#modalAppDomains").addClass("active");
+
+      $.getJSON(`/api/v3/control_panel/apps/?action=sites&app_id=${appId}`, function (res) {
+        if (res.status === "success") {
+          self.currentAppDomainsList = res.data || [];
+          if (res.app) {
+            $("#appDomainsModalHeading").text(res.app.title);
+            if (res.app.image) {
+              $("#appDomainsModalIcon").html(`<img src="${res.app.image}" alt="${res.app.title}">`);
+            } else {
+              $("#appDomainsModalIcon").html('<i class="fi fi-rr-apps"></i>');
+            }
+          }
+          $("#appDomainsCountBadge").text(`${res.total || self.currentAppDomainsList.length} Sites`);
+          self.renderAppDomainsTable(self.currentAppDomainsList);
+        } else {
+          $("#appDomainsTbody").html(`<tr><td colspan="5" class="text-center py-4 text-danger">${res.msg || "Failed to load sites"}</td></tr>`);
+        }
+      }).fail(function () {
+        $("#appDomainsTbody").html('<tr><td colspan="5" class="text-center py-4 text-danger">Server communication error loading site domains.</td></tr>');
+      });
+    },
+
+    filterAppDomains: function (query) {
+      if (!this.currentAppDomainsList) return;
+      if (!query) {
+        this.renderAppDomainsTable(this.currentAppDomainsList);
+        return;
+      }
+      const filtered = this.currentAppDomainsList.filter(function (s) {
+        const q = query.toLowerCase();
+        return (
+          (s.name && s.name.toLowerCase().indexOf(q) !== -1) ||
+          (s.domain && s.domain.toLowerCase().indexOf(q) !== -1) ||
+          (s.owner_name && s.owner_name.toLowerCase().indexOf(q) !== -1) ||
+          (s.owner_email && s.owner_email.toLowerCase().indexOf(q) !== -1) ||
+          (s.owner_mobile && s.owner_mobile.toLowerCase().indexOf(q) !== -1) ||
+          (s.plan && s.plan.toLowerCase().indexOf(q) !== -1)
+        );
+      });
+      this.renderAppDomainsTable(filtered);
+    },
+
+    renderAppDomainsTable: function (sites) {
+      if (!sites || sites.length === 0) {
+        $("#appDomainsTbody").html(`<tr><td colspan="5" class="text-center py-4 text-muted">
+          <i class="fi fi-rr-globe" style="font-size:24px;display:block;margin-bottom:6px;opacity:0.4;"></i>
+          No provisioned client sites running this application.
+        </td></tr>`);
+        return;
+      }
+
+      let html = "";
+      sites.forEach(function (site) {
+        const isLive = site.status == 1;
+        const statusBadge = isLive
+          ? '<span class="cp-status-pill active"><i class="fi fi-rr-bullet"></i> Live</span>'
+          : '<span class="cp-status-pill suspended"><i class="fi fi-rr-ban"></i> Suspended</span>';
+        
+        const domainUrl = site.domain ? (site.domain.indexOf("http") === 0 ? site.domain : "http://" + site.domain) : "#";
+        const ownerInfo = site.owner_name && site.owner_name !== "N/A"
+          ? `<strong>${site.owner_name}</strong><span class="cp-site-sub-small">${site.owner_email || site.owner_mobile || ""}</span>`
+          : `<span class="text-muted">Unassigned</span>`;
+
+        html += `<tr>
+          <td>
+            <a href="${domainUrl}" target="_blank" rel="noopener noreferrer" class="cp-domain-link">
+              <span>${site.domain || site.name}</span>
+              <i class="fi fi-rr-arrow-up-right-from-square" style="font-size: 10px;"></i>
+            </a>
+            <span class="cp-site-sub-small">${site.name} (#${site.id})</span>
+          </td>
+          <td>${ownerInfo}</td>
+          <td>
+            <span class="cp-badge-plan">${site.plan}</span>
+            <span class="cp-site-sub-small">${site.expiry ? "Exp: " + site.expiry : "No Expiry"}</span>
+          </td>
+          <td>${statusBadge}</td>
+          <td class="text-right">
+            <a href="/dashboard/sites/?search=${encodeURIComponent(site.domain || site.name)}" class="cp-btn-secondary" title="View in Client Sites Manager" style="padding:4px 8px;font-size:11px;">
+              <i class="fi fi-rr-settings"></i> Settings
+            </a>
+          </td>
+        </tr>`;
+      });
+      $("#appDomainsTbody").html(html);
+    },
+
+    toggleAppDeletable: function (id, isChecked, $toggle) {
+      const self = this;
+      const deletableVal = isChecked ? 1 : 0;
+      $.ajax({
+        url: "/api/v3/control_panel/apps/",
+        method: "POST",
+        contentType: "application/json",
+        data: JSON.stringify({
+          action: "toggle_deletable",
+          app_id: id,
+          deletable: deletableVal
+        }),
+        success: function (res) {
+          const $wrap = $toggle.closest(".cp-app-deletable-wrap");
+          const $badge = $wrap.find(".cp-deletable-badge");
+          if (isChecked) {
+            $badge.text("Deletable").removeClass("protected").addClass("deletable");
+          } else {
+            $badge.text("Protected").removeClass("deletable").addClass("protected");
+          }
+          if (window.swal) {
+            swal({
+              title: isChecked ? "Deletable Enabled" : "App Protected",
+              text: res.msg || (isChecked ? "Application is now deletable." : "Application is now protected from deletion."),
+              icon: "success",
+              timer: 1400,
+              buttons: false
+            });
+          }
+        },
+        error: function (xhr) {
+          $toggle.prop("checked", !isChecked);
+          const err = xhr.responseJSON ? xhr.responseJSON.msg : "Failed to toggle deletable status";
+          if (window.swal) {
+            swal("Error", err, "error");
+          } else {
+            alert(err);
+          }
         }
       });
     },

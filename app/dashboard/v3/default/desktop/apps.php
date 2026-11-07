@@ -326,3 +326,65 @@ $displayRole = $roleTitles[$userRole] ?? 'Administrator';
         </form>
     </div>
 </div>
+
+<!-- Modal: App Active Sites & Domains List -->
+<div class="cp-modal-backdrop" id="modalAppDomains">
+    <div class="cp-modal-box cp-app-domains-modal-box">
+        <div class="cp-modal-header">
+            <div class="cp-modal-header-titles">
+                <div class="cp-modal-app-title-wrap">
+                    <div class="cp-modal-app-icon" id="appDomainsModalIcon">
+                        <i class="fi fi-rr-apps"></i>
+                    </div>
+                    <div>
+                        <h3 id="appDomainsModalHeading">Active Provisioned Sites</h3>
+                        <p id="appDomainsModalSubheading">Client domains running this core application</p>
+                    </div>
+                </div>
+            </div>
+            <button type="button" class="cp-modal-close-btn" data-close-modal>&times;</button>
+        </div>
+
+        <div class="cp-modal-body">
+            <!-- Search & Quick Filter Toolbar -->
+            <div class="cp-modal-toolbar">
+                <div class="cp-search-wrap">
+                    <i class="fi fi-rr-search"></i>
+                    <input type="text" class="cp-search-input" id="inputFilterAppDomains" placeholder="Filter by domain, site name or client...">
+                </div>
+                <div class="cp-modal-counter">
+                    <span id="appDomainsCountBadge" class="cp-stat-pill">0 Sites</span>
+                </div>
+            </div>
+
+            <!-- Table of provisioned client instances -->
+            <div class="cp-table-wrap cp-modal-table-wrap">
+                <table class="cp-table" id="tableAppDomains">
+                    <thead>
+                        <tr>
+                            <th>Domain &amp; Site</th>
+                            <th>Client / Owner</th>
+                            <th>Plan &amp; Expiry</th>
+                            <th>Status</th>
+                            <th class="text-right">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="appDomainsTbody">
+                        <tr>
+                            <td colspan="5" class="text-center py-4">
+                                <i class="fi fi-rr-spinner-alt cp-spin"></i> Loading sites...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="cp-modal-footer">
+            <button type="button" class="cp-btn-secondary" data-close-modal>Close</button>
+            <a href="/dashboard/sites/" class="cp-btn-primary" id="btnAppDomainsGoAllSites">
+                <i class="fi fi-rr-globe"></i> <span>Manage All Sites</span>
+            </a>
+        </div>
+    </div>
+</div>

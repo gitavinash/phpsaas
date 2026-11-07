@@ -106,6 +106,9 @@ if (!function_exists('ensureControlPanelTables')) {
             // 7. Verify and auto-create missing columns in isw_site_configuration
             $ensureColumn("{$tblPrefix}site_configuration", "site_configuration_global", "int NOT NULL DEFAULT 0 AFTER `site_configuration_status`");
 
+            // 8. Verify and auto-create missing columns in isw_app
+            $ensureColumn("{$tblPrefix}app", "app_deletable", "tinyint(1) NOT NULL DEFAULT 0 AFTER `app_visiblity`");
+
         } catch (\Throwable $e) {
             // Silently ignore if DB user lacks CREATE or ALTER TABLE privileges
         }

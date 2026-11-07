@@ -20,11 +20,71 @@ if (!isset($connection)) {
 $tblPrefix = defined('TABLE_PREFIX') ? TABLE_PREFIX : 'isw_';
 $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 
+// Ensure required tables and columns exist on load
+require_once __DIR__ . '/schema_helper.php';
+ensureControlPanelTables($connection, $tblPrefix);
+
 // --------------------------------------------------------------------------
-// 1. GET: List Apps with Themes and Sites counts or Single App Details
+// 1. GET: List Apps with Themes and Sites counts, Domain List, or Single App Details
 // --------------------------------------------------------------------------
 if ($method === 'GET') {
+    $action = isset($_GET['action']) ? trim($_GET['action']) : '';
     $appId = isset($_GET['app_id']) ? (int)$_GET['app_id'] : 0;
+
+    // A. Active Sites & Domains List for App
+    if ($action === 'sites') {
+        if ($appId <= 0) {
+            http_response_code(400);
+            echo json_encode(['status' => 'error', 'msg' => 'Invalid App ID']);
+            exit();
+        }
+
+        // Fetch App Info
+        $appQ = mysqli_query($connection, "SELECT app_id, app_title, app_path, app_image, app_primary_color FROM {$tblPrefix}app WHERE app_id = {$appId} LIMIT 1");
+        $appInfo = ($appQ && $ar = mysqli_fetch_assoc($appQ)) ? [
+            'id' => (int)$ar['app_id'],
+            'title' => trim($ar['app_title']),
+            'path' => trim($ar['app_path']),
+            'image' => trim($ar['app_image'] ?? ''),
+            'primary_color' => trim($ar['app_primary_color'] ?? '#2563eb')
+        ] : null;
+
+        $sql = "SELECT s.site_id, s.site_name, s.site_domain, s.site_url, s.site_status, s.site_dashboard_version,
+                u.user_email, u.user_mobile, p.profile_display_name,
+                (SELECT site_configuration_value FROM {$tblPrefix}site_configuration sc WHERE sc.site_configuration_site_id = s.site_id AND sc.site_configuration_key = 'subscription_plan' LIMIT 1) as subscription_plan,
+                (SELECT site_configuration_value FROM {$tblPrefix}site_configuration sc WHERE sc.site_configuration_site_id = s.site_id AND sc.site_configuration_key = 'subscription_expiry' LIMIT 1) as subscription_expiry
+                FROM {$tblPrefix}site s
+                LEFT JOIN {$tblPrefix}user u ON s.site_owner_id = u.user_id
+                LEFT JOIN {$tblPrefix}profile p ON p.profile_user_id = u.user_id
+                WHERE s.site_app_id = {$appId}
+                ORDER BY s.site_status DESC, s.site_id DESC";
+        $res = mysqli_query($connection, $sql);
+        $sites = [];
+        if ($res) {
+            while ($r = mysqli_fetch_assoc($res)) {
+                $domain = !empty($r['site_domain']) ? trim($r['site_domain']) : trim($r['site_url'] ?? '');
+                $sites[] = [
+                    'id' => (int)$r['site_id'],
+                    'name' => htmlspecialchars($r['site_name'] ?: 'Site #' . $r['site_id']),
+                    'domain' => htmlspecialchars($domain),
+                    'status' => (int)$r['site_status'],
+                    'owner_name' => htmlspecialchars(!empty($r['profile_display_name']) ? $r['profile_display_name'] : 'N/A'),
+                    'owner_email' => htmlspecialchars($r['user_email'] ?: ''),
+                    'owner_mobile' => htmlspecialchars($r['user_mobile'] ?: ''),
+                    'plan' => htmlspecialchars($r['subscription_plan'] ?: 'Professional SaaS'),
+                    'expiry' => htmlspecialchars($r['subscription_expiry'] ? substr($r['subscription_expiry'], 0, 10) : '')
+                ];
+            }
+        }
+
+        echo json_encode([
+            'status' => 'success',
+            'app' => $appInfo,
+            'total' => count($sites),
+            'data' => $sites
+        ]);
+        exit();
+    }
 
     // Single App Lookup
     if ($appId > 0) {
@@ -48,6 +108,7 @@ if ($method === 'GET') {
                     'secondary_color' => trim($row['app_secondary_color'] ?? '#60a5fa'),
                     'status' => (int)$row['app_status'],
                     'visibility' => (int)$row['app_visiblity'],
+                    'is_deletable' => (int)($row['app_deletable'] ?? 0),
                     'launch_time' => $row['app_launch_time'],
                     'themes_count' => (int)$row['themes_count'],
                     'sites_count' => (int)$row['sites_count']
@@ -108,6 +169,7 @@ if ($method === 'GET') {
                 'secondary_color' => trim($row['app_secondary_color'] ?? '#60a5fa'),
                 'status' => (int)$row['app_status'],
                 'visibility' => (int)$row['app_visiblity'],
+                'is_deletable' => (int)($row['app_deletable'] ?? 0),
                 'launch_time' => $row['app_launch_time'],
                 'themes_count' => (int)$row['themes_count'],
                 'sites_count' => (int)$row['sites_count']
@@ -175,6 +237,60 @@ if ($method === 'POST') {
         $up = mysqli_query($connection, "UPDATE {$tblPrefix}app SET app_status = {$newStatus} WHERE app_id = {$appId}");
         if ($up) {
             echo json_encode(['status' => 'success', 'msg' => 'App status updated successfully.', 'status_val' => $newStatus]);
+        } else {
+            http_response_code(500);
+            echo json_encode(['status' => 'error', 'msg' => mysqli_error($connection)]);
+        }
+        exit();
+    }
+
+    // Toggle Deletable Action
+    if ($action === 'toggle_deletable') {
+        if ($appId <= 0) {
+            http_response_code(400);
+            echo json_encode(['status' => 'error', 'msg' => 'Invalid App ID']);
+            exit();
+        }
+        $newDeletable = !empty($payload['deletable']) ? 1 : 0;
+        $up = mysqli_query($connection, "UPDATE {$tblPrefix}app SET app_deletable = {$newDeletable} WHERE app_id = {$appId}");
+        if ($up) {
+            echo json_encode([
+                'status' => 'success',
+                'msg' => $newDeletable ? 'Application marked as deletable.' : 'Application protected from deletion.',
+                'deletable' => $newDeletable
+            ]);
+        } else {
+            http_response_code(500);
+            echo json_encode(['status' => 'error', 'msg' => mysqli_error($connection)]);
+        }
+        exit();
+    }
+
+    // Delete App Action (only if deletable is enabled and 0 active sites)
+    if ($action === 'delete') {
+        if ($appId <= 0) {
+            http_response_code(400);
+            echo json_encode(['status' => 'error', 'msg' => 'Invalid App ID']);
+            exit();
+        }
+        $chkSites = mysqli_query($connection, "SELECT COUNT(*) as cnt FROM {$tblPrefix}site WHERE site_app_id = {$appId}");
+        $sCnt = ($chkSites && $sr = mysqli_fetch_assoc($chkSites)) ? (int)$sr['cnt'] : 0;
+        if ($sCnt > 0) {
+            http_response_code(400);
+            echo json_encode(['status' => 'error', 'msg' => "Cannot delete application: {$sCnt} client sites are currently provisioned with this application."]);
+            exit();
+        }
+        $chkDel = mysqli_query($connection, "SELECT app_deletable FROM {$tblPrefix}app WHERE app_id = {$appId} LIMIT 1");
+        $isDel = ($chkDel && $dr = mysqli_fetch_assoc($chkDel)) ? (int)$dr['app_deletable'] : 0;
+        if ($isDel !== 1) {
+            http_response_code(400);
+            echo json_encode(['status' => 'error', 'msg' => "This application is protected. Please enable the 'Deletable' toggle before deleting."]);
+            exit();
+        }
+        mysqli_query($connection, "DELETE FROM {$tblPrefix}theme WHERE theme_app_id = {$appId}");
+        $del = mysqli_query($connection, "DELETE FROM {$tblPrefix}app WHERE app_id = {$appId}");
+        if ($del) {
+            echo json_encode(['status' => 'success', 'msg' => 'Application removed successfully.']);
         } else {
             http_response_code(500);
             echo json_encode(['status' => 'error', 'msg' => mysqli_error($connection)]);
