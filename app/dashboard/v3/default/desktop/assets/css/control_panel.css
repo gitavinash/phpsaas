@@ -614,100 +614,152 @@
 }
 
 .cp-table,
-table.dataTable.package-v3-datatable {
+table.dataTable.package-v3-datatable,
+#cpSitesTable,
+table#cpSitesTable,
+table#cpSitesTable.dataTable,
+table#cpSitesTable.package-v3-datatable,
+.cp-table-wrap table {
   width: 100% !important;
   border-collapse: separate !important;
   border-spacing: 0 !important;
+  overflow: visible !important;
   font-size: 13px;
   text-align: left;
 }
 
+.cp-table-wrap .dataTables_wrapper,
+#cpSitesTable_wrapper {
+  position: static !important;
+  overflow: visible !important;
+  clear: both !important;
+  width: 100% !important;
+}
+
 /* Dedicated Column Layout & Proportions for Client Sites Table (Fluid full window width) */
 #cpSitesTable {
-  min-width: 960px;
+  min-width: 900px;
   width: 100% !important;
   table-layout: auto;
+  border-collapse: separate !important;
+  border-spacing: 0 !important;
+  overflow: visible !important;
+}
+
+#cpSitesTable thead,
+#cpSitesTable tbody,
+#cpSitesTable tr,
+#cpSitesTable tr:hover {
+  transform: none !important;
+  perspective: none !important;
+  filter: none !important;
 }
 
 /* Col 1: Site & Domain */
 #cpSitesTable th:nth-child(1),
 #cpSitesTable td:nth-child(1) {
-  min-width: 165px;
-  width: 20%;
+  min-width: 140px;
+  width: 15%;
 }
 
 /* Col 2: Owner Details (Name, Mobile, Email) */
 #cpSitesTable th:nth-child(2),
 #cpSitesTable td:nth-child(2) {
-  min-width: 175px;
-  width: 21%;
+  min-width: 135px;
+  width: 14%;
 }
 
 /* Col 3: App & Theme */
 #cpSitesTable th:nth-child(3),
 #cpSitesTable td:nth-child(3) {
-  min-width: 125px;
-  width: 13%;
+  min-width: 95px;
+  width: 10%;
 }
 
-/* Col 4: Active & Expire Dates */
+/* Col 4: Active Date */
 #cpSitesTable th:nth-child(4),
 #cpSitesTable td:nth-child(4) {
-  min-width: 145px;
-  width: 16%;
+  min-width: 90px;
+  width: 9%;
+  white-space: nowrap;
 }
 
-/* Col 5: Licence Details */
+/* Col 5: Expiry Date */
 #cpSitesTable th:nth-child(5),
 #cpSitesTable td:nth-child(5) {
-  min-width: 135px;
-  width: 14%;
+  min-width: 95px;
+  width: 10%;
+  white-space: nowrap;
 }
 
-/* Col 6: Status */
+/* Col 6: Licence Details */
 #cpSitesTable th:nth-child(6),
 #cpSitesTable td:nth-child(6) {
-  min-width: 80px;
-  width: 6%;
+  min-width: 105px;
+  width: 11%;
+}
+
+/* Col 7: Status */
+#cpSitesTable th:nth-child(7),
+#cpSitesTable td:nth-child(7) {
+  min-width: 70px;
+  width: 7%;
   text-align: center;
 }
 
-/* Col 7: CTA Actions */
+/* Col 8: CTA Actions - Always Fixed & Visible */
 #cpSitesTable th.cp-actions-header,
 #cpSitesTable td.cp-actions-cell,
-#cpSitesTable th:nth-child(7),
-#cpSitesTable td:nth-child(7) {
-  min-width: 175px !important;
-  width: 175px !important;
+#cpSitesTable th:last-child,
+#cpSitesTable td:last-child,
+#cpSitesTable th:nth-child(8),
+#cpSitesTable td:nth-child(8) {
+  min-width: 200px !important;
+  width: 200px !important;
+  max-width: 200px !important;
   text-align: right !important;
-  padding-right: 14px !important;
+  padding-right: 8px !important;
+  padding-left: 6px !important;
   white-space: nowrap !important;
+  position: -webkit-sticky !important;
+  position: sticky !important;
+  right: 0 !important;
+  z-index: 25 !important;
+  background-clip: padding-box !important;
 }
 
-/* Sticky Action Column on Tablet/Mobile Horizontal Scrolling */
-@media (max-width: 1080px) {
-  #cpSitesTable th.cp-actions-header,
-  #cpSitesTable th:nth-child(7) {
-    position: sticky;
-    right: 0;
-    background: #f8fafc;
-    z-index: 3;
-    box-shadow: -4px 0 8px rgba(0, 0, 0, 0.05);
-  }
+#cpSitesTable .cp-action-icon-group {
+  gap: 3px !important;
+}
 
-  #cpSitesTable td.cp-actions-cell,
-  #cpSitesTable td:nth-child(7) {
-    position: sticky;
-    right: 0;
-    background: #ffffff;
-    z-index: 2;
-    box-shadow: -4px 0 8px rgba(0, 0, 0, 0.05);
-  }
+#cpSitesTable .cp-action-icon-btn {
+  width: 28px !important;
+  height: 28px !important;
+  font-size: 12.5px !important;
+  border-radius: 6px !important;
+}
 
-  #cpSitesTable tr:hover td.cp-actions-cell,
-  #cpSitesTable tr:hover td:nth-child(7) {
-    background: #f8fafc;
-  }
+#cpSitesTable th.cp-actions-header,
+#cpSitesTable th:last-child,
+#cpSitesTable th:nth-child(8) {
+  background: #f8fafc !important;
+  box-shadow: -4px 0 10px rgba(0, 0, 0, 0.08) !important;
+  border-left: 1px solid #cbd5e1 !important;
+  z-index: 26 !important;
+}
+
+#cpSitesTable td.cp-actions-cell,
+#cpSitesTable td:last-child,
+#cpSitesTable td:nth-child(8) {
+  background: #ffffff !important;
+  box-shadow: -4px 0 10px rgba(0, 0, 0, 0.08) !important;
+  border-left: 1px solid #e2e8f0 !important;
+}
+
+#cpSitesTable tr:hover td.cp-actions-cell,
+#cpSitesTable tr:hover td:last-child,
+#cpSitesTable tr:hover td:nth-child(8) {
+  background: #f8fafc !important;
 }
 
 .cp-table th,
@@ -774,10 +826,14 @@ table.dataTable thead th.sorting_desc:after {
   color: #2563eb;
 }
 
-table.dataTable thead th.no-sort,
-table.dataTable thead th.no-sort:after {
+table.dataTable thead th.no-sort {
   cursor: default !important;
+}
+
+table.dataTable thead th.no-sort:after,
+table.dataTable thead th.no-sort::after {
   display: none !important;
+  content: "" !important;
 }
 
 /* DataTables Pagination & Info Elements */
