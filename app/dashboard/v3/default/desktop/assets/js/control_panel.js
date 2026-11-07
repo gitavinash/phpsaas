@@ -164,6 +164,8 @@
         dedicatedPage = "users";
       } else if (path.indexOf("/dashboard/invoices") !== -1) {
         dedicatedPage = "invoices";
+      } else if (path.indexOf("/dashboard/partners/clients") !== -1 || path.indexOf("/dashboard/partner_clients") !== -1) {
+        dedicatedPage = "partner_clients";
       } else if (path.indexOf("/dashboard/commissions") !== -1) {
         dedicatedPage = "commissions";
       } else if (path.indexOf("/dashboard/configurations") !== -1) {
@@ -187,8 +189,10 @@
         } else if (dedicatedPage === "invoices") {
           this.loadSiteDropdowns();
           this.loadPartnerDropdowns();
-        } else if (dedicatedPage === "commissions") {
+        } else if (dedicatedPage === "commissions" || dedicatedPage === "partner_clients") {
           this.loadPartnerDropdowns();
+          this.loadSiteDropdowns();
+        } else if (dedicatedPage === "users" && $("#controlPanelApp").data("is-cp") == 1) {
           this.loadSiteDropdowns();
         }
         return;
@@ -472,8 +476,45 @@
 
       $(document).on("click", "#btnOpenNewUserModal", function () {
         $("#formNewUser")[0].reset();
+        const currentSiteId = $("#cpFilterUserSite").length ? ($("#cpFilterUserSite").val() || $("#controlPanelApp").data("site-id") || 1) : ($("#controlPanelApp").data("site-id") || 1);
+        $("#userSiteIdInput").val(currentSiteId);
         $("#modalNewUser").addClass("active");
         self.initSelect2("#modalNewUser");
+      });
+
+      // Users Search, Filter & Pagination Listeners
+      let usersSearchTimer = null;
+      $(document).on("input", "#cpSearchUsers", function () {
+        const val = $(this).val().trim();
+        if (val.length > 0) {
+          $("#cpClearUsersSearch").removeClass("cp-hidden").show();
+        } else {
+          $("#cpClearUsersSearch").addClass("cp-hidden").hide();
+        }
+        clearTimeout(usersSearchTimer);
+        usersSearchTimer = setTimeout(() => {
+          self.usersCurrentPage = 1;
+          self.fetchUsers();
+        }, 300);
+      });
+
+      $(document).on("click", "#cpClearUsersSearch", function () {
+        $("#cpSearchUsers").val("");
+        $(this).addClass("cp-hidden").hide();
+        self.usersCurrentPage = 1;
+        self.fetchUsers();
+      });
+
+      $(document).on("change", "#cpFilterUserRole, #cpFilterUserStatus, #cpFilterUserSite", function () {
+        self.usersCurrentPage = 1;
+        self.fetchUsers();
+      });
+
+      $(document).on("click", ".btn-users-page", function () {
+        const page = $(this).data("page");
+        if (page) {
+          self.fetchUsers(page);
+        }
       });
 
       $(document).on("click", "#btnOpenNewConfigModal", function () {
@@ -519,6 +560,12 @@
         self.submitNewUser();
       });
 
+      // Edit User Role
+      $(document).on("submit", "#formEditUserRole", function (e) {
+        e.preventDefault();
+        self.submitEditUserRole();
+      });
+
       // Create Invoice
       $(document).on("submit", "#formCreateInvoice", function (e) {
         e.preventDefault();
@@ -529,6 +576,24 @@
       $(document).on("submit", "#formManualCommission", function (e) {
         e.preventDefault();
         self.submitManualCommission();
+      });
+
+      // Register Partner
+      $(document).on("submit", "#formNewPartner", function (e) {
+        e.preventDefault();
+        self.submitNewPartner();
+      });
+
+      // Edit Partner Details
+      $(document).on("submit", "#formEditPartner", function (e) {
+        e.preventDefault();
+        self.submitEditPartner();
+      });
+
+      // Assign Site Partner
+      $(document).on("submit", "#formAssignSitePartner", function (e) {
+        e.preventDefault();
+        self.submitAssignSitePartner();
       });
 
       // Save Configuration
@@ -863,13 +928,147 @@
 
       $(document).on("click", ".btn-toggle-user-status", function () {
         const id = $(this).data("id");
-        const status = $(this).data("status") == 1 ? 0 : 1;
-        self.toggleUserStatus(id, status);
+        const siteId = $(this).data("site-id") || $("#controlPanelApp").data("site-id") || 1;
+        const status = $(this).data("status");
+        self.toggleUserStatus(id, siteId, status);
+      });
+
+      $(document).on("click", ".btn-edit-user-role", function () {
+        self.openEditUserRoleModal($(this));
       });
 
       $(document).on("click", ".btn-reset-user-password", function () {
         const id = $(this).data("id");
-        self.resetUserPasswordPrompt(id);
+        const name = $(this).data("name") || "this user";
+        self.resetUserPasswordPrompt(id, name);
+      });
+
+      // Partner Commissions Tab Navigation
+      $(document).on("click", "#commissionsTabNav .cp-tab-pill", function () {
+        $("#commissionsTabNav .cp-tab-pill").removeClass("active");
+        $(this).addClass("active");
+        const target = $(this).data("tab-target");
+        if (target === "partners") {
+          $("#tabPanePartners").removeClass("cp-hidden").show();
+          $("#tabPaneLedger").addClass("cp-hidden").hide();
+        } else {
+          $("#tabPaneLedger").removeClass("cp-hidden").show();
+          $("#tabPanePartners").addClass("cp-hidden").hide();
+          self.fetchCommissions();
+        }
+      });
+
+      // Partners Search & Filter
+      let partnersSearchTimer = null;
+      $(document).on("input", "#cpSearchPartners", function () {
+        const val = $(this).val().trim();
+        if (val.length > 0) {
+          $("#cpClearPartnersSearch").removeClass("cp-hidden").show();
+        } else {
+          $("#cpClearPartnersSearch").addClass("cp-hidden").hide();
+        }
+        clearTimeout(partnersSearchTimer);
+        partnersSearchTimer = setTimeout(() => {
+          self.partnersCurrentPage = 1;
+          self.fetchPartners();
+        }, 300);
+      });
+
+      $(document).on("click", "#cpClearPartnersSearch", function () {
+        $("#cpSearchPartners").val("");
+        $(this).addClass("cp-hidden").hide();
+        self.partnersCurrentPage = 1;
+        self.fetchPartners();
+      });
+
+      $(document).on("change", "#cpFilterPartnerStatus", function () {
+        self.partnersCurrentPage = 1;
+        self.fetchPartners();
+      });
+
+      $(document).on("click", ".btn-partners-page", function () {
+        const page = $(this).data("page");
+        if (page) self.fetchPartners(page);
+      });
+
+      // Partner Clients Search & Filter
+      let partnerClientsSearchTimer = null;
+      $(document).on("input", "#cpSearchPartnerClients", function () {
+        const val = $(this).val().trim();
+        if (val.length > 0) {
+          $("#cpClearPartnerClientsSearch").removeClass("cp-hidden").show();
+        } else {
+          $("#cpClearPartnerClientsSearch").addClass("cp-hidden").hide();
+        }
+        clearTimeout(partnerClientsSearchTimer);
+        partnerClientsSearchTimer = setTimeout(() => {
+          self.fetchPartnerClients();
+        }, 300);
+      });
+
+      $(document).on("click", "#cpClearPartnerClientsSearch", function () {
+        $("#cpSearchPartnerClients").val("");
+        $(this).addClass("cp-hidden").hide();
+        self.fetchPartnerClients();
+      });
+
+      $(document).on("change", "#cpSwitchPartnerSelect", function () {
+        const pId = $(this).val();
+        if (pId) {
+          window.location.href = `/dashboard/partners/clients/?partner_id=${pId}`;
+        }
+      });
+
+      $(document).on("change", "#cpFilterPartnerClientStatus", function () {
+        self.fetchPartnerClients();
+      });
+
+      $(document).on("click", "#btnPartnerClientsBack", function () {
+        window.location.href = "/dashboard/commissions/";
+      });
+
+      // Partner Modals Openers & Actions
+      $(document).on("click", "#btnOpenNewPartnerModal", function () {
+        $("#formNewPartner")[0].reset();
+        $("#modalNewPartner").addClass("active");
+        self.initSelect2("#modalNewPartner");
+      });
+
+      $(document).on("click", ".btn-edit-partner, #btnBannerEditPartner", function () {
+        const id = $(this).data("id") || $("#controlPanelApp").data("partner-id");
+        if (id) {
+          self.openEditPartnerModal(id);
+        }
+      });
+
+      $(document).on("click", ".btn-toggle-partner-status", function () {
+        const id = $(this).data("id");
+        const status = $(this).data("status");
+        self.togglePartnerStatus(id, status);
+      });
+
+      $(document).on("click", ".btn-record-partner-comm", function () {
+        const pId = $(this).data("id");
+        self.loadPartnerDropdowns(true, function () {
+          if (pId) {
+            $("#manualCommPartnerSelect").val(pId).trigger("change");
+          }
+          self.initSelect2("#modalManualCommission");
+        });
+        self.loadSiteDropdowns(true, function () {
+          self.initSelect2("#modalManualCommission");
+        });
+        $("#formManualCommission")[0].reset();
+        if (pId) {
+          $("#manualCommPartnerSelect").val(pId);
+        }
+        $("#modalManualCommission").addClass("active");
+        self.initSelect2("#modalManualCommission");
+      });
+
+      // Assign Site Partner Button (on Sites Page & Clients Page)
+      $(document).on("click", ".btn-assign-site-partner", function () {
+        self.openAssignSitePartnerModal($(this));
       });
     },
 
@@ -931,7 +1130,11 @@
           this.fetchInvoices();
           break;
         case "commissions":
+          this.fetchPartners();
           this.fetchCommissions();
+          break;
+        case "partner_clients":
+          this.fetchPartnerClients();
           break;
         case "configurations":
           this.fetchConfigurations();
@@ -1696,6 +1899,16 @@
                         title="Send Renewal Reminder">
                         <i class="fi fi-rr-bell"></i>
                       </button>
+                      <button type="button" class="cp-action-icon-btn btn-assign-site-partner ${s.partner_id > 0 ? 'is-partnered' : ''}" 
+                        data-id="${s.id}" 
+                        data-name="${siteDisplayName}" 
+                        data-domain="${effectiveDomain}" 
+                        data-partner-id="${s.partner_id || 0}" 
+                        data-partner-name="${s.partner_name || ''}" 
+                        data-tooltip="${s.partner_id > 0 ? 'Partner: ' + s.partner_name : 'Assign Referral Partner'}" 
+                        title="${s.partner_id > 0 ? 'Partner: ' + s.partner_name : 'Assign Referral Partner'}">
+                        <i class="fi fi-rr-handshake"></i>
+                      </button>
                       <button type="button" class="cp-action-icon-btn btn-manage-site-config" 
                         data-id="${s.id}" 
                         data-name="${siteDisplayName}" 
@@ -2447,62 +2660,218 @@
     },
 
     // ------------------------------------------------------------------------
-    // 6. Users & RBAC
+    // 6. Users & Site Access Directory
     // ------------------------------------------------------------------------
-    fetchUsers: function () {
-      const search = $("#cpSearchUsers").val() || "";
-      const role = $("#cpFilterUserRole").val() || "";
+    usersCurrentPage: 1,
 
-      this.activeXhr = $.getJSON(`/api/v3/control_panel/users/?search=${encodeURIComponent(search)}&role=${encodeURIComponent(role)}`, function (res) {
+    fetchUsers: function (page) {
+      const self = this;
+      if (page) {
+        this.usersCurrentPage = parseInt(page) || 1;
+      }
+      const curPage = this.usersCurrentPage || 1;
+
+      // Extract site context: check select filter first, then container attribute, default 1
+      const siteSelectorVal = $("#cpFilterUserSite").length ? $("#cpFilterUserSite").val() : null;
+      const appSiteId = $("#controlPanelApp").data("site-id");
+      const siteId = siteSelectorVal || appSiteId || 1;
+
+      const search = ($("#cpSearchUsers").val() || "").trim();
+      const role = $("#cpFilterUserRole").val() || "";
+      const status = $("#cpFilterUserStatus").length ? $("#cpFilterUserStatus").val() : "";
+
+      $("#cpUsersTbody").html(`<tr><td colspan="6" class="text-center cp-loading-cell"><i class="fi fi-rr-spinner-alt cp-spin"></i> Loading users for site access #${siteId}...</td></tr>`);
+
+      let url = `/api/v3/control_panel/users/?site_id=${encodeURIComponent(siteId)}&page=${curPage}&limit=25`;
+      if (search) url += `&search=${encodeURIComponent(search)}`;
+      if (role) url += `&role=${encodeURIComponent(role)}`;
+      if (status !== "") url += `&status=${encodeURIComponent(status)}`;
+
+      if (this.activeUsersXhr) {
+        this.activeUsersXhr.abort();
+      }
+
+      this.activeUsersXhr = $.getJSON(url, function (res) {
         if (res.status === "success") {
+          // Update KPI Stats for current site access
+          if (res.stats) {
+            $("#statTotalUsers").text(res.stats.total || 0);
+            $("#statActiveUsers").text(res.stats.active || 0);
+            $("#statAdminUsers").text(res.stats.admins || 0);
+            $("#statStaffUsers").text(res.stats.staff || 0);
+          }
+          if (res.site && res.site.name) {
+            $("#statSiteLabel").text(res.site.name);
+          }
+
           let html = "";
           if (res.data && res.data.length) {
             res.data.forEach(function (u) {
-              const statusPill = u.status == 1 ? '<span class="cp-status-pill active">Active</span>' : '<span class="cp-status-pill inactive">Disabled</span>';
+              const isActive = parseInt(u.status) === 1;
+              const statusPill = isActive
+                ? '<span class="cp-status-pill active"><i class="fi fi-rr-check"></i> Active</span>'
+                : '<span class="cp-status-pill inactive"><i class="fi fi-rr-ban"></i> Disabled</span>';
+
               let roleClass = u.role === "on_ground_sales" ? "ground" : u.role;
               let roleLabel = u.role.replace(/_/g, " ").toUpperCase();
 
+              // User initials monogram
+              const initials = (u.display_name || u.username || "U")
+                .split(" ")
+                .filter(Boolean)
+                .map(n => n[0])
+                .slice(0, 2)
+                .join("")
+                .toUpperCase();
+
+              const avatarHtml = u.image
+                ? `<div class="cp-user-avatar"><img src="${u.image}" alt="${u.display_name}"></div>`
+                : `<div class="cp-user-avatar">${initials}</div>`;
+
               html += `<tr>
                 <td>
-                  <strong>${u.display_name}</strong>
-                  <span class="cp-site-sub">@${u.username} &bull; ID: #${u.id}</span>
+                  <div class="cp-user-cell">
+                    ${avatarHtml}
+                    <div class="cp-user-meta">
+                      <span class="cp-user-name">${u.display_name}</span>
+                      <span class="cp-user-sub">@${u.username} &bull; ID: #${u.id}</span>
+                    </div>
+                  </div>
                 </td>
                 <td>
-                  <span>${u.email}</span>
-                  <span class="cp-site-sub">${u.mobile || "No mobile registered"}</span>
+                  <div class="cp-contact-cell">
+                    <span class="cp-contact-email"><i class="fi fi-rr-envelope"></i> ${u.email}</span>
+                    <span class="cp-contact-mobile"><i class="fi fi-rr-phone-call"></i> ${u.mobile || "No mobile"}</span>
+                  </div>
                 </td>
                 <td>
                   <span class="cp-badge-role ${roleClass}">${roleLabel}</span>
                 </td>
-                <td>${u.site_name}</td>
-                <td>${statusPill}</td>
                 <td>
-                  <button type="button" class="cp-btn-secondary btn-reset-user-password" data-id="${u.id}" title="Reset Password">
-                    <i class="fi fi-rr-key"></i>
-                  </button>
-                  <button type="button" class="cp-btn-secondary btn-toggle-user-status" data-id="${u.id}" data-status="${u.status}">
-                    ${u.status == 1 ? "Disable" : "Enable"}
-                  </button>
+                  <div class="cp-site-access-badge">
+                    <span class="cp-site-access-title"><i class="fi fi-rr-globe"></i> ${u.site_name} (#${u.site_id})</span>
+                    ${u.site_domain ? `<a href="//${u.site_domain}" target="_blank" class="cp-site-access-domain">${u.site_domain} <i class="fi fi-rr-arrow-up-right"></i></a>` : ''}
+                  </div>
+                </td>
+                <td>${statusPill}</td>
+                <td class="text-right cp-actions-cell">
+                  <div class="cp-action-icon-group">
+                    <button type="button" class="cp-action-icon-btn btn-reset-user-password" data-id="${u.id}" data-name="${u.display_name}" title="Reset Password">
+                      <i class="fi fi-rr-key"></i>
+                    </button>
+                    <button type="button" class="cp-action-icon-btn btn-edit-user-role" data-id="${u.id}" data-site-id="${u.site_id}" data-role="${u.role}" data-name="${u.display_name}" data-email="${u.email}" data-site-name="${u.site_name}" title="Change Site Role">
+                      <i class="fi fi-rr-shield-check"></i>
+                    </button>
+                    <button type="button" class="cp-action-icon-btn btn-toggle-user-status ${isActive ? 'is-active is-danger' : 'is-inactive is-success'}" data-id="${u.id}" data-site-id="${u.site_id}" data-status="${isActive ? 1 : 0}" title="${isActive ? 'Disable Access for this Site' : 'Enable Access for this Site'}">
+                      <i class="fi fi-rr-${isActive ? 'ban' : 'check'}"></i>
+                    </button>
+                  </div>
                 </td>
               </tr>`;
             });
+
+            // Pagination Controls
+            if (res.total_pages && res.total_pages > 1) {
+              $("#cpUsersPaginationWrap").removeClass("cp-hidden").show();
+              const startCount = (curPage - 1) * res.limit + 1;
+              const endCount = Math.min(curPage * res.limit, res.total);
+              $("#cpUsersPaginationInfo").text(`Showing ${startCount} to ${endCount} of ${res.total} team members`);
+
+              let paginationHtml = "";
+              if (curPage > 1) {
+                paginationHtml += `<button type="button" class="cp-pagination-btn btn-users-page" data-page="${curPage - 1}"><i class="fi fi-rr-angle-left"></i> Prev</button>`;
+              }
+              for (let i = 1; i <= res.total_pages; i++) {
+                if (i === 1 || i === res.total_pages || (i >= curPage - 2 && i <= curPage + 2)) {
+                  paginationHtml += `<button type="button" class="cp-pagination-btn btn-users-page ${i === curPage ? 'active' : ''}" data-page="${i}">${i}</button>`;
+                } else if (i === curPage - 3 || i === curPage + 3) {
+                  paginationHtml += `<span class="cp-pagination-ellipsis">...</span>`;
+                }
+              }
+              if (curPage < res.total_pages) {
+                paginationHtml += `<button type="button" class="cp-pagination-btn btn-users-page" data-page="${curPage + 1}">Next <i class="fi fi-rr-angle-right"></i></button>`;
+              }
+              $("#cpUsersPaginationControls").html(paginationHtml);
+            } else {
+              if (res.total > 0) {
+                $("#cpUsersPaginationWrap").removeClass("cp-hidden").show();
+                $("#cpUsersPaginationInfo").text(`Showing all ${res.total} team members for this site`);
+                $("#cpUsersPaginationControls").empty();
+              } else {
+                $("#cpUsersPaginationWrap").addClass("cp-hidden").hide();
+              }
+            }
+
           } else {
-            html = '<tr><td colspan="6" class="text-center">No users found.</td></tr>';
+            html = `<tr><td colspan="6" class="text-center cp-empty-cell"><i class="fi fi-rr-users"></i><p>No team members found for this site matching criteria.</p></td></tr>`;
+            $("#cpUsersPaginationWrap").addClass("cp-hidden").hide();
           }
           $("#cpUsersTbody").html(html);
           self.loadedTabs["users"] = true;
+        }
+      }).fail(function () {
+        $("#cpUsersTbody").html('<tr><td colspan="6" class="text-center cp-error-cell">Error loading users data. Please refresh.</td></tr>');
+      });
+    },
+
+    openEditUserRoleModal: function ($btn) {
+      const userId = $btn.data("id");
+      const siteId = $btn.data("site-id") || $("#controlPanelApp").data("site-id") || 1;
+      const role = $btn.data("role") || "sales_executive";
+      const name = $btn.data("name") || "User";
+      const email = $btn.data("email") || "";
+      const siteName = $btn.data("site-name") || "Current Site";
+
+      $("#editUserRoleUserId").val(userId);
+      $("#editUserRoleSiteId").val(siteId);
+      $("#editUserNameDisplay").text(name);
+      $("#editUserEmailDisplay").text(email);
+      $("#editUserSiteDisplay").html(`<i class="fi fi-rr-globe"></i> ${siteName} (#${siteId})`);
+
+      const initials = (name || "U").split(" ").filter(Boolean).map(n => n[0]).slice(0, 2).join("").toUpperCase() || "U";
+      $("#editUserAvatar").text(initials);
+
+      $("#editUserRoleSelect").val(role).trigger("change");
+      $("#modalEditUserRole").addClass("active");
+      this.initSelect2("#modalEditUserRole");
+    },
+
+    submitEditUserRole: function () {
+      const self = this;
+      const data = {
+        action: "update_role",
+        user_id: $("#editUserRoleUserId").val(),
+        site_id: $("#editUserRoleSiteId").val(),
+        role: $("#editUserRoleSelect").val()
+      };
+
+      $.ajax({
+        url: "/api/v3/control_panel/users/",
+        method: "POST",
+        contentType: "application/json",
+        data: JSON.stringify(data),
+        success: function (res) {
+          $("#modalEditUserRole").removeClass("active");
+          swal("Updated", res.msg || "User role updated successfully!", "success");
+          self.fetchUsers();
+        },
+        error: function (xhr) {
+          const err = xhr.responseJSON ? xhr.responseJSON.msg : "Error updating role.";
+          swal("Error", err, "error");
         }
       });
     },
 
     submitNewUser: function () {
       const self = this;
+      const siteId = $("#userSiteIdInput").val() || $("#cpFilterUserSite").val() || $("#controlPanelApp").data("site-id") || 1;
       const data = {
         email: $("#userEmailInput").val().trim(),
         display_name: $("#userDisplayNameInput").val().trim(),
         mobile: $("#userMobileInput").val().trim(),
         role: $("#userRoleSelect").val(),
-        password: $("#userPasswordInput").val().trim()
+        password: $("#userPasswordInput").val().trim(),
+        site_id: siteId
       };
 
       $.ajax({
@@ -2513,7 +2882,7 @@
         success: function (res) {
           $("#modalNewUser").removeClass("active");
           $("#formNewUser")[0].reset();
-          swal("Created", res.msg || "User created successfully!", "success");
+          swal("Success", res.msg || "Team member granted site access!", "success");
           self.fetchUsers();
           delete self.loadedTabs["overview"];
         },
@@ -2524,22 +2893,40 @@
       });
     },
 
-    toggleUserStatus: function (id, status) {
+    toggleUserStatus: function (id, siteId, currentStatus) {
       const self = this;
-      $.ajax({
-        url: "/api/v3/control_panel/users/",
-        method: "POST",
-        contentType: "application/json",
-        data: JSON.stringify({ action: "toggle_status", user_id: id, status: status }),
-        success: function (res) {
-          swal("Updated", res.msg, "success");
-          self.fetchUsers();
+      const newStatus = parseInt(currentStatus) === 1 ? 0 : 1;
+      const actionName = newStatus === 1 ? "enable" : "disable";
+
+      swal({
+        title: `${newStatus === 1 ? 'Enable' : 'Disable'} User Access?`,
+        text: `Are you sure you want to ${actionName} this user's access for this site?`,
+        icon: "warning",
+        buttons: true,
+        dangerMode: newStatus === 0
+      }).then(willToggle => {
+        if (willToggle) {
+          $.ajax({
+            url: "/api/v3/control_panel/users/",
+            method: "POST",
+            contentType: "application/json",
+            data: JSON.stringify({ action: "toggle_status", user_id: id, site_id: siteId, status: newStatus }),
+            success: function (res) {
+              swal("Updated", res.msg || "Status updated!", "success");
+              self.fetchUsers();
+            },
+            error: function (xhr) {
+              const err = xhr.responseJSON ? xhr.responseJSON.msg : "Error toggling status.";
+              swal("Error", err, "error");
+            }
+          });
         }
       });
     },
 
-    resetUserPasswordPrompt: function (id) {
-      const newPass = prompt("Enter new password for this user (minimum 6 characters):");
+    resetUserPasswordPrompt: function (id, userName) {
+      const label = userName || "this user";
+      const newPass = prompt(`Enter new password for ${label} (minimum 6 characters):`);
       if (newPass && newPass.trim().length >= 6) {
         $.ajax({
           url: "/api/v3/control_panel/users/",
@@ -2547,7 +2934,11 @@
           contentType: "application/json",
           data: JSON.stringify({ action: "reset_password", user_id: id, new_password: newPass.trim() }),
           success: function (res) {
-            swal("Password Reset", res.msg, "success");
+            swal("Password Reset", res.msg || "Password successfully reset.", "success");
+          },
+          error: function (xhr) {
+            const err = xhr.responseJSON ? xhr.responseJSON.msg : "Error resetting password.";
+            swal("Error", err, "error");
           }
         });
       }
@@ -2706,7 +3097,470 @@
     },
 
     // ------------------------------------------------------------------------
-    // 8. Partner Commissions
+    // 8. Partner Referral Program & Commissions
+    // ------------------------------------------------------------------------
+    partnersCurrentPage: 1,
+
+    fetchPartners: function (page) {
+      const self = this;
+      if (page) {
+        this.partnersCurrentPage = parseInt(page) || 1;
+      }
+      const curPage = this.partnersCurrentPage || 1;
+      const search = ($("#cpSearchPartners").val() || "").trim();
+      const status = $("#cpFilterPartnerStatus").length ? $("#cpFilterPartnerStatus").val() : "";
+
+      $("#cpPartnersTbody").html(`<tr><td colspan="8" class="text-center cp-loading-cell"><i class="fi fi-rr-spinner-alt cp-spin"></i> Loading affiliate partners...</td></tr>`);
+
+      let url = `/api/v3/control_panel/partners/?page=${curPage}&limit=25`;
+      if (search) url += `&search=${encodeURIComponent(search)}`;
+      if (status !== "") url += `&status=${encodeURIComponent(status)}`;
+
+      $.getJSON(url, function (res) {
+        if (res.status === "success") {
+          // Update KPI stats
+          if (res.metrics) {
+            $("#statTotalPartners").text(res.metrics.total_partners || 0);
+            $("#statActivePartners").text(`${res.metrics.active_partners || 0} active affiliates`);
+            $("#statReferredClients").text(res.metrics.total_referred_clients || 0);
+            $("#statPaidCommission").text(`₹${(res.metrics.paid_commission || 0).toLocaleString("en-IN")}`);
+            $("#statPendingCommission").text(`₹${(res.metrics.pending_commission || 0).toLocaleString("en-IN")}`);
+          }
+
+          let html = "";
+          if (res.data && res.data.length) {
+            res.data.forEach(function (p) {
+              const isActive = parseInt(p.status) === 1;
+              const statusPill = isActive
+                ? '<span class="cp-status-pill active"><i class="fi fi-rr-check"></i> Active</span>'
+                : '<span class="cp-status-pill inactive"><i class="fi fi-rr-ban"></i> Disabled</span>';
+
+              const initials = (p.display_name || p.username || "P")
+                .split(" ")
+                .filter(Boolean)
+                .map(n => n[0])
+                .slice(0, 2)
+                .join("")
+                .toUpperCase();
+
+              const avatarHtml = p.image
+                ? `<div class="cp-user-avatar"><img src="${p.image}" alt="${p.display_name}"></div>`
+                : `<div class="cp-user-avatar">${initials}</div>`;
+
+              const clientBadge = p.clients_count > 0
+                ? `<a href="/dashboard/partners/clients/?partner_id=${p.id}" class="cp-clients-count-badge" title="View ${p.clients_count} Referred Clients">
+                     <i class="fi fi-rr-globe"></i> <span>${p.clients_count} ${p.clients_count === 1 ? 'Client' : 'Clients'}</span> <i class="fi fi-rr-arrow-up-right"></i>
+                   </a>`
+                : `<span class="cp-clients-count-badge zero"><i class="fi fi-rr-minus"></i> 0 Clients</span>`;
+
+              html += `<tr>
+                <td>
+                  <div class="cp-user-cell">
+                    ${avatarHtml}
+                    <div class="cp-user-meta">
+                      <span class="cp-user-name">${p.display_name}</span>
+                      <span class="cp-user-sub">@${p.username} &bull; ID: #${p.id}</span>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <div class="cp-contact-cell">
+                    <span class="cp-contact-email"><i class="fi fi-rr-envelope"></i> ${p.email}</span>
+                    <span class="cp-contact-mobile"><i class="fi fi-rr-phone-call"></i> ${p.mobile || "No mobile"}</span>
+                  </div>
+                </td>
+                <td>${clientBadge}</td>
+                <td><span class="cp-pbc-badge-rate">${p.commission_rate}%</span></td>
+                <td><strong>₹${(p.total_commission || 0).toLocaleString("en-IN", { minimumFractionDigits: 2 })}</strong></td>
+                <td>
+                  <div class="cp-contact-cell">
+                    <span class="cp-site-sub">Paid: <strong>₹${(p.paid_commission || 0).toLocaleString()}</strong></span>
+                    <span class="cp-site-sub">Pending: <strong>₹${(p.pending_commission || 0).toLocaleString()}</strong></span>
+                  </div>
+                </td>
+                <td>${statusPill}</td>
+                <td class="text-right cp-actions-cell">
+                  <div class="cp-action-icon-group">
+                    <a href="/dashboard/partners/clients/?partner_id=${p.id}" class="cp-action-icon-btn btn-view-partner-clients" title="View Detailed Referred Clients">
+                      <i class="fi fi-rr-users-alt"></i>
+                    </a>
+                    <button type="button" class="cp-action-icon-btn btn-edit-partner" data-id="${p.id}" title="Edit Partner Details">
+                      <i class="fi fi-rr-edit"></i>
+                    </button>
+                    <button type="button" class="cp-action-icon-btn btn-record-partner-comm" data-id="${p.id}" data-name="${p.display_name}" title="Record Commission">
+                      <i class="fi fi-rr-add"></i>
+                    </button>
+                    <button type="button" class="cp-action-icon-btn btn-toggle-partner-status ${isActive ? 'is-active is-danger' : 'is-inactive is-success'}" data-id="${p.id}" data-status="${isActive ? 1 : 0}" title="${isActive ? 'Disable Partner' : 'Activate Partner'}">
+                      <i class="fi fi-rr-${isActive ? 'ban' : 'check'}"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>`;
+            });
+
+            // Pagination Controls
+            if (res.total_pages && res.total_pages > 1) {
+              $("#cpPartnersPaginationWrap").removeClass("cp-hidden").show();
+              const startCount = (curPage - 1) * res.limit + 1;
+              const endCount = Math.min(curPage * res.limit, res.total);
+              $("#cpPartnersPaginationInfo").text(`Showing ${startCount} to ${endCount} of ${res.total} partners`);
+
+              let paginationHtml = "";
+              if (curPage > 1) {
+                paginationHtml += `<button type="button" class="cp-pagination-btn btn-partners-page" data-page="${curPage - 1}"><i class="fi fi-rr-angle-left"></i> Prev</button>`;
+              }
+              for (let i = 1; i <= res.total_pages; i++) {
+                if (i === 1 || i === res.total_pages || (i >= curPage - 2 && i <= curPage + 2)) {
+                  paginationHtml += `<button type="button" class="cp-pagination-btn btn-partners-page ${i === curPage ? 'active' : ''}" data-page="${i}">${i}</button>`;
+                } else if (i === curPage - 3 || i === curPage + 3) {
+                  paginationHtml += `<span class="cp-pagination-ellipsis">...</span>`;
+                }
+              }
+              if (curPage < res.total_pages) {
+                paginationHtml += `<button type="button" class="cp-pagination-btn btn-partners-page" data-page="${curPage + 1}">Next <i class="fi fi-rr-angle-right"></i></button>`;
+              }
+              $("#cpPartnersPaginationControls").html(paginationHtml);
+            } else {
+              if (res.total > 0) {
+                $("#cpPartnersPaginationWrap").removeClass("cp-hidden").show();
+                $("#cpPartnersPaginationInfo").text(`Showing all ${res.total} partners`);
+                $("#cpPartnersPaginationControls").empty();
+              } else {
+                $("#cpPartnersPaginationWrap").addClass("cp-hidden").hide();
+              }
+            }
+          } else {
+            html = `<tr><td colspan="8" class="text-center cp-empty-cell"><i class="fi fi-rr-users"></i><p>No affiliate partners found matching criteria.</p></td></tr>`;
+            $("#cpPartnersPaginationWrap").addClass("cp-hidden").hide();
+          }
+          $("#cpPartnersTbody").html(html);
+          self.loadedTabs["commissions"] = true;
+        }
+      });
+    },
+
+    fetchPartnerClients: function (partnerId) {
+      const self = this;
+      let effectivePartnerId = partnerId;
+      if (!effectivePartnerId) {
+        const urlParams = new URLSearchParams(window.location.search);
+        effectivePartnerId = urlParams.get("partner_id") || $("#controlPanelApp").data("partner-id") || 0;
+      }
+      if (!effectivePartnerId || parseInt(effectivePartnerId) <= 0) {
+        if ($("#cpSwitchPartnerSelect").val()) {
+          effectivePartnerId = $("#cpSwitchPartnerSelect").val();
+        } else {
+          $.getJSON("/api/v3/control_panel/partners/?page=1&limit=1", function (pRes) {
+            if (pRes.status === "success" && pRes.data && pRes.data.length) {
+              const firstPId = pRes.data[0].id;
+              $("#cpSwitchPartnerSelect").val(firstPId).trigger("change");
+              self.fetchPartnerClients(firstPId);
+            } else {
+              $("#cpPartnerClientsTbody").html('<tr><td colspan="7" class="text-center cp-error-cell">No partners found. Please add a referral partner first.</td></tr>');
+            }
+          });
+          return;
+        }
+      }
+
+      const search = ($("#cpSearchPartnerClients").val() || "").trim();
+
+      let url = `/api/v3/control_panel/partners/?action=clients&partner_id=${encodeURIComponent(effectivePartnerId)}`;
+      if (search) url += `&search=${encodeURIComponent(search)}`;
+
+      $("#cpPartnerClientsTbody").html('<tr><td colspan="7" class="text-center cp-loading-cell"><i class="fi fi-rr-spinner-alt cp-spin"></i> Loading referred clients...</td></tr>');
+
+      $.getJSON(url, function (res) {
+        if (res.status === "success") {
+          // Partner Banner
+          if (res.partner) {
+            const p = res.partner;
+            $("#partnerHeadingName").text(p.name);
+            $("#pbcName").text(p.name);
+            $("#pbcEmail").text(p.email || "No email");
+            $("#pbcMobile").text(p.mobile || "No mobile");
+            $("#pbcRate").text(`${p.commission_rate}% Commission`);
+            $("#pbcRegDate").text(p.reg_time ? p.reg_time.substring(0, 10) : "--");
+            const initials = (p.name || "P").split(" ").filter(Boolean).map(n => n[0]).slice(0, 2).join("").toUpperCase();
+            $("#pbcAvatar").text(initials);
+            if (p.status == 1) {
+              $("#pbcStatus").removeClass("inactive").addClass("active").text("Active");
+            } else {
+              $("#pbcStatus").removeClass("active").addClass("inactive").text("Disabled");
+            }
+          }
+
+          // KPI Metrics
+          if (res.metrics) {
+            $("#statPartnerTotalClients").text(res.metrics.total_clients || 0);
+            $("#statPartnerTotalCommission").text(`₹${(res.metrics.total_commission || 0).toLocaleString("en-IN", { minimumFractionDigits: 2 })}`);
+            $("#statPartnerPaidCommission").text(`₹${(res.metrics.paid_commission || 0).toLocaleString("en-IN", { minimumFractionDigits: 2 })}`);
+            $("#statPartnerPendingCommission").text(`₹${(res.metrics.pending_commission || 0).toLocaleString("en-IN", { minimumFractionDigits: 2 })}`);
+          }
+
+          // Table Rows
+          let html = "";
+          if (res.clients && res.clients.length) {
+            res.clients.forEach(function (c) {
+              const isLive = parseInt(c.site_status) === 1;
+              const statusPill = isLive
+                ? '<span class="cp-status-pill active"><i class="fi fi-rr-check"></i> Live</span>'
+                : '<span class="cp-status-pill inactive"><i class="fi fi-rr-ban"></i> Suspended</span>';
+
+              const commStatusClass = c.commission_status === "paid" ? "active" : "pending";
+              const commBadge = c.commission_amount > 0
+                ? `<div class="cp-contact-cell">
+                     <strong>₹${c.commission_amount.toLocaleString("en-IN", { minimumFractionDigits: 2 })}</strong>
+                     <span class="cp-status-pill ${commStatusClass}">${c.commission_status.toUpperCase()}</span>
+                   </div>`
+                : '<span class="cp-site-sub">No accrual yet</span>';
+
+              html += `<tr>
+                <td>
+                  <div class="cp-site-identity">
+                    <span class="cp-site-title">${c.site_name}</span>
+                    <span class="cp-site-sub">${c.site_domain} &bull; ID: #${c.site_id}</span>
+                  </div>
+                </td>
+                <td>
+                  <div class="cp-app-cell">
+                    <div class="cp-app-tag"><i class="fi fi-rr-apps"></i> <span>${c.app_title}</span></div>
+                    <div class="cp-site-sub cp-theme-sub"><i class="fi fi-rr-palette"></i> <span>${c.theme_title}</span></div>
+                  </div>
+                </td>
+                <td>
+                  <div class="cp-contact-cell">
+                    <span class="cp-contact-email">${c.owner_name}</span>
+                    <span class="cp-site-sub">${c.owner_email}</span>
+                  </div>
+                </td>
+                <td>
+                  <div class="cp-dates-stack">
+                    <span class="cp-badge-plan">${c.subscription_plan}</span>
+                    <span class="cp-date-line expire-date"><i class="fi fi-rr-calendar"></i> ${c.subscription_expiry ? c.subscription_expiry.substring(0, 10) : 'No Expiry'}</span>
+                  </div>
+                </td>
+                <td>${commBadge}</td>
+                <td>${statusPill}</td>
+                <td class="text-right cp-actions-cell">
+                  <div class="cp-action-icon-group">
+                    <button type="button" class="cp-action-icon-btn btn-assign-site-partner is-partnered" 
+                      data-id="${c.site_id}" 
+                      data-name="${c.site_name}" 
+                      data-domain="${c.site_domain}" 
+                      data-partner-id="${effectivePartnerId}" 
+                      data-partner-name="${res.partner ? res.partner.name : ''}" 
+                      title="Change Referral Partner">
+                      <i class="fi fi-rr-handshake"></i>
+                    </button>
+                    <button type="button" class="cp-action-icon-btn btn-record-partner-comm" 
+                      data-id="${effectivePartnerId}" 
+                      data-name="${res.partner ? res.partner.name : ''}" 
+                      data-site-id="${c.site_id}" 
+                      title="Record Commission for Site">
+                      <i class="fi fi-rr-add"></i>
+                    </button>
+                    ${c.site_domain ? `
+                      <a href="http://${c.site_domain}/dashboard/" target="_blank" class="cp-action-icon-btn" title="Open Client Dashboard">
+                        <i class="fi fi-rr-arrow-up-right-from-square"></i>
+                      </a>
+                    ` : ''}
+                  </div>
+                </td>
+              </tr>`;
+            });
+          } else {
+            html = `<tr><td colspan="7" class="text-center cp-empty-cell"><i class="fi fi-rr-globe"></i><p>No client instances currently referred by this partner.</p></td></tr>`;
+          }
+          $("#cpPartnerClientsTbody").html(html);
+        }
+      });
+    },
+
+    openEditPartnerModal: function (id) {
+      const self = this;
+      $.getJSON(`/api/v3/control_panel/partners/?action=get_partner&partner_id=${encodeURIComponent(id)}`, function (res) {
+        if (res.status === "success" && res.partner) {
+          const p = res.partner;
+          $("#editPartnerIdInput").val(p.id);
+          $("#editPartnerNameTitle").text(p.display_name || "Partner");
+          $("#editPartnerEmailSubtitle").text(p.email || "");
+          const initials = (p.display_name || "P").split(" ").filter(Boolean).map(n => n[0]).slice(0, 2).join("").toUpperCase();
+          $("#editPartnerAvatarDisplay").text(initials);
+
+          $("#editPartnerNameInput").val(p.display_name || "");
+          $("#editPartnerEmailInput").val(p.email || "");
+          $("#editPartnerMobileInput").val(p.mobile || "");
+          $("#editPartnerRateInput").val(p.commission_rate || 10.0);
+          $("#editPartnerStatusSelect").val(p.status).trigger("change");
+
+          $("#editPartnerBankNameInput").val(p.bank_name || "");
+          $("#editPartnerAccountNoInput").val(p.account_number || "");
+          $("#editPartnerIfscInput").val(p.ifsc_code || "");
+          $("#editPartnerUpiInput").val(p.upi_id || "");
+          $("#editPartnerPanInput").val(p.pan_gst || "");
+          $("#editPartnerNotesInput").val(p.notes || "");
+
+          $("#modalEditPartner").addClass("active");
+          self.initSelect2("#modalEditPartner");
+        } else {
+          swal("Error", "Could not load partner details.", "error");
+        }
+      });
+    },
+
+    submitEditPartner: function () {
+      const self = this;
+      const data = {
+        action: "update_partner",
+        partner_id: $("#editPartnerIdInput").val(),
+        display_name: $("#editPartnerNameInput").val().trim(),
+        email: $("#editPartnerEmailInput").val().trim(),
+        mobile: $("#editPartnerMobileInput").val().trim(),
+        commission_rate: parseFloat($("#editPartnerRateInput").val()) || 10.0,
+        status: parseInt($("#editPartnerStatusSelect").val()) || 1,
+        bank_name: $("#editPartnerBankNameInput").val().trim(),
+        account_number: $("#editPartnerAccountNoInput").val().trim(),
+        ifsc_code: $("#editPartnerIfscInput").val().trim(),
+        upi_id: $("#editPartnerUpiInput").val().trim(),
+        pan_gst: $("#editPartnerPanInput").val().trim(),
+        notes: $("#editPartnerNotesInput").val().trim()
+      };
+
+      $.ajax({
+        url: "/api/v3/control_panel/partners/",
+        method: "POST",
+        contentType: "application/json",
+        data: JSON.stringify(data),
+        success: function (res) {
+          $("#modalEditPartner").removeClass("active");
+          swal("Updated", res.msg || "Partner updated successfully!", "success");
+          if ($("#cpPartnersTbody").length) self.fetchPartners();
+          if ($("#cpPartnerClientsTbody").length) self.fetchPartnerClients();
+        },
+        error: function (xhr) {
+          const err = xhr.responseJSON ? xhr.responseJSON.msg : "Error updating partner.";
+          swal("Error", err, "error");
+        }
+      });
+    },
+
+    submitNewPartner: function () {
+      const self = this;
+      const data = {
+        action: "create_partner",
+        email: $("#newPartnerEmailInput").val().trim(),
+        display_name: $("#newPartnerNameInput").val().trim(),
+        mobile: $("#newPartnerMobileInput").val().trim(),
+        commission_rate: parseFloat($("#newPartnerRateInput").val()) || 10.0,
+        upi_id: $("#newPartnerUpiInput").val().trim()
+      };
+
+      $.ajax({
+        url: "/api/v3/control_panel/partners/",
+        method: "POST",
+        contentType: "application/json",
+        data: JSON.stringify(data),
+        success: function (res) {
+          $("#modalNewPartner").removeClass("active");
+          $("#formNewPartner")[0].reset();
+          swal("Success", res.msg || "Referral Partner registered successfully!", "success");
+          self.fetchPartners();
+          self.loadPartnerDropdowns(true);
+        },
+        error: function (xhr) {
+          const err = xhr.responseJSON ? xhr.responseJSON.msg : "Error creating partner.";
+          swal("Error", err, "error");
+        }
+      });
+    },
+
+    togglePartnerStatus: function (id, currentStatus) {
+      const self = this;
+      const newStatus = parseInt(currentStatus) === 1 ? 0 : 1;
+      const actionTxt = newStatus === 1 ? "activate" : "disable";
+
+      swal({
+        title: `${newStatus === 1 ? 'Activate' : 'Disable'} Partner?`,
+        text: `Are you sure you want to ${actionTxt} this affiliate partner?`,
+        icon: "warning",
+        buttons: true,
+        dangerMode: newStatus === 0
+      }).then(willToggle => {
+        if (willToggle) {
+          $.ajax({
+            url: "/api/v3/control_panel/partners/",
+            method: "POST",
+            contentType: "application/json",
+            data: JSON.stringify({ action: "toggle_status", partner_id: id, status: newStatus }),
+            success: function (res) {
+              swal("Updated", res.msg || "Status updated!", "success");
+              self.fetchPartners();
+            },
+            error: function (xhr) {
+              const err = xhr.responseJSON ? xhr.responseJSON.msg : "Error toggling status.";
+              swal("Error", err, "error");
+            }
+          });
+        }
+      });
+    },
+
+    openAssignSitePartnerModal: function ($btn) {
+      const siteId = $btn.data("id");
+      const siteName = $btn.data("name") || `Site #${siteId}`;
+      const siteDomain = $btn.data("domain") || "";
+      const currentPartnerId = $btn.data("partner-id") || 0;
+      const currentPartnerName = $btn.data("partner-name") || "";
+
+      $("#aspSiteIdInput").val(siteId);
+      $("#aspSiteNameDisplay").text(siteName);
+      $("#aspSiteDomainDisplay").text(siteDomain);
+      $("#aspCurrentPartnerDisplay").text(currentPartnerId > 0 ? `Current Partner: ${currentPartnerName} (#${currentPartnerId})` : "Direct / No Partner Assigned");
+      $("#aspCommissionRateInput").val("10.0");
+      $("#aspCommissionNotesInput").val("");
+
+      const self = this;
+      this.loadPartnerDropdowns(false, function () {
+        $("#aspPartnerSelect").val(currentPartnerId || "0").trigger("change");
+        $("#modalAssignSitePartner").addClass("active");
+        self.initSelect2("#modalAssignSitePartner");
+      });
+      $("#aspPartnerSelect").val(currentPartnerId || "0").trigger("change");
+      $("#modalAssignSitePartner").addClass("active");
+      this.initSelect2("#modalAssignSitePartner");
+    },
+
+    submitAssignSitePartner: function () {
+      const self = this;
+      const data = {
+        action: "assign_partner",
+        site_id: parseInt($("#aspSiteIdInput").val()),
+        partner_id: parseInt($("#aspPartnerSelect").val()) || 0,
+        commission_rate: parseFloat($("#aspCommissionRateInput").val()) || 10.0,
+        notes: $("#aspCommissionNotesInput").val().trim()
+      };
+
+      $.ajax({
+        url: "/api/v3/control_panel/sites/",
+        method: "POST",
+        contentType: "application/json",
+        data: JSON.stringify(data),
+        success: function (res) {
+          $("#modalAssignSitePartner").removeClass("active");
+          swal("Attributed", res.msg || "Partner attribution updated!", "success");
+          if ($("#cpSitesTable").length) self.fetchSites();
+          if ($("#cpPartnerClientsTable").length) self.fetchPartnerClients();
+        },
+        error: function (xhr) {
+          const err = xhr.responseJSON ? xhr.responseJSON.msg : "Error assigning partner.";
+          swal("Error", err, "error");
+        }
+      });
+    },
+
+    // ------------------------------------------------------------------------
+    // 8b. Partner Commissions Transactions Ledger
     // ------------------------------------------------------------------------
     fetchCommissions: function () {
       const search = $("#cpSearchCommissions").val() || "";
@@ -2911,6 +3765,22 @@
             }
           });
           $("#invSiteSelect, #manualCommSiteSelect").html(opts);
+
+          // Also populate site access filter for Users page if on Control Panel
+          if ($("#cpFilterUserSite").length) {
+            const currentSiteVal = $("#cpFilterUserSite").val() || $("#controlPanelApp").data("site-id") || 1;
+            let userSiteOpts = "";
+            res.data.forEach(function (s) {
+              const isSel = parseInt(s.id) === parseInt(currentSiteVal) ? " selected" : "";
+              userSiteOpts += `<option value="${s.id}"${isSel}>${s.name} (#${s.id})</option>`;
+            });
+            if ($("#cpFilterUserSite").hasClass("select2-hidden-accessible")) {
+              $("#cpFilterUserSite").select2("destroy");
+            }
+            $("#cpFilterUserSite").html(userSiteOpts);
+            self.initSelect2("#cpFilterUserSite");
+          }
+
           self.dropdownsLoaded.sites = true;
           self.initSelect2("#invSiteSelect, #manualCommSiteSelect");
           if (typeof callback === "function") callback();
@@ -2937,15 +3807,22 @@
             pOpts += `<option value="${p.id}">${p.display_name} (${p.email})</option>`;
             pSelectOpts += `<option value="${p.id}">${p.display_name} (${p.email})</option>`;
           });
-          $("#sitePartnerSelect, #invPartnerSelect, #manualCommPartnerSelect").each(function () {
+          $("#sitePartnerSelect, #invPartnerSelect, #manualCommPartnerSelect, #aspPartnerSelect, #cpSwitchPartnerSelect").each(function () {
             if ($(this).hasClass("select2-hidden-accessible")) {
               $(this).select2("destroy");
             }
           });
-          $("#sitePartnerSelect, #invPartnerSelect").html(pOpts);
+          $("#sitePartnerSelect, #invPartnerSelect, #aspPartnerSelect").html(pOpts);
           $("#manualCommPartnerSelect").html(pSelectOpts);
+          if ($("#cpSwitchPartnerSelect").length) {
+            let switchOpts = '<option value="">-- Switch Partner --</option>';
+            res.data.forEach(function (p) {
+              switchOpts += `<option value="${p.id}">${p.display_name} (${p.email})</option>`;
+            });
+            $("#cpSwitchPartnerSelect").html(switchOpts);
+          }
           self.dropdownsLoaded.partners = true;
-          self.initSelect2("#sitePartnerSelect, #invPartnerSelect, #manualCommPartnerSelect");
+          self.initSelect2("#sitePartnerSelect, #invPartnerSelect, #manualCommPartnerSelect, #aspPartnerSelect, #cpSwitchPartnerSelect");
           if (typeof callback === "function") callback();
         }
       });

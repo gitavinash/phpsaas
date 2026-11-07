@@ -17,7 +17,7 @@ if (!isset($connection)) {
     }
 }
 
-$tblPrefix = defined('TABLE_PREFIX') ? TABLE_PREFIX : 'isw_';
+$tblPrefix = defined('TABLE_PREFIX') ? TABLE_PREFIX : 'isw_';33
 $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 
 // Helper function to get a site config value
@@ -227,7 +227,9 @@ if ($method === 'GET') {
             (SELECT site_configuration_value FROM {$tblPrefix}site_configuration sc WHERE sc.site_configuration_site_id = s.site_id AND sc.site_configuration_key = 'subscription_price_yearly' LIMIT 1) as price_yearly,
             (SELECT site_configuration_value FROM {$tblPrefix}site_configuration sc WHERE sc.site_configuration_site_id = s.site_id AND sc.site_configuration_key = 'subscription_currency' LIMIT 1) as currency,
             (SELECT site_configuration_value FROM {$tblPrefix}site_configuration sc WHERE sc.site_configuration_site_id = s.site_id AND sc.site_configuration_key = 'billing_interval' LIMIT 1) as billing_interval,
-            (SELECT site_configuration_value FROM {$tblPrefix}site_configuration sc WHERE sc.site_configuration_site_id = s.site_id AND sc.site_configuration_key = 'renewal_price_override' LIMIT 1) as renewal_price_override
+            (SELECT site_configuration_value FROM {$tblPrefix}site_configuration sc WHERE sc.site_configuration_site_id = s.site_id AND sc.site_configuration_key = 'renewal_price_override' LIMIT 1) as renewal_price_override,
+            (SELECT site_configuration_value FROM {$tblPrefix}site_configuration sc WHERE sc.site_configuration_site_id = s.site_id AND sc.site_configuration_key = 'partner_id' LIMIT 1) as partner_id_cfg,
+            (SELECT cpc.commission_partner_id FROM {$tblPrefix}control_panel_commission cpc WHERE cpc.commission_site_id = s.site_id ORDER BY cpc.commission_id DESC LIMIT 1) as partner_id_comm
             FROM {$tblPrefix}site s
             LEFT JOIN {$tblPrefix}app a ON s.site_app_id = a.app_id
             LEFT JOIN {$tblPrefix}theme t ON s.site_theme_id = t.theme_id
@@ -293,6 +295,12 @@ if ($method === 'GET') {
                 'billing_interval' => htmlspecialchars($row['billing_interval'] ?? 'yearly'),
                 'renewal_price_override' => ($row['renewal_price_override'] ?? '1') === '1',
                 'last_reminder_sent' => htmlspecialchars($row['last_reminder_sent'] ?? ''),
+                'partner_id' => !empty($row['partner_id_cfg']) ? (int)$row['partner_id_cfg'] : (!empty($row['partner_id_comm']) ? (int)$row['partner_id_comm'] : 0),
+                'partner_name' => (!empty($row['partner_id_cfg']) || !empty($row['partner_id_comm'])) ? (function() use ($connection, $tblPrefix, $row) {
+                    $pid = !empty($row['partner_id_cfg']) ? (int)$row['partner_id_cfg'] : (int)$row['partner_id_comm'];
+                    $pr = mysqli_query($connection, "SELECT COALESCE(p.profile_display_name, u.user_username, u.user_email) as pn FROM {$tblPrefix}user u LEFT JOIN {$tblPrefix}profile p ON p.profile_user_id = u.user_id WHERE u.user_id = {$pid} LIMIT 1");
+                    return ($pr && $prow = mysqli_fetch_assoc($pr)) ? htmlspecialchars($prow['pn']) : '';
+                })() : '',
                 'logo' => htmlspecialchars($row['site_logo'] ?? ''),
                 'icon' => htmlspecialchars($row['site_icon'] ?? '')
             ];
@@ -757,7 +765,48 @@ if ($method === 'POST') {
         exit();
     }
 
-    // C. 1-Click Provision New Site or Update Existing Site
+    // C. Assign / Change Referral Partner for Site
+    if ($action === 'assign_partner') {
+        if ($siteId <= 0) {
+            http_response_code(400);
+            echo json_encode(['status' => 'error', 'msg' => 'Invalid Site ID']);
+            exit();
+        }
+
+        $partnerId = isset($payload['partner_id']) ? (int)$payload['partner_id'] : 0;
+        $commissionRate = isset($payload['commission_rate']) ? (float)$payload['commission_rate'] : 10.0;
+        $commissionAmount = isset($payload['commission_amount']) ? (float)$payload['commission_amount'] : 1000.0;
+        $notes = trim($payload['notes'] ?? '');
+
+        // Store partner_id in site_configuration
+        setSiteConfigValue($connection, $tblPrefix, $siteId, 'partner_id', (string)$partnerId);
+
+        if ($partnerId > 0) {
+            $escNotes = mysqli_real_escape_string($connection, !empty($notes) ? $notes : "Referral partner assigned from Control Panel");
+            $chkComm = mysqli_query($connection, "SELECT commission_id FROM {$tblPrefix}control_panel_commission WHERE commission_site_id = {$siteId} LIMIT 1");
+            if ($chkComm && mysqli_num_rows($chkComm) > 0) {
+                $cRow = mysqli_fetch_assoc($chkComm);
+                $cId = (int)$cRow['commission_id'];
+                mysqli_query($connection, "UPDATE {$tblPrefix}control_panel_commission 
+                                           SET commission_partner_id = {$partnerId}, commission_rate_percent = {$commissionRate}" . (!empty($notes) ? ", commission_notes = '{$escNotes}'" : "") . " 
+                                           WHERE commission_id = {$cId}");
+            } else {
+                mysqli_query($connection, "INSERT INTO {$tblPrefix}control_panel_commission 
+                                           (commission_partner_id, commission_site_id, commission_rate_percent, commission_amount, commission_status, commission_notes)
+                                           VALUES ({$partnerId}, {$siteId}, {$commissionRate}, {$commissionAmount}, 'pending', '{$escNotes}')");
+            }
+        }
+
+        echo json_encode([
+            'status' => 'success',
+            'msg' => $partnerId > 0 ? 'Referral partner assigned to site successfully!' : 'Partner unassigned from site.',
+            'site_id' => $siteId,
+            'partner_id' => $partnerId
+        ]);
+        exit();
+    }
+
+    // D. 1-Click Provision New Site or Update Existing Site
     $siteName = trim($payload['site_name'] ?? '');
     $siteDomain = trim($payload['site_domain'] ?? '');
     $siteUrl = trim($payload['site_url'] ?? '');

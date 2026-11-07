@@ -3165,3 +3165,524 @@ nav.side-nav ul li a .aside-menu-pill.badge-qr {
   }
 }
 
+
+/* ==========================================================================
+   Users & Site Access Management Styling
+   ========================================================================== */
+
+.cp-user-cell {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.cp-user-avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 13px;
+  background: #eff6ff;
+  color: #2563eb;
+  border: 1px solid #bfdbfe;
+  flex-shrink: 0;
+  text-transform: uppercase;
+  overflow: hidden;
+}
+
+.cp-user-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.cp-user-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.cp-user-name {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #0f172a;
+  line-height: 1.25;
+}
+
+.cp-user-sub {
+  font-size: 12px;
+  color: #64748b;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.cp-contact-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.cp-contact-email {
+  font-size: 13px;
+  color: #1e293b;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.cp-contact-mobile {
+  font-size: 12px;
+  color: #64748b;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.cp-site-access-badge {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.cp-site-access-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #1e293b;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.cp-site-access-domain {
+  font-size: 11.5px;
+  color: #64748b;
+  text-decoration: none;
+}
+
+.cp-site-access-domain:hover {
+  color: #2563eb;
+  text-decoration: underline;
+}
+
+/* User Role Badges for all tenant roles */
+.cp-badge-role.agent { background: #eff6ff; color: #1d4ed8; border-color: #bfdbfe; }
+.cp-badge-role.team_lead { background: #fdf2f8; color: #be185d; border-color: #fbcfe8; }
+.cp-badge-role.operations { background: #f0fdfa; color: #0f766e; border-color: #99f6e4; }
+.cp-badge-role.digital_marketing { background: #fff1f2; color: #e11d48; border-color: #fecdd3; }
+.cp-badge-role.sales_executive { background: #ecfdf5; color: #047857; border-color: #a7f3d0; }
+.cp-badge-role.member, .cp-badge-role.subscriber { background: #f8fafc; color: #475569; border-color: #e2e8f0; }
+
+/* Edit Role Modal Summary Card */
+.cp-user-role-summary-box {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 9px;
+  margin-bottom: 18px;
+}
+
+.cp-user-role-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #e0e7ff;
+  color: #4338ca;
+  font-size: 16px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  text-transform: uppercase;
+}
+
+.cp-user-role-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.cp-user-role-info h4 {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.cp-user-role-info p {
+  margin: 0;
+  font-size: 12.5px;
+  color: #64748b;
+}
+
+.cp-badge-site {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #2563eb;
+  margin-top: 2px;
+}
+
+/* Specific User Action Tooltips & Hover */
+.cp-action-icon-btn.btn-reset-user-password:hover {
+  color: #d97706;
+  background: #fffbeb;
+  border-color: #fde68a;
+}
+
+.cp-action-icon-btn.btn-edit-user-role:hover {
+  color: #4f46e5;
+  background: #eef2ff;
+  border-color: #c7d2fe;
+}
+
+.cp-action-icon-btn.btn-toggle-user-status.is-active:hover {
+  color: #dc2626;
+  background: #fef2f2;
+  border-color: #fecaca;
+}
+
+.cp-action-icon-btn.btn-toggle-user-status.is-inactive:hover {
+  color: #16a34a;
+  background: #f0fdf4;
+  border-color: #bbf7d0;
+}
+
+.cp-hidden {
+  display: none !important;
+}
+
+/* ==========================================================================
+   Partners & Referral Commissions Management Styles
+   ========================================================================== */
+
+/* Segmented Tab Navigation */
+.cp-tabs-header {
+  border-bottom: 1px solid #e2e8f0;
+  padding: 12px 20px;
+  background: #f8fafc;
+}
+
+.cp-tab-pills {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #e2e8f0;
+  padding: 4px;
+  border-radius: 9px;
+}
+
+.cp-tab-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 16px;
+  border: none;
+  background: transparent;
+  color: #64748b;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 7px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.cp-tab-pill:hover {
+  color: #0f172a;
+}
+
+.cp-tab-pill.active {
+  background: #ffffff;
+  color: #2563eb;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.cp-tab-pane {
+  display: block;
+}
+
+/* Referred Clients Count Badge */
+.cp-clients-count-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  background: #eff6ff;
+  color: #1d4ed8;
+  border: 1px solid #bfdbfe;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.15s ease;
+}
+
+.cp-clients-count-badge:hover {
+  background: #dbeafe;
+  border-color: #93c5fd;
+  color: #1e40af;
+  transform: translateY(-1px);
+}
+
+.cp-clients-count-badge.zero {
+  background: #f8fafc;
+  color: #94a3b8;
+  border-color: #e2e8f0;
+}
+
+/* Partner Profile Banner Card (Referred Clients View) */
+.cp-partner-banner-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 18px 24px;
+  margin-bottom: 20px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.cp-pbc-main {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.cp-pbc-avatar {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: #e0e7ff;
+  color: #4338ca;
+  font-size: 20px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-transform: uppercase;
+  border: 2px solid #c7d2fe;
+  flex-shrink: 0;
+}
+
+.cp-pbc-info {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.cp-pbc-name-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.cp-pbc-name-row h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.cp-pbc-badge-rate {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 9px;
+  background: #fef3c7;
+  color: #b45309;
+  border: 1px solid #fde68a;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.cp-pbc-meta-row {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  font-size: 13px;
+  color: #64748b;
+  flex-wrap: wrap;
+}
+
+.cp-pbc-meta-row span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Partner Summary Card inside Edit Modal */
+.cp-partner-summary-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 9px;
+  padding: 12px 16px;
+  margin-bottom: 18px;
+}
+
+.cp-partner-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #e0e7ff;
+  color: #4338ca;
+  font-size: 16px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  text-transform: uppercase;
+}
+
+.cp-partner-meta-text h4 {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.cp-partner-meta-text p {
+  margin: 0;
+  font-size: 12px;
+  color: #64748b;
+}
+
+/* Site Partner Summary Box (Assign Partner Modal) */
+.cp-site-partner-summary-box {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 9px;
+  padding: 14px 16px;
+  margin-bottom: 18px;
+}
+
+.cp-site-partner-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 9px;
+  background: #eff6ff;
+  color: #2563eb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.cp-site-partner-meta h4 {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.cp-site-partner-meta p {
+  margin: 2px 0;
+  font-size: 12px;
+  color: #64748b;
+}
+
+.cp-badge-site-partner {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: #eef2ff;
+  color: #4338ca;
+  font-size: 11px;
+  font-weight: 600;
+  margin-top: 3px;
+}
+
+/* Form Grid Helpers */
+.cp-modal-wide {
+  max-width: 680px !important;
+}
+
+.cp-form-row-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.cp-form-row-3 {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr 1fr;
+  gap: 14px;
+}
+
+.cp-modal-subheading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 16px 0 10px;
+  padding-top: 12px;
+  border-top: 1px dashed #e2e8f0;
+}
+
+/* Partner Action Buttons */
+.cp-action-icon-btn.btn-assign-site-partner:hover {
+  color: #059669;
+  background: #ecfdf5;
+  border-color: #a7f3d0;
+}
+
+.cp-action-icon-btn.btn-assign-site-partner.is-partnered {
+  color: #059669;
+  border-color: #a7f3d0;
+  background: #f0fdf4;
+}
+
+.cp-action-icon-btn.btn-view-partner-clients:hover {
+  color: #2563eb;
+  background: #eff6ff;
+  border-color: #bfdbfe;
+}
+
+.cp-action-icon-btn.btn-edit-partner:hover {
+  color: #4f46e5;
+  background: #eef2ff;
+  border-color: #c7d2fe;
+}
+
+.cp-action-icon-btn.btn-record-partner-comm:hover {
+  color: #d97706;
+  background: #fffbeb;
+  border-color: #fde68a;
+}
+
+@media (max-width: 640px) {
+  .cp-form-row-2,
+  .cp-form-row-3 {
+    grid-template-columns: 1fr !important;
+  }
+
+  .cp-partner-banner-card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

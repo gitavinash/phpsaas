@@ -944,3 +944,50 @@ $displayRole = $roleTitles[$userRole] ?? 'Administrator';
         </div>
     </div>
 </div>
+
+<!-- Modal: Assign / Change Referral Partner for Site -->
+<div class="cp-modal-backdrop" id="modalAssignSitePartner">
+    <div class="cp-modal-box">
+        <div class="cp-modal-header">
+            <h3>Assign Referral Partner</h3>
+            <button type="button" class="cp-modal-close-btn" data-close-modal>&times;</button>
+        </div>
+        <form id="formAssignSitePartner">
+            <input type="hidden" id="aspSiteIdInput" value="0">
+            <div class="cp-modal-body">
+                <div class="cp-site-partner-summary-box">
+                    <div class="cp-site-partner-icon">
+                        <i class="fi fi-rr-globe"></i>
+                    </div>
+                    <div class="cp-site-partner-meta">
+                        <h4 id="aspSiteNameDisplay">Site Name</h4>
+                        <p id="aspSiteDomainDisplay">domain.com</p>
+                        <span class="cp-badge-site-partner" id="aspCurrentPartnerDisplay">No Partner Assigned</span>
+                    </div>
+                </div>
+
+                <div class="cp-form-group">
+                    <label for="aspPartnerSelect">Referral / Affiliate Partner *</label>
+                    <select class="cp-form-select selectJS2 cp-select2 cp-modal-select2" id="aspPartnerSelect" required data-placeholder="Select Partner" data-width="100%">
+                        <option value="0">Direct / No Partner</option>
+                    </select>
+                    <small class="cp-form-hint">Select the referral partner to attribute commissions for this client instance.</small>
+                </div>
+
+                <div class="cp-form-group">
+                    <label for="aspCommissionRateInput">Commission Rate (%)</label>
+                    <input type="number" step="0.1" class="cp-form-input" id="aspCommissionRateInput" value="10.0" placeholder="e.g. 10.0">
+                </div>
+
+                <div class="cp-form-group">
+                    <label for="aspCommissionNotesInput">Referral / Attribution Notes</label>
+                    <textarea class="cp-form-input" id="aspCommissionNotesInput" rows="2" placeholder="e.g. Referral partner assigned from Control Panel"></textarea>
+                </div>
+            </div>
+            <div class="cp-modal-footer">
+                <button type="button" class="cp-btn-secondary" data-close-modal>Cancel</button>
+                <button type="submit" class="cp-btn-primary">Save Partner Attribution</button>
+            </div>
+        </form>
+    </div>
+</div>
