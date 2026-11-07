@@ -17,8 +17,12 @@ if (!isset($connection)) {
     }
 }
 
-$tblPrefix = defined('TABLE_PREFIX') ? TABLE_PREFIX : 'isw_';33
+$tblPrefix = defined('TABLE_PREFIX') ? TABLE_PREFIX : 'isw_';
 $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
+
+// Ensure required tables and columns exist on load
+require_once __DIR__ . '/schema_helper.php';
+ensureControlPanelTables($connection, $tblPrefix);
 
 // Helper function to get a site config value
 function getSiteConfigValue($connection, $tblPrefix, $siteId, $key, $default = '') {

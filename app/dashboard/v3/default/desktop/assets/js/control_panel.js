@@ -1096,13 +1096,11 @@
         this.loadAppDropdowns();
       }
 
-      // Load content only if not already loaded in this session
-      if (!this.loadedTabs[tab]) {
-        this.loadActiveTabContent(false);
-      }
+      // Always hit API and load fresh data on tab switch or navigation
+      this.loadActiveTabContent(true);
     },
 
-    loadActiveTabContent: function (forceRefresh = false) {
+    loadActiveTabContent: function (forceRefresh = true) {
       const tab = this.activeTab;
 
       // Abort previous pending request if any
@@ -1145,9 +1143,7 @@
     // ------------------------------------------------------------------------
     // 1. Overview API
     // ------------------------------------------------------------------------
-    fetchOverview: function (forceRefresh = false) {
-      if (this.loadedTabs["overview"] && !forceRefresh) return;
-
+    fetchOverview: function (forceRefresh = true) {
       const self = this;
       this.activeXhr = $.getJSON("/api/v3/control_panel/overview/", function (res) {
         if (res.status === "success" && res.data) {
@@ -3863,12 +3859,14 @@
     }
   };
 
-  // 1. Full Page Load
+  // 1. Full Page Load / Refresh
   $(document).ready(function () {
-    V3ControlPanel.init();
+    if ($("#controlPanelApp").length) {
+      V3ControlPanel.onPageEnter();
+    }
   });
 
-  // If DOM is already parsed/complete when script executes, ensure onPageEnter triggers
+  // If DOM is already parsed/complete when script executes, ensure onPageEnter triggers immediately
   if (document.readyState === "complete" || document.readyState === "interactive") {
     setTimeout(function () {
       if ($("#controlPanelApp").length) {
@@ -3879,10 +3877,24 @@
 
   // 2. SPA AJAX Page Navigation (triggered by app.js on loadPage)
   $(document).on("spa:loaded", function () {
-    V3ControlPanel.onPageEnter();
+    if ($("#controlPanelApp").length) {
+      V3ControlPanel.onPageEnter();
+    }
   });
 
-  // 3. Browser History Navigation
+  document.addEventListener("spa:loaded", function () {
+    if ($("#controlPanelApp").length) {
+      V3ControlPanel.onPageEnter();
+    }
+  });
+
+  // 3. Browser Back/Forward & BFCache Navigation
+  window.addEventListener("pageshow", function () {
+    if ($("#controlPanelApp").length) {
+      V3ControlPanel.onPageEnter();
+    }
+  });
+
   $(window).on("popstate", function () {
     if ($("#controlPanelApp").length) {
       V3ControlPanel.onPageEnter();

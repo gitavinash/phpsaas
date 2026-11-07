@@ -28,6 +28,10 @@ $tblPrefix = defined('TABLE_PREFIX') ? TABLE_PREFIX : 'isw_';
 $controlPanelSiteId = defined('SITE_ID') ? (int)SITE_ID : 1;
 $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 
+// Ensure required tables and columns exist on load
+require_once __DIR__ . '/schema_helper.php';
+ensureControlPanelTables($connection, $tblPrefix);
+
 // --------------------------------------------------------------------------
 // 1. GET: List Users for Active Site Access Context
 // --------------------------------------------------------------------------
