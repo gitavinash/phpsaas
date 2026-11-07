@@ -65,6 +65,11 @@
         $(this).hide();
       });
 
+      // Retry Fetch Users
+      $(document).off("click", ".btn-retry-fetch-users").on("click", ".btn-retry-fetch-users", function () {
+        self.fetchUsers();
+      });
+
       // Reset All Filters
       $(document).off("click", "#btnResetUserFilters, #btnResetEmptyFilters").on("click", "#btnResetUserFilters, #btnResetEmptyFilters", function () {
         self.activeRole = "";
@@ -410,7 +415,7 @@
             </div>
             <h4 style="font-size: 16px; color: #1e293b; margin: 0 0 6px 0; font-weight: 700;">Unable to Load Team Members</h4>
             <p style="color: #64748b; font-size: 13px; margin: 0 0 16px 0;">${selfEscapeHTML(msg)}</p>
-            <button type="button" class="btn-v3-action" onclick="window.V3Users.fetchUsers();" style="padding: 8px 18px; font-size: 12.5px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px;">
+            <button type="button" class="btn-v3-action btn-retry-fetch-users" style="padding: 8px 18px; font-size: 12.5px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px;">
               <i class="fi fi-rr-refresh"></i> Retry
             </button>
           </td>
@@ -501,4 +506,35 @@
   }
 
   window.V3Users = V3Users;
+
+  // Auto-init on page load or SPA navigation
+  $(document).ready(function () {
+    if ($("#usersListApp, .user-list-wrapper").length) {
+      V3Users.init();
+    }
+  });
+
+  $(document).on("spa:loaded", function () {
+    if ($("#usersListApp, .user-list-wrapper").length) {
+      V3Users.init();
+    }
+  });
+
+  document.addEventListener("spa:loaded", function () {
+    if ($("#usersListApp, .user-list-wrapper").length) {
+      V3Users.init();
+    }
+  });
+
+  window.addEventListener("pageshow", function () {
+    if ($("#usersListApp, .user-list-wrapper").length) {
+      V3Users.init();
+    }
+  });
+
+  $(window).on("popstate", function () {
+    if ($("#usersListApp, .user-list-wrapper").length) {
+      V3Users.init();
+    }
+  });
 })(window, jQuery);

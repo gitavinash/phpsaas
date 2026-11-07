@@ -89,7 +89,7 @@ if (isset($connection) && $connection && $siteId > 0) {
 
 <?php if ($isAdmin || $isSupport) { ?>
 <li <?php echo ($isUsersActive ? 'class="active"' : ''); ?>>
-    <a href="/dashboard/users/"><i class="fi fi-rr-users-alt"></i> Team &amp; Roles</a>
+    <a href="/dashboard/team/"><i class="fi fi-rr-users-alt"></i> Team &amp; Roles</a>
 </li>
 <?php } ?>
 

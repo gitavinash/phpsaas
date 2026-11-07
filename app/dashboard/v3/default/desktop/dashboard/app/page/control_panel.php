@@ -151,7 +151,7 @@ $displayRole = $roleTitles[$userRole] ?? 'Administrator';
         <?php } ?>
 
         <?php if ($userRole === 'administrator' || $userRole === 'support') { ?>
-            <a href="/dashboard/users/" class="cp-tab-btn">
+            <a href="/dashboard/team/" class="cp-tab-btn">
                 <i class="fi fi-rr-users-alt"></i> <span>Team &amp; Roles</span>
             </a>
         <?php } ?>
