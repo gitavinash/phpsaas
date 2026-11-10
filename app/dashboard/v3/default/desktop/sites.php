@@ -908,6 +908,10 @@ $displayRole = $roleTitles[$userRole] ?? 'Administrator';
                         <span class="cp-sqd-val" id="sqdOwnerMobile">N/A</span>
                     </div>
                     <div class="cp-sqd-kv-row">
+                        <span class="cp-sqd-key">Referral Partner</span>
+                        <span class="cp-sqd-val" id="sqdPartnerName">Direct / No Partner Assigned</span>
+                    </div>
+                    <div class="cp-sqd-kv-row">
                         <span class="cp-sqd-key">Renewal Pricing</span>
                         <span class="cp-sqd-val" id="sqdPricingDetail">--</span>
                     </div>

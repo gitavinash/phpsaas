@@ -127,6 +127,20 @@ if ($method === 'GET') {
             }
         }
 
+        // Fetch referral partner details
+        $partnerIdCfg = getSiteConfigValue($connection, $tblPrefix, $siteId, 'partner_id', null);
+        $cpcQ = mysqli_query($connection, "SELECT commission_partner_id, commission_rate_percent FROM {$tblPrefix}control_panel_commission WHERE commission_site_id = {$siteId} ORDER BY commission_id DESC LIMIT 1");
+        $cpcRow = ($cpcQ && mysqli_num_rows($cpcQ) > 0) ? mysqli_fetch_assoc($cpcQ) : null;
+        $partnerId = ($partnerIdCfg !== null && $partnerIdCfg !== '') ? (int)$partnerIdCfg : ($cpcRow ? (int)$cpcRow['commission_partner_id'] : 0);
+        $commRate = $cpcRow ? (float)$cpcRow['commission_rate_percent'] : null;
+        $partnerName = '';
+        if ($partnerId > 0) {
+            $pQ = mysqli_query($connection, "SELECT COALESCE(p.profile_display_name, u.user_username, u.user_email) as pn FROM {$tblPrefix}user u LEFT JOIN {$tblPrefix}profile p ON p.profile_user_id = u.user_id WHERE u.user_id = {$partnerId} LIMIT 1");
+            if ($pQ && $pRow = mysqli_fetch_assoc($pQ)) {
+                $partnerName = $pRow['pn'];
+            }
+        }
+
         $effDomain = !empty($site['site_domain']) ? trim($site['site_domain']) : (!empty($site['site_url']) ? trim($site['site_url']) : '');
         $effName = !empty($site['site_name']) ? trim($site['site_name']) : (!empty($effDomain) ? $effDomain : 'Site #' . (int)$site['site_id']);
 
@@ -163,7 +177,10 @@ if ($method === 'GET') {
                 'renewal_price_override'     => $priceOverride,
                 'renewal_pricing_notes'      => $renewalNotes,
                 'last_reminder_sent'         => $lastReminder,
-                'reminder_count'             => $reminderCount
+                'reminder_count'             => $reminderCount,
+                'partner_id'                 => $partnerId,
+                'partner_name'               => htmlspecialchars($partnerName),
+                'commission_rate'            => $commRate
             ]
         ]);
         exit();
@@ -300,12 +317,13 @@ if ($method === 'GET') {
                 'billing_interval' => htmlspecialchars($row['billing_interval'] ?? 'yearly'),
                 'renewal_price_override' => ($row['renewal_price_override'] ?? '1') === '1',
                 'last_reminder_sent' => htmlspecialchars($row['last_reminder_sent'] ?? ''),
-                'partner_id' => !empty($row['partner_id_cfg']) ? (int)$row['partner_id_cfg'] : (!empty($row['partner_id_comm']) ? (int)$row['partner_id_comm'] : 0),
-                'partner_name' => (!empty($row['partner_id_cfg']) || !empty($row['partner_id_comm'])) ? (function() use ($connection, $tblPrefix, $row) {
-                    $pid = !empty($row['partner_id_cfg']) ? (int)$row['partner_id_cfg'] : (int)$row['partner_id_comm'];
+                'partner_id' => ($row['partner_id_cfg'] !== null && $row['partner_id_cfg'] !== '') ? (int)$row['partner_id_cfg'] : (!empty($row['partner_id_comm']) ? (int)$row['partner_id_comm'] : 0),
+                'partner_name' => (function() use ($connection, $tblPrefix, $row) {
+                    $pid = ($row['partner_id_cfg'] !== null && $row['partner_id_cfg'] !== '') ? (int)$row['partner_id_cfg'] : (!empty($row['partner_id_comm']) ? (int)$row['partner_id_comm'] : 0);
+                    if ($pid <= 0) return '';
                     $pr = mysqli_query($connection, "SELECT COALESCE(p.profile_display_name, u.user_username, u.user_email) as pn FROM {$tblPrefix}user u LEFT JOIN {$tblPrefix}profile p ON p.profile_user_id = u.user_id WHERE u.user_id = {$pid} LIMIT 1");
                     return ($pr && $prow = mysqli_fetch_assoc($pr)) ? htmlspecialchars($prow['pn']) : '';
-                })() : '',
+                })(),
                 'commission_rate' => !empty($row['commission_rate_comm']) ? (float)$row['commission_rate_comm'] : null,
                 'logo' => htmlspecialchars($row['site_logo'] ?? ''),
                 'icon' => htmlspecialchars($row['site_icon'] ?? '')
@@ -630,6 +648,23 @@ if ($method === 'POST') {
             }
         }
 
+        // If a new expiry date was chosen via Quick Extend (e.g. +1 Year or Lifetime)
+        $newExpiry = trim($payload['new_expiry'] ?? '');
+        if (!empty($newExpiry) && $newExpiry !== 'No expiry set' && !str_starts_with($newExpiry, '—') && $newExpiry !== $expiry) {
+            $escNewExp = mysqli_real_escape_string($connection, substr($newExpiry, 0, 10));
+            setSiteConfigValue($connection, $tblPrefix, $siteId, 'subscription_expiry', $escNewExp);
+            mysqli_query($connection, "UPDATE {$tblPrefix}site_installation SET site_installation_expiry_date = '{$escNewExp}' WHERE site_installation_site_id = {$siteId}");
+            $expiry = $escNewExp;
+        }
+
+        // Persist price and billing interval if adjusted in reminder modal
+        if ($renewalAmount > 0) {
+            $priceKey = ($billingInterval === 'monthly') ? 'subscription_price_monthly' : 'subscription_price_yearly';
+            setSiteConfigValue($connection, $tblPrefix, $siteId, $priceKey, $renewalAmount);
+            setSiteConfigValue($connection, $tblPrefix, $siteId, 'billing_interval', $billingInterval);
+            setSiteConfigValue($connection, $tblPrefix, $siteId, 'renewal_price_override', '1');
+        }
+
         // Record reminder log in site_configuration
         setSiteConfigValue($connection, $tblPrefix, $siteId, 'last_renewal_reminder_sent', date('Y-m-d H:i:s'));
         $prevCount = (int)getSiteConfigValue($connection, $tblPrefix, $siteId, 'renewal_reminder_count', 0);
@@ -671,7 +706,9 @@ if ($method === 'POST') {
         setSiteConfigValue($connection, $tblPrefix, $siteId, 'storage_limit_mb', $storageLimitMb);
         setSiteConfigValue($connection, $tblPrefix, $siteId, 'subscription_plan', $plan);
         if (!empty($expiry)) {
-            setSiteConfigValue($connection, $tblPrefix, $siteId, 'subscription_expiry', $expiry);
+            $escExp = mysqli_real_escape_string($connection, substr($expiry, 0, 10));
+            setSiteConfigValue($connection, $tblPrefix, $siteId, 'subscription_expiry', $escExp);
+            mysqli_query($connection, "UPDATE {$tblPrefix}site_installation SET site_installation_expiry_date = '{$escExp}' WHERE site_installation_site_id = {$siteId}");
         }
 
         // Subscription Pricing & Renewal Overrides
@@ -712,6 +749,7 @@ if ($method === 'POST') {
         // Update site table fields if provided
         $siteName = trim($payload['site_name'] ?? '');
         $siteUrl = trim($payload['site_url'] ?? '');
+        $appId = isset($payload['site_app_id']) ? (int)$payload['site_app_id'] : 0;
         $themeId = isset($payload['site_theme_id']) ? (int)$payload['site_theme_id'] : 0;
         $dashboardVersion = isset($payload['site_dashboard_version']) ? (int)$payload['site_dashboard_version'] : 0;
 
@@ -724,6 +762,9 @@ if ($method === 'POST') {
             $escU = mysqli_real_escape_string($connection, strtolower($siteUrl));
             $updateCols[] = "site_url = '{$escU}'";
         }
+        if ($appId > 0) {
+            $updateCols[] = "site_app_id = {$appId}";
+        }
         if ($themeId > 0) {
             $updateCols[] = "site_theme_id = {$themeId}";
         }
@@ -732,6 +773,7 @@ if ($method === 'POST') {
         }
 
         mysqli_query($connection, "UPDATE {$tblPrefix}site SET " . implode(', ', $updateCols) . " WHERE site_id = {$siteId}");
+        mysqli_query($connection, "UPDATE {$tblPrefix}site_installation SET site_installation_status = {$siteStatus} WHERE site_installation_site_id = {$siteId}");
 
         // Update theme color in site_setting if provided
         if (!empty($payload['site_theme_color'])) {
@@ -762,8 +804,13 @@ if ($method === 'POST') {
         }
         $newStatus = !empty($payload['status']) ? 1 : 0;
         $up = mysqli_query($connection, "UPDATE {$tblPrefix}site SET site_status = {$newStatus} WHERE site_id = {$siteId}");
+        @mysqli_query($connection, "UPDATE {$tblPrefix}site_installation SET site_installation_status = {$newStatus} WHERE site_installation_site_id = {$siteId}");
         if ($up) {
-            echo json_encode(['status' => 'success', 'msg' => 'Site status updated successfully.']);
+            echo json_encode([
+                'status' => 'success',
+                'msg' => $newStatus === 1 ? 'Site tenant activated successfully.' : 'Site tenant suspended successfully.',
+                'new_status' => $newStatus
+            ]);
         } else {
             http_response_code(500);
             echo json_encode(['status' => 'error', 'msg' => mysqli_error($connection)]);
@@ -801,6 +848,9 @@ if ($method === 'POST') {
                                            (commission_partner_id, commission_site_id, commission_rate_percent, commission_amount, commission_status, commission_notes)
                                            VALUES ({$partnerId}, {$siteId}, {$commissionRate}, {$commissionAmount}, 'pending', '{$escNotes}')");
             }
+        } else {
+            // Unassign partner: delete commission attribution for this site
+            mysqli_query($connection, "DELETE FROM {$tblPrefix}control_panel_commission WHERE commission_site_id = {$siteId}");
         }
 
         echo json_encode([

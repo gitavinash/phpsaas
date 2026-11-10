@@ -700,6 +700,8 @@
 
       // Quick Extend Expiry inside Reminder Modal
       $(document).on("click", ".btn-quick-extend-expiry", function () {
+        $(".btn-quick-extend-expiry").removeClass("active");
+        $(this).addClass("active");
         const months = $(this).data("months");
         let newDateStr = "";
         if (months === "lifetime") {
@@ -2263,9 +2265,13 @@
         contentType: "application/json",
         data: JSON.stringify({ action: "toggle_status", site_id: id, status: status }),
         success: function (res) {
-          swal("Updated", res.msg, "success");
+          swal("Updated", res.msg || "Site status updated successfully.", "success");
           self.fetchSites();
           delete self.loadedTabs["overview"];
+        },
+        error: function (xhr) {
+          const err = xhr.responseJSON ? xhr.responseJSON.msg : "Error toggling site status.";
+          swal("Error", err, "error");
         }
       });
     },
@@ -2333,6 +2339,7 @@
           $("#sqdOwnerName").text(d.owner_name || "Unassigned");
           $("#sqdOwnerEmail").text(d.owner_email || "N/A");
           $("#sqdOwnerMobile").text(d.owner_mobile || "N/A");
+          $("#sqdPartnerName").text(d.partner_id > 0 ? `${d.partner_name} (#${d.partner_id})` : "Direct / No Partner Assigned");
           $("#sqdLastReminder").text(d.last_reminder_sent ? d.last_reminder_sent : "Never Sent");
           $("#sqdReminderCount").text(d.reminder_count || 0);
 
@@ -2380,6 +2387,9 @@
 
           // Wire CTA button datasets for one-click modal opening
           $("#btnSqdSendReminder")
+            .attr("data-id", d.site_id)
+            .attr("data-name", d.site_name)
+            .attr("data-domain", d.site_domain)
             .data("id", d.site_id)
             .data("name", d.site_name)
             .data("domain", d.site_domain)
@@ -2395,7 +2405,7 @@
             .data("billing-interval", d.billing_interval || "yearly")
             .data("price-override", isOverridden ? "1" : "0");
 
-          $("#btnSqdOpenSettings").data("id", d.site_id);
+          $("#btnSqdOpenSettings").attr("data-id", d.site_id).data("id", d.site_id);
           $("#btnSqdOpenLive").attr("href", `http://${d.site_domain}/dashboard/`);
         } else {
           $("#sqdSiteName").text("Failed to load details");
@@ -2487,6 +2497,7 @@
         siteId, siteName, domain, plan, expiry, clientName, email, mobile
       });
 
+      $(".btn-quick-extend-expiry").removeClass("active");
       this.generateReminderTemplate();
       $("#modalRenewalReminder").addClass("active");
       this.initSelect2("#modalRenewalReminder");
@@ -2539,6 +2550,7 @@
           site_id: siteId,
           channels: channels,
           message: message,
+          new_expiry: $("#remSumExpiryDate").text().trim(),
           renewal_price: parseFloat($("#remCustomPriceInput").val()) || 0,
           billing_interval: $("#remBillingIntervalSelect").val() || "yearly"
         }),
