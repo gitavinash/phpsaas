@@ -83,7 +83,7 @@
 				<?php
 				}
 
-				if ($_GET['type'] == 'list') { ?>
+				if ($_GET['type'] == 'list' && (!defined('ADMIN_BASE_URL') || ADMIN_BASE_URL !== '/order/')) { ?>
 
 					<script type='text/javascript'>
 						$(document).ready(function() {
@@ -121,6 +121,10 @@
 			<?php
 				}
 			}
+
+			if (defined('ADMIN_BASE_URL') && ADMIN_BASE_URL === '/order/' && (!isset($_GET['type']) || $_GET['type'] === 'list')) { ?>
+				<script src="/lib/resource/ui/js/app/crm/desktop/orders-list.js?v=<?php echo @filemtime(ROOT . '/lib/resource/ui/js/app/crm/desktop/orders-list.js') ?: 1; ?>"></script>
+			<?php }
 
 			?>
 

@@ -21,6 +21,9 @@ $postType = rtrim(ltrim(ADMIN_BASE_URL, '/'), '/');
     <link rel="stylesheet" type="text/css" href="<?php echo PLUGIN_LIBRARY ?>datatable/css/datatables.min.css">
     <link rel="stylesheet" type="text/css" href="<?php echo PLUGIN_LIBRARY ?>image-uploader/css/image-uploader.min.css">
     <link rel="stylesheet" type="text/css" href="<?php echo PLUGIN_LIBRARY ?>select2/css/select2.min.css">
+    <?php if (defined('ADMIN_BASE_URL') && ADMIN_BASE_URL === '/order/') { ?>
+        <link rel="stylesheet" type="text/css" href="/lib/resource/ui/css/app/crm/orders-list.css?v=<?php echo @filemtime(ROOT . '/lib/resource/ui/css/app/crm/orders-list.css') ?: 1; ?>">
+    <?php } ?>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap">
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap">
@@ -73,27 +76,27 @@ $postType = rtrim(ltrim(ADMIN_BASE_URL, '/'), '/');
                     <div class="side-menu">
                         <ul>
                             <li><a href="order/?type=list&status=all"><i class="fas fa-list"></i> All Order</a></li>
-                            <li><a href="order/?type=list&status=1"><i class="fas fa-check"></i> Confirm Order</a>
-                            </li>
-                            <li><a href="order/?type=list&status=0"><i class="fas fa-exclamation"></i> Pending
-                                    Order</a></li>
-                            <li><a href="order/?type=list&status=2"><i class="fas fa-times"></i> Cancel Order</a>
-                            </li>
-                            <li><a href="order/?type=import"><i class="fas fa-file-import"></i> Import Orders</a>
-                            </li>
+                            <li><a href="order/?type=list&status=1"><i class="fas fa-check"></i> Confirm Order</a></li>
+                            <li><a href="order/?type=list&status=0"><i class="fas fa-exclamation"></i> Pending Order</a></li>
+                            <li><a href="order/?type=list&status=4"><i class="fas fa-clock"></i> Waiting Order</a></li>
+                            <li><a href="order/?type=list&status=6"><i class="fas fa-box-open"></i> Delivered Order</a></li>
+                            <li><a href="order/?type=list&status=3"><i class="fas fa-times"></i> Cancel Order</a></li>
+                            <li><a href="order/?type=list&status=2"><i class="fas fa-ban"></i> Reject Order</a></li>
+                            <li><a href="order/?type=list&status=5"><i class="fas fa-undo"></i> RTO Order</a></li>
+                            <li><a href="order/?type=import"><i class="fas fa-file-import"></i> Import Orders</a></li>
                         </ul>
                     </div>
                     <div class="bottom-menu">
                         <ul>
                             <li><a href="order/?type=list&status=all"><i class="fas fa-list"></i> All Order</a></li>
-                            <li><a href="order/?type=list&status=1"><i class="fas fa-check"></i> Confirm Order</a>
-                            </li>
-                            <li><a href="order/?type=list&status=0"><i class="fas fa-exclamation"></i> Pending
-                                    Order</a></li>
-                            <li><a href="order/?type=list&status=2"><i class="fas fa-times"></i> Cancel Order</a>
-                            </li>
-                            <li><a href="order/?type=import"><i class="fas fa-file-import"></i> Import Orders</a>
-                            </li>
+                            <li><a href="order/?type=list&status=1"><i class="fas fa-check"></i> Confirm Order</a></li>
+                            <li><a href="order/?type=list&status=0"><i class="fas fa-exclamation"></i> Pending Order</a></li>
+                            <li><a href="order/?type=list&status=4"><i class="fas fa-clock"></i> Waiting Order</a></li>
+                            <li><a href="order/?type=list&status=6"><i class="fas fa-box-open"></i> Delivered Order</a></li>
+                            <li><a href="order/?type=list&status=3"><i class="fas fa-times"></i> Cancel Order</a></li>
+                            <li><a href="order/?type=list&status=2"><i class="fas fa-ban"></i> Reject Order</a></li>
+                            <li><a href="order/?type=list&status=5"><i class="fas fa-undo"></i> RTO Order</a></li>
+                            <li><a href="order/?type=import"><i class="fas fa-file-import"></i> Import Orders</a></li>
                         </ul>
                     </div>
                 </li>

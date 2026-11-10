@@ -36,14 +36,23 @@ $eventsQuery = "SELECT e.*, l.link_url, c.category_title,
                    AND c.category_site_id = " . SITE_ID . " 
                 LEFT JOIN " . TABLE_PREFIX . "inventory inv
                     ON inv.inventory_relation_id = e.event_id
+                   AND inv.inventory_type = 'event'
                    AND inv.inventory_site_id = " . SITE_ID . "
                 WHERE e.event_status = 1 
                   AND e.event_site_id = " . SITE_ID . " 
                 {$sortQuery}";
 
 $eventsResult = mysqli_query($connection, $eventsQuery);
+$seenEventIds = [];
 if ($eventsResult && mysqli_num_rows($eventsResult) > 0) {
     while ($row = mysqli_fetch_assoc($eventsResult)) {
+        $eventId = isset($row['event_id']) ? (int)$row['event_id'] : 0;
+        if ($eventId > 0) {
+            if (isset($seenEventIds[$eventId])) {
+                continue;
+            }
+            $seenEventIds[$eventId] = true;
+        }
         $siteEvents[] = $row;
     }
 }
