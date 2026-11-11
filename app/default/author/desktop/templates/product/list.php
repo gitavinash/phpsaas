@@ -31,11 +31,21 @@ $plParseDateYmd = static function ($value): string {
     if ($raw === '') {
         return '';
     }
-    $dt = DateTime::createFromFormat('Y-m-d', $raw);
-    if ($dt && $dt->format('Y-m-d') === $raw) {
-        return $raw;
+    foreach (array('!Y-m-d', '!d/m/Y', '!d-m-Y') as $fmt) {
+        $dt = DateTime::createFromFormat($fmt, $raw);
+        if ($dt && $dt->format(substr($fmt, 1)) === $raw) {
+            return $dt->format('Y-m-d');
+        }
     }
     return '';
+};
+
+$plFormatDateDisplay = static function (string $ymd): string {
+    if ($ymd === '') {
+        return '';
+    }
+    $dt = DateTime::createFromFormat('!Y-m-d', $ymd);
+    return $dt ? $dt->format('d/m/Y') : '';
 };
 
 $plRoot = defined('ROOT') ? ROOT : dirname(__FILE__, 6);
@@ -617,16 +627,18 @@ if ($plFilterMaxPrice !== '') {
         'remove_aria' => 'Remove maximum price filter',
     );
 }
+$plFilterDateFromDisplay = $plFormatDateDisplay($plFilterDateFrom);
+$plFilterDateToDisplay = $plFormatDateDisplay($plFilterDateTo);
 if ($plFilterDateFrom !== '') {
     $plActiveChips[] = array(
-        'label' => 'Published from: ' . $plFilterDateFrom,
+        'label' => 'Published from: ' . $plFilterDateFromDisplay,
         'remove_url' => $plBuildRemoveChipUrl('date_from'),
         'remove_aria' => 'Remove start date filter',
     );
 }
 if ($plFilterDateTo !== '') {
     $plActiveChips[] = array(
-        'label' => 'Published to: ' . $plFilterDateTo,
+        'label' => 'Published to: ' . $plFilterDateToDisplay,
         'remove_url' => $plBuildRemoveChipUrl('date_to'),
         'remove_aria' => 'Remove end date filter',
     );
@@ -901,25 +913,49 @@ $plCountUnit = ($plTotalProducts === 1) ? 'product' : 'products';
 
                     <fieldset class="filter-fieldset">
                         <legend class="filter-legend">Publish date range</legend>
-                        <span class="filter-hint">Filter by published or creation date.</span>
+                        <span id="filterDateHint" class="filter-hint">Pick or enter dates (DD/MM/YYYY).</span>
                         <div class="filter-range-group">
                             <div class="filter-field">
                                 <label for="filterDateFrom">From date</label>
-                                <input
-                                    type="date"
-                                    id="filterDateFrom"
-                                    name="date_from"
-                                    class="filter-control"
-                                    value="<?php echo $plEsc($plFilterDateFrom); ?>">
+                                <div class="date-input-wrap">
+                                    <input
+                                        type="text"
+                                        id="filterDateFrom"
+                                        name="date_from"
+                                        class="filter-control product-datepicker"
+                                        value="<?php echo $plEsc($plFilterDateFromDisplay); ?>"
+                                        placeholder="DD/MM/YYYY"
+                                        maxlength="10"
+                                        inputmode="numeric"
+                                        autocomplete="off"
+                                        autocorrect="off"
+                                        autocapitalize="none"
+                                        spellcheck="false"
+                                        enterkeyhint="next"
+                                        aria-describedby="filterDateHint">
+                                    <i class="fas fa-calendar-alt date-input-icon" aria-hidden="true"></i>
+                                </div>
                             </div>
                             <div class="filter-field">
                                 <label for="filterDateTo">To date</label>
-                                <input
-                                    type="date"
-                                    id="filterDateTo"
-                                    name="date_to"
-                                    class="filter-control"
-                                    value="<?php echo $plEsc($plFilterDateTo); ?>">
+                                <div class="date-input-wrap">
+                                    <input
+                                        type="text"
+                                        id="filterDateTo"
+                                        name="date_to"
+                                        class="filter-control product-datepicker"
+                                        value="<?php echo $plEsc($plFilterDateToDisplay); ?>"
+                                        placeholder="DD/MM/YYYY"
+                                        maxlength="10"
+                                        inputmode="numeric"
+                                        autocomplete="off"
+                                        autocorrect="off"
+                                        autocapitalize="none"
+                                        spellcheck="false"
+                                        enterkeyhint="done"
+                                        aria-describedby="filterDateHint">
+                                    <i class="fas fa-calendar-alt date-input-icon" aria-hidden="true"></i>
+                                </div>
                             </div>
                         </div>
                     </fieldset>
