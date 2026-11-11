@@ -1387,9 +1387,10 @@ function crmOrderFetchDataset(
         }
 
         $facets = [
-            'statuses'      => array_values(crmOrderStatusCatalog()),
-            'payment_modes' => $paymentModes,
-            'cities'        => $cities,
+            'statuses'       => array_values(crmOrderStatusCatalog()),
+            'payment_modes'  => $paymentModes,
+            'cities'         => $cities,
+            'export_columns' => crmOrderExportColumnCatalog(),
         ];
     }
 
@@ -1409,6 +1410,232 @@ function crmOrderFetchDataset(
         ],
         'facets' => $facets,
     ];
+}
+
+/**
+ * Authoritative catalog of selectable order export columns across CSV, XLSX, PDF, and Print.
+ *
+ * @return array<int, array{
+ *   key:string,
+ *   label:string,
+ *   group:string,
+ *   group_label:string,
+ *   is_default:bool,
+ *   xlsx_type:string,
+ *   xlsx_width:int,
+ *   pdf_width:int,
+ *   align:string
+ * }>
+ */
+function crmOrderExportColumnCatalog(): array
+{
+    return [
+        // Order Details
+        ['key' => 'order_code',              'label' => 'Order ID',                'group' => 'order',    'group_label' => 'Order Details',     'is_default' => true,  'xlsx_type' => 'bold_accent', 'xlsx_width' => 12, 'pdf_width' => 38, 'align' => 'left'],
+        ['key' => 'order_date',              'label' => 'Order Date',              'group' => 'order',    'group_label' => 'Order Details',     'is_default' => true,  'xlsx_type' => 'text',        'xlsx_width' => 13, 'pdf_width' => 42, 'align' => 'left'],
+        ['key' => 'order_time',              'label' => 'Order Time',              'group' => 'order',    'group_label' => 'Order Details',     'is_default' => false, 'xlsx_type' => 'text',        'xlsx_width' => 11, 'pdf_width' => 36, 'align' => 'left'],
+        ['key' => 'order_status',            'label' => 'Order Status',            'group' => 'order',    'group_label' => 'Order Details',     'is_default' => true,  'xlsx_type' => 'status',      'xlsx_width' => 13, 'pdf_width' => 42, 'align' => 'center'],
+
+        // Product & Pricing Details
+        ['key' => 'product_name',            'label' => 'Product Name',            'group' => 'product',  'group_label' => 'Product & Pricing', 'is_default' => true,  'xlsx_type' => 'text',        'xlsx_width' => 30, 'pdf_width' => 84, 'align' => 'left'],
+        ['key' => 'product_link',            'label' => 'Product Website Link',    'group' => 'product',  'group_label' => 'Product & Pricing', 'is_default' => true,  'xlsx_type' => 'link',        'xlsx_width' => 44, 'pdf_width' => 98, 'align' => 'left'],
+        ['key' => 'product_sku',             'label' => 'Product SKU',             'group' => 'product',  'group_label' => 'Product & Pricing', 'is_default' => false, 'xlsx_type' => 'text',        'xlsx_width' => 16, 'pdf_width' => 44, 'align' => 'left'],
+        ['key' => 'item_qty',                'label' => 'Item Qty',                'group' => 'product',  'group_label' => 'Product & Pricing', 'is_default' => true,  'xlsx_type' => 'int',         'xlsx_width' => 11, 'pdf_width' => 24, 'align' => 'right'],
+        ['key' => 'total_qty',               'label' => 'Total Qty',               'group' => 'product',  'group_label' => 'Product & Pricing', 'is_default' => false, 'xlsx_type' => 'int',         'xlsx_width' => 11, 'pdf_width' => 26, 'align' => 'right'],
+        ['key' => 'unit_price',              'label' => 'Product Unit Price',      'group' => 'product',  'group_label' => 'Product & Pricing', 'is_default' => false, 'xlsx_type' => 'num',         'xlsx_width' => 16, 'pdf_width' => 44, 'align' => 'right'],
+        ['key' => 'product_subtotal',        'label' => 'Product Subtotal',        'group' => 'product',  'group_label' => 'Product & Pricing', 'is_default' => false, 'xlsx_type' => 'num',         'xlsx_width' => 16, 'pdf_width' => 44, 'align' => 'right'],
+        ['key' => 'delivery_charges',        'label' => 'Delivery Charges',        'group' => 'product',  'group_label' => 'Product & Pricing', 'is_default' => false, 'xlsx_type' => 'num',         'xlsx_width' => 15, 'pdf_width' => 42, 'align' => 'right'],
+        ['key' => 'coupon_code',             'label' => 'Coupon Code',             'group' => 'product',  'group_label' => 'Product & Pricing', 'is_default' => false, 'xlsx_type' => 'text',        'xlsx_width' => 14, 'pdf_width' => 38, 'align' => 'left'],
+        ['key' => 'order_price',             'label' => 'Order Price',             'group' => 'product',  'group_label' => 'Product & Pricing', 'is_default' => true,  'xlsx_type' => 'bold_num',    'xlsx_width' => 16, 'pdf_width' => 50, 'align' => 'right'],
+        ['key' => 'currency',                'label' => 'Currency',                'group' => 'product',  'group_label' => 'Product & Pricing', 'is_default' => false, 'xlsx_type' => 'text',        'xlsx_width' => 10, 'pdf_width' => 28, 'align' => 'center'],
+        ['key' => 'payment_mode',            'label' => 'Payment Mode',            'group' => 'product',  'group_label' => 'Product & Pricing', 'is_default' => true,  'xlsx_type' => 'text',        'xlsx_width' => 15, 'pdf_width' => 42, 'align' => 'left'],
+        ['key' => 'payment_status',          'label' => 'Payment Status',          'group' => 'product',  'group_label' => 'Product & Pricing', 'is_default' => false, 'xlsx_type' => 'text',        'xlsx_width' => 14, 'pdf_width' => 40, 'align' => 'left'],
+        ['key' => 'transaction_ref',         'label' => 'Transaction Ref',         'group' => 'product',  'group_label' => 'Product & Pricing', 'is_default' => false, 'xlsx_type' => 'text',        'xlsx_width' => 24, 'pdf_width' => 64, 'align' => 'left'],
+
+        // Sender Details
+        ['key' => 'sender_name',             'label' => 'Sender Name',             'group' => 'sender',   'group_label' => 'Sender Details',    'is_default' => true,  'xlsx_type' => 'text',        'xlsx_width' => 22, 'pdf_width' => 60, 'align' => 'left'],
+        ['key' => 'sender_mobile',           'label' => 'Sender Mobile',           'group' => 'sender',   'group_label' => 'Sender Details',    'is_default' => true,  'xlsx_type' => 'text',        'xlsx_width' => 15, 'pdf_width' => 48, 'align' => 'left'],
+        ['key' => 'sender_alt_mobile',       'label' => 'Sender Alt Mobile',       'group' => 'sender',   'group_label' => 'Sender Details',    'is_default' => false, 'xlsx_type' => 'text',        'xlsx_width' => 16, 'pdf_width' => 48, 'align' => 'left'],
+        ['key' => 'sender_email',            'label' => 'Sender Email',            'group' => 'sender',   'group_label' => 'Sender Details',    'is_default' => false, 'xlsx_type' => 'text',        'xlsx_width' => 28, 'pdf_width' => 68, 'align' => 'left'],
+
+        // Receiver Details
+        ['key' => 'receiver_name',           'label' => 'Receiver Name',           'group' => 'receiver', 'group_label' => 'Receiver Details',  'is_default' => true,  'xlsx_type' => 'text',        'xlsx_width' => 22, 'pdf_width' => 60, 'align' => 'left'],
+        ['key' => 'receiver_mobile',         'label' => 'Receiver Mobile',         'group' => 'receiver', 'group_label' => 'Receiver Details',  'is_default' => true,  'xlsx_type' => 'text',        'xlsx_width' => 15, 'pdf_width' => 48, 'align' => 'left'],
+        ['key' => 'receiver_alt_mobile',     'label' => 'Receiver Alt Mobile',     'group' => 'receiver', 'group_label' => 'Receiver Details',  'is_default' => false, 'xlsx_type' => 'text',        'xlsx_width' => 16, 'pdf_width' => 48, 'align' => 'left'],
+        ['key' => 'receiver_street_address', 'label' => 'Receiver Street Address', 'group' => 'receiver', 'group_label' => 'Receiver Details',  'is_default' => true,  'xlsx_type' => 'text',        'xlsx_width' => 34, 'pdf_width' => 86, 'align' => 'left'],
+        ['key' => 'receiver_city',           'label' => 'Receiver City',           'group' => 'receiver', 'group_label' => 'Receiver Details',  'is_default' => true,  'xlsx_type' => 'text',        'xlsx_width' => 16, 'pdf_width' => 46, 'align' => 'left'],
+        ['key' => 'receiver_state',          'label' => 'Receiver State',          'group' => 'receiver', 'group_label' => 'Receiver Details',  'is_default' => false, 'xlsx_type' => 'text',        'xlsx_width' => 16, 'pdf_width' => 44, 'align' => 'left'],
+        ['key' => 'receiver_country',        'label' => 'Receiver Country',        'group' => 'receiver', 'group_label' => 'Receiver Details',  'is_default' => false, 'xlsx_type' => 'text',        'xlsx_width' => 14, 'pdf_width' => 38, 'align' => 'left'],
+        ['key' => 'receiver_pin_code',       'label' => 'Receiver Pin Code',       'group' => 'receiver', 'group_label' => 'Receiver Details',  'is_default' => false, 'xlsx_type' => 'text',        'xlsx_width' => 14, 'pdf_width' => 36, 'align' => 'left'],
+        ['key' => 'address_type',            'label' => 'Address Type',            'group' => 'receiver', 'group_label' => 'Receiver Details',  'is_default' => false, 'xlsx_type' => 'text',        'xlsx_width' => 13, 'pdf_width' => 36, 'align' => 'left'],
+
+        // Delivery Details
+        ['key' => 'delivery_date',           'label' => 'Delivery Date',           'group' => 'delivery', 'group_label' => 'Delivery Details',  'is_default' => true,  'xlsx_type' => 'text',        'xlsx_width' => 14, 'pdf_width' => 42, 'align' => 'left'],
+        ['key' => 'delivery_slot',           'label' => 'Delivery Slot',           'group' => 'delivery', 'group_label' => 'Delivery Details',  'is_default' => false, 'xlsx_type' => 'text',        'xlsx_width' => 15, 'pdf_width' => 42, 'align' => 'left'],
+        ['key' => 'delivery_time',           'label' => 'Delivery Time',           'group' => 'delivery', 'group_label' => 'Delivery Details',  'is_default' => false, 'xlsx_type' => 'text',        'xlsx_width' => 18, 'pdf_width' => 48, 'align' => 'left'],
+        ['key' => 'occasion',                'label' => 'Occasion',                'group' => 'delivery', 'group_label' => 'Delivery Details',  'is_default' => false, 'xlsx_type' => 'text',        'xlsx_width' => 15, 'pdf_width' => 42, 'align' => 'left'],
+        ['key' => 'gift_message',            'label' => 'Gift Message',            'group' => 'delivery', 'group_label' => 'Delivery Details',  'is_default' => false, 'xlsx_type' => 'text',        'xlsx_width' => 34, 'pdf_width' => 84, 'align' => 'left'],
+        ['key' => 'delivery_note',           'label' => 'Delivery Note',           'group' => 'delivery', 'group_label' => 'Delivery Details',  'is_default' => false, 'xlsx_type' => 'text',        'xlsx_width' => 26, 'pdf_width' => 64, 'align' => 'left'],
+        ['key' => 'return_reason',           'label' => 'Return Reason',           'group' => 'delivery', 'group_label' => 'Delivery Details',  'is_default' => false, 'xlsx_type' => 'text',        'xlsx_width' => 20, 'pdf_width' => 50, 'align' => 'left'],
+        ['key' => 'return_comment',          'label' => 'Return Comment',          'group' => 'delivery', 'group_label' => 'Delivery Details',  'is_default' => false, 'xlsx_type' => 'text',        'xlsx_width' => 24, 'pdf_width' => 56, 'align' => 'left'],
+        ['key' => 'delivery_photo_status',   'label' => 'Delivery Photo Status',   'group' => 'delivery', 'group_label' => 'Delivery Details',  'is_default' => false, 'xlsx_type' => 'text',        'xlsx_width' => 16, 'pdf_width' => 40, 'align' => 'left'],
+        ['key' => 'delivery_photo_link',     'label' => 'Delivery Photo Link',     'group' => 'delivery', 'group_label' => 'Delivery Details',  'is_default' => false, 'xlsx_type' => 'link',        'xlsx_width' => 40, 'pdf_width' => 76, 'align' => 'left'],
+    ];
+}
+
+/**
+ * Resolves and validates requested export columns against the authoritative catalog.
+ * Preserves canonical group ordering so multi-tier report headers always stay contiguous.
+ *
+ * @return array<int, array<string, mixed>>
+ */
+function crmOrderResolveExportColumns(array $reqData): array
+{
+    $catalog = crmOrderExportColumnCatalog();
+    $rawCols = $reqData['columns'] ?? '';
+    $keysRequested = [];
+
+    if (is_array($rawCols)) {
+        foreach ($rawCols as $part) {
+            $k = strtolower(trim((string)$part));
+            if ($k !== '') {
+                $keysRequested[$k] = true;
+            }
+        }
+    } else {
+        $strCols = strtolower(trim((string)$rawCols));
+        if ($strCols === 'all') {
+            return $catalog;
+        }
+        if ($strCols !== '') {
+            foreach (explode(',', $strCols) as $part) {
+                $k = trim($part);
+                if ($k !== '') {
+                    $keysRequested[$k] = true;
+                }
+            }
+        }
+    }
+
+    if (!empty($keysRequested)) {
+        $matched = [];
+        foreach ($catalog as $colDef) {
+            if (isset($keysRequested[$colDef['key']])) {
+                $matched[] = $colDef;
+            }
+        }
+        if (!empty($matched)) {
+            return $matched;
+        }
+    }
+
+    $defaults = [];
+    foreach ($catalog as $colDef) {
+        if (!empty($colDef['is_default'])) {
+            $defaults[] = $colDef;
+        }
+    }
+
+    return !empty($defaults) ? $defaults : $catalog;
+}
+
+/**
+ * Extracts a single atomic cell value for CSV/XLSX export given a normalized order row and column key.
+ */
+function crmOrderExtractColumnSpreadsheetValue(array $row, string $colKey): string
+{
+    $prod    = $row['product'] ?? [];
+    $payment = $row['payment'] ?? [];
+    $sender  = $row['sender'] ?? [];
+    $rec     = $row['receiver'] ?? [];
+    $deliv   = $row['delivery'] ?? [];
+
+    switch ($colKey) {
+        case 'order_code':
+            return (string)($row['order_code'] ?? ('OD' . ($row['order_id'] ?? '')));
+        case 'order_date':
+            return (string)($row['created_date_display'] ?? '');
+        case 'order_time':
+            return (string)($row['created_time_display'] ?? '');
+        case 'order_status':
+            return (string)($row['status']['label'] ?? '');
+        case 'product_name':
+            return (string)($prod['names_text'] ?? ($prod['primary_title'] ?? ''));
+        case 'product_link':
+            return (string)($prod['links_text'] ?? ($prod['primary_url'] ?? ''));
+        case 'product_sku':
+            return (string)($prod['skus_text'] ?? '');
+        case 'item_qty':
+            return (string)($prod['qtys_text'] ?? (string)($prod['total_qty'] ?? 1));
+        case 'total_qty':
+            return (string)($prod['total_qty'] ?? 1);
+        case 'unit_price':
+            return (string)($prod['unit_prices_text'] ?? '');
+        case 'product_subtotal':
+            return (string)($prod['subtotal'] ?? '0');
+        case 'delivery_charges':
+            return (string)($prod['delivery_charges'] ?? '0');
+        case 'coupon_code':
+            return (string)($prod['coupon'] ?? '');
+        case 'order_price':
+            return (string)($prod['total_amount'] ?? '0');
+        case 'currency':
+            return (string)($prod['currency_code'] ?? 'INR');
+        case 'payment_mode':
+            return (string)($payment['mode_label'] ?? '');
+        case 'payment_status':
+            return (string)($payment['transaction_status_label'] ?? '');
+        case 'transaction_ref':
+            return (string)($payment['transaction_ref'] ?? '');
+        case 'sender_name':
+            return (string)($sender['name'] ?? '');
+        case 'sender_mobile':
+            return (string)($sender['mobile'] ?? '');
+        case 'sender_alt_mobile':
+            return (string)($sender['alt_mobile'] ?? '');
+        case 'sender_email':
+            return (string)($sender['email'] ?? '');
+        case 'receiver_name':
+            return (string)($rec['name'] ?? '');
+        case 'receiver_mobile':
+            return (string)($rec['mobile'] ?? '');
+        case 'receiver_alt_mobile':
+            return (string)($rec['alt_mobile'] ?? '');
+        case 'receiver_street_address':
+            return (string)($rec['street_address'] ?? '');
+        case 'receiver_city':
+            return (string)($rec['city'] ?? '');
+        case 'receiver_state':
+            return (string)($rec['state'] ?? '');
+        case 'receiver_country':
+            return (string)($rec['country'] ?? '');
+        case 'receiver_pin_code':
+            return (string)($rec['pin_code'] ?? '');
+        case 'address_type':
+            return (string)($rec['address_type'] ?? '');
+        case 'delivery_date':
+            return (string)($deliv['date_display'] ?? '');
+        case 'delivery_slot':
+            return (string)($deliv['slot'] ?? '');
+        case 'delivery_time':
+            return (string)($deliv['time'] ?? '');
+        case 'occasion':
+            return (string)($deliv['occasion'] ?? '');
+        case 'gift_message':
+            return (string)($deliv['message'] ?? '');
+        case 'delivery_note':
+            return (string)($deliv['comment'] ?? '');
+        case 'return_reason':
+            return (string)($deliv['return_reason'] ?? '');
+        case 'return_comment':
+            return (string)($deliv['return_comment'] ?? '');
+        case 'delivery_photo_status':
+            return (string)($deliv['photo_status'] ?? 'Not Uploaded');
+        case 'delivery_photo_link':
+            return (string)($deliv['photo_url'] ?? '');
+        default:
+            return '';
+    }
 }
 
 /**

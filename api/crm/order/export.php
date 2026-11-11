@@ -55,101 +55,18 @@ if ($filters['q'] !== '') {
 }
 $filterSummaryText = implode(' | ', $filterSummaryParts);
 
-// Spreadsheet atomic columns (CSV & XLSX): separate column for each data value type
-$spreadsheetHeaders = [
-    'Order ID',               // 0
-    'Order Date',             // 1
-    'Order Time',             // 2
-    'Order Status',           // 3
-    'Product Name',           // 4
-    'Product Website Link',   // 5
-    'Product SKU',            // 6
-    'Item Qty',               // 7
-    'Total Qty',              // 8
-    'Product Unit Price',     // 9
-    'Product Subtotal',       // 10
-    'Delivery Charges',       // 11
-    'Coupon Code',            // 12
-    'Order Price',            // 13
-    'Currency',               // 14
-    'Payment Mode',           // 15
-    'Payment Status',         // 16
-    'Transaction Ref',        // 17
-    'Sender Name',            // 18
-    'Sender Mobile',          // 19
-    'Sender Alt Mobile',      // 20
-    'Sender Email',           // 21
-    'Receiver Name',          // 22
-    'Receiver Mobile',        // 23
-    'Receiver Alt Mobile',    // 24
-    'Receiver Street Address',// 25
-    'Receiver City',          // 26
-    'Receiver State',         // 27
-    'Receiver Country',       // 28
-    'Receiver Pin Code',      // 29
-    'Address Type',           // 30
-    'Delivery Date',          // 31
-    'Delivery Slot',          // 32
-    'Delivery Time',          // 33
-    'Occasion',               // 34
-    'Gift Message',           // 35
-    'Delivery Note',          // 36
-    'Return Reason',          // 37
-    'Return Comment',         // 38
-    'Delivery Photo Status',  // 39
-    'Delivery Photo Link',    // 40
-];
+$selectedCols = crmOrderResolveExportColumns($reqData);
+$spreadsheetHeaders = [];
+foreach ($selectedCols as $colDef) {
+    $spreadsheetHeaders[] = $colDef['label'];
+}
 
-$buildSpreadsheetRow = static function (array $row): array {
-    $prod    = $row['product'] ?? [];
-    $payment = $row['payment'] ?? [];
-    $sender  = $row['sender'] ?? [];
-    $rec     = $row['receiver'] ?? [];
-    $deliv   = $row['delivery'] ?? [];
-
-    return [
-        $row['order_code'] ?? ('OD' . ($row['order_id'] ?? '')),
-        $row['created_date_display'] ?? '',
-        $row['created_time_display'] ?? '',
-        $row['status']['label'] ?? '',
-        $prod['names_text'] ?? ($prod['primary_title'] ?? ''),
-        $prod['links_text'] ?? ($prod['primary_url'] ?? ''),
-        $prod['skus_text'] ?? '',
-        $prod['qtys_text'] ?? (string)($prod['total_qty'] ?? 1),
-        (string)($prod['total_qty'] ?? 1),
-        $prod['unit_prices_text'] ?? '',
-        $prod['subtotal'] ?? '0',
-        $prod['delivery_charges'] ?? '0',
-        $prod['coupon'] ?? '',
-        $prod['total_amount'] ?? '0',
-        $prod['currency_code'] ?? 'INR',
-        $payment['mode_label'] ?? '',
-        $payment['transaction_status_label'] ?? '',
-        $payment['transaction_ref'] ?? '',
-        $sender['name'] ?? '',
-        $sender['mobile'] ?? '',
-        $sender['alt_mobile'] ?? '',
-        $sender['email'] ?? '',
-        $rec['name'] ?? '',
-        $rec['mobile'] ?? '',
-        $rec['alt_mobile'] ?? '',
-        $rec['street_address'] ?? '',
-        $rec['city'] ?? '',
-        $rec['state'] ?? '',
-        $rec['country'] ?? '',
-        $rec['pin_code'] ?? '',
-        $rec['address_type'] ?? '',
-        $deliv['date_display'] ?? '',
-        $deliv['slot'] ?? '',
-        $deliv['time'] ?? '',
-        $deliv['occasion'] ?? '',
-        $deliv['message'] ?? '',
-        $deliv['comment'] ?? '',
-        $deliv['return_reason'] ?? '',
-        $deliv['return_comment'] ?? '',
-        $deliv['photo_status'] ?? 'Not Uploaded',
-        $deliv['photo_url'] ?? '',
-    ];
+$buildSpreadsheetRow = static function (array $row) use ($selectedCols): array {
+    $outRow = [];
+    foreach ($selectedCols as $colDef) {
+        $outRow[] = crmOrderExtractColumnSpreadsheetValue($row, (string)$colDef['key']);
+    }
+    return $outRow;
 };
 
 if ($exportFormat === 'csv') {
@@ -182,56 +99,41 @@ if ($exportFormat === 'xlsx') {
     foreach ($rows as $row) {
         $sheetRows[] = $buildSpreadsheetRow($row);
     }
+
+    $boldAccentCols  = [];
+    $linkCols        = [];
+    $integerCols     = [];
+    $numericCols     = [];
+    $boldNumericCols = [];
+    $statusCol       = null;
+    $colWidths       = [];
+
+    foreach ($selectedCols as $colIdx => $colDef) {
+        $colWidths[$colIdx] = (int)($colDef['xlsx_width'] ?? 16);
+        $xType = (string)($colDef['xlsx_type'] ?? 'text');
+        if ($xType === 'bold_accent') {
+            $boldAccentCols[] = $colIdx;
+        } elseif ($xType === 'status' && $statusCol === null) {
+            $statusCol = $colIdx;
+        } elseif ($xType === 'link') {
+            $linkCols[] = $colIdx;
+        } elseif ($xType === 'int') {
+            $integerCols[] = $colIdx;
+        } elseif ($xType === 'num') {
+            $numericCols[] = $colIdx;
+        } elseif ($xType === 'bold_num') {
+            $boldNumericCols[] = $colIdx;
+        }
+    }
+
     $xlsxOptions = [
-        'boldAccentCols'  => [0],
-        'statusCol'       => 3,
-        'linkCols'        => [5, 40],
-        'integerCols'     => [7, 8],
-        'numericCols'     => [9, 10, 11],
-        'boldNumericCols' => [13],
-        'colWidths'       => [
-            0  => 12,
-            1  => 13,
-            2  => 11,
-            3  => 13,
-            4  => 30,
-            5  => 44,
-            6  => 16,
-            7  => 11,
-            8  => 11,
-            9  => 16,
-            10 => 16,
-            11 => 15,
-            12 => 14,
-            13 => 16,
-            14 => 10,
-            15 => 15,
-            16 => 14,
-            17 => 24,
-            18 => 22,
-            19 => 15,
-            20 => 16,
-            21 => 28,
-            22 => 22,
-            23 => 15,
-            24 => 16,
-            25 => 34,
-            26 => 16,
-            27 => 16,
-            28 => 14,
-            29 => 14,
-            30 => 13,
-            31 => 14,
-            32 => 15,
-            33 => 18,
-            34 => 15,
-            35 => 34,
-            36 => 26,
-            37 => 20,
-            38 => 24,
-            39 => 16,
-            40 => 40,
-        ],
+        'boldAccentCols'  => $boldAccentCols,
+        'statusCol'       => $statusCol,
+        'linkCols'        => $linkCols,
+        'integerCols'     => $integerCols,
+        'numericCols'     => $numericCols,
+        'boldNumericCols' => $boldNumericCols,
+        'colWidths'       => $colWidths,
     ];
     crmOrderStreamXlsx($filename, $spreadsheetHeaders, $sheetRows, 'CRM Orders', $xlsxOptions);
 }
@@ -243,26 +145,32 @@ $summaryData = $dataset['summary'] ?? [
     'status_counts'    => [],
 ];
 
+$selectedColKeys = array_map(static function (array $c): string {
+    return (string)$c['key'];
+}, $selectedCols);
+
 if ($exportFormat === 'json') {
     header('Content-Type: application/json; charset=utf-8', true);
     echo json_encode([
         'status'  => 'success',
         'message' => 'Export dataset prepared.',
         'meta'    => [
-            'site_name'      => $siteName,
-            'exported_at'    => date('d/m/Y h:i A'),
-            'date_slug'      => $dateSlug,
-            'total'          => count($rows),
-            'filter_summary' => $filterSummaryText,
-            'redact_pii'     => $ctx['redactPii'],
-            'summary'        => $summaryData,
+            'site_name'        => $siteName,
+            'exported_at'      => date('d/m/Y h:i A'),
+            'date_slug'        => $dateSlug,
+            'total'            => count($rows),
+            'filter_summary'   => $filterSummaryText,
+            'redact_pii'       => $ctx['redactPii'],
+            'summary'          => $summaryData,
+            'selected_columns' => $selectedColKeys,
+            'export_columns'   => crmOrderExportColumnCatalog(),
         ],
         'rows' => $rows,
     ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
     exit;
 }
 
-// 'print' or direct-navigation 'pdf' fallback -> printable A3 landscape HTML report
+// 'print' or direct-navigation 'pdf' fallback -> printable HTML report honoring selected columns
 $autoPrintAttr = ($exportFormat === 'pdf' || !empty($reqData['auto_print'])) ? '1' : '0';
 header('Content-Type: text/html; charset=utf-8', true);
 header('Cache-Control: no-store, no-cache, must-revalidate', true);
@@ -284,6 +192,27 @@ $renderWrappableEmail = static function (string $email) use ($esc): string {
     return $esc($email);
 };
 
+// Build contiguous header groups for the currently selected columns
+$headerGroups = [];
+foreach ($selectedCols as $colDef) {
+    $gKey   = (string)$colDef['group'];
+    $gLabel = (string)$colDef['group_label'];
+    $lastIdx = count($headerGroups) - 1;
+    if ($lastIdx >= 0 && $headerGroups[$lastIdx]['group'] === $gKey) {
+        $headerGroups[$lastIdx]['span']++;
+    } else {
+        $headerGroups[] = [
+            'group' => $gKey,
+            'label' => $gLabel,
+            'span'  => 1,
+        ];
+    }
+}
+
+$colCount = count($selectedCols);
+$tableDensityClass = $colCount <= 10 ? 'crm-cols-compact' : ($colCount <= 22 ? 'crm-cols-medium' : 'crm-cols-wide');
+$firstOrderKey = $selectedCols[0]['key'] ?? '';
+
 $statusCounts     = $summaryData['status_counts'] ?? [];
 $confirmedCount   = (int)($statusCounts['1'] ?? 0);
 $deliveredCount   = (int)($statusCounts['6'] ?? 0);
@@ -303,7 +232,7 @@ $summaryTotalVal  = $summaryCurr . ' ' . crmOrderFormatMoney((float)($summaryDat
     <header class="crm-print-toolbar no-print">
         <div class="crm-print-toolbar-info">
             <strong><?php echo $esc($siteName); ?> — Order Export Report</strong>
-            <span><?php echo count($rows); ?> order(s) | <?php echo $esc($filterSummaryText); ?></span>
+            <span><?php echo count($rows); ?> order(s) · <?php echo $colCount; ?> column(s) | <?php echo $esc($filterSummaryText); ?></span>
         </div>
         <div class="crm-print-toolbar-actions">
             <button type="button" class="crm-print-btn crm-print-btn-primary" id="crmPrintNowBtn">Print / Save as PDF</button>
@@ -315,7 +244,7 @@ $summaryTotalVal  = $summaryCurr . ' ' . crmOrderFormatMoney((float)($summaryDat
         <section class="crm-print-header">
             <div>
                 <h1><?php echo $esc($siteName); ?> — Orders Report</h1>
-                <p class="crm-print-subtitle"><?php echo $esc($filterSummaryText); ?></p>
+                <p class="crm-print-subtitle"><?php echo $esc($filterSummaryText); ?> · <?php echo $colCount; ?> selected column(s)</p>
             </div>
             <div class="crm-print-meta">
                 <div><strong>Generated:</strong> <?php echo $esc(date('d/m/Y h:i A')); ?></div>
@@ -343,229 +272,165 @@ $summaryTotalVal  = $summaryCurr . ' ' . crmOrderFormatMoney((float)($summaryDat
         </section>
 
         <div tabindex="0" role="region" aria-labelledby="crmPrintTableCaption" class="crm-print-table-wrap">
-            <table class="crm-print-table">
+            <table class="crm-print-table <?php echo $esc($tableDensityClass); ?>">
                 <caption id="crmPrintTableCaption" class="crm-print-caption">
-                    Detailed Orders Export Report — <?php echo count($rows); ?> order(s)
+                    Detailed Orders Export Report — <?php echo count($rows); ?> order(s), <?php echo $colCount; ?> column(s)
                 </caption>
-                <colgroup>
-                    <col class="col-oid">
-                    <col class="col-date">
-                    <col class="col-time">
-                    <col class="col-status">
-                </colgroup>
-                <colgroup>
-                    <col class="col-pname">
-                    <col class="col-plink">
-                    <col class="col-qty">
-                    <col class="col-uprice">
-                </colgroup>
-                <colgroup>
-                    <col class="col-oprice">
-                    <col class="col-pay">
-                </colgroup>
-                <colgroup>
-                    <col class="col-sname">
-                    <col class="col-smob">
-                    <col class="col-semail">
-                </colgroup>
-                <colgroup>
-                    <col class="col-rname">
-                    <col class="col-rmob">
-                    <col class="col-raddr">
-                    <col class="col-rcity">
-                </colgroup>
-                <colgroup>
-                    <col class="col-ddate">
-                    <col class="col-dslot">
-                    <col class="col-docc">
-                    <col class="col-dmsg">
-                </colgroup>
                 <thead>
                     <tr class="crm-th-groups">
-                        <th scope="colgroup" colspan="4" class="grp-order">Order</th>
-                        <th scope="colgroup" colspan="4" class="grp-product">Product</th>
-                        <th scope="colgroup" colspan="2" class="grp-price">Pricing &amp; Payment</th>
-                        <th scope="colgroup" colspan="3" class="grp-sender">Sender</th>
-                        <th scope="colgroup" colspan="4" class="grp-receiver">Receiver</th>
-                        <th scope="colgroup" colspan="4" class="grp-delivery">Delivery</th>
+                        <?php foreach ($headerGroups as $grp) { ?>
+                            <th scope="colgroup" colspan="<?php echo (int)$grp['span']; ?>" class="grp-<?php echo $esc($grp['group']); ?>"><?php echo $esc($grp['label']); ?></th>
+                        <?php } ?>
                     </tr>
                     <tr class="crm-th-cols">
-                        <th scope="col" class="col-oid">Order ID</th>
-                        <th scope="col" class="col-date">Order Date</th>
-                        <th scope="col" class="col-time">Order Time</th>
-                        <th scope="col" class="col-status">Status</th>
-                        <th scope="col" class="col-pname">Product Name</th>
-                        <th scope="col" class="col-plink">Product Website Link</th>
-                        <th scope="col" class="col-qty">Qty</th>
-                        <th scope="col" class="col-uprice">Prod. Price</th>
-                        <th scope="col" class="col-oprice">Order Price</th>
-                        <th scope="col" class="col-pay">Payment</th>
-                        <th scope="col" class="col-sname">Sender Name</th>
-                        <th scope="col" class="col-smob">Sender Mobile</th>
-                        <th scope="col" class="col-semail">Sender Email</th>
-                        <th scope="col" class="col-rname">Receiver Name</th>
-                        <th scope="col" class="col-rmob">Receiver Mobile</th>
-                        <th scope="col" class="col-raddr">Street Address</th>
-                        <th scope="col" class="col-rcity">City / Pin</th>
-                        <th scope="col" class="col-ddate">Deliv. Date</th>
-                        <th scope="col" class="col-dslot">Slot / Time</th>
-                        <th scope="col" class="col-docc">Occasion</th>
-                        <th scope="col" class="col-dmsg">Gift Message / Note</th>
+                        <?php foreach ($selectedCols as $colDef) {
+                            $thCls = 'col-k-' . $colDef['key'];
+                            if ($colDef['align'] === 'right') {
+                                $thCls .= ' th-right';
+                            } elseif ($colDef['align'] === 'center') {
+                                $thCls .= ' th-center';
+                            }
+                            ?>
+                            <th scope="col" class="<?php echo $esc($thCls); ?>"><?php echo $esc($colDef['label']); ?></th>
+                        <?php } ?>
                     </tr>
                 </thead>
                 <tbody>
                     <?php if (empty($rows)) { ?>
                         <tr>
-                            <td colspan="21" class="crm-print-empty">No orders matched the active filter criteria.</td>
+                            <td colspan="<?php echo $colCount; ?>" class="crm-print-empty">No orders matched the active filter criteria.</td>
                         </tr>
                     <?php } else { ?>
                         <?php foreach ($rows as $row) {
-                            $items    = $row['product']['items'] ?? [];
-                            $isMulti  = count($items) > 1;
-                            $currSym  = $row['product']['currency_symbol'] ?? '₹';
-                            $delivChg = (float)($row['product']['delivery_charges_num'] ?? 0);
-                            $coupon   = trim((string)($row['product']['coupon'] ?? ''));
-                            $txStat   = trim((string)($row['payment']['transaction_status_label'] ?? ''));
-                            $slotStr  = trim((string)($row['delivery']['slot'] ?? ''));
-                            $timeStr  = trim((string)($row['delivery']['time'] ?? ''));
-                            $msgStr   = trim((string)($row['delivery']['message'] ?? ''));
-                            $noteStr  = trim((string)($row['delivery']['comment'] ?? ''));
-                            $retStr   = trim(implode(' — ', array_filter([
-                                $row['delivery']['return_reason'] ?? '',
-                                $row['delivery']['return_comment'] ?? ''
-                            ])));
-                            $cityPin  = trim(implode(', ', array_filter([
-                                $row['receiver']['city'] ?? '',
-                                $row['receiver']['state'] ?? ''
-                            ])));
-                            $pinCode  = trim((string)($row['receiver']['pin_code'] ?? ''));
+                            $items   = $row['product']['items'] ?? [];
+                            $isMulti = count($items) > 1;
+                            $currSym = $row['product']['currency_symbol'] ?? '₹';
                             ?>
                             <tr>
-                                <th scope="row" class="col-oid cell-strong"><?php echo $esc($row['order_code']); ?></th>
-                                <td class="col-date cell-nowrap"><?php echo $esc($row['created_date_display'] ?: 'N/A'); ?></td>
-                                <td class="col-time cell-nowrap cell-muted-inline"><?php echo $esc($row['created_time_display'] ?: '—'); ?></td>
-                                <td class="col-status">
-                                    <span class="cell-badge <?php echo $esc($row['status']['class']); ?>"><?php echo $esc($row['status']['label']); ?></span>
-                                </td>
-                                <td class="col-pname">
-                                    <?php foreach ($items as $idx => $item) { ?>
-                                        <div class="cell-line<?php echo $idx > 0 ? ' cell-item-sep' : ''; ?>">
-                                            <span class="cell-strong"><?php echo $esc($item['title']); ?></span>
-                                            <?php if (!empty($item['sku'])) { ?>
-                                                <span class="cell-muted-inline"> [<?php echo $esc($item['sku']); ?>]</span>
-                                            <?php } ?>
-                                        </div>
-                                    <?php } ?>
-                                </td>
-                                <td class="col-plink">
-                                    <?php
-                                    $hasAnyLink = false;
-                                    foreach ($items as $idx => $item) {
-                                        $wUrl = trim((string)($item['website_url'] ?? ''));
-                                        if ($wUrl !== '') {
-                                            $hasAnyLink = true;
-                                            ?>
-                                            <div class="cell-line<?php echo $idx > 0 ? ' cell-item-sep' : ''; ?>">
-                                                <a class="crm-print-link" href="<?php echo $esc($wUrl); ?>" target="_blank" rel="noopener noreferrer"><?php echo $renderWrappableUrl($wUrl); ?></a>
-                                            </div>
-                                            <?php
-                                        } elseif ($isMulti) {
-                                            ?>
-                                            <div class="cell-line cell-muted-inline<?php echo $idx > 0 ? ' cell-item-sep' : ''; ?>">—</div>
-                                            <?php
-                                        }
+                                <?php foreach ($selectedCols as $colIdx => $colDef) {
+                                    $cKey   = (string)$colDef['key'];
+                                    $isHead = ($colIdx === 0);
+                                    $tdCls  = 'col-k-' . $cKey;
+                                    if ($colDef['align'] === 'right') {
+                                        $tdCls .= ' cell-num';
+                                    } elseif ($colDef['align'] === 'center') {
+                                        $tdCls .= ' cell-center';
                                     }
-                                    if (!$hasAnyLink) {
-                                        echo '<span class="cell-muted-inline">—</span>';
+                                    if ($cKey === 'order_code') {
+                                        $tdCls .= ' cell-strong cell-nowrap';
+                                    } elseif ($cKey === 'order_price') {
+                                        $tdCls .= ' cell-order-price cell-strong';
+                                    } elseif (in_array($cKey, ['order_date', 'order_time', 'sender_mobile', 'sender_alt_mobile', 'receiver_mobile', 'receiver_alt_mobile', 'delivery_date'], true)) {
+                                        $tdCls .= ' cell-nowrap';
                                     }
+                                    $tag = $isHead ? 'th' : 'td';
+                                    $scopeAttr = $isHead ? ' scope="row"' : '';
                                     ?>
-                                </td>
-                                <td class="col-qty cell-num">
-                                    <?php foreach ($items as $idx => $item) { ?>
-                                        <div class="cell-line"><?php echo (int)$item['qty']; ?></div>
-                                    <?php } ?>
-                                    <?php if ($isMulti) { ?>
-                                        <div class="cell-muted">Sum: <?php echo (int)$row['product']['total_qty']; ?></div>
-                                    <?php } ?>
-                                </td>
-                                <td class="col-uprice cell-num">
-                                    <?php foreach ($items as $item) {
-                                        $uNum = $item['unit_price_num'] ?? null;
-                                        $uStr = $uNum !== null ? ($currSym . ' ' . crmOrderFormatMoney((float)$uNum)) : ($item['unit_price'] ?: '—');
+                                    <<?php echo $tag . $scopeAttr; ?> class="<?php echo $esc($tdCls); ?>">
+                                        <?php
+                                        switch ($cKey) {
+                                            case 'order_code':
+                                                echo $esc($row['order_code']);
+                                                break;
+                                            case 'order_date':
+                                                echo $esc($row['created_date_display'] ?: 'N/A');
+                                                break;
+                                            case 'order_time':
+                                                echo $esc($row['created_time_display'] ?: '—');
+                                                break;
+                                            case 'order_status':
+                                                echo '<span class="cell-badge ' . $esc($row['status']['class']) . '">' . $esc($row['status']['label']) . '</span>';
+                                                break;
+                                            case 'product_name':
+                                                if (empty($items)) {
+                                                    echo '<span class="cell-muted-inline">N/A</span>';
+                                                } else {
+                                                    foreach ($items as $idx => $item) {
+                                                        echo '<div class="cell-line' . ($idx > 0 ? ' cell-item-sep' : '') . '"><span class="cell-strong">' . $esc($item['title']) . '</span></div>';
+                                                    }
+                                                }
+                                                break;
+                                            case 'product_link':
+                                                $hasAnyLink = false;
+                                                foreach ($items as $idx => $item) {
+                                                    $wUrl = trim((string)($item['website_url'] ?? ''));
+                                                    if ($wUrl !== '') {
+                                                        $hasAnyLink = true;
+                                                        echo '<div class="cell-line' . ($idx > 0 ? ' cell-item-sep' : '') . '"><a class="crm-print-link" href="' . $esc($wUrl) . '" target="_blank" rel="noopener noreferrer">' . $renderWrappableUrl($wUrl) . '</a></div>';
+                                                    } elseif ($isMulti) {
+                                                        echo '<div class="cell-line cell-muted-inline' . ($idx > 0 ? ' cell-item-sep' : '') . '">—</div>';
+                                                    }
+                                                }
+                                                if (!$hasAnyLink) {
+                                                    echo '<span class="cell-muted-inline">—</span>';
+                                                }
+                                                break;
+                                            case 'product_sku':
+                                                $skus = [];
+                                                foreach ($items as $item) {
+                                                    $sVal = trim((string)($item['sku'] ?? ''));
+                                                    $skus[] = $sVal !== '' ? $esc($sVal) : '<span class="cell-muted-inline">—</span>';
+                                                }
+                                                echo !empty($skus) ? implode('<br>', $skus) : '<span class="cell-muted-inline">—</span>';
+                                                break;
+                                            case 'item_qty':
+                                                if (empty($items)) {
+                                                    echo '1';
+                                                } else {
+                                                    foreach ($items as $item) {
+                                                        echo '<div class="cell-line">' . (int)($item['qty'] ?? 1) . '</div>';
+                                                    }
+                                                }
+                                                break;
+                                            case 'total_qty':
+                                                echo (int)($row['product']['total_qty'] ?? 1);
+                                                break;
+                                            case 'unit_price':
+                                                if (empty($items)) {
+                                                    echo '<span class="cell-muted-inline">—</span>';
+                                                } else {
+                                                    foreach ($items as $item) {
+                                                        $uNum = $item['unit_price_num'] ?? null;
+                                                        $uStr = $uNum !== null ? ($currSym . ' ' . crmOrderFormatMoney((float)$uNum)) : ($item['unit_price'] ?: '—');
+                                                        echo '<div class="cell-line">' . $esc($uStr) . '</div>';
+                                                    }
+                                                }
+                                                break;
+                                            case 'product_subtotal':
+                                                $subNum = (float)($row['product']['subtotal_num'] ?? 0);
+                                                echo $esc($currSym . ' ' . crmOrderFormatMoney($subNum));
+                                                break;
+                                            case 'delivery_charges':
+                                                $delNum = (float)($row['product']['delivery_charges_num'] ?? 0);
+                                                echo $esc($currSym . ' ' . crmOrderFormatMoney($delNum));
+                                                break;
+                                            case 'order_price':
+                                                echo $esc($row['product']['amount_display'] ?: ($currSym . ' 0'));
+                                                break;
+                                            case 'sender_email':
+                                                $em = trim((string)($row['sender']['email'] ?? ''));
+                                                echo $em !== '' ? $renderWrappableEmail($em) : '<span class="cell-muted-inline">—</span>';
+                                                break;
+                                            case 'transaction_ref':
+                                                $txRefVal = trim((string)($row['payment']['transaction_ref'] ?? ''));
+                                                echo $txRefVal !== '' ? '<code class="cell-code">' . $esc($txRefVal) . '</code>' : '<span class="cell-muted-inline">—</span>';
+                                                break;
+                                            case 'delivery_photo_link':
+                                                $pUrl = trim((string)($row['delivery']['photo_url'] ?? ''));
+                                                if ($pUrl !== '') {
+                                                    echo '<a class="crm-print-link" href="' . $esc($pUrl) . '" target="_blank" rel="noopener noreferrer">' . $renderWrappableUrl($pUrl) . '</a>';
+                                                } else {
+                                                    echo '<span class="cell-muted-inline">—</span>';
+                                                }
+                                                break;
+                                            default:
+                                                $valStr = trim(crmOrderExtractColumnSpreadsheetValue($row, $cKey));
+                                                echo $valStr !== '' ? $esc($valStr) : '<span class="cell-muted-inline">—</span>';
+                                                break;
+                                        }
                                         ?>
-                                        <div class="cell-line"><?php echo $esc($uStr); ?></div>
-                                    <?php } ?>
-                                </td>
-                                <td class="col-oprice cell-num cell-order-price">
-                                    <div class="cell-strong"><?php echo $esc($row['product']['amount_display']); ?></div>
-                                    <?php if ($delivChg > 0) { ?>
-                                        <div class="cell-muted">+ Deliv: <?php echo $esc($currSym . ' ' . crmOrderFormatMoney($delivChg)); ?></div>
-                                    <?php } ?>
-                                    <?php if ($coupon !== '') { ?>
-                                        <div class="cell-muted">Coupon: <?php echo $esc($coupon); ?></div>
-                                    <?php } ?>
-                                </td>
-                                <td class="col-pay">
-                                    <div><?php echo $esc($row['payment']['mode_label']); ?></div>
-                                    <?php if ($txStat !== '') { ?>
-                                        <div class="cell-muted"><?php echo $esc($txStat); ?></div>
-                                    <?php } ?>
-                                </td>
-                                <td class="col-sname"><?php echo $esc($row['sender']['name']); ?></td>
-                                <td class="col-smob cell-nowrap">
-                                    <div><?php echo $esc($row['sender']['mobile'] ?: '—'); ?></div>
-                                    <?php if (!empty($row['sender']['alt_mobile'])) { ?>
-                                        <div class="cell-muted">Alt: <?php echo $esc($row['sender']['alt_mobile']); ?></div>
-                                    <?php } ?>
-                                </td>
-                                <td class="col-semail">
-                                    <?php if (!empty($row['sender']['email'])) { ?>
-                                        <?php echo $renderWrappableEmail($row['sender']['email']); ?>
-                                    <?php } else { ?>
-                                        <span class="cell-muted-inline">—</span>
-                                    <?php } ?>
-                                </td>
-                                <td class="col-rname"><?php echo $esc($row['receiver']['name']); ?></td>
-                                <td class="col-rmob cell-nowrap">
-                                    <div><?php echo $esc($row['receiver']['mobile'] ?: '—'); ?></div>
-                                    <?php if (!empty($row['receiver']['alt_mobile'])) { ?>
-                                        <div class="cell-muted">Alt: <?php echo $esc($row['receiver']['alt_mobile']); ?></div>
-                                    <?php } ?>
-                                </td>
-                                <td class="col-raddr"><?php echo $esc($row['receiver']['street_address'] ?: '—'); ?></td>
-                                <td class="col-rcity">
-                                    <div><?php echo $esc($cityPin !== '' ? $cityPin : '—'); ?></div>
-                                    <?php if ($pinCode !== '') { ?>
-                                        <div class="cell-muted">PIN: <?php echo $esc($pinCode); ?></div>
-                                    <?php } ?>
-                                </td>
-                                <td class="col-ddate cell-nowrap"><?php echo $esc($row['delivery']['date_display']); ?></td>
-                                <td class="col-dslot">
-                                    <?php if ($slotStr !== '') { ?>
-                                        <div><?php echo $esc($slotStr); ?></div>
-                                    <?php } ?>
-                                    <?php if ($timeStr !== '' && strcasecmp($timeStr, $slotStr) !== 0) { ?>
-                                        <div class="cell-muted"><?php echo $esc($timeStr); ?></div>
-                                    <?php } ?>
-                                    <?php if ($slotStr === '' && $timeStr === '') { ?>
-                                        <span class="cell-muted-inline">—</span>
-                                    <?php } ?>
-                                </td>
-                                <td class="col-docc"><?php echo $esc($row['delivery']['occasion'] ?: '—'); ?></td>
-                                <td class="col-dmsg">
-                                    <?php if ($msgStr !== '') { ?>
-                                        <div><?php echo $esc($msgStr); ?></div>
-                                    <?php } ?>
-                                    <?php if ($noteStr !== '') { ?>
-                                        <div class="cell-muted">Note: <?php echo $esc($noteStr); ?></div>
-                                    <?php } ?>
-                                    <?php if ($retStr !== '') { ?>
-                                        <div class="cell-muted">Return: <?php echo $esc($retStr); ?></div>
-                                    <?php } ?>
-                                    <?php if ($msgStr === '' && $noteStr === '' && $retStr === '') { ?>
-                                        <span class="cell-muted-inline">—</span>
-                                    <?php } ?>
-                                </td>
+                                    </<?php echo $tag; ?>>
+                                <?php } ?>
                             </tr>
                         <?php } ?>
                     <?php } ?>

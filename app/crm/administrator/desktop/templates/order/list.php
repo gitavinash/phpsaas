@@ -51,6 +51,20 @@ $statusPills = [
         </div>
 
         <div class="crm-export-toolbar" role="toolbar" focusgroup="toolbar wrap" aria-label="Order exports" aria-controls="crmOrdersTable">
+            <div class="crm-export-group" role="group" aria-label="Customize export columns">
+                <button type="button"
+                    class="crm-btn crm-btn-cols"
+                    id="crmExportColumnsBtn"
+                    command="show-modal"
+                    commandfor="crmExportColumnsDialog"
+                    aria-haspopup="dialog"
+                    aria-label="Choose export columns (15 selected)">
+                    <svg aria-hidden="true" focusable="false" class="crm-btn-icon-svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/></svg>
+                    <span class="crm-btn-label">Columns</span>
+                    <span class="crm-cols-count-badge" id="crmExportColsBadge">15</span>
+                </button>
+            </div>
+            <span class="crm-toolbar-sep" role="separator" aria-orientation="vertical"></span>
             <div class="crm-export-group" role="group" aria-label="Export files">
                 <button type="button" class="crm-btn crm-btn-pdf" id="crmExportPdfBtn" aria-disabled="false">
                     <svg aria-hidden="true" focusable="false" class="crm-btn-icon-svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
@@ -406,4 +420,72 @@ $statusPills = [
             <nav class="crm-pagination-controls" id="crmPaginationControls" aria-label="Orders pagination"></nav>
         </div>
     </div>
+
+    <dialog id="crmExportColumnsDialog"
+        class="crm-dialog crm-export-cols-dialog"
+        closedby="any"
+        aria-labelledby="crmExportColumnsTitle">
+        <div class="crm-dialog-shell">
+            <div class="crm-dialog-header">
+                <div class="crm-dialog-title-wrap">
+                    <h2 id="crmExportColumnsTitle" class="crm-dialog-title">Customize Export Columns</h2>
+                    <p class="crm-dialog-subtitle">Choose which order fields to include in PDF, CSV, Excel (.xlsx), and Print exports.</p>
+                </div>
+                <button type="button"
+                    class="crm-dialog-close"
+                    id="crmExportColsCloseBtn"
+                    command="close"
+                    commandfor="crmExportColumnsDialog"
+                    aria-label="Close customize export columns dialog">
+                    <svg aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+            </div>
+
+            <div class="crm-cols-toolbar">
+                <div class="crm-cols-search-wrap">
+                    <label for="crmExportColsFilterInput" class="visually-hidden">Search export columns</label>
+                    <input type="search"
+                        id="crmExportColsFilterInput"
+                        name="col_filter"
+                        class="crm-cols-search-input"
+                        placeholder="Filter columns (e.g. email, pin, gift, price)..."
+                        autocomplete="off"
+                        autocorrect="off"
+                        autocapitalize="none"
+                        spellcheck="false"
+                        autofocus>
+                </div>
+                <div class="crm-cols-bulk-actions" role="group" aria-label="Column presets">
+                    <button type="button" class="crm-btn crm-btn-sm" id="crmExportColsDefaultBtn">Default (15)</button>
+                    <button type="button" class="crm-btn crm-btn-sm" id="crmExportColsAllBtn">Select All</button>
+                    <button type="button" class="crm-btn crm-btn-sm crm-btn-ghost" id="crmExportColsClearBtn">Clear All</button>
+                </div>
+            </div>
+
+            <div class="crm-cols-summary-strip">
+                <span class="crm-cols-live-summary" id="crmExportColsSummary" aria-live="polite">15 of 41 columns selected (Default)</span>
+                <span class="crm-cols-group-order-note">Grouped order follows report layout</span>
+            </div>
+
+            <form id="crmExportColumnsForm" class="crm-dialog-form" method="dialog" novalidate>
+                <div class="crm-dialog-body">
+                    <div id="crmExportColsGroups" class="crm-cols-groups"></div>
+                    <p id="crmExportColsEmptySearch" class="crm-cols-empty-search" hidden>No columns matched your filter.</p>
+                </div>
+
+                <div id="crmExportColsError" class="crm-cols-error" role="alert" hidden>
+                    <span class="crm-error-icon" role="img" aria-label="Error">!</span>
+                    <span class="crm-cols-error-text">Select at least one column to export.</span>
+                </div>
+
+                <div class="crm-dialog-footer">
+                    <span class="crm-cols-applies-note">Saved automatically for PDF, CSV, Excel &amp; Print</span>
+                    <div class="crm-dialog-footer-actions">
+                        <button type="button" class="crm-btn" id="crmExportColsCancelBtn" command="close" commandfor="crmExportColumnsDialog">Cancel</button>
+                        <button type="submit" value="save" class="crm-btn crm-btn-primary" id="crmExportColsSaveBtn">Save Columns</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </dialog>
 </div>

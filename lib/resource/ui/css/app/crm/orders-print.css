@@ -156,10 +156,22 @@ body.crm-print-body {
 
 .crm-print-table {
     width: 100%;
-    min-width: 1600px;
+    min-width: 1120px;
     border-collapse: separate;
     border-spacing: 0;
-    table-layout: fixed;
+    table-layout: auto;
+}
+
+.crm-print-table.crm-cols-compact {
+    min-width: 100%;
+}
+
+.crm-print-table.crm-cols-medium {
+    min-width: 1120px;
+}
+
+.crm-print-table.crm-cols-wide {
+    min-width: 2150px;
 }
 
 .crm-print-caption {
@@ -189,19 +201,20 @@ body.crm-print-body {
     border-bottom: 1px solid #334155;
 }
 
+.crm-print-table thead tr.crm-th-groups th:last-child { border-right: 0; }
 .crm-print-table thead tr.crm-th-groups th.grp-order { background: #0f172a; }
 .crm-print-table thead tr.crm-th-groups th.grp-product { background: #1e293b; }
 .crm-print-table thead tr.crm-th-groups th.grp-price { background: #1e3a8a; }
 .crm-print-table thead tr.crm-th-groups th.grp-sender { background: #0f172a; }
 .crm-print-table thead tr.crm-th-groups th.grp-receiver { background: #1e293b; }
-.crm-print-table thead tr.crm-th-groups th.grp-delivery { background: #0f172a; border-right: 0; }
+.crm-print-table thead tr.crm-th-groups th.grp-delivery { background: #0f172a; }
 
 .crm-print-table thead tr.crm-th-cols th {
     background: #f1f5f9;
     color: #1e293b;
     border-right: 1px solid #cbd5e1;
     border-bottom: 2px solid #94a3b8;
-    padding: 5px 5px;
+    padding: 5px 6px;
     text-align: left;
     font-size: 9px;
     font-weight: 700;
@@ -214,17 +227,19 @@ body.crm-print-body {
     border-right: 0;
 }
 
-.crm-print-table thead tr.crm-th-cols th.col-qty,
-.crm-print-table thead tr.crm-th-cols th.col-uprice,
-.crm-print-table thead tr.crm-th-cols th.col-oprice {
+.crm-print-table thead tr.crm-th-cols th.th-right {
     text-align: right;
+}
+
+.crm-print-table thead tr.crm-th-cols th.th-center {
+    text-align: center;
 }
 
 .crm-print-table tbody th,
 .crm-print-table tbody td {
     border-right: 1px solid #e2e8f0;
     border-bottom: 1px solid #e2e8f0;
-    padding: 5px 5px;
+    padding: 5px 6px;
     vertical-align: top;
     text-align: left;
     font-size: 10px;
@@ -232,6 +247,7 @@ body.crm-print-body {
     word-break: normal;
 }
 
+.crm-print-table tbody th:last-child,
 .crm-print-table tbody td:last-child {
     border-right: 0;
 }
@@ -246,28 +262,21 @@ body.crm-print-body {
     background: #f8fafc;
 }
 
-/* Balanced fixed widths across all 21 separated value columns (sum = 100%) */
-.crm-print-table .col-oid    { width: 4.3%; white-space: nowrap; }
-.crm-print-table .col-date   { width: 4.3%; }
-.crm-print-table .col-time   { width: 3.8%; }
-.crm-print-table .col-status { width: 4.3%; }
-.crm-print-table .col-pname  { width: 6.4%; }
-.crm-print-table .col-plink  { width: 6.7%; }
-.crm-print-table .col-qty    { width: 2.3%; }
-.crm-print-table .col-uprice { width: 4.1%; }
-.crm-print-table .col-oprice { width: 4.8%; }
-.crm-print-table .col-pay    { width: 3.9%; }
-.crm-print-table .col-sname  { width: 4.8%; }
-.crm-print-table .col-smob   { width: 4.6%; }
-.crm-print-table .col-semail { width: 6.5%; overflow-wrap: anywhere; }
-.crm-print-table .col-rname  { width: 4.7%; }
-.crm-print-table .col-rmob   { width: 4.6%; }
-.crm-print-table .col-raddr  { width: 6.2%; }
-.crm-print-table .col-rcity  { width: 4.4%; }
-.crm-print-table .col-ddate  { width: 4.8%; }
-.crm-print-table .col-dslot  { width: 4.5%; }
-.crm-print-table .col-docc   { width: 4.4%; }
-.crm-print-table .col-dmsg   { width: 5.6%; }
+/* Column proportion hints for dynamic column selection */
+.crm-print-table .col-k-order_code { min-width: 72px; white-space: nowrap; }
+.crm-print-table .col-k-order_date,
+.crm-print-table .col-k-delivery_date { min-width: 78px; white-space: nowrap; }
+.crm-print-table .col-k-order_status { min-width: 82px; white-space: nowrap; }
+.crm-print-table .col-k-product_name { min-width: 145px; }
+.crm-print-table .col-k-product_link,
+.crm-print-table .col-k-delivery_photo_link { min-width: 155px; max-width: 230px; overflow-wrap: anywhere; }
+.crm-print-table .col-k-sender_name,
+.crm-print-table .col-k-receiver_name { min-width: 108px; }
+.crm-print-table .col-k-sender_email { min-width: 130px; overflow-wrap: anywhere; }
+.crm-print-table .col-k-receiver_street_address { min-width: 155px; }
+.crm-print-table .col-k-gift_message,
+.crm-print-table .col-k-delivery_note,
+.crm-print-table .col-k-return_comment { min-width: 135px; max-width: 240px; }
 
 .cell-strong {
     font-weight: 700;
@@ -289,10 +298,20 @@ body.crm-print-body {
     white-space: nowrap;
 }
 
+.cell-center {
+    text-align: center !important;
+}
+
 .cell-num {
     text-align: right !important;
     font-variant-numeric: tabular-nums;
     white-space: nowrap;
+}
+
+.cell-code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 9px;
+    overflow-wrap: anywhere;
 }
 
 .crm-print-table tbody td.cell-order-price {
@@ -392,9 +411,17 @@ body.crm-print-body {
         border-radius: 0;
     }
 
-    .crm-print-table {
+    .crm-print-table,
+    .crm-print-table.crm-cols-compact,
+    .crm-print-table.crm-cols-medium,
+    .crm-print-table.crm-cols-wide {
         min-width: 0;
         width: 100%;
+    }
+
+    .crm-print-table [class*="col-k-"] {
+        min-width: 0;
+        max-width: none;
     }
 
     .crm-print-table thead {
@@ -412,6 +439,13 @@ body.crm-print-body {
     .crm-print-table tbody td {
         font-size: 8.2px;
         padding: 3.5px 4px;
+    }
+
+    .crm-print-table.crm-cols-wide thead th,
+    .crm-print-table.crm-cols-wide tbody th,
+    .crm-print-table.crm-cols-wide tbody td {
+        font-size: 6.8px;
+        padding: 2.5px 3px;
     }
 
     .crm-print-link {
