@@ -1489,12 +1489,18 @@ body.premium-admin .modern-product-list .dt-search-slot .dataTables_filter input
   z-index: 9999;
 }
 
-.daterangepicker.pl-daterangepicker:before {
+.daterangepicker.pl-daterangepicker:not(.drop-up):before {
   border-bottom-color: #cbd5e1;
 }
 
 .daterangepicker.pl-daterangepicker.drop-up:before {
-  border-top-color: #cbd5e1;
+  border-bottom: 0;
+  border-top: 7px solid #cbd5e1;
+}
+
+.daterangepicker.pl-daterangepicker.drop-up:after {
+  border-bottom: 0;
+  border-top: 6px solid #ffffff;
 }
 
 .daterangepicker.pl-daterangepicker.single .drp-calendar.left {
