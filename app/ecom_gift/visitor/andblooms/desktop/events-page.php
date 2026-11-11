@@ -140,7 +140,7 @@ if (!function_exists('renderEventCardItem')) {
         $timeStart = $hasTime ? date('h:i A', strtotime($startTime)) : '';
         $hasEndTime = (!empty($endTime) && $endTime !== '00:00:00');
         $timeEnd = $hasEndTime ? date('h:i A', strtotime($endTime)) : '';
-        $timeStr = $hasTime ? ($timeStart . ($hasEndTime ? ' - ' . $timeEnd : '')) : 'All Day';
+        $timeStr = $hasTime ? ($timeStart . ($hasEndTime ? ' - ' . $timeEnd : '')) : '';
 
         // Pricing
         $invPrice = $event['inventory_price'] ?? 0;
@@ -218,10 +218,17 @@ if (!function_exists('renderEventCardItem')) {
                             <i class="ri-calendar-line <?= $isPast ? 'text-gray-400' : 'text-primary' ?> text-base"></i>
                             <span><?= htmlspecialchars($fullDateStr, ENT_QUOTES, 'UTF-8') ?></span>
                         </div>
-                        <div class="flex items-center gap-2">
-                            <i class="ri-time-line <?= $isPast ? 'text-gray-400' : 'text-primary' ?> text-base"></i>
-                            <span><?= htmlspecialchars($timeStr, ENT_QUOTES, 'UTF-8') ?></span>
-                        </div>
+                        <?php
+
+                        if ($timeStr != '') { ?>
+                            <div class="flex items-center gap-2">
+                                <i class="ri-time-line <?= $isPast ? 'text-gray-400' : 'text-primary' ?> text-base"></i>
+                                <span><?= htmlspecialchars($timeStr, ENT_QUOTES, 'UTF-8') ?></span>
+                            </div>
+                        <?php
+                        }
+
+                        ?>
                         <div class="flex items-center gap-2 sm:col-span-2">
                             <i class="ri-map-pin-line <?= $isPast ? 'text-gray-400' : 'text-primary' ?> text-base"></i>
                             <span class="truncate"><?= $locationStr ?></span>
