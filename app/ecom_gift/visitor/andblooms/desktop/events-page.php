@@ -9,7 +9,7 @@ $bannerFromProduct = false;
 
 // Sort parameter
 $sort = $_GET['sort'] ?? 'newest';
-$sortQuery = "ORDER BY e.event_start_date DESC, e.event_id DESC";
+$sortQuery = "ORDER BY e.event_start_date ASC";
 
 if ($sort === 'price_low') {
     $sortQuery = "ORDER BY inv.inventory_price ASC, e.event_id DESC";
@@ -115,7 +115,8 @@ if (empty($bannerImage)) {
 
 // Reusable Event Card Renderer
 if (!function_exists('renderEventCardItem')) {
-    function renderEventCardItem($event, $today) {
+    function renderEventCardItem($event, $today)
+    {
         $eventId = $event['event_id'] ?? 0;
         $eventTitle = ucwords($event['event_title'] ?? '');
         $categoryName = !empty($event['category_title']) ? ucwords($event['category_title']) : 'Workshop';
@@ -155,15 +156,15 @@ if (!function_exists('renderEventCardItem')) {
         $locationStr = !empty($event['event_location']) ? htmlspecialchars($event['event_location'], ENT_QUOTES, 'UTF-8') : 'Venue to be announced';
         $descSnippet = !empty($event['event_description']) ? htmlspecialchars(mb_strimwidth(strip_tags($event['event_description']), 0, 160, '...'), ENT_QUOTES, 'UTF-8') : '';
         $seatsAvailable = isset($event['inventory_current_stock']) ? (int)$event['inventory_current_stock'] : 0;
-        ?>
+?>
         <article class="bg-white rounded-2xl border <?= $isPast ? 'border-gray-200/80' : 'border-gray-100' ?> shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden flex flex-col md:flex-row group">
-            
+
             <!-- Left: Event Image & Date Badge Overlay -->
             <div class="relative md:w-2/5 lg:w-1/3 min-h-[220px] md:min-h-full overflow-hidden bg-gray-100">
                 <a href="<?= htmlspecialchars($eventLink, ENT_QUOTES, 'UTF-8') ?>" class="block h-full">
-                    <img src="<?= htmlspecialchars($eventImg, ENT_QUOTES, 'UTF-8') ?>" 
-                         alt="<?= htmlspecialchars($eventTitle, ENT_QUOTES, 'UTF-8') ?>" 
-                         class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 <?= $isPast ? 'filter saturate-90' : '' ?>">
+                    <img src="<?= htmlspecialchars($eventImg, ENT_QUOTES, 'UTF-8') ?>"
+                        alt="<?= htmlspecialchars($eventTitle, ENT_QUOTES, 'UTF-8') ?>"
+                        class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 <?= $isPast ? 'filter saturate-90' : '' ?>">
                 </a>
 
                 <!-- Calendar Badge Overlay -->
@@ -255,19 +256,19 @@ if (!function_exists('renderEventCardItem')) {
 
                     <?php if ($isPast): ?>
                         <a href="<?= htmlspecialchars($eventLink, ENT_QUOTES, 'UTF-8') ?>"
-                           class="inline-flex items-center justify-center px-6 py-3 rounded-xl font-semibold text-sm bg-gray-100 hover:bg-gray-200 text-gray-800 border border-gray-200 transition-all duration-200 shadow-sm group-hover:shadow group-hover:translate-x-0.5">
+                            class="inline-flex items-center justify-center px-6 py-3 rounded-xl font-semibold text-sm bg-gray-100 hover:bg-gray-200 text-gray-800 border border-gray-200 transition-all duration-200 shadow-sm group-hover:shadow group-hover:translate-x-0.5">
                             View Event Details <i class="ri-arrow-right-line ml-2"></i>
                         </a>
                     <?php else: ?>
                         <a href="<?= htmlspecialchars($eventLink, ENT_QUOTES, 'UTF-8') ?>"
-                           class="inline-flex items-center justify-center px-6 py-3 rounded-xl font-semibold text-sm bg-primary text-white hover:bg-opacity-90 transition-all duration-200 shadow-sm group-hover:shadow group-hover:translate-x-0.5">
+                            class="inline-flex items-center justify-center px-6 py-3 rounded-xl font-semibold text-sm bg-primary text-white hover:bg-opacity-90 transition-all duration-200 shadow-sm group-hover:shadow group-hover:translate-x-0.5">
                             Explore & Book Seat <i class="ri-arrow-right-line ml-2"></i>
                         </a>
                     <?php endif; ?>
                 </div>
             </div>
         </article>
-        <?php
+<?php
     }
 }
 ?>
@@ -311,13 +312,13 @@ if (!function_exists('renderEventCardItem')) {
 
     <!-- Filter & Tabs Toolbar Header -->
     <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 md:p-6 mb-8 flex flex-col lg:flex-row justify-between items-stretch lg:items-center gap-4">
-        
+
         <!-- Tabs Switcher -->
         <div class="flex flex-wrap items-center gap-2 p-1.5 bg-gray-100/80 rounded-xl border border-gray-200/60 w-full lg:w-auto">
             <!-- Upcoming Events Tab -->
-            <a href="?tab=upcoming<?= !empty($sort) && $sort !== 'newest' ? '&sort=' . urlencode($sort) : '' ?>" 
-               data-tab="upcoming"
-               class="event-tab-btn flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold transition-all <?= $activeTab === 'upcoming' ? 'bg-white text-gray-900 shadow-sm border border-gray-200/80' : 'text-gray-600 hover:text-gray-900 hover:bg-white/60' ?>">
+            <a href="?tab=upcoming<?= !empty($sort) && $sort !== 'newest' ? '&sort=' . urlencode($sort) : '' ?>"
+                data-tab="upcoming"
+                class="event-tab-btn flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold transition-all <?= $activeTab === 'upcoming' ? 'bg-white text-gray-900 shadow-sm border border-gray-200/80' : 'text-gray-600 hover:text-gray-900 hover:bg-white/60' ?>">
                 <i class="ri-calendar-event-line <?= $activeTab === 'upcoming' ? 'text-primary' : 'text-gray-400' ?>"></i>
                 <span>Upcoming</span>
                 <span class="tab-count-badge px-2 py-0.5 text-xs rounded-full <?= $activeTab === 'upcoming' ? 'bg-primary/10 text-primary font-bold' : 'bg-gray-200/80 text-gray-600' ?>">
@@ -326,9 +327,9 @@ if (!function_exists('renderEventCardItem')) {
             </a>
 
             <!-- Previous Events Tab -->
-            <a href="?tab=previous<?= !empty($sort) && $sort !== 'newest' ? '&sort=' . urlencode($sort) : '' ?>" 
-               data-tab="previous"
-               class="event-tab-btn flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold transition-all <?= $activeTab === 'previous' ? 'bg-white text-gray-900 shadow-sm border border-gray-200/80' : 'text-gray-600 hover:text-gray-900 hover:bg-white/60' ?>">
+            <a href="?tab=previous<?= !empty($sort) && $sort !== 'newest' ? '&sort=' . urlencode($sort) : '' ?>"
+                data-tab="previous"
+                class="event-tab-btn flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold transition-all <?= $activeTab === 'previous' ? 'bg-white text-gray-900 shadow-sm border border-gray-200/80' : 'text-gray-600 hover:text-gray-900 hover:bg-white/60' ?>">
                 <i class="ri-history-line <?= $activeTab === 'previous' ? 'text-primary' : 'text-gray-400' ?>"></i>
                 <span>Previous</span>
                 <span class="tab-count-badge px-2 py-0.5 text-xs rounded-full <?= $activeTab === 'previous' ? 'bg-primary/10 text-primary font-bold' : 'bg-gray-200/80 text-gray-600' ?>">
@@ -337,9 +338,9 @@ if (!function_exists('renderEventCardItem')) {
             </a>
 
             <!-- All Events Tab -->
-            <a href="?tab=all<?= !empty($sort) && $sort !== 'newest' ? '&sort=' . urlencode($sort) : '' ?>" 
-               data-tab="all"
-               class="event-tab-btn flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold transition-all <?= $activeTab === 'all' ? 'bg-white text-gray-900 shadow-sm border border-gray-200/80' : 'text-gray-600 hover:text-gray-900 hover:bg-white/60' ?>">
+            <a href="?tab=all<?= !empty($sort) && $sort !== 'newest' ? '&sort=' . urlencode($sort) : '' ?>"
+                data-tab="all"
+                class="event-tab-btn flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold transition-all <?= $activeTab === 'all' ? 'bg-white text-gray-900 shadow-sm border border-gray-200/80' : 'text-gray-600 hover:text-gray-900 hover:bg-white/60' ?>">
                 <i class="ri-apps-2-line <?= $activeTab === 'all' ? 'text-primary' : 'text-gray-400' ?>"></i>
                 <span>All Events</span>
                 <span class="tab-count-badge px-2 py-0.5 text-xs rounded-full <?= $activeTab === 'all' ? 'bg-primary/10 text-primary font-bold' : 'bg-gray-200/80 text-gray-600' ?>">
