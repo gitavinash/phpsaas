@@ -1025,6 +1025,7 @@ if ($plFilterSort !== 'newest') {
                         $plRawLinkUrl = trim((string)($plRow['link_url'] ?? ''));
                         $plViewHref = $plSafeHref($plRawLinkUrl, '#');
                         $plEditHref = $plRouteBaseUrl . '?type=edit&editor=true&id=' . rawurlencode($plEncodedId);
+                        $plDuplicateHref = $plRouteBaseUrl . '?type=add&editor=true&duplicate_id=' . rawurlencode($plEncodedId);
 
                         $plEffDateStr = (string)($plRow['effective_publish_date'] ?? $plRow['link_creation']);
                         $plTimestamp = strtotime($plEffDateStr);
@@ -1070,6 +1071,9 @@ if ($plFilterSort !== 'newest') {
                                         <div class="hover">
                                             <a href="<?php echo $plEsc($plEditHref); ?>" aria-label="<?php echo $plEsc('Edit ' . $plProductTitle); ?>">
                                                 <i class="fas fa-pencil-alt" aria-hidden="true"></i> Edit
+                                            </a>
+                                            <a href="<?php echo $plEsc($plDuplicateHref); ?>" aria-label="<?php echo $plEsc('Duplicate ' . $plProductTitle); ?>">
+                                                <i class="fas fa-copy" aria-hidden="true"></i> Duplicate
                                             </a>
                                             <a
                                                 href="#"

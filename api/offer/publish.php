@@ -1,35 +1,49 @@
 <?php
 
     require_once LOGIN_CHECK;
+    require_once FUNCTIONS . 'duplicate.php';
 
     function publish($connection, $data) {
 
         extract($data);
         
-        if($title!='') {
+        if(isset($title) && $title!='') {
 
+            $image = array();
+            $thumbnailImage = '';
             require_once MODULES.'imageUploader.php';
 
-            if(!isset($featureImage)) {
-
-                /** if feature image is not upload then set featureImage as blank */
-
-                $featureImage='';
-                $thumbnailImage='';
-
-            }
-        
-            $facebookImage=(((isset($facebookImage)) ? $facebookImage : $featureImage ));
-            $twitterImage=(((isset($twitterImage)) ? $twitterImage : $featureImage ));
+            $resolvedImages = iswResolveDuplicateImages(
+                $connection,
+                $data,
+                (isset($image) && is_array($image)) ? $image : array(),
+                isset($thumbnailImage) ? (string)$thumbnailImage : ''
+            );
+            $featureImage = $resolvedImages['featureImage'];
+            $thumbnailImage = $resolvedImages['thumbnailImage'];
+            $facebookImage = $resolvedImages['facebookImage'];
+            $twitterImage = $resolvedImages['twitterImage'];
+            $description = isset($description) ? $description : '';
 
             /** offer url */
 
-            $url='/offer/'.strtolower(preg_replace('~[^\p{M}\w-]+~u', '-', $url)).'/';
+            $slugClean = trim((string)preg_replace('~[^\p{M}\w-]+~u', '-', trim((string)($url ?? ''), '/')), '-');
+            if ($slugClean === '') {
+                $slugClean = trim((string)preg_replace('~[^\p{M}\w-]+~u', '-', trim((string)$title)), '-');
+            }
+            $url = '/offer/' . strtolower($slugClean) . '/';
                     
             /* define facebook and twitter meta desciption */
 
-            $fb_desc=(($fb_desc=='') ? $meta_desc : $fb_desc );
-            $tw_desc=(($tw_desc=='') ? $meta_desc : $tw_desc );
+            $meta_title = isset($meta_title) ? $meta_title : '';
+            $meta_desc = isset($meta_desc) ? $meta_desc : '';
+            $meta_key = isset($meta_key) ? $meta_key : '';
+            $canonical = isset($canonical) ? $canonical : '';
+            $robots = isset($robots) ? $robots : 'index, follow';
+            $fb_title = isset($fb_title) ? $fb_title : '';
+            $fb_desc = ((!isset($fb_desc) || $fb_desc=='') ? $meta_desc : $fb_desc );
+            $tw_title = isset($tw_title) ? $tw_title : '';
+            $tw_desc = ((!isset($tw_desc) || $tw_desc=='') ? $meta_desc : $tw_desc );
 
             if($checkURL=mysqli_query($connection, "SELECT link_relation_id FROM ".TABLE_PREFIX."link WHERE link_url='{$url}' AND link_site_id='".SITE_ID."'")) {
 
@@ -45,7 +59,7 @@
 
                     /* Insert data into link table */
 
-                    $addNewOffer=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."page(page_image, page_thumbnail, page_title, page_description, page_owner_id, page_status, page_type) VALUES('{$featureImage}', '{$thumbnailImage}', '{$title}', '{$description}', '".USER_ID."', '1', 'offer')");
+                    $addNewOffer=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."page(page_site_id, page_image, page_thumbnail, page_title, page_description, page_owner_id, page_status, page_type) VALUES(".SITE_ID.", '{$featureImage}', '{$thumbnailImage}', '{$title}', '{$description}', '".USER_ID."', '1', 'offer')");
                     $offerID=mysqli_insert_id($connection);
 
                     $addNewLink=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."link(link_url, link_relation_id, link_status, link_type, link_owner_id, link_site_id, link_creation, link_published) VALUES('{$url}', '{$offerID}', '{$link_status}', 'page', ".USER_ID.", '".SITE_ID."', NOW() ,NOW())");
@@ -62,7 +76,6 @@
 
                     } else {
 
-                        echo mysqli_error($connection);
                         $msg='Something is wrong while adding new page';
                         mysqli_query($connection, "ROLLBACK");
 

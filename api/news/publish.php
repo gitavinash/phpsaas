@@ -1,18 +1,19 @@
 <?php
 
 require_once LOGIN_CHECK;
+require_once FUNCTIONS . 'duplicate.php';
 
 function publish($connection, $data)
 {
 
     extract($data);
 
-    if ($title != '') {
+    if (isset($title) && $title != '') {
 
         if (isset($category)) {
 
-
             $news_audio = '';
+            $files = array();
 
             if (isset($_FILES['audioFile']) && $_FILES['audioFile']['error'] === UPLOAD_ERR_OK) {
                 $_FILES['files'] = array(
@@ -25,34 +26,59 @@ function publish($connection, $data)
 
                 require_once MODULES . 'fileUploader.php';
 
-                if (!empty($files)) {
+                if (!empty($files) && is_string($files)) {
                     $uploadedFiles = json_decode($files, true);
                     if (is_array($uploadedFiles) && isset($uploadedFiles[0]['path'])) {
-                        $news_audio = $uploadedFiles[0]['path'];
+                        $news_audio = mysqli_real_escape_string($connection, (string)$uploadedFiles[0]['path']);
                     }
                 }
 
                 unset($_FILES['files']);
             }
+            if ($news_audio === '') {
+                $news_audio = iswResolveUploadedImage($connection, $data, 'audioFile', 'oldAudioFile', '');
+            }
 
+            $image = array();
+            $thumbnailImage = '';
+            $images = array();
+            $gallery = '';
             require_once MODULES . 'imageUploader.php';
 
-            if (isset($image['featureImage'])) {
+            $resolvedImages = iswResolveDuplicateImages(
+                $connection,
+                $data,
+                (isset($image) && is_array($image)) ? $image : array(),
+                isset($thumbnailImage) ? (string)$thumbnailImage : ''
+            );
+            $featureImage = $resolvedImages['featureImage'];
+            $thumbnailImage = $resolvedImages['thumbnailImage'];
+            $facebookImage = $resolvedImages['facebookImage'];
+            $twitterImage = $resolvedImages['twitterImage'];
+
+            if ($featureImage != '') {
 
                 if (isset($_FILES['gallery'])) {
 
                     require_once MODULES . 'galleryUploader.php';
-                } else {
-
-                    $gallery = '';
                 }
+
+                $gallery = iswMergeDuplicateGallery(
+                    $connection,
+                    'news',
+                    $_POST,
+                    (isset($images) && is_array($images)) ? $images : array(),
+                    SITE_ID,
+                    false
+                );
+                $gallery = mysqli_real_escape_string($connection, $gallery);
 
                 // Extract the single upload image string to variables
 
-
-
-                $facebookImage = (((isset($facebookImage)) ? $facebookImage : $featureImage));
-                $twitterImage = (((isset($twitterImage)) ? $twitterImage : $featureImage));
+                $description = isset($description) ? $description : '';
+                $featurePost = iswNormalizeFlag($featurePost ?? 0);
+                $paid = iswNormalizeFlag($paid ?? 0);
+                $amount = iswNormalizeDecimal($amount ?? 0);
 
                 /** Category */
 
@@ -62,12 +88,23 @@ function publish($connection, $data)
 
                 /** post page url */
 
-                $url = strtolower($categoryURL . preg_replace('~[^\p{M}\w-]+~u', '-', $url)) . '/';
+                $slugClean = trim((string)preg_replace('~[^\p{M}\w-]+~u', '-', trim((string)($url ?? ''), '/')), '-');
+                if ($slugClean === '') {
+                    $slugClean = trim((string)preg_replace('~[^\p{M}\w-]+~u', '-', trim((string)$title)), '-');
+                }
+                $url = strtolower($categoryURL . $slugClean) . '/';
 
                 /* define facebook and twitter meta desciption */
 
-                $fb_desc = (($fb_desc == '') ? $meta_desc : $fb_desc);
-                $tw_desc = (($tw_desc == '') ? $meta_desc : $tw_desc);
+                $meta_title = isset($meta_title) ? $meta_title : '';
+                $meta_desc = isset($meta_desc) ? $meta_desc : '';
+                $meta_key = isset($meta_key) ? $meta_key : '';
+                $canonical = isset($canonical) ? $canonical : '';
+                $robots = isset($robots) ? $robots : 'index, follow';
+                $fb_title = isset($fb_title) ? $fb_title : '';
+                $fb_desc = ((!isset($fb_desc) || $fb_desc == '') ? $meta_desc : $fb_desc);
+                $tw_title = isset($tw_title) ? $tw_title : '';
+                $tw_desc = ((!isset($tw_desc) || $tw_desc == '') ? $meta_desc : $tw_desc);
 
                 if ($checkURL = mysqli_query($connection, "SELECT link_relation_id FROM " . TABLE_PREFIX . "link WHERE link_url='{$url}' AND link_site_id='" . SITE_ID . "'")) {
 
@@ -83,7 +120,7 @@ function publish($connection, $data)
 
                         /* Insert data into link table */
 
-                        $newsOwnerId = ((isset($_POST['authorId'][0])) ? (($_POST['authorId'][0] == '') ? USER_ID : $_POST['authorId'][0]) : USER_ID);
+                        $newsOwnerId = ((isset($_POST['authorId'][0]) && is_numeric($_POST['authorId'][0]) && (int)$_POST['authorId'][0] > 0) ? (int)$_POST['authorId'][0] : (int)USER_ID);
 
                         $addNewPost = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "news(news_site_id, news_image, news_gallery, news_thumbnail, news_title, news_description, news_category, news_owner_id, news_paid, news_mrp, news_price, news_audio, news_status, news_type, news_published) VALUES(" . SITE_ID . ", '{$featureImage}', '{$gallery}', '{$thumbnailImage}', '{$title}', '{$description}', '{$category}', {$newsOwnerId}, '{$paid}', '{$amount}', '{$amount}', '{$news_audio}', '1', 'news', NOW())");
                         $postID = mysqli_insert_id($connection);
@@ -95,18 +132,22 @@ function publish($connection, $data)
 
                         /* Insert tags into tag table */
 
-                        if ($tags != '') {
+                        $addNewTags = TRUE;
+                        $tagsStr = isset($tags) ? trim((string)$tags) : '';
+                        if ($tagsStr != '') {
 
-                            $tags = explode(',', $tags);
+                            $tagsArr = explode(',', $tagsStr);
 
-                            for ($i = 0; $i < sizeof($tags); $i++) {
+                            for ($i = 0; $i < sizeof($tagsArr); $i++) {
 
-                                $tagsName = strtolower(preg_replace('~[^\p{M}\s\w,-]+~u', '', rtrim(ltrim($tags[$i], ' '), ' ')));
-                                $addNewTags = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "tag(tag_title, tag_relation_id, tag_owner_id, tag_site_id, tag_type) VALUES('{$tagsName}', '{$postID}', '" . USER_ID . "', '" . SITE_ID . "', 'news')");
+                                $tagsName = strtolower(preg_replace('~[^\p{M}\s\w,-]+~u', '', trim($tagsArr[$i])));
+                                if ($tagsName !== '') {
+                                    $tagInserted = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "tag(tag_title, tag_relation_id, tag_owner_id, tag_site_id, tag_type) VALUES('{$tagsName}', '{$postID}', '" . USER_ID . "', '" . SITE_ID . "', 'news')");
+                                    if (!$tagInserted) {
+                                        $addNewTags = FALSE;
+                                    }
+                                }
                             }
-                        } else {
-
-                            $addNewTags = TRUE;
                         }
 
                         if ($addNewPost && $addNewLink && $addNewMeta && $addNewTags) {
@@ -119,9 +160,9 @@ function publish($connection, $data)
                             ) {
                                 $values = [];
                                 for ($i = 0; $i < count($_POST['authorId']); $i++) {
-                                    $uid = mysqli_real_escape_string($connection, $_POST['authorId'][$i]);
-                                    $seq = mysqli_real_escape_string($connection, $_POST['authorOrder'][$i]);
-                                    if ($uid && $seq) {
+                                    $uid = is_numeric($_POST['authorId'][$i]) ? (int)$_POST['authorId'][$i] : 0;
+                                    $seq = is_numeric($_POST['authorOrder'][$i]) ? (int)$_POST['authorOrder'][$i] : 0;
+                                    if ($uid > 0 && $seq > 0) {
                                         $values[] = "('{$postID}', 'news', '{$uid}', '{$seq}')";
                                     }
                                 }

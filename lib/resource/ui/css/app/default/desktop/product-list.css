@@ -841,6 +841,12 @@ main:has(.modern-product-list) > .container {
   text-decoration: underline;
 }
 
+.modern-product-list .product-meta .hover a:focus-visible {
+  outline: 2px solid var(--pl-focus);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
 .modern-product-list .product-meta .hover a::after {
   content: none !important;
 }

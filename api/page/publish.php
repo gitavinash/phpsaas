@@ -1,40 +1,57 @@
 <?php
 
 require_once LOGIN_CHECK;
+require_once FUNCTIONS . 'duplicate.php';
 
 function publish($connection, $data)
 {
 
     extract($data);
 
-    if ($title != '') {
+    if (isset($title) && $title != '') {
 
+        $image = array();
+        $thumbnailImage = '';
         require_once MODULES . 'imageUploader.php';
 
-        if (!isset($featureImage)) {
-
-            /** if feature image is not upload then set featureImage as blank */
-
-            $featureImage = '';
-            $thumbnailImage = '';
-        }
-
-        $facebookImage = (((isset($facebookImage)) ? $facebookImage : $featureImage));
-        $twitterImage = (((isset($twitterImage)) ? $twitterImage : $featureImage));
+        $resolvedImages = iswResolveDuplicateImages(
+            $connection,
+            $data,
+            (isset($image) && is_array($image)) ? $image : array(),
+            isset($thumbnailImage) ? (string)$thumbnailImage : ''
+        );
+        $featureImage = $resolvedImages['featureImage'];
+        $thumbnailImage = $resolvedImages['thumbnailImage'];
+        $facebookImage = $resolvedImages['facebookImage'];
+        $twitterImage = $resolvedImages['twitterImage'];
+        $description = isset($description) ? $description : '';
 
         /** page page url */
 
-        $pageTitle = strtolower($title);
-        $url = strtolower(($pageTitle === 'home' || $pageTitle === 'homepage')
-            ? '/'
-            : '/' . preg_replace('~[^\p{M}\w-]+~u', '-', $title) . '/');
-
-        $title = ($pageTitle === 'home' || $pageTitle === 'homepage') ? 'homepage' : $title;
+        $pageTitle = strtolower(trim($title));
+        $rawUrl = isset($url) ? trim((string)$url) : '';
+        if (($pageTitle === 'home' || $pageTitle === 'homepage') && ($rawUrl === '' || $rawUrl === '/' || strtolower($rawUrl) === 'home' || strtolower($rawUrl) === 'homepage')) {
+            $url = '/';
+            $title = 'homepage';
+        } elseif ($rawUrl !== '' && $rawUrl !== '/') {
+            $slugClean = trim((string)preg_replace('~[^\p{M}\w-]+~u', '-', trim($rawUrl, '/')), '-');
+            $url = ($slugClean !== '') ? '/' . strtolower($slugClean) . '/' : '/';
+        } else {
+            $slugClean = trim((string)preg_replace('~[^\p{M}\w-]+~u', '-', $title), '-');
+            $url = ($slugClean !== '') ? '/' . strtolower($slugClean) . '/' : '/';
+        }
 
         /* define facebook and twitter meta desciption */
 
-        $fb_desc = (($fb_desc == '') ? $meta_desc : $fb_desc);
-        $tw_desc = (($tw_desc == '') ? $meta_desc : $tw_desc);
+        $meta_title = isset($meta_title) ? $meta_title : '';
+        $meta_desc = isset($meta_desc) ? $meta_desc : '';
+        $meta_key = isset($meta_key) ? $meta_key : '';
+        $canonical = isset($canonical) ? $canonical : '';
+        $robots = isset($robots) ? $robots : 'index, follow';
+        $fb_title = isset($fb_title) ? $fb_title : '';
+        $fb_desc = ((!isset($fb_desc) || $fb_desc == '') ? $meta_desc : $fb_desc);
+        $tw_title = isset($tw_title) ? $tw_title : '';
+        $tw_desc = ((!isset($tw_desc) || $tw_desc == '') ? $meta_desc : $tw_desc);
 
         if ($checkURL = mysqli_query($connection, "SELECT link_relation_id FROM " . TABLE_PREFIX . "link WHERE link_url='{$url}' AND link_site_id='" . SITE_ID . "'")) {
 

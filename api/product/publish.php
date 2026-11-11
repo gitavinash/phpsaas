@@ -1,68 +1,103 @@
 <?php
+
+require_once LOGIN_CHECK;
+require_once FUNCTIONS . 'duplicate.php';
+
 function publish($connection, $data)
 {
 
     extract($data);
 
-    if ($title != '') {
+    if (isset($title) && $title != '') {
 
+        $image = array();
+        $thumbnailImage = '';
+        $images = array();
+        $gallery = '';
         require_once MODULES . 'imageUploader.php';
 
-        if (isset($image['featureImage'])) {
+        $resolvedImages = iswResolveDuplicateImages(
+            $connection,
+            $data,
+            (isset($image) && is_array($image)) ? $image : array(),
+            isset($thumbnailImage) ? (string)$thumbnailImage : ''
+        );
+        $featureImage = $resolvedImages['featureImage'];
+        $thumbnailImage = $resolvedImages['thumbnailImage'];
+        $facebookImage = $resolvedImages['facebookImage'];
+        $twitterImage = $resolvedImages['twitterImage'];
+
+        if ($featureImage != '') {
 
             // Extract the single upload image string to variables
 
-
-            $postType = ((isset($postType)) ? $postType : $type);
-            $currentStock = ((isset($currentStock)) ? $currentStock : 0);
-
-            $facebookImage = (((isset($facebookImage)) ? $facebookImage : $featureImage));
-            $twitterImage = (((isset($twitterImage)) ? $twitterImage : $featureImage));
+            $description = isset($description) ? $description : '';
+            $highlight = isset($highlight) ? (string)$highlight : '';
+            $postType = ((isset($postType) && $postType != '') ? $postType : ($type ?? 'product'));
+            $currentStock = iswNormalizeInt($currentStock ?? 0);
+            $featurePost = iswNormalizeFlag($featurePost ?? 0);
+            $in_stock = iswNormalizeFlag($in_stock ?? 0);
+            $backorder = iswNormalizeFlag($backorder ?? 0);
+            $taxStatus = iswNormalizeInt($taxStatus ?? 0);
+            $taxRate = iswNormalizeInt($taxRate ?? 0);
+            $sku = isset($sku) ? (string)$sku : '';
+            $stock_warning = isset($stock_warning) ? (string)$stock_warning : '';
+            $weight = isset($weight) ? (string)$weight : '';
+            $lenght = isset($lenght) ? (string)$lenght : '';
+            $width = isset($width) ? (string)$width : '';
+            $height = isset($height) ? (string)$height : '';
 
             if (isset($_FILES['gallery'])) {
 
                 require_once MODULES . 'galleryUploader.php';
-            } else {
-
-                $gallery = '';
             }
+
+            $gallery = iswMergeDuplicateGallery(
+                $connection,
+                'product',
+                $_POST,
+                (isset($images) && is_array($images)) ? $images : array(),
+                SITE_ID,
+                false
+            );
+            $gallery = mysqli_real_escape_string($connection, $gallery);
 
             // Product Variation
 
             $productVariation = '';
-            $mrp = (($mrp == 0) ? $salePrice : $mrp);
-            $salePrice = (($salePrice == 0) ? $mrp : $salePrice);
+            $rawSalePrice = iswNormalizeDecimal($salePrice ?? 0);
+            $rawMrp = iswNormalizeDecimal($mrp ?? 0);
+            $mrp = ((float)$rawMrp == 0.0) ? $rawSalePrice : $rawMrp;
+            $salePrice = ((float)$rawSalePrice == 0.0) ? $mrp : $rawSalePrice;
 
-            if (isset($_POST['similarProducts'])) {
+            if (isset($_POST['similarProducts']) && is_array($_POST['similarProducts']) && count($_POST['similarProducts']) > 0) {
 
+                $similarSplit = array();
                 for ($i = 0; $i < sizeof($_POST['similarProducts']); $i++) {
 
-                    $splitString[] = explode('&&', $_POST['similarProducts'][$i]);
+                    $similarSplit[] = explode('&&', (string)$_POST['similarProducts'][$i]);
                 }
 
-                $productVariation = json_encode($splitString, TRUE);
+                $productVariation = json_encode($similarSplit, TRUE);
             }
 
-            $productVariation = base64_encode($productVariation);
+            $productVariation = mysqli_real_escape_string($connection, base64_encode((string)$productVariation));
 
             // Product add-ons
 
             $productAddons = '';
-            $splitString = array();
-            $mrp = (($mrp == 0) ? $salePrice : $mrp);
-            $salePrice = (($salePrice == 0) ? $mrp : $salePrice);
+            if (isset($_POST['addOnProducts']) && is_array($_POST['addOnProducts']) && count($_POST['addOnProducts']) > 0) {
 
-            if (isset($_POST['addOnProducts'])) {
-
+                $addonSplit = array();
                 for ($i = 0; $i < sizeof($_POST['addOnProducts']); $i++) {
 
-                    $splitString[] = explode('&&', $_POST['addOnProducts'][$i]);
+                    $addonSplit[] = explode('&&', (string)$_POST['addOnProducts'][$i]);
                 }
 
-                $productAddons = json_encode($splitString, TRUE);
+                $productAddons = json_encode($addonSplit, TRUE);
             }
 
-            $productAddons = base64_encode($productAddons);
+            $productAddons = mysqli_real_escape_string($connection, base64_encode((string)$productAddons));
 
             /** Category */
 
@@ -74,13 +109,24 @@ function publish($connection, $data)
 
                 /** product page url */
 
-                $url = strtolower('/product' . $categoryURL . preg_replace('~[^\p{M}\w-]+~u', '-', $url)) . '/';
+                $slugClean = trim((string)preg_replace('~[^\p{M}\w-]+~u', '-', trim((string)($url ?? ''), '/')), '-');
+                if ($slugClean === '') {
+                    $slugClean = trim((string)preg_replace('~[^\p{M}\w-]+~u', '-', trim((string)$title)), '-');
+                }
+                $url = strtolower('/product' . $categoryURL . $slugClean) . '/';
 
                 /* define facebook and twitter meta desciption */
 
-                $fb_desc = (($fb_desc == '') ? $meta_desc : $fb_desc);
-                $tw_desc = (($tw_desc == '') ? $meta_desc : $tw_desc);
-                $sell_online = ((isset($sell_online)) ? $sell_online : 1);
+                $meta_title = isset($meta_title) ? $meta_title : '';
+                $meta_desc = isset($meta_desc) ? $meta_desc : '';
+                $meta_key = isset($meta_key) ? $meta_key : '';
+                $canonical = isset($canonical) ? $canonical : '';
+                $robots = isset($robots) ? $robots : 'index, follow';
+                $fb_title = isset($fb_title) ? $fb_title : '';
+                $fb_desc = ((!isset($fb_desc) || $fb_desc == '') ? $meta_desc : $fb_desc);
+                $tw_title = isset($tw_title) ? $tw_title : '';
+                $tw_desc = ((!isset($tw_desc) || $tw_desc == '') ? $meta_desc : $tw_desc);
+                $sell_online = (isset($sell_online) && (string)$sell_online === '0') ? 0 : 1;
 
                 if ($checkURL = mysqli_query($connection, "SELECT link_relation_id FROM " . TABLE_PREFIX . "link WHERE link_url='{$url}' AND link_site_id='" . SITE_ID . "'")) {
 
@@ -88,7 +134,7 @@ function publish($connection, $data)
 
                         require_once EDITOR_CONTENT_FILTER;
 
-                        $brand = ((isset($brand)) ? $brand : 0);
+                        $brand = iswNormalizeInt($brand ?? 0);
 
                         /** Start uploading the product */
 
@@ -108,29 +154,36 @@ function publish($connection, $data)
 
                         /* Insert tags into tag table */
 
-                        if ($tags != '') {
+                        $addNewTags = TRUE;
+                        $tagsStr = isset($tags) ? trim((string)$tags) : '';
+                        if ($tagsStr != '') {
 
-                            $tags = explode(',', $tags);
+                            $tagsArr = explode(',', $tagsStr);
 
-                            for ($i = 0; $i < sizeof($tags); $i++) {
+                            for ($i = 0; $i < sizeof($tagsArr); $i++) {
 
-                                $tagsName = strtolower(preg_replace('~[^\p{M}\s\w,-]+~u', '', rtrim(ltrim($tags[$i], ' '), ' ')));
-                                $addNewTags = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "tag(tag_title, tag_relation_id, tag_owner_id, tag_site_id, tag_type) VALUES('{$tagsName}', '{$productID}', '" . USER_ID . "', '" . SITE_ID . "', '{$postType}')");
+                                $tagsName = strtolower(preg_replace('~[^\p{M}\s\w,-]+~u', '', trim($tagsArr[$i])));
+                                if ($tagsName !== '') {
+                                    $tagInserted = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "tag(tag_title, tag_relation_id, tag_owner_id, tag_site_id, tag_type) VALUES('{$tagsName}', '{$productID}', '" . USER_ID . "', '" . SITE_ID . "', '{$postType}')");
+                                    if (!$tagInserted) {
+                                        $addNewTags = FALSE;
+                                    }
+                                }
                             }
-                        } else {
-
-                            $addNewTags = TRUE;
                         }
 
-                        if (isset($_POST['productMeta'])) {
+                        $addProductMeta = TRUE;
+                        if (isset($_POST['productMeta']) && is_array($_POST['productMeta'])) {
 
                             foreach ($_POST['productMeta'] as $product_meta_key => $product_meta_value) {
 
-                                $addProductMeta = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "product_meta(product_meta_relation_id, product_meta_site_id, product_meta_key, product_meta_value, product_meta_status) VALUES('{$productID}', " . SITE_ID . ", '{$product_meta_key}', '{$product_meta_value}', 1)");
+                                $safeMetaKey = mysqli_real_escape_string($connection, (string)$product_meta_key);
+                                $safeMetaVal = mysqli_real_escape_string($connection, (string)$product_meta_value);
+                                $metaInserted = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "product_meta(product_meta_relation_id, product_meta_site_id, product_meta_key, product_meta_value, product_meta_status) VALUES('{$productID}', " . SITE_ID . ", '{$safeMetaKey}', '{$safeMetaVal}', 1)");
+                                if (!$metaInserted) {
+                                    $addProductMeta = FALSE;
+                                }
                             }
-                        } else {
-
-                            $addProductMeta = true;
                         }
 
                         if ($addNewProduct && $addNewLink && $addNewInventory && $addNewMeta && $addNewTags && $addProductMeta) {
@@ -141,8 +194,7 @@ function publish($connection, $data)
                             mysqli_query($connection, "COMMIT");
                         } else {
 
-                            // $msg = 'Something is wrong while adding new product';
-                            $msg = $addNewProduct . " && " . $addNewLink . " && " . $addNewInventory . " && " . $addNewMeta . " && " . $addNewTags . " && " . $addProductMeta;
+                            $msg = 'Something is wrong while adding new product';
                             mysqli_query($connection, "ROLLBACK");
                         }
                     } else {

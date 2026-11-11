@@ -38,10 +38,10 @@ $postStatus = (($postStatus == 'all') ? '' : "AND page_status='{$postStatus}'");
 <table id="table" data-default-order-column="2" data-page-length="10">
     <thead>
         <tr>
-            <th style="width: 460px">Title</th>
+            <th style="width: 370px">Title</th>
             <th style="width: 150px">Author</th>
             <th style="width: 100px">Date</th>
-            <th style="width: 120px">Actions</th>
+            <th style="width: 210px">Actions</th>
         </tr>
     </thead>
     <tbody>
@@ -83,6 +83,7 @@ $postStatus = (($postStatus == 'all') ? '' : "AND page_status='{$postStatus}'");
                         <td>
                             <div class="action-btns">
                                 <a href="page/?type=edit&editor=true&id=<?php echo base64_encode($page_id); ?>" class="action-btn btn-edit" title="Edit"><i class="fas fa-pencil-alt"></i> Edit</a>
+                                <a href="page/?type=add&editor=true&duplicate_id=<?php echo base64_encode($page_id); ?>" class="action-btn btn-duplicate" title="Duplicate" aria-label="<?php echo htmlspecialchars('Duplicate ' . $page_title, ENT_QUOTES, 'UTF-8'); ?>"><i class="fas fa-copy" aria-hidden="true"></i> Duplicate</a>
                                 <a href="<?php echo $link_url; ?>" target="_blank" class="action-btn btn-view" title="View"><i class="fas fa-eye"></i> View</a>
                                 <a href="#" id="<?php echo base64_encode($page_id) ?>_page" class="action-btn btn-delete deleteBtn" title="Delete"><i class="fas fa-trash"></i> Delete</a>
                             </div>

@@ -65,6 +65,11 @@ $statusFilter = (($postStatus == 'all') ? '' : "AND news_status='{$postStatus}'"
                         href="news/?type=edit&editor=true&id=<?php echo base64_encode($news_id);
                                                                             echo (($news_gallery != '') ? '&theme=gallery' : '') ?>"><i
                             class="fas fa-pencil-alt"></i> Edit</a>
+                    <a
+                        href="news/?type=add&editor=true&duplicate_id=<?php echo base64_encode($news_id);
+                                                                            echo (($news_gallery != '' && $news_gallery != '[]') ? '&theme=gallery' : '') ?>"
+                        aria-label="<?php echo htmlspecialchars('Duplicate ' . $news_title, ENT_QUOTES, 'UTF-8'); ?>"><i
+                            class="fas fa-copy" aria-hidden="true"></i> Duplicate</a>
                     <a href="#" id="<?php echo base64_encode($news_id); ?>_news" class="deleteBtn"><i
                             class="fas fa-trash"></i> Delete</a>
                     <?php if ((int) $news_status === 1 && $link_status == 200) { ?>

@@ -1,22 +1,67 @@
+<?php
+require_once FUNCTIONS . 'duplicate.php';
+
+$dupSourceId = iswGetDuplicateSourceId();
+$dupData = ($dupSourceId > 0) ? iswGetDuplicateRecord($connection, 'event', $dupSourceId, SITE_ID) : null;
+$dupRow = ($dupData !== null) ? $dupData['row'] : array();
+$dupTitle = ($dupData !== null) ? (string)$dupData['duplicate_title'] : '';
+$dupUrl = ($dupData !== null) ? (string)$dupData['duplicate_slug'] : '';
+$dupDesc = ($dupData !== null) ? html_entity_decode((string)($dupRow['event_description'] ?? ''), ENT_QUOTES, 'UTF-8') : '';
+$dupHighlight = (string)($dupRow['event_highlight'] ?? '');
+$dupInStock = ($dupData === null) || ((string)($dupRow['inventory_in_stock'] ?? '') === '1');
+$dupBackorder = ($dupData === null) || ((string)($dupRow['inventory_backorder'] ?? '') === '1');
+$dupSalePrice = (string)($dupRow['inventory_price'] ?? '');
+$dupMrp = (string)($dupRow['inventory_mrp'] ?? '');
+$dupSku = (string)($dupRow['inventory_sku'] ?? '');
+$dupCurrentStock = (string)($dupRow['inventory_current_stock'] ?? '');
+$dupTaxStatus = (string)($dupRow['inventory_tax_status'] ?? '0');
+$dupTaxRate = (string)($dupRow['inventory_tax_rate'] ?? '');
+$dupPreloadedGallery = ($dupData !== null) ? $dupData['preloaded_gallery'] : array();
+$dupGallerySource = ($dupData !== null) ? (string)$dupData['encoded_source_id'] : '';
+$dupMetaTitle = (string)($dupRow['meta_title'] ?? '');
+$dupMetaDesc = (string)($dupRow['meta_description'] ?? '');
+$dupMetaKey = (string)($dupRow['meta_keyword'] ?? '');
+$dupCanonical = (string)($dupRow['meta_canonical'] ?? '');
+$dupRobots = (string)($dupRow['meta_robots'] ?? '');
+$dupFbImg = (string)($dupRow['fb_img'] ?? '');
+$dupFbTitle = (string)($dupRow['fb_title'] ?? '');
+$dupFbDesc = (string)($dupRow['fb_desc'] ?? '');
+$dupTwImg = (string)($dupRow['tw_img'] ?? '');
+$dupTwTitle = (string)($dupRow['tw_title'] ?? '');
+$dupTwDesc = (string)($dupRow['tw_desc'] ?? '');
+$dupIsFeatured = ((string)($dupRow['link_is_featured'] ?? '') === '1');
+$selectedCategoryId = ($dupData !== null) ? (int)($dupRow['event_category'] ?? 1) : 1;
+$dupTagsCsv = ($dupData !== null) ? (string)$dupData['tags_csv'] : '';
+$dupEventDate = (!empty($dupRow['event_start_date']) && $dupRow['event_start_date'] != '0000-00-00') ? date('d-m-Y', strtotime($dupRow['event_start_date'])) : '';
+$dupEventTime = ($dupData !== null) ? iswFormatTimeInput($dupRow['event_start_time'] ?? '') : '';
+$dupEventEndTime = ($dupData !== null) ? iswFormatTimeInput($dupRow['event_end_time'] ?? '') : '';
+$dupEventLocation = (string)($dupRow['event_location'] ?? '');
+$dupEventMap = (string)($dupRow['event_map'] ?? '');
+$dupFeatureImg = (string)($dupRow['event_image'] ?? '');
+$dupThumbImg = (string)($dupRow['event_thumbnail'] ?? '');
+?>
     <div class="product-add-ui">
         <h2>Add new <?php echo $postType ?></h2>
+        <?php if ($dupData !== null) { ?>
+            <div class="duplicate-mode-banner">Duplicating: <strong><?php echo iswEscHtml($dupData['source_title']); ?></strong> &mdash; Review your changes and click Publish to save a new copy.</div>
+        <?php } ?>
 
         <div class="form-box">
             <form method="POST" id="formData" enctype="multipart/form-data" autocomplete="off">
                 <div class="left-box">
                     <div class="form-group">
                         <input type="text" id="title" class="form-control inside-shadow" name="title" placeholder="Title"
-                            autofocus required>
+                            value="<?php echo iswEscHtml($dupTitle); ?>" autofocus required>
                     </div>
                     <div class="form-group">
                         <div class="url">
                             <p><strong>Permalink</strong></p>
                             <p><span><?php echo SITE_DOMAIN ?>/</span></p>
-                            <input type="text" id="url" class="form-control" name="url">
+                            <input type="text" id="url" class="form-control" name="url" value="<?php echo iswEscHtml($dupUrl); ?>">
                         </div>
                     </div>
                     <div class="form-group fullscreen-editor">
-                        <textarea name="description" class="editor inside-shadow"></textarea>
+                        <textarea name="description" class="editor inside-shadow"><?php echo iswEscHtml($dupDesc); ?></textarea>
                     </div>
 
                     <!-- Event description and other things -->
@@ -32,16 +77,16 @@
                             <div class="form-group">
                                 <label>Event short description / Highlights</label>
                                 <textarea name="highlight" class="form-control inside-shadow"
-                                    placeholder="Event short description / Highlights"></textarea>
+                                    placeholder="Event short description / Highlights"><?php echo iswEscHtml($dupHighlight); ?></textarea>
                             </div>
                         </div>
                         <div class="productInventory generalTab" style="display: none;">
 
                             <div class="box-2" style="display: none;">
-                                <input type="checkbox" name="in_stock" value=1 checked> In Stock
+                                <input type="checkbox" name="in_stock" value=1 <?php echo ($dupInStock ? 'checked' : ''); ?>> In Stock
                             </div>
                             <div class="box-2" style="display: none;">
-                                <input type="checkbox" name="backorder" value=1 checked> Allowed Backorders (if product is
+                                <input type="checkbox" name="backorder" value=1 <?php echo ($dupBackorder ? 'checked' : ''); ?>> Allowed Backorders (if product is
                                 out
                                 of stock )
                             </div>
@@ -49,35 +94,35 @@
                                 <div class="form-group">
                                     <label>Sale price (₹)</label>
                                     <input type="number" onwheel="this.blur()" class="form-control inside-shadow"
-                                        name="salePrice" placeholder="Sale price">
+                                        name="salePrice" value="<?php echo iswEscHtml($dupSalePrice); ?>" placeholder="Sale price">
                                 </div>
                             </div>
                             <div class="box-2">
                                 <div class="form-group">
                                     <label>Regular price in ₹ ( MRP )</label>
                                     <input type="number" onwheel="this.blur()" class="form-control inside-shadow" name="mrp"
-                                        placeholder="Regular price">
+                                        value="<?php echo iswEscHtml($dupMrp); ?>" placeholder="Regular price">
                                 </div>
                             </div>
                             <div class="box-2">
                                 <div class="form-group">
                                     <label>SKU</label>
-                                    <input type="text" class="form-control inside-shadow" name="sku" placeholder="SKU">
+                                    <input type="text" class="form-control inside-shadow" name="sku" value="<?php echo iswEscHtml($dupSku); ?>" placeholder="SKU">
                                 </div>
                             </div>
                             <div class="box-2">
                                 <div class="form-group">
                                     <label>Seats Available</label>
                                     <input type="number" onwheel="this.blur()" class="form-control inside-shadow" name="currentStock"
-                                        placeholder="Seats Available">
+                                        value="<?php echo iswEscHtml($dupCurrentStock); ?>" placeholder="Seats Available">
                                 </div>
                             </div>
                             <div class="box-2">
                                 <div class="form-group">
                                     <label>Calculate tax</label>
                                     <select name="taxStatus" class="form-control inside-shadow">
-                                        <option value="0">No</option>
-                                        <option value="1">Yes</option>
+                                        <option value="0" <?php echo (($dupTaxStatus === '0' || $dupTaxStatus === '') ? 'selected' : ''); ?>>No</option>
+                                        <option value="1" <?php echo (($dupTaxStatus === '1') ? 'selected' : ''); ?>>Yes</option>
                                     </select>
                                 </div>
                             </div>
@@ -85,7 +130,7 @@
                                 <div class="form-group">
                                     <label>Tax rate ( in % )</label>
                                     <input type="number" onwheel="this.blur()" name="taxRate"
-                                        placeholder="Tax rate ( in % )" class="form-control inside-shadow">
+                                        value="<?php echo iswEscHtml($dupTaxRate); ?>" placeholder="Tax rate ( in % )" class="form-control inside-shadow">
                                 </div>
                             </div>
                         </div>
@@ -94,6 +139,10 @@
                             <div class="input-field">
                                 <div class="input-images" style="padding-top: .5rem;"></div>
                             </div>
+                            <input type="hidden" name="duplicateGallerySource" value="<?php echo iswEscHtml($dupGallerySource); ?>">
+                            <?php if (!empty($dupPreloadedGallery)) { ?>
+                                <script>var oldGalleryImages = <?php echo json_encode($dupPreloadedGallery); ?>;</script>
+                            <?php } ?>
 
                         </div>
                     </section>
@@ -111,69 +160,71 @@
                             <div class="form-group">
                                 <label>Meta Title</label>
                                 <input type="text" name="meta_title" id="meta_title" class="form-control inside-shadow"
-                                    placeholder="Meta title">
+                                    placeholder="Meta title" value="<?php echo iswEscHtml($dupMetaTitle); ?>">
                             </div>
                             <div class="form-group">
                                 <label>Meta Description</label>
                                 <textarea name="meta_desc" id="meta_desc" class="form-control inside-shadow"
-                                    placeholder="Meta Description"></textarea>
+                                    placeholder="Meta Description"><?php echo iswEscHtml($dupMetaDesc); ?></textarea>
                             </div>
                             <div class="form-group">
                                 <label>Meta Keywords</label>
                                 <textarea name="meta_key" id="meta_keywords" class="form-control inside-shadow"
-                                    placeholder="Enter keywords of the post ( use , to seprate keywords )"></textarea>
+                                    placeholder="Enter keywords of the post ( use , to seprate keywords )"><?php echo iswEscHtml($dupMetaKey); ?></textarea>
                             </div>
                             <div class="form-group">
                                 <label>Canonical URL</label>
                                 <input type="text" name="canonical" class="form-control inside-shadow" id="canonical"
-                                    placeholder="Actual URL of the <?php echo $postType ?>">
+                                    placeholder="Actual URL of the <?php echo $postType ?>" value="<?php echo iswEscHtml($dupCanonical); ?>">
                             </div>
                             <div class="form-group">
                                 <label>Allow search engines to show this Post in search results?</label>
                                 <select name="robots" class="form-control inside-shadow">
-                                    <option value="index, follow">Yes</option>
-                                    <option value="noindex, nofollow">No</option>
+                                    <option value="index, follow" <?php echo (($dupRobots == 'index, follow') ? 'selected' : ''); ?>>Yes</option>
+                                    <option value="noindex, nofollow" <?php echo (($dupRobots == 'noindex, nofollow') ? 'selected' : ''); ?>>No</option>
                                 </select>
                             </div>
                         </div>
                         <div class="fb generalTab" style="display: none;">
-                            <div class="facebookPreviewBox" style="display: none;">
-                                <div class="img"><img src="" id="facebookPath" alt=""></div>
+                            <div class="facebookPreviewBox" style="display: <?php echo (($dupFbImg == '') ? 'none' : 'block'); ?>;">
+                                <input type="hidden" name="oldFacebookImage" value="<?php echo iswEscHtml($dupFbImg); ?>">
+                                <div class="img"><img src="<?php echo iswPreviewImageUrl($dupFbImg); ?>" id="facebookPath" alt=""></div>
                                 <p id="facebookChangeImage" class='changeImage'>Remove facebook feature image</p>
                             </div>
-                            <div class="facebookUploadBox">
+                            <div class="facebookUploadBox" style="display: <?php echo (($dupFbImg == '') ? 'block' : 'none'); ?>;">
                                 <span>Set facebook feature image</span>
                                 <input type='file' id="facebookImage" name='facebookImage' />
                             </div>
                             <div class="form-group">
                                 <label>Facebook Title</label>
                                 <input type="text" name="fb_title" id="fb_title" class="form-control inside-shadow"
-                                    placeholder="Facebook title">
+                                    placeholder="Facebook title" value="<?php echo iswEscHtml($dupFbTitle); ?>">
                             </div>
                             <div class="form-group">
                                 <label>Facebook Description</label>
                                 <textarea name="fb_desc" id="fb_desc" class="form-control inside-shadow"
-                                    placeholder="Facebook Description"></textarea>
+                                    placeholder="Facebook Description"><?php echo iswEscHtml($dupFbDesc); ?></textarea>
                             </div>
                         </div>
                         <div class="tw generalTab" style="display: none;">
-                            <div class="twitterPreviewBox" style="display: none;">
-                                <div class="img"><img src="" id="twitterPath" alt=""></div>
-                                <p id="twitterChangeImage" class="changeImage">Remove twitter feature image</p>
+                            <div class="twitterPreviewBox" style="display: <?php echo (($dupTwImg == '') ? 'none' : 'block'); ?>;">
+                                <input type="hidden" name="oldTwitterImage" value="<?php echo iswEscHtml($dupTwImg); ?>">
+                                <div class="img"><img src="<?php echo iswPreviewImageUrl($dupTwImg); ?>" id="twitterPath" alt=""></div>
+                                <p id="twitterChangeImage" class='changeImage'>Remove twitter feature image</p>
                             </div>
-                            <div class="twitterUploadBox">
+                            <div class="twitterUploadBox" style="display: <?php echo (($dupTwImg == '') ? 'block' : 'none'); ?>;">
                                 <span>Set Twitter feature image</span>
                                 <input type='file' id="twitterImage" name='twitterImage' />
                             </div>
                             <div class="form-group">
                                 <label>Twitter Title</label>
                                 <input type="text" name="tw_title" id="tw_title" class="form-control inside-shadow"
-                                    placeholder="Twitter title">
+                                    placeholder="Twitter title" value="<?php echo iswEscHtml($dupTwTitle); ?>">
                             </div>
                             <div class="form-group">
                                 <label>Twitter Description</label>
                                 <textarea name="tw_desc" id="tw_desc" class="form-control inside-shadow"
-                                    placeholder="Twitter Description"></textarea>
+                                    placeholder="Twitter Description"><?php echo iswEscHtml($dupTwDesc); ?></textarea>
                             </div>
                         </div>
                     </section>
@@ -189,7 +240,7 @@
                     <div class="form-group">
                         <h2>Featured</h2>
                         <div class="action-box inside-shadow" style="padding: 10px">
-                            <input type="checkbox" value="1" name='featurePost'> Mark as feature
+                            <input type="checkbox" value="1" name='featurePost' <?php echo ($dupIsFeatured ? 'checked' : ''); ?>> Mark as feature
                         </div>
                     </div>
                     <h2>Categories</h2>
@@ -200,7 +251,7 @@
                                 <div class="form-group">
                                     <input type="radio" name="category"
                                         value="<?php echo $category['category_id'] . '_' . str_replace('/category', '', $category['link_url']); ?>"
-                                        <?php echo (($category['category_id'] == 1) ? 'checked' : '') ?>>
+                                        <?php echo (((int)$category['category_id'] === $selectedCategoryId) ? 'checked' : '') ?>>
                                     <?php echo ucwords($category['category_title']); ?>
                                 </div>
                         <?php
@@ -212,39 +263,42 @@
                     <div class="action-box inside-shadow">
                         <div class="form-group">
                             <input type="text" class='tags' />
+                            <input type="hidden" id="tagValue" value="<?php echo iswEscHtml($dupTagsCsv); ?>">
                             <input type="hidden" id='tags' name="tags" value=''>
                         </div>
                     </div>
                     <div class="tagList" style="display: none;"></div>
                     <h2>Date</h2>
                     <div class="form-group">
-                        <input type="text" name="eventDate" class="form-control inside-shadow datepicker">
+                        <input type="text" name="eventDate" value="<?php echo iswEscHtml($dupEventDate); ?>" class="form-control inside-shadow datepicker">
                     </div>
                     <h2>Start Time</h2>
                     <div class="form-group">
-                        <input type="time" name="eventTime" class="form-control inside-shadow">
+                        <input type="time" name="eventTime" value="<?php echo iswEscHtml($dupEventTime); ?>" class="form-control inside-shadow">
                     </div>
                     <h2>End Time</h2>
                     <div class="form-group">
-                        <input type="time" name="eventEndTime" class="form-control inside-shadow">
+                        <input type="time" name="eventEndTime" value="<?php echo iswEscHtml($dupEventEndTime); ?>" class="form-control inside-shadow">
                     </div>
                     <h2>Location</h2>
                     <div class="form-group">
-                        <input type="text" name="eventLocation" placeholder="Place name" class="form-control inside-shadow">
+                        <input type="text" name="eventLocation" value="<?php echo iswEscHtml($dupEventLocation); ?>" placeholder="Place name" class="form-control inside-shadow">
                     </div>
                     <h2>Embed Map</h2>
                     <div class="form-group">
-                        <textarea name="eventMap" class="form-control inside-shadow" placeholder="Google maps embed code"></textarea>
+                        <textarea name="eventMap" class="form-control inside-shadow" placeholder="Google maps embed code"><?php echo iswEscHtml($dupEventMap); ?></textarea>
                     </div>
                     <h2>Feature Image</h2>
-                    <div class="form-group featureImageUploadBox upload-btn">
+                    <div class="form-group featureImageUploadBox upload-btn" style="display: <?php echo (($dupFeatureImg != '') ? 'none' : 'block'); ?>;">
                         <span>Set Feature Image</span>
+                        <input type="hidden" name="oldFeatureImage" value="<?php echo iswEscHtml($dupFeatureImg); ?>">
+                        <input type="hidden" name="oldThumbnailImage" value="<?php echo iswEscHtml($dupThumbImg); ?>">
                         <input type="file" id="featureImage" name="featureImage" accept="image/x-png, image/gif, image/jpeg">
                         <p><strong>Only these file formats are supported:</strong> .png, .jpg, .jpeg, .gif <strong>Recommended
                                 file size maximum 500kb</p>
                     </div>
-                    <div class="img-preview featureImagePreviewBox action-box" style="display: none;">
-                        <img src="#" id="featureImagePath" alt="">
+                    <div class="img-preview featureImagePreviewBox action-box" style="display: <?php echo (($dupFeatureImg != '') ? 'block' : 'none'); ?>;">
+                        <img src="<?php echo (($dupFeatureImg != '') ? iswPreviewImageUrl($dupFeatureImg) : '#'); ?>" id="featureImagePath" alt="">
                         <p id="featureChangeImage" class="btn btn-red btn-sm">Remove feature image</p>
                     </div>
                 </div>

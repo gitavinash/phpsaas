@@ -45,6 +45,7 @@ $postStatus = (($postStatus == 'all') ? '' : "AND event_status='{$postStatus}'")
 							<p><a href="event/?type=edit&editor=true&id=<?php echo base64_encode($event_id); ?>"><?php echo ucwords($event_title) . (($link_status != '200') ? '<strong> — Draft </strong>' : ''); ?></a></p>
 							<div class="hover">
 								<a href="event/?type=edit&editor=true&id=<?php echo base64_encode($event_id); ?>"><i class="fas fa-pencil-alt"></i> Edit</a>
+								<a href="event/?type=add&editor=true&duplicate_id=<?php echo base64_encode($event_id); ?>" aria-label="<?php echo htmlspecialchars('Duplicate ' . $event_title, ENT_QUOTES, 'UTF-8'); ?>"><i class="fas fa-copy" aria-hidden="true"></i> Duplicate</a>
 								<a href="#" id="<?php echo base64_encode($event_id) ?>_event" class="deleteBtn"><i class="fas fa-trash"></i> Delete</a>
 								<a href="<?php echo $link_url; ?>" target='_blank'><i class="fas fa-eye"></i> View</a>
 							</div>

@@ -375,7 +375,8 @@ main .container {
   display: none;
 }
 
-.container td:hover .hover {
+.container td:hover .hover,
+.container td:focus-within .hover {
   float: left;
   display: block;
   padding: 0;
@@ -383,7 +384,8 @@ main .container {
   margin-top: 10px;
 }
 
-.container td:hover .hover a {
+.container td:hover .hover a,
+.container td:focus-within .hover a {
   float: left;
   font-size: 14px;
   font-weight: 300;
@@ -393,19 +395,54 @@ main .container {
   margin: 0 auto;
 }
 
-.container td:hover .hover a:after {
+.container td:hover .hover a:after,
+.container td:focus-within .hover a:after {
   content: "|";
   padding: 0px 10px;
   font-size: 18px;
   color: #ccc;
 }
 
-.container td:hover .hover a:last-child:after {
+.container td:hover .hover a:last-child:after,
+.container td:focus-within .hover a:last-child:after {
   content: "";
 }
 
-.container td:hover .hover a i {
+.container td:hover .hover a i,
+.container td:focus-within .hover a i {
   width: 20px;
+}
+
+.container td .hover a:focus-visible {
+  outline: 2px solid #2563eb;
+  outline-offset: 2px;
+  border-radius: 3px;
+}
+
+@media (hover: none), (pointer: coarse) {
+  .container td .hover {
+    float: left;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 12px;
+    padding: 0;
+    margin-top: 10px;
+  }
+
+  .container td .hover a {
+    float: none;
+    display: inline-flex;
+    align-items: center;
+    min-height: 36px;
+    font-size: 14px;
+    font-weight: 400;
+    color: #00609e;
+    text-decoration: none;
+  }
+
+  .container td .hover a:after {
+    content: "";
+  }
 }
 
 .btn {
@@ -6311,6 +6348,7 @@ textarea.premium-form-control {
 /* Custom premium action buttons */
 .action-btns {
   display: flex;
+  flex-wrap: wrap;
   gap: 6px;
   align-items: center;
 }
@@ -6329,6 +6367,11 @@ textarea.premium-form-control {
   border: 1px solid transparent;
 }
 
+.action-btn:focus-visible {
+  outline: 2px solid #2563eb;
+  outline-offset: 2px;
+}
+
 .action-btn.btn-edit {
   background: #eef2ff !important;
   border-color: #c7d2fe;
@@ -6337,6 +6380,16 @@ textarea.premium-form-control {
 .action-btn.btn-edit:hover {
   background: #e0e7ff !important;
   color: #1e1b4b;
+}
+
+.action-btn.btn-duplicate {
+  background: #eff6ff;
+  border-color: #bfdbfe;
+  color: #1e40af;
+}
+.action-btn.btn-duplicate:hover {
+  background: #dbeafe;
+  color: #1e3a8a;
 }
 
 .action-btn.btn-view {
@@ -8336,4 +8389,45 @@ textarea.premium-form-control {
   font-size: 13px;
   color: #64748b;
   font-style: italic;
+}
+
+.duplicate-mode-banner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 12px 0 18px;
+  padding: 12px 16px;
+  border: 1px solid #bfdbfe;
+  border-radius: 8px;
+  background: #eff6ff;
+  color: #1e3a8a;
+  font-size: 14px;
+  line-height: 1.45;
+  clear: both;
+}
+
+.duplicate-mode-banner i {
+  color: #1d4ed8;
+  flex-shrink: 0;
+}
+
+.duplicate-media-preview {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 8px 0 12px;
+  padding: 8px 10px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  font-size: 13px;
+}
+
+.duplicate-media-preview img {
+  width: 56px;
+  height: 56px;
+  object-fit: cover;
+  border-radius: 4px;
+  border: 1px solid #cbd5e1;
+  flex-shrink: 0;
 }
