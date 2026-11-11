@@ -54,7 +54,7 @@ $postType = rtrim(ltrim(ADMIN_BASE_URL, '/'), '/');
             <ul>
                 <li <?php echo ((ADMIN_BASE_URL == '/') ? 'class="active"' : '') ?>><a href="/dashboard/"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
                 <li <?php echo ((ADMIN_BASE_URL == '/order/') ? 'class="active"' : '') ?>>
-                    <a href="order/?type=list&status=all"><i class="fas fa-funnel-dollar"></i> Manage order</a>
+                    <a href="order/?type=list&status=all"><i class="fas fa-rupee-sign" aria-hidden="true"></i> Manage order</a>
                     <div class="side-menu">
                         <ul>
                             <li><a href="order/?type=list&status=all"><i class="fas fa-list"></i> All Order</a></li>

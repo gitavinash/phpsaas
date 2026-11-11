@@ -210,7 +210,7 @@ function crmOrderNormalizeDateString(?string $raw, bool $preferDayFirst = false)
         }
     }
 
-    if (preg_match('/^(\d{2})\/(\d{2})\/(\d{4})$/', $val, $m)) {
+    if (preg_match('/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/', $val, $m)) {
         $p1 = (int)$m[1];
         $p2 = (int)$m[2];
         $yr = (int)$m[3];
@@ -228,7 +228,7 @@ function crmOrderNormalizeDateString(?string $raw, bool $preferDayFirst = false)
         }
     }
 
-    if (preg_match('/^(\d{2})-(\d{2})-(\d{4})$/', $val, $m)) {
+    if (preg_match('/^(\d{1,2})-(\d{1,2})-(\d{4})$/', $val, $m)) {
         if (checkdate((int)$m[2], (int)$m[1], (int)$m[3])) {
             return sprintf('%04d-%02d-%02d', (int)$m[3], (int)$m[2], (int)$m[1]);
         }
@@ -493,16 +493,20 @@ function crmOrderParseFilters(array $reqData): array
         }
     }
 
-    // Date basis & range
+    // Date basis & range (default: rolling Last 30 Days unless all_dates=1; future dates clamped to today)
     $dateBasis = strtolower(trim((string)($reqData['date_basis'] ?? 'created')));
     if (!in_array($dateBasis, ['created', 'delivery'], true)) {
         $dateBasis = 'created';
     }
 
+    $todayIso = date('Y-m-d');
+    $rawAllDates = strtolower(trim((string)($reqData['all_dates'] ?? ($reqData['date_scope'] ?? ''))));
+    $allDatesRequested = in_array($rawAllDates, ['1', 'true', 'yes', 'all'], true);
+
     $startDate = crmOrderNormalizeDateString((string)($reqData['start_date'] ?? ''), true);
     $endDate   = crmOrderNormalizeDateString((string)($reqData['end_date'] ?? ''), true);
 
-    if ($startDate === '' && $endDate === '' && !empty($reqData['daterange'])) {
+    if ($startDate === '' && $endDate === '' && !$allDatesRequested && !empty($reqData['daterange'])) {
         $drParts = explode(' - ', (string)$reqData['daterange']);
         if (count($drParts) === 2) {
             $startDate = crmOrderNormalizeDateString($drParts[0], true);
@@ -510,10 +514,25 @@ function crmOrderParseFilters(array $reqData): array
         }
     }
 
-    if ($startDate !== '' && $endDate === '') {
-        $endDate = $startDate;
-    } elseif ($endDate !== '' && $startDate === '') {
-        $startDate = $endDate;
+    if ($allDatesRequested && $startDate === '' && $endDate === '') {
+        $startDate = '';
+        $endDate   = '';
+    } elseif ($startDate === '' && $endDate === '') {
+        $endDate   = $todayIso;
+        $startDate = date('Y-m-d', strtotime('-29 days', strtotime($todayIso)));
+    } else {
+        if ($startDate !== '' && $endDate === '') {
+            $endDate = $startDate;
+        } elseif ($endDate !== '' && $startDate === '') {
+            $startDate = $endDate;
+        }
+    }
+
+    if ($startDate !== '' && $startDate > $todayIso) {
+        $startDate = $todayIso;
+    }
+    if ($endDate !== '' && $endDate > $todayIso) {
+        $endDate = $todayIso;
     }
     if ($startDate !== '' && $endDate !== '' && $startDate > $endDate) {
         $tmp       = $startDate;
@@ -563,6 +582,7 @@ function crmOrderParseFilters(array $reqData): array
         'date_basis'   => $dateBasis,
         'start_date'   => $startDate,
         'end_date'     => $endDate,
+        'all_dates'    => ($startDate === '' && $endDate === ''),
         'payment_mode' => $paymentMode,
         'city'         => $city,
         'q'            => $search,

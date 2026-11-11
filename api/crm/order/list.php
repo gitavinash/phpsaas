@@ -33,6 +33,7 @@ echo json_encode([
         'date_basis'   => $filters['date_basis'],
         'start_date'   => $filters['start_date'],
         'end_date'     => $filters['end_date'],
+        'all_dates'    => $filters['all_dates'],
         'payment_mode' => $filters['payment_mode'],
         'city'         => $filters['city'],
         'q'            => $filters['q'],
@@ -41,6 +42,7 @@ echo json_encode([
     'meta' => [
         'site_id'    => $ctx['siteId'],
         'redact_pii' => $ctx['redactPii'],
+        'today'      => date('Y-m-d'),
     ],
 ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
 exit;

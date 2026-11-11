@@ -5,6 +5,23 @@ $allowedStatuses = ['all', '0', '1', '2', '3', '4', '5', '6'];
 $statusParam = in_array($rawStatus, $allowedStatuses, true) ? $rawStatus : 'all';
 $typeParam = isset($_GET['type']) ? trim((string)$_GET['type']) : 'list';
 
+$todayIso = date('Y-m-d');
+$defaultStartIso = date('Y-m-d', strtotime('-29 days', strtotime($todayIso)));
+$defaultEndIso = $todayIso;
+$todayDisplay = date('d/m/Y', strtotime($todayIso));
+$defaultStartDisplay = date('d/m/Y', strtotime($defaultStartIso));
+$defaultEndDisplay = $todayDisplay;
+
+$allDatesGet = strtolower(trim((string)($_GET['all_dates'] ?? ($_GET['date_scope'] ?? ''))));
+$isAllDatesInitial = in_array($allDatesGet, ['1', 'true', 'yes', 'all'], true)
+    && empty($_GET['start_date'])
+    && empty($_GET['end_date']);
+$initialStartDisplay = $isAllDatesInitial ? '' : $defaultStartDisplay;
+$initialEndDisplay = $isAllDatesInitial ? '' : $defaultEndDisplay;
+$initialSubtitle = $isAllDatesInitial
+    ? 'Showing all dates. Filter or reset to Last 30 Days.'
+    : ('Showing Last 30 Days (' . $defaultStartDisplay . ' – ' . $defaultEndDisplay . '). Filter or export.');
+
 $statusPills = [
     ['code' => 'all', 'label' => 'All'],
     ['code' => '0',   'label' => 'Pending'],
@@ -22,12 +39,15 @@ $statusPills = [
     data-pdf-plugin-base="/lib/resource/ui/plugin/datatable/js/"
     data-default-status="<?php echo htmlspecialchars($statusParam, ENT_QUOTES, 'UTF-8'); ?>"
     data-default-limit="15"
+    data-today="<?php echo htmlspecialchars($todayIso, ENT_QUOTES, 'UTF-8'); ?>"
+    data-default-start-date="<?php echo htmlspecialchars($defaultStartIso, ENT_QUOTES, 'UTF-8'); ?>"
+    data-default-end-date="<?php echo htmlspecialchars($defaultEndIso, ENT_QUOTES, 'UTF-8'); ?>"
     data-view="mobile">
 
     <div class="crm-order-header">
         <div class="crm-header-copy">
             <h1 class="crm-page-title">Orders</h1>
-            <p class="crm-page-subtitle">Filter on demand and export complete order details.</p>
+            <p class="crm-page-subtitle" id="crmPageSubtitle"><?php echo htmlspecialchars($initialSubtitle, ENT_QUOTES, 'UTF-8'); ?></p>
         </div>
 
         <div class="crm-export-toolbar" role="toolbar" focusgroup="toolbar wrap" aria-label="Order exports" aria-controls="crmOrdersTable">
@@ -60,24 +80,36 @@ $statusPills = [
             <div class="crm-summary-card is-orders">
                 <div class="crm-summary-head">
                     <span class="crm-summary-label">Matching Orders</span>
+                    <span class="crm-summary-icon" aria-hidden="true">
+                        <svg aria-hidden="true" focusable="false" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+                    </span>
                 </div>
                 <div class="crm-summary-value" id="crmSummaryTotalOrders">-</div>
             </div>
             <div class="crm-summary-card is-revenue">
                 <div class="crm-summary-head">
                     <span class="crm-summary-label">Filtered Value</span>
+                    <span class="crm-summary-icon" aria-hidden="true">
+                        <svg aria-hidden="true" focusable="false" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12"/><path d="M6 8h12"/><path d="m6 13 8.5 8"/><path d="M6 13h3"/><path d="M9 13c6.667 0 6.667-10 0-10"/></svg>
+                    </span>
                 </div>
                 <div class="crm-summary-value" id="crmSummaryRevenue">-</div>
             </div>
             <div class="crm-summary-card is-pending">
                 <div class="crm-summary-head">
                     <span class="crm-summary-label">Pending</span>
+                    <span class="crm-summary-icon" aria-hidden="true">
+                        <svg aria-hidden="true" focusable="false" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    </span>
                 </div>
                 <div class="crm-summary-value" id="crmSummaryPending">-</div>
             </div>
             <div class="crm-summary-card is-delivered">
                 <div class="crm-summary-head">
                     <span class="crm-summary-label">Delivered</span>
+                    <span class="crm-summary-icon" aria-hidden="true">
+                        <svg aria-hidden="true" focusable="false" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                    </span>
                 </div>
                 <div class="crm-summary-value" id="crmSummaryDelivered">-</div>
             </div>
@@ -134,6 +166,7 @@ $statusPills = [
 
             <form class="crm-filter-form" id="crmOrderFilterForm" method="GET" action="order/" aria-labelledby="crmFilterDrawerHeading">
                 <input type="hidden" name="type" value="<?php echo htmlspecialchars($typeParam, ENT_QUOTES, 'UTF-8'); ?>">
+                <input type="hidden" name="all_dates" id="crmFilterAllDates" value="<?php echo $isAllDatesInitial ? '1' : ''; ?>">
                 <div class="crm-filter-grid">
                     <div class="crm-field crm-field-search">
                         <label for="crmFilterSearch">Search Order ID, Product, Sender, Receiver, Mobile, City</label>
@@ -162,14 +195,80 @@ $statusPills = [
                         </select>
                     </div>
 
-                    <div class="crm-field">
+                    <div class="crm-field crm-field-date" id="crmStartDateField">
                         <label for="crmFilterStartDate">From Date</label>
-                        <input type="date" id="crmFilterStartDate" name="start_date">
+                        <span id="crmStartDateHint" class="crm-field-hint">DD/MM/YYYY · up to <?php echo htmlspecialchars($todayDisplay, ENT_QUOTES, 'UTF-8'); ?></span>
+                        <div class="crm-date-input-wrap">
+                            <input type="text"
+                                id="crmFilterStartDate"
+                                name="start_date"
+                                class="crm-date-input"
+                                value="<?php echo htmlspecialchars($initialStartDisplay, ENT_QUOTES, 'UTF-8'); ?>"
+                                placeholder="DD/MM/YYYY"
+                                inputmode="numeric"
+                                autocomplete="off"
+                                autocorrect="off"
+                                autocapitalize="none"
+                                spellcheck="false"
+                                enterkeyhint="next"
+                                maxlength="10"
+                                aria-invalid="false"
+                                aria-describedby="crmStartDateHint"
+                                data-error="crmStartDateError"
+                                data-date-role="start">
+                            <button type="button"
+                                id="crmStartDateTrigger"
+                                class="crm-date-trigger"
+                                aria-label="Open calendar for From Date"
+                                aria-haspopup="dialog"
+                                aria-expanded="false"
+                                aria-controls="crmDatepickerPopover"
+                                data-date-target="start">
+                                <svg aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                            </button>
+                        </div>
+                        <div id="crmStartDateError" class="crm-field-error" hidden>
+                            <span class="crm-error-icon" role="img" aria-label="Error">!</span>
+                            <span class="crm-error-text"></span>
+                        </div>
                     </div>
 
-                    <div class="crm-field">
+                    <div class="crm-field crm-field-date" id="crmEndDateField">
                         <label for="crmFilterEndDate">To Date</label>
-                        <input type="date" id="crmFilterEndDate" name="end_date">
+                        <span id="crmEndDateHint" class="crm-field-hint">DD/MM/YYYY · up to <?php echo htmlspecialchars($todayDisplay, ENT_QUOTES, 'UTF-8'); ?></span>
+                        <div class="crm-date-input-wrap">
+                            <input type="text"
+                                id="crmFilterEndDate"
+                                name="end_date"
+                                class="crm-date-input"
+                                value="<?php echo htmlspecialchars($initialEndDisplay, ENT_QUOTES, 'UTF-8'); ?>"
+                                placeholder="DD/MM/YYYY"
+                                inputmode="numeric"
+                                autocomplete="off"
+                                autocorrect="off"
+                                autocapitalize="none"
+                                spellcheck="false"
+                                enterkeyhint="done"
+                                maxlength="10"
+                                aria-invalid="false"
+                                aria-describedby="crmEndDateHint"
+                                data-error="crmEndDateError"
+                                data-date-role="end">
+                            <button type="button"
+                                id="crmEndDateTrigger"
+                                class="crm-date-trigger"
+                                aria-label="Open calendar for To Date"
+                                aria-haspopup="dialog"
+                                aria-expanded="false"
+                                aria-controls="crmDatepickerPopover"
+                                data-date-target="end">
+                                <svg aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                            </button>
+                        </div>
+                        <div id="crmEndDateError" class="crm-field-error" hidden>
+                            <span class="crm-error-icon" role="img" aria-label="Error">!</span>
+                            <span class="crm-error-text"></span>
+                        </div>
                     </div>
 
                     <div class="crm-field">
@@ -216,8 +315,9 @@ $statusPills = [
                         <button type="button" class="crm-preset-chip" data-preset="today" aria-pressed="false">Today</button>
                         <button type="button" class="crm-preset-chip" data-preset="yesterday" aria-pressed="false">Yesterday</button>
                         <button type="button" class="crm-preset-chip" data-preset="last7" aria-pressed="false">Last 7 Days</button>
+                        <button type="button" class="crm-preset-chip" data-preset="last30" aria-pressed="<?php echo $isAllDatesInitial ? 'false' : 'true'; ?>">Last 30 Days</button>
                         <button type="button" class="crm-preset-chip" data-preset="month" aria-pressed="false">This Month</button>
-                        <button type="button" class="crm-preset-chip" data-preset="all" aria-pressed="true">All Dates</button>
+                        <button type="button" class="crm-preset-chip" data-preset="all" aria-pressed="<?php echo $isAllDatesInitial ? 'true' : 'false'; ?>">All Dates</button>
                     </div>
 
                     <div class="crm-filter-actions">
@@ -230,6 +330,51 @@ $statusPills = [
                     </div>
                 </div>
             </form>
+
+            <div id="crmDatepickerPopover"
+                class="crm-datepicker-popover"
+                role="dialog"
+                aria-modal="false"
+                aria-labelledby="crmDpTitle"
+                hidden>
+                <div class="crm-dp-header">
+                    <h3 id="crmDpTitle" class="crm-dp-title">Select Date</h3>
+                    <button type="button" id="crmDpCloseBtn" class="crm-dp-close" aria-label="Close calendar">
+                        <svg aria-hidden="true" focusable="false" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                    </button>
+                </div>
+                <div class="crm-dp-nav">
+                    <button type="button" id="crmDpPrevBtn" class="crm-dp-nav-btn" aria-label="Previous month">
+                        <svg aria-hidden="true" focusable="false" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+                    </button>
+                    <div class="crm-dp-ym">
+                        <label for="crmDpMonthSelect" class="visually-hidden">Month</label>
+                        <select id="crmDpMonthSelect" class="crm-dp-select"></select>
+                        <label for="crmDpYearSelect" class="visually-hidden">Year</label>
+                        <select id="crmDpYearSelect" class="crm-dp-select"></select>
+                    </div>
+                    <button type="button" id="crmDpNextBtn" class="crm-dp-nav-btn" aria-label="Next month">
+                        <svg aria-hidden="true" focusable="false" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+                    </button>
+                </div>
+                <div class="crm-dp-weekdays" aria-hidden="true">
+                    <span>Su</span>
+                    <span>Mo</span>
+                    <span>Tu</span>
+                    <span>We</span>
+                    <span>Th</span>
+                    <span>Fr</span>
+                    <span>Sa</span>
+                </div>
+                <div id="crmDpDays" class="crm-dp-days" role="group" aria-label="Calendar days"></div>
+                <div class="crm-dp-footer">
+                    <span class="crm-dp-note" id="crmDpNote">Future dates are disabled</span>
+                    <div class="crm-dp-footer-actions">
+                        <button type="button" id="crmDpTodayBtn" class="crm-dp-foot-btn">Today</button>
+                        <button type="button" id="crmDpClearBtn" class="crm-dp-foot-btn">Clear</button>
+                    </div>
+                </div>
+            </div>
         </search>
 
         <p id="crmOrderStatusRegion" class="crm-status-region is-idle" role="status" aria-live="polite"></p>
@@ -240,11 +385,11 @@ $statusPills = [
                 <thead>
                     <tr>
                         <th scope="col">Order</th>
-                        <th scope="col">Product Details</th>
-                        <th scope="col">Order Sender Details</th>
-                        <th scope="col">Receiver Details</th>
-                        <th scope="col">Delivery Details</th>
-                        <th scope="col">Status &amp; Payment</th>
+                        <th scope="col">Product</th>
+                        <th scope="col">Sender</th>
+                        <th scope="col">Receiver</th>
+                        <th scope="col">Delivery</th>
+                        <th scope="col">Order Status</th>
                         <th scope="col">Action</th>
                     </tr>
                 </thead>

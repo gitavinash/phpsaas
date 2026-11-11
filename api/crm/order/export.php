@@ -41,6 +41,8 @@ if ($filters['status'] !== 'all' && !empty($filters['status_codes'])) {
 if ($filters['start_date'] !== '' && $filters['end_date'] !== '') {
     $basisLabel = ($filters['date_basis'] === 'delivery') ? 'Delivery Date' : 'Created Date';
     $filterSummaryParts[] = $basisLabel . ': ' . date('d/m/Y', strtotime($filters['start_date'])) . ' - ' . date('d/m/Y', strtotime($filters['end_date']));
+} else {
+    $filterSummaryParts[] = 'Dates: All Dates';
 }
 if ($filters['payment_mode'] !== 'all') {
     $filterSummaryParts[] = 'Payment: ' . crmOrderPaymentLabel($filters['payment_mode'] === 'unspecified' ? '' : $filters['payment_mode']);
