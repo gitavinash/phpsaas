@@ -3,26 +3,24 @@
 
 
 <div class="modern-user-list">
-    <h2>All <?php echo ucwords($postType . 's'); ?></h2>
+    <h2 id="userListHeading">All <?php echo ucwords($postType . 's'); ?></h2>
     <a href="user/?type=add" class="floating-add-btn" title="Add New User">
         <i class="fas fa-plus"></i>
         <span>Add User</span>
     </a>
-    <div class="panel">
-        <table id="table" data-default-order-column="0" data-page-length="10">
+    <div class="panel" role="region" tabindex="0" aria-labelledby="userListHeading">
+        <table id="table" data-default-order-column="0" data-default-order-dir="asc" data-page-length="10" data-empty-message="No users found.">
             <thead>
                 <tr>
                     <th>Username</th>
                     <th>Full Name</th>
                     <th>Email</th>
                     <th>Role</th>
-                    <th style="width: 150px">Actions</th>
+                    <th style="width: 150px" data-orderable="false" data-searchable="false">Actions</th>
                 </tr>
             </thead>
             <tbody>
                 <?php
-                $hasUsers = false;
-
                 $applyUserFilter = '';
                 if (SITE_APP == 'nms') {
                     $applyUserFilter = "site_access_type NOT IN ('subscriber', 'customer') AND ";
@@ -31,7 +29,6 @@
                 if ($dataList = mysqli_query($connection, "SELECT user_id, user_username, user_email, user_status, site_access_type, profile_display_name, profile_image FROM " . TABLE_PREFIX . "user INNER JOIN " . TABLE_PREFIX . "profile ON profile_user_id = user_id INNER JOIN " . TABLE_PREFIX . "site_access ON site_access_user_id=user_id WHERE {$applyUserFilter} site_access_site_id=" . SITE_ID)) {
                     if (mysqli_num_rows($dataList) != 0) {
                         while ($data = mysqli_fetch_assoc($dataList)) {
-                            $hasUsers = true;
                             extract($data);
 
                             $nameParts = preg_split('/\s+/', trim((string)$profile_display_name));
@@ -42,29 +39,40 @@
                                     $initials .= strtoupper(substr($nameParts[1], 0, 1));
                                 }
                             }
+
+                            $userIdEncoded = base64_encode((string)$user_id);
+                            $safeUsername = htmlspecialchars((string)$user_username, ENT_QUOTES, 'UTF-8');
+                            $safeDisplayName = htmlspecialchars((string)$profile_display_name, ENT_QUOTES, 'UTF-8');
+                            $safeEmail = htmlspecialchars((string)$user_email, ENT_QUOTES, 'UTF-8');
+                            $safeRole = htmlspecialchars((string)$site_access_type, ENT_QUOTES, 'UTF-8');
+                            $safeInitials = htmlspecialchars($initials, ENT_QUOTES, 'UTF-8');
+                            $trimmedImage = trim((string)$profile_image);
                 ?>
                 <tr>
-                    <td>
+                    <td data-order="<?php echo $safeUsername; ?>">
                         <div class="user-cell">
-                            <span
-                                class="user-avatar"><?php echo (($profile_image != '') ? '<img src="' . $profile_image . '" alt="Profile Picture">' : htmlspecialchars($initials)); ?></span>
+                            <span class="user-avatar" data-initials="<?php echo $safeInitials; ?>"><?php
+                                echo ($trimmedImage !== '')
+                                    ? '<img src="' . htmlspecialchars($trimmedImage, ENT_QUOTES, 'UTF-8') . '" alt="">'
+                                    : $safeInitials;
+                            ?></span>
                             <div>
                                 <a class="user-name"
-                                    href="user/?type=edit&editor=true&id=<?php echo base64_encode($user_id); ?>"><?php echo htmlspecialchars($user_username); ?></a>
+                                    href="user/?type=edit&editor=true&id=<?php echo $userIdEncoded; ?>"><?php echo $safeUsername; ?></a>
                                 <div class="user-sub">Manage account access</div>
                             </div>
                         </div>
                     </td>
-                    <td><?php echo htmlspecialchars($profile_display_name); ?></td>
-                    <td><?php echo htmlspecialchars($user_email); ?></td>
-                    <td><span class="role-chip"><?php echo htmlspecialchars($site_access_type); ?></span></td>
+                    <td><?php echo $safeDisplayName; ?></td>
+                    <td><?php echo $safeEmail; ?></td>
+                    <td><span class="role-chip"><?php echo $safeRole; ?></span></td>
                     <td>
                         <div class="action-btns">
                             <a class="action-btn btn-edit"
-                                href="user/?type=edit&editor=true&id=<?php echo base64_encode($user_id); ?>" title="Edit"><i
+                                href="user/?type=edit&editor=true&id=<?php echo $userIdEncoded; ?>" title="Edit"><i
                                     class="fas fa-pencil-alt"></i> Edit</a>
                             <?php if ($site_access_type != 'administrator') { ?>
-                            <a href="#" id="<?php echo base64_encode($user_id) ?>_post"
+                            <a href="#" id="<?php echo $userIdEncoded; ?>_post"
                                 class="deleteBtn action-btn btn-delete" title="Delete"><i class="fas fa-trash"></i> Delete</a>
                             <?php } ?>
                         </div>
@@ -73,10 +81,6 @@
                 <?php
                         }
                     }
-                }
-
-                if (!$hasUsers) {
-                    echo '<tr><td colspan="5"><div class="empty-user-state">No users found.</div></td></tr>';
                 }
 
                 ?>
