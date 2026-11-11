@@ -305,10 +305,10 @@ require_once 'header.php';
                         <span class="font-semibold"><?php echo $category_title; ?></span>
                     </div>
 
-                    <div class="flex justify-between">
+                    <!-- <div class="flex justify-between">
                         <span class="text-gray-500">Organizer</span>
                         <span class="font-semibold"><?php echo ucwords($profile_display_name); ?></span>
-                    </div>
+                    </div> -->
 
                     <div class="flex justify-between">
                         <span class="text-gray-500">Venue</span>
