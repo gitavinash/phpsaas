@@ -101,7 +101,7 @@ require_once 'header.php';
             </li>
             <li class="text-gray-300">/</li>
             <li>
-                <a href="#" class="hover:text-primary transition-colors truncate">
+                <a href="/events/" class="hover:text-primary transition-colors truncate">
                     <?php echo htmlspecialchars($category_title, ENT_QUOTES, 'UTF-8') ?>
                 </a>
             </li>
