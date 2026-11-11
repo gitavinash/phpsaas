@@ -11,31 +11,67 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
     if (isset($header_user_token)) {
 
-        if ($checkUserIsReal = mysqli_query($connection, "SELECT user_id, user_email, user_salt_key, user_status, site_domain, site_url, site_name, site_icon, site_status, site_app_id, site_access_site_id, site_access_type, company_id, vendor_id FROM " . TABLE_PREFIX . "site_access INNER JOIN " . TABLE_PREFIX . "user ON site_access_user_id=user_id INNER JOIN " . TABLE_PREFIX . "site ON site_access_site_id=site_id LEFT JOIN " . TABLE_PREFIX . "company ON company_user_id=user_id LEFT JOIN " . TABLE_PREFIX . "vendor ON vendor_user_id=user_id WHERE user_salt_key='" . base64_decode($header_user_token) . "' AND site_access_site_id=" . SITE_ID)) {
+        $ssoFile = defined('MODULES') ? MODULES . 'sso.php' : dirname(__DIR__, 2) . '/lib/modules/sso.php';
+        if (file_exists($ssoFile)) {
+            require_once $ssoFile;
+        }
+
+        $escSalt = mysqli_real_escape_string($connection, (string) base64_decode((string) $header_user_token));
+
+        if ($checkUserIsReal = mysqli_query($connection, "SELECT user_id FROM " . TABLE_PREFIX . "user WHERE user_salt_key='{$escSalt}' LIMIT 1")) {
 
             if (mysqli_num_rows($checkUserIsReal) != 0) {
 
-                extract(mysqli_fetch_assoc($checkUserIsReal));
+                $uRow = mysqli_fetch_assoc($checkUserIsReal);
+                $user_id = (int) ($uRow['user_id'] ?? 0);
+                $resolved = ($user_id > 0 && function_exists('iswResolveSiteAccessForUser'))
+                    ? iswResolveSiteAccessForUser($connection, $user_id, (int) SITE_ID)
+                    : null;
 
-                $encryptEmail = base64_encode($user_email);
-
-                if ($user_status != 1) {
-
+                if (!$resolved) {
+                    $status = 404;
+                    $msg = 'No user found';
+                } elseif (empty($resolved['has_access'])) {
+                    $status = 403;
+                    $msg = (($resolved['reason'] ?? '') === 'disabled')
+                        ? 'Your workspace access has been deactivated.'
+                        : 'Unauthorized access';
+                } elseif ((int) ($resolved['user']['user_status'] ?? 0) !== 1 && (int) ($resolved['site']['site_app_id'] ?? 0) !== 3) {
                     $status = 204;
                     $msg = 'Account is not verified';
                 } else {
+                    $user_email = (string) ($resolved['user']['user_email'] ?? '');
+                    $company_id = $resolved['user']['company_id'] ?? '';
+                    $vendor_id = $resolved['user']['vendor_id'] ?? '';
+                    $site_status = (int) ($resolved['site']['site_status'] ?? 0);
+                    $site_name = (string) ($resolved['site']['site_name'] ?? '');
+                    $site_icon = (string) ($resolved['site']['site_icon'] ?? '');
+                    $site_app = (string) ($resolved['site']['site_app'] ?? 'system');
+                    $site_access_type = (string) ($resolved['access']['site_access_type'] ?? 'visitor');
+                    $encryptEmail = base64_encode($user_email);
 
                     /** Define new constant variable */
 
-                    define('USER_ID', $user_id);
-                    define('COMPANY_ID', (($company_id != '') ? $company_id : '0'));
-                    define('VENDOR_ID', (($vendor_id != '') ? $vendor_id : '0'));
+                    if (!defined('USER_ID')) {
+                        define('USER_ID', $user_id);
+                    }
+                    if (!defined('COMPANY_ID')) {
+                        define('COMPANY_ID', (($company_id != '') ? $company_id : '0'));
+                    }
+                    if (!defined('VENDOR_ID')) {
+                        define('VENDOR_ID', (($vendor_id != '') ? $vendor_id : '0'));
+                    }
 
                     /** Define new cookie for logged in user */
 
+                    $uiOpts = function_exists('iswBuildCookieOptions')
+                        ? iswBuildCookieOptions(time() + 30 * 24 * 60 * 60, false)
+                        : (time() + 30 * 24 * 60 * 60);
+
                     if (!isset($_COOKIE['site_app'])) {
 
-                        setcookie('site_app', base64_encode($site_app), time() + 30 * 24 * 60 * 60, '/', SITE_DOMAIN);
+                        $appForCookie = defined('SITE_APP') ? SITE_APP : $site_app;
+                        setcookie('site_app', base64_encode($appForCookie), $uiOpts);
                         $status = 200;
                         $msg = 'valid user';
                     } else {
@@ -59,7 +95,8 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                             }
                         } else {
 
-                            $msg = 'Dounbtfull area';
+                            $status = 200;
+                            $msg = 'valid user';
                         }
 
                         /** Redirect to complete profile page */
@@ -74,7 +111,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
                         /** Set login is valid */
 
-                        setcookie('isLogin', 1, time() + 30 * 24 * 60 * 60, '/', MAIN_DOMAIN);
+                        setcookie('isLogin', '1', $uiOpts);
                     }
                 }
             } else {

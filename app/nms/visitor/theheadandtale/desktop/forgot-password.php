@@ -1,15 +1,29 @@
 <?php
 
-$redirect_url = ((isset($redirect_url)) ? $redirect_url : '/dashboard/');
-
-if (isset($responseMsg)) {
-    echo "<script>alert('{$responseMsg}')</script>";
+$ssoFile = defined('MODULES') ? MODULES . 'sso.php' : dirname(__DIR__, 5) . '/lib/modules/sso.php';
+if (file_exists($ssoFile)) {
+    require_once $ssoFile;
 }
 
-if (isset($_COOKIE['user_data'])) {
+$redirect_url = function_exists('iswNormalizeRedirectPath')
+    ? iswNormalizeRedirectPath($redirect_url ?? '/dashboard/', '/dashboard/')
+    : '/dashboard/';
 
-    header("Location: {$redirect_url}");
-    exit();
+if (isset($responseMsg)) {
+    echo '<script>alert(' . json_encode((string) $responseMsg) . ');</script>';
+}
+
+if (
+    isset($connection)
+    && $connection instanceof mysqli
+    && defined('SITE_ID')
+    && function_exists('iswValidateCurrentSiteSession')
+) {
+    $sessionCheck = iswValidateCurrentSiteSession($connection, (int) SITE_ID);
+    if (!empty($sessionCheck['ok'])) {
+        header("Location: {$redirect_url}");
+        exit();
+    }
 }
 
 ?>

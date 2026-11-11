@@ -7,6 +7,18 @@
 
         window.addEventListener('load', async () => {
             try {
+                const inDash = location.pathname === '/dashboard' || location.pathname.startsWith('/dashboard/');
+                const hadController = !!navigator.serviceWorker.controller;
+                let reloading = false;
+
+                // When new SW takes control on an already-controlled dashboard view without an active POST form, reload once
+                navigator.serviceWorker.addEventListener('controllerchange', () => {
+                    if (!inDash || !hadController || reloading) return;
+                    if (document.querySelector('form[method="POST"], form[method="post"]')) return;
+                    reloading = true;
+                    location.reload();
+                });
+
                 const reg = await navigator.serviceWorker.register('/dashboard/sw.js', {
                     scope: '/dashboard/'
                 });
@@ -19,19 +31,18 @@
                     } catch {}
                 }
 
-                // When new SW takes control, reload once
-                navigator.serviceWorker.addEventListener('controllerchange', () => location.reload());
-
-                // Warmup: after ready (guarantees active worker)
-                const ready = await navigator.serviceWorker.ready;
-                (navigator.serviceWorker.controller || ready.active)?.postMessage?.({
-                    type: 'WARMUP',
-                    payload: {
-                        urls: [
-                            '/dashboard/?view=overview',
-                        ]
-                    }
-                });
+                // Warmup: after ready (only within /dashboard/ scope so .ready does not hang on /login/)
+                if (inDash) {
+                    const ready = await navigator.serviceWorker.ready;
+                    (navigator.serviceWorker.controller || ready.active)?.postMessage?.({
+                        type: 'WARMUP',
+                        payload: {
+                            urls: [
+                                '/dashboard/?view=overview',
+                            ]
+                        }
+                    });
+                }
             } catch (err) {
                 console.error('❌ SW registration failed:', err);
             }

@@ -20,6 +20,11 @@ if (!isset($connection)) {
     }
 }
 
+$ssoFile = defined('MODULES') ? MODULES . 'sso.php' : dirname(__DIR__, 3) . '/lib/modules/sso.php';
+if (file_exists($ssoFile)) {
+    require_once $ssoFile;
+}
+
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
     echo json_encode([
@@ -36,7 +41,7 @@ if ($siteId <= 0) {
     $host = $_SERVER['HTTP_HOST'] ?? '';
     $host = preg_replace('/:\d+$/', '', $host);
     $escapedHost = mysqli_real_escape_string($connection, $host);
-    $siteQuery = mysqli_query($connection, "SELECT site_id FROM {$tblPrefix}site WHERE site_domain = '{$escapedHost}' OR site_url LIKE '%{$escapedHost}%' LIMIT 1");
+    $siteQuery = mysqli_query($connection, "SELECT site_id FROM {$tblPrefix}site WHERE site_domain = '{$escapedHost}' OR site_url = '{$escapedHost}' OR site_url LIKE '%{$escapedHost}%' ORDER BY (site_domain = '{$escapedHost}') DESC, (site_url = '{$escapedHost}') DESC LIMIT 1");
     if ($siteQuery && mysqli_num_rows($siteQuery) > 0) {
         $row = mysqli_fetch_assoc($siteQuery);
         $siteId = (int)$row['site_id'];
@@ -104,6 +109,7 @@ $userSql = "
     LEFT JOIN {$tblPrefix}site_access sa ON sa.site_access_user_id = u.user_id AND sa.site_access_site_id = {$siteId}
     LEFT JOIN {$tblPrefix}site s ON s.site_id = sa.site_access_site_id
     WHERE (u.user_email = '{$escIdentifier}' OR u.user_mobile = '{$escIdentifier}' OR u.user_username = '{$escIdentifier}')
+    ORDER BY (sa.site_access_status = 1) DESC, (sa.site_access_id IS NOT NULL) DESC, u.user_id ASC
     LIMIT 1
 ";
 
@@ -144,6 +150,23 @@ if (!$isPasswordValid) {
     exit;
 }
 
+// Check Site Access Permission first (strict per-site + legacy 49/234 fallback)
+$resolved = function_exists('iswResolveSiteAccessForUser')
+    ? iswResolveSiteAccessForUser($connection, $userId, $siteId)
+    : null;
+
+if (!$resolved || empty($resolved['has_access'])) {
+    http_response_code(403);
+    echo json_encode([
+        'status' => 'error',
+        'code'   => 'access_denied',
+        'msg'    => (($resolved['reason'] ?? '') === 'disabled')
+            ? 'Access denied. Your workspace access has been deactivated.'
+            : 'Access denied. You do not have active access permissions for this workspace.'
+    ]);
+    exit;
+}
+
 // Check Global User Status
 if ((int)$user['user_status'] !== 1) {
     http_response_code(403);
@@ -155,55 +178,25 @@ if ((int)$user['user_status'] !== 1) {
     exit;
 }
 
-// Check Site Access Permission
-if (empty($user['site_access_id']) || (int)$user['site_access_status'] !== 1) {
-    http_response_code(403);
-    echo json_encode([
-        'status' => 'error',
-        'code'   => 'access_denied',
-        'msg'    => 'Access denied. You do not have active access permissions for this workspace.'
-    ]);
-    exit;
-}
-
 // Establish Authenticated Session & Cookies
-$userRole = strtolower(trim($user['site_access_type'] ?? 'administrator'));
-$displayName = trim($user['profile_display_name'] ?? '');
+$accessData  = $resolved['access'] ?? [];
+$userDataRow = $resolved['user'] ?? $user;
+$userRole    = strtolower(trim((string)($accessData['site_access_type'] ?? 'administrator')));
+$displayName = trim((string)($userDataRow['logginUserName'] ?? ($user['profile_display_name'] ?? '')));
 if (empty($displayName)) {
-    $displayName = trim(($user['profile_first_name'] ?? '') . ' ' . ($user['profile_last_name'] ?? ''));
+    $displayName = trim((string)(($userDataRow['profile_first_name'] ?? '') . ' ' . ($userDataRow['profile_last_name'] ?? '')));
 }
 if (empty($displayName)) {
-    $displayName = $user['user_username'] ?? 'Team Member';
+    $displayName = $userDataRow['user_username'] ?? 'Team Member';
 }
 
-$userEmail   = trim($user['user_email'] ?? '');
-$userMobile  = trim($user['user_mobile'] ?? '');
-$userAvatar  = trim($user['profile_image'] ?? '');
-$siteMeta    = trim($user['site_access_meta'] ?? '');
-$siteApp     = defined('SITE_APP') ? SITE_APP : 'aleya';
-$mainDomain  = defined('MAIN_DOMAIN') ? MAIN_DOMAIN : ($_SERVER['HTTP_HOST'] ?? '');
-$mainDomain  = preg_replace('/:\d+$/', '', $mainDomain);
+$userEmail  = trim((string)($userDataRow['user_email'] ?? ''));
+$userMobile = trim((string)($userDataRow['user_mobile'] ?? ''));
+$userAvatar = trim((string)($userDataRow['profile_image'] ?? ''));
 
-// Cookie Setup (30 days persistence)
-$cookieExpiry = time() + (30 * 24 * 60 * 60);
-$isHttps = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') || (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https');
-
-$cookieDomain = '.' . ltrim($mainDomain, '.');
-if (filter_var($mainDomain, FILTER_VALIDATE_IP) || strpos($mainDomain, 'localhost') !== false) {
-    $cookieDomain = '';
-}
-
-@setcookie('user_data', base64_encode($userSalt), $cookieExpiry, '/', $cookieDomain, $isHttps, false);
-@setcookie('user_name', base64_encode($displayName), $cookieExpiry, '/', $cookieDomain, $isHttps, false);
-@setcookie('user_email', base64_encode($userEmail), $cookieExpiry, '/', $cookieDomain, $isHttps, false);
-@setcookie('user_mobile', base64_encode($userMobile), $cookieExpiry, '/', $cookieDomain, $isHttps, false);
-@setcookie('user_image', base64_encode($userAvatar), $cookieExpiry, '/', $cookieDomain, $isHttps, false);
-@setcookie('user_type', base64_encode($userRole), $cookieExpiry, '/', $cookieDomain, $isHttps, false);
-@setcookie('user_meta', base64_encode($siteMeta), $cookieExpiry, '/', $cookieDomain, $isHttps, false);
-@setcookie('site_app', base64_encode($siteApp), $cookieExpiry, '/', $cookieDomain, $isHttps, false);
-@setcookie('isLogin', '1', $cookieExpiry, '/', $cookieDomain, $isHttps, false);
-
-$_COOKIE['user_data'] = $userSalt;
+$deviceId = !empty($_COOKIE['device_id']) ? trim((string)$_COOKIE['device_id']) : bin2hex(random_bytes(16));
+$_COOKIE['device_id'] = $deviceId;
+$_COOKIE['user_data'] = base64_encode($userSalt);
 
 // Store in PHP Session if active
 if (session_status() === PHP_SESSION_ACTIVE) {
@@ -214,6 +207,7 @@ if (session_status() === PHP_SESSION_ACTIVE) {
 }
 
 // Analytics Session Tracking
+$analyticsId = 0;
 $analyticsModule = (defined('API_MODULES') ? API_MODULES : dirname(__DIR__, 2) . '/') . 'analytics/session-record.php';
 if (file_exists($analyticsModule)) {
     try {
@@ -223,8 +217,18 @@ if (file_exists($analyticsModule)) {
     }
 }
 
+$activeDeviceId = trim((string)($_COOKIE['device_id'] ?? $deviceId));
+if (function_exists('iswSyncGroupUserSessions')) {
+    iswSyncGroupUserSessions($connection, $userId, $activeDeviceId, $siteId, (int)$analyticsId);
+}
+if (function_exists('iswSetSiteAuthCookies')) {
+    iswSetSiteAuthCookies($resolved, $activeDeviceId, 30);
+}
+
 // Determine destination URL
-$finalRedirect = !empty($redirectUrl) && $redirectUrl !== '#' ? $redirectUrl : '/dashboard/';
+$finalRedirect = function_exists('iswNormalizeRedirectPath')
+    ? iswNormalizeRedirectPath($redirectUrl, '/dashboard/')
+    : (!empty($redirectUrl) && $redirectUrl !== '#' ? $redirectUrl : '/dashboard/');
 
 echo json_encode([
     'status'       => 'success',

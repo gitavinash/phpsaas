@@ -210,6 +210,10 @@ switch ($urlStructure[0]) {
 		require_once 'oauth.php';
 		break;
 
+	case 'sso':
+		require_once 'sso.php';
+		break;
+
 	case str_replace('/', '', LOGOUT_PATH):
 		require_once 'logout.php';
 		break;

@@ -71,7 +71,7 @@
 			if (isset($_GET['responseMsg'])) { ?>
 
 				<script type='text/javascript'>
-					alert("<?php echo $_GET['responseMsg'] ?>");
+					alert(<?php echo json_encode((string) $_GET['responseMsg'], JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>);
 				</script>
 
 				<?php
@@ -83,6 +83,9 @@
 					<script type='text/javascript'>
 						$(window).bind('beforeunload', function() {
 							return "Leaving this page will reset the wizard";
+						});
+						$(document).on('submit', 'form', function() {
+							$(window).off('beforeunload');
 						});
 					</script>
 				<?php

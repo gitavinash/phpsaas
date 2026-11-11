@@ -1,6 +1,15 @@
 <?php
 
-if (isset($_COOKIE['user_data'])) {
+$ssoFile = defined('MODULES') ? MODULES . 'sso.php' : dirname(__DIR__) . '/lib/modules/sso.php';
+if (file_exists($ssoFile)) {
+    require_once $ssoFile;
+}
+
+$sessionValidation = (isset($connection) && $connection instanceof mysqli && function_exists('iswValidateCurrentSiteSession'))
+    ? iswValidateCurrentSiteSession($connection, (int) SITE_ID)
+    : ['ok' => false];
+
+if (!empty($sessionValidation['ok'])) {
 
     /** Show draft only for login user */
 

@@ -4,44 +4,108 @@
 
 function login($connection, $data)
 {
+    $ssoFile = defined('MODULES') ? MODULES . 'sso.php' : dirname(__DIR__, 2) . '/lib/modules/sso.php';
+    if (file_exists($ssoFile)) {
+        require_once $ssoFile;
+    }
 
     extract($data);
 
-    if ($checkUser = mysqli_query($connection, "SELECT user_id, user_email, user_mobile, user_password, user_salt_key, user_status, user_type_code as user_type, site_app_id, profile_display_name, profile_image, site_access_site_id, site_access_status, site_access_meta FROM " . TABLE_PREFIX . "user INNER JOIN " . TABLE_PREFIX . "profile ON user_id=profile_user_id INNER JOIN " . TABLE_PREFIX . "site_access ON site_access_user_id=user_id INNER JOIN " . TABLE_PREFIX . "site ON site_id=site_access_site_id INNER JOIN " . TABLE_PREFIX . "user_type ON user_type_code=site_access_type AND site_access_site_id=" . SITE_ID . " WHERE (user_email='{$email}' OR user_mobile='{$email}') LIMIT 1")) {
+    $identifierRaw = isset($email) ? trim((string) $email) : '';
+    $passRaw = isset($pass) ? (string) $pass : '';
+    $escIdentifier = mysqli_real_escape_string($connection, $identifierRaw);
+    $siteIdInt = (int) SITE_ID;
+    $saSiteFilter = in_array($siteIdInt, [49, 234], true)
+        ? "sa.site_access_site_id IN (49, 234)"
+        : "sa.site_access_site_id = {$siteIdInt}";
+
+    $loginUserSql = "SELECT u.user_id, u.user_email, u.user_mobile, u.user_password, u.user_salt_key, u.user_status
+                     FROM " . TABLE_PREFIX . "user u
+                     LEFT JOIN " . TABLE_PREFIX . "site_access sa
+                            ON sa.site_access_user_id = u.user_id
+                           AND {$saSiteFilter}
+                     WHERE (u.user_email='{$escIdentifier}' OR u.user_mobile='{$escIdentifier}')
+                     ORDER BY (sa.site_access_status = 1) DESC,
+                              (sa.site_access_site_id = {$siteIdInt}) DESC,
+                              (sa.site_access_id IS NOT NULL) DESC,
+                              (u.user_status = 1) DESC,
+                              u.user_id ASC
+                     LIMIT 5";
+
+    if ($checkUser = mysqli_query($connection, $loginUserSql)) {
 
         if (mysqli_num_rows($checkUser) != 0) {
 
-            extract(mysqli_fetch_assoc($checkUser));
+            $candidateRows = [];
+            while ($uRow = mysqli_fetch_assoc($checkUser)) {
+                $candidateRows[] = $uRow;
+            }
 
-            if ($user_password == hash('sha256', $user_salt_key . $pass)) {
+            $matchedRow = null;
+            foreach ($candidateRows as $uRow) {
+                if ($uRow['user_password'] == hash('sha256', $uRow['user_salt_key'] . $passRaw)) {
+                    $matchedRow = $uRow;
+                    $candResolved = function_exists('iswResolveSiteAccessForUser')
+                        ? iswResolveSiteAccessForUser($connection, (int) $uRow['user_id'], $siteIdInt)
+                        : null;
+                    if ($candResolved && !empty($candResolved['has_access'])) {
+                        break;
+                    }
+                }
+            }
+
+            $user_type = '';
+
+            if ($matchedRow !== null) {
+                extract($matchedRow);
+
+                $resolved = function_exists('iswResolveSiteAccessForUser')
+                    ? iswResolveSiteAccessForUser($connection, (int) $user_id, $siteIdInt)
+                    : null;
+
+                $hasSiteAccess = ($resolved && !empty($resolved['has_access']));
+                if ($hasSiteAccess) {
+                    $user_type = (string) ($resolved['access']['site_access_type'] ?? '');
+                }
 
                 /** User has access of this site */
 
-                if ($site_access_status == 1 && $user_status == 1) {
+                if ($hasSiteAccess && (int) $user_status === 1) {
 
                     ob_start();
-                    setcookie('user_name', base64_encode($profile_display_name), time() + 30 * 24 * 60 * 60, '/', MAIN_DOMAIN);
-                    setcookie('user_email', base64_encode(!empty($user_email) ? $user_email : $email), time() + 30 * 24 * 60 * 60, '/', MAIN_DOMAIN);
-                    setcookie('user_mobile', base64_encode($user_mobile), time() + 30 * 24 * 60 * 60, '/', MAIN_DOMAIN);
-                    setcookie('user_image', base64_encode($profile_image), time() + 30 * 24 * 60 * 60, '/', MAIN_DOMAIN);
-                    setcookie('user_data', base64_encode($user_salt_key), time() + 30 * 24 * 60 * 60, '/', MAIN_DOMAIN);
-                    setcookie('user_meta', base64_encode($site_access_meta), time() + 30 * 24 * 60 * 60, '/', MAIN_DOMAIN);
-                    setcookie('user_type', base64_encode($user_type), time() + 30 * 24 * 60 * 60, '/', MAIN_DOMAIN);
-                    setcookie('site_app', base64_encode(SITE_APP), time() + 30 * 24 * 60 * 60, '/', MAIN_DOMAIN);
-                    $_COOKIE['user_data'] = $user_salt_key;
+                    $_COOKIE['user_data'] = base64_encode($user_salt_key);
                     require_once API_MODULES . 'analytics/session-record.php';
 
+                    $activeDeviceId = trim((string) ($_COOKIE['device_id'] ?? ''));
+                    if (function_exists('iswSyncGroupUserSessions') && $activeDeviceId !== '') {
+                        iswSyncGroupUserSessions($connection, (int) $user_id, $activeDeviceId, $siteIdInt, (int) ($analyticsId ?? 0));
+                    }
+                    if (function_exists('iswSetSiteAuthCookies')) {
+                        iswSetSiteAuthCookies($resolved, $activeDeviceId, 30);
+                    }
                     ob_end_flush();
+
                     $status = 'success';
                     $msg = 'Login Successfully';
-                    $url = urldecode((isset($redirect_url)) ? $redirect_url : '/dashboard/');
+                    $defaultRedirect = '/dashboard/';
+                    if (function_exists('iswNormalizeRedirectPath')) {
+                        $url = iswNormalizeRedirectPath($redirect_url ?? $defaultRedirect, $defaultRedirect);
+                    } else {
+                        $url = urldecode((isset($redirect_url)) ? $redirect_url : $defaultRedirect);
+                    }
+                } elseif (!$hasSiteAccess) {
+
+                    $status = 'error';
+                    $msg = ($resolved && ($resolved['reason'] ?? '') === 'disabled')
+                        ? 'Your workspace access has been deactivated.'
+                        : 'You do not have access to this workspace.';
                 } else {
 
-                    if ($user_status == 0) {
+                    if ((int) $user_status === 0) {
 
                         /** User verification url using the user salt key */
 
-                        $verifyURL = SITE_DOMAIN . '/verify/email/?user_id=' . $user_salt_key . '&email=' . base64_encode($email);
+                        $verifyURL = SITE_DOMAIN . '/verify/email/?user_id=' . $user_salt_key . '&email=' . base64_encode($user_email);
 
                         require_once EMAIL_TEMPLATE . 'email-verification.php';
 
@@ -59,16 +123,19 @@ function login($connection, $data)
 
             if ($user_type == 'travel_agent' && SITE_ID == 50) {
                 $url = '/our-hotels/';
+                $hardRedirectURL = $url;
             } else {
-                $hardRedirectURL = (($status == 'success') ? $url : '/login/?alertMsg=' . urlencode($msg));
+                $hardRedirectURL = ((isset($status) && $status == 'success') ? $url : '/login/?sso_done=1&alertMsg=' . urlencode($msg));
             }
         } else {
             $status = 'error';
             $msg = 'No user found';
+            $hardRedirectURL = '/login/?sso_done=1&alertMsg=' . urlencode($msg);
         }
     } else {
         $status = 'error';
         $msg = 'Technical error';
+        $hardRedirectURL = '/login/?sso_done=1&alertMsg=' . urlencode($msg);
     }
 
     $return = array(
@@ -98,9 +165,9 @@ function login($connection, $data)
             </head>
 
             <body>
-                <form id="autoSubmitForm" action="<?php echo $baseUrl ?>" method="<?php echo $method ?>">
-                    <input type="hidden" name="id" value="<?php echo $id ?>">
-                    <input type="hidden" name="redirect_url" value="<?php echo $hardRedirectURL ?>">
+                <form id="autoSubmitForm" action="<?php echo htmlspecialchars((string) $baseUrl, ENT_QUOTES, 'UTF-8'); ?>" method="<?php echo htmlspecialchars((string) ($method ?? 'POST'), ENT_QUOTES, 'UTF-8'); ?>">
+                    <input type="hidden" name="id" value="<?php echo htmlspecialchars((string) ($id ?? ''), ENT_QUOTES, 'UTF-8'); ?>">
+                    <input type="hidden" name="redirect_url" value="<?php echo htmlspecialchars((string) ($hardRedirectURL ?? '/dashboard/'), ENT_QUOTES, 'UTF-8'); ?>">
                     <noscript>
                         <p>JavaScript is disabled. Please click the submit button.</p>
                         <button type="submit">Submit</button>
@@ -113,7 +180,7 @@ function login($connection, $data)
 <?php
 
         } else {
-            header("Location: {$hardRedirectURL}", true, 301);
+            header("Location: " . ($hardRedirectURL ?? '/login/'), true, 302);
         }
     } else {
         echo json_encode($return, true);

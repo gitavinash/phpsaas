@@ -82,10 +82,18 @@ const isCssOrJs = /\.(css|js)(\?|$)/i.test(url.pathname);
 if (isNavigation || (isSameOrigin && isCssOrJs)) {
 event.respondWith((async () => {
 try {
-const networkResponse = await fetch(req, { cache: 'no-store' });
-if (isSameOrigin && networkResponse && networkResponse.ok) {
+const networkResponse = isNavigation
+? await fetch(req)
+: await fetch(req, { cache: 'no-store' });
+if (networkResponse && networkResponse.type === 'opaqueredirect') {
+return networkResponse;
+}
+if (isNavigation && networkResponse && networkResponse.redirected) {
+return Response.redirect(networkResponse.url, 302);
+}
+if (isSameOrigin && networkResponse && networkResponse.ok && !networkResponse.redirected) {
 const cache = await caches.open(CACHE_NAME);
-await cache.put(req, networkResponse.clone());
+await cache.put(req, networkResponse.clone()).catch(() => {});
 }
 return networkResponse;
 } catch (error) {
@@ -115,8 +123,8 @@ return cachedResponse;
 }
 
 const networkResponse = await fetch(req);
-if (isSameOrigin && networkResponse && networkResponse.ok) {
-await cache.put(req, networkResponse.clone());
+if (isSameOrigin && networkResponse && networkResponse.ok && !networkResponse.redirected) {
+await cache.put(req, networkResponse.clone()).catch(() => {});
 }
 return networkResponse;
 })());

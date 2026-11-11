@@ -151,17 +151,23 @@ function publish($connection, $data)
 
     $msg = urlencode($msg);
 
+    if (!headers_sent()) {
+        header('Content-Type: text/html; charset=utf-8');
+    }
+
+    $encodedUserId = isset($userID) ? urlencode(base64_encode((string) $userID)) : '';
+
     if (SITE_DASHBOARD_VERSION == 1) {
         if ($status == 'success') {
-            header("Location: /dashboard/user/?type=edit&editor=true&id=" . base64_encode($userID) . "&responseMsg={$msg}", TRUE, 301);
+            header("Location: /dashboard/user/?type=edit&editor=true&id={$encodedUserId}&responseMsg={$msg}", TRUE, 302);
         } else {
-            header("Location: /dashboard/user/?type=add&responseMsg={$msg}&status={$status}", TRUE, 301);
+            header("Location: /dashboard/user/?type=add&responseMsg={$msg}&status={$status}", TRUE, 302);
         }
     } else {
         if ($status === 'success') {
-            header("Location: /dashboard/user/edit/?id=" . base64_encode($userID) . "&responseMsg={$msg}", TRUE, 301);
+            header("Location: /dashboard/user/edit/?id={$encodedUserId}&responseMsg={$msg}", TRUE, 302);
         } else {
-            header("Location: /dashboard/user/add/?responseMsg={$msg}&status={$status}", TRUE, 301);
+            header("Location: /dashboard/user/add/?responseMsg={$msg}&status={$status}", TRUE, 302);
         }
     }
     exit();

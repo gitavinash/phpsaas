@@ -2,12 +2,18 @@
 
 function verifyOTP($connection, $data)
 {
+    $ssoFile = defined('MODULES') ? MODULES . 'sso.php' : dirname(__DIR__, 2) . '/lib/modules/sso.php';
+    if (file_exists($ssoFile)) {
+        require_once $ssoFile;
+    }
 
     extract($data);
 
-    $otp_id = base64_decode($otp_id);
+    $siteIdInt = (int) SITE_ID;
+    $otp_id = (int) base64_decode((string) ($otp_id ?? ''));
+    $rawMobile = isset($mobile) ? trim((string) $mobile) : '';
 
-    if ($checkOtpId = mysqli_query($connection, "SELECT otp_id, otp_user_id, otp_code, otp_status, otp_expire FROM " . TABLE_PREFIX . "otp WHERE otp_id='{$otp_id}'")) {
+    if ($otp_id > 0 && ($checkOtpId = mysqli_query($connection, "SELECT otp_id, otp_user_id, otp_code, otp_status, otp_expire, otp_destination FROM " . TABLE_PREFIX . "otp WHERE otp_id='{$otp_id}' AND (otp_site_id={$siteIdInt} OR otp_site_id=0) LIMIT 1"))) {
 
         if (mysqli_num_rows($checkOtpId) != 0) {
 
@@ -17,70 +23,69 @@ function verifyOTP($connection, $data)
 
                 if ($otp_status == 0) {
 
-                    if ($otp_code == $otp) {
+                    if ($otp_code == ($otp ?? '')) {
 
-                        if ($updateOTP = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "otp SET otp_status=1 WHERE otp_id='{$otp_id}'")) {
+                        $resolved = null;
+                        $accessReason = 'no_access';
+                        $otpUserIdInt = (int) ($otp_user_id ?? 0);
 
-                            if ($checkUser = mysqli_query($connection, "SELECT user_id, user_password, user_salt_key, user_status, user_type_code as user_type, site_app_id, profile_display_name, profile_image, site_access_site_id, site_access_meta, site_access_status FROM " . TABLE_PREFIX . "user INNER JOIN " . TABLE_PREFIX . "profile ON user_id=profile_user_id INNER JOIN " . TABLE_PREFIX . "site_access ON site_access_user_id=user_id INNER JOIN " . TABLE_PREFIX . "site ON site_id=site_access_site_id INNER JOIN " . TABLE_PREFIX . "user_type ON user_type_code=site_access_type WHERE user_mobile='{$mobile}' AND site_access_site_id=" . SITE_ID . " LIMIT 1")) {
-
-                                if (mysqli_num_rows($checkUser) != 0) {
-
-                                    extract(mysqli_fetch_assoc($checkUser));
-
-                                    /** User Session Data */
-
-                                    ob_start();
-                                    setcookie('user_name', base64_encode($profile_display_name), time() + 30 * 24 * 60 * 60, '/');
-                                    setcookie('user_image', base64_encode($profile_image), time() + 30 * 24 * 60 * 60, '/');
-                                    setcookie('user_data', base64_encode($user_salt_key), time() + 30 * 24 * 60 * 60, '/');
-                                    setcookie('user_meta', base64_encode($site_access_meta), time() + 30 * 24 * 60 * 60, '/');
-                                    setcookie('user_type', base64_encode($user_type), time() + 30 * 24 * 60 * 60, '/');
-                                    setcookie('site_app', base64_encode(SITE_APP), time() + 30 * 24 * 60 * 60, '/');
-                                    $_COOKIE['user_data'] = $user_salt_key;
-                                    require_once API_MODULES . 'analytics/session-record.php';
-
-                                    ob_end_flush();
-
-                                    if ($site_access_status == 1) {
-
-                                        $status = 200;
-                                        $msg = 'Login Successfully';
-                                        $url = '/dashboard/';
-                                    } else {
-
-                                        $status = 'warning';
-                                        $msg = 'Your account was deactivated';
-                                    }
+                        if ($otpUserIdInt > 0 && function_exists('iswResolveSiteAccessForUser')) {
+                            $cand = iswResolveSiteAccessForUser($connection, $otpUserIdInt, $siteIdInt);
+                            if ($cand && !empty($cand['has_access'])) {
+                                $uStat = (int) ($cand['user']['user_status'] ?? 0);
+                                $sApp  = (int) ($cand['site']['site_app_id'] ?? 0);
+                                if ($uStat === 1 || $sApp === 3) {
+                                    $resolved = $cand;
+                                    $accessReason = 'ok';
                                 } else {
-
-                                    if (isset($redirectUrl)) {
-
-                                        /** Redirect to registrer page */
-
-                                        $status = 200;
-                                        $url = $redirectUrl . '?mobile=' . $mobile;
-                                        $msg = 'New user found';
-                                    } else {
-
-                                        /** Start Registration process into current website */
-
-                                        if (mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "site_access(site_access_site_id, site_access_user_id, site_access_type, site_access_status) VALUES(" . SITE_ID . ", '{$otp_user_id}', 'member', 1)")) {
-
-                                            $status = 200;
-                                            $msg = 'Login Successfully';
-                                            $url = '/dashboard/';
-                                        } else {
-
-                                            $msg = 'Something is wrong while registrating into app';
-                                        }
-                                    }
+                                    $accessReason = 'inactive_user';
                                 }
-                            } else {
-
-                                $msg = 'Error while searching the user';
+                            } elseif ($cand && ($cand['reason'] ?? '') === 'disabled') {
+                                $accessReason = 'disabled';
                             }
-                        } else {
+                        }
 
+                        if ($accessReason !== 'ok' && $rawMobile !== '' && function_exists('iswFindUserAndSiteAccessByIdentifier')) {
+                            $lookup = iswFindUserAndSiteAccessByIdentifier($connection, $rawMobile, $siteIdInt, 'mobile');
+                            if ($lookup['reason'] === 'ok' || ($resolved === null && !empty($lookup['resolved']))) {
+                                $resolved = $lookup['resolved'];
+                                $accessReason = $lookup['reason'];
+                            }
+                        }
+
+                        if ($accessReason !== 'ok' || !$resolved || empty($resolved['has_access'])) {
+                            if ($accessReason === 'disabled') {
+                                $status = 'warning';
+                                $msg = 'Your account was deactivated';
+                            } elseif ($accessReason === 'inactive_user') {
+                                $status = 'error';
+                                $msg = 'Your account is inactive or pending verification.';
+                            } else {
+                                $status = 'error';
+                                $msg = 'You do not have access to this workspace.';
+                            }
+                        } elseif ($updateOTP = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "otp SET otp_status=1 WHERE otp_id='{$otp_id}'")) {
+                            $verifiedUid = (int) ($resolved['user']['user_id'] ?? 0);
+                            $userSaltKey = (string) ($resolved['user']['user_salt_key'] ?? '');
+
+                            /** User Session Data */
+                            ob_start();
+                            $_COOKIE['user_data'] = base64_encode($userSaltKey);
+                            require_once API_MODULES . 'analytics/session-record.php';
+
+                            $activeDeviceId = trim((string) ($_COOKIE['device_id'] ?? ''));
+                            if (function_exists('iswSyncGroupUserSessions') && $activeDeviceId !== '') {
+                                iswSyncGroupUserSessions($connection, $verifiedUid, $activeDeviceId, $siteIdInt, (int) ($analyticsId ?? 0));
+                            }
+                            if (function_exists('iswSetSiteAuthCookies')) {
+                                iswSetSiteAuthCookies($resolved, $activeDeviceId, 30);
+                            }
+                            ob_end_flush();
+
+                            $status = 200;
+                            $msg = 'Login Successfully';
+                            $url = '/dashboard/';
+                        } else {
                             $msg = 'Something is wrong while verifying OTP';
                         }
                     } else {

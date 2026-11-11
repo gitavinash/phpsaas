@@ -12,26 +12,26 @@ function password($connection, $data)
     if ($password == '' || $cnf_password == '') {
 
         $msg = 'Please enter your password';
-    } else {
+    } elseif (strcmp($password, $cnf_password)) {
 
         /** Check both password is match or not */
-
-        if (strcmp($password, $cnf_password)) {
-
-            $msg = 'Your Confirm Password is not matched';
-        }
+        $msg = 'Your Confirm Password is not matched';
+    } else {
 
         $email = $user_email;
+        $escSaltKey = mysqli_real_escape_string($connection, (string) $user_salt_key);
+        $escEmail   = mysqli_real_escape_string($connection, (string) $email);
 
-        if ($checkUser = mysqli_query($connection, "SELECT user_id FROM " . TABLE_PREFIX . "user WHERE user_salt_key='{$user_salt_key}' AND user_email='{$email}'")) {
+        if ($checkUser = mysqli_query($connection, "SELECT user_id FROM " . TABLE_PREFIX . "user WHERE user_salt_key='{$escSaltKey}' AND user_email='{$escEmail}'")) {
 
             if (mysqli_num_rows($checkUser) != 0) {
 
                 extract(mysqli_fetch_assoc($checkUser));
+                $uidInt = (int) $user_id;
 
                 $dbPassword = hash('sha256', $user_salt_key . $cnf_password);
 
-                if ($updatePassword = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "user SET user_password='{$dbPassword}' WHERE user_id='{$user_id}' AND user_email='{$email}' AND user_salt_key='{$user_salt_key}'")) {
+                if ($updatePassword = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "user SET user_password='{$dbPassword}' WHERE user_id='{$uidInt}' AND user_email='{$escEmail}' AND user_salt_key='{$escSaltKey}'")) {
 
                     $status = 'success';
                     $msg = "Password updated successfully";

@@ -1,5 +1,10 @@
 <?php
 
+$ssoModuleFile = defined('MODULES') ? MODULES . 'sso.php' : __DIR__ . '/sso.php';
+if (file_exists($ssoModuleFile)) {
+    require_once $ssoModuleFile;
+}
+
 /**
  * Resolve verification template path with fallback to system default template
  *
@@ -69,19 +74,29 @@ function email($connection, $data)
     global $table_prefix;
 
     $rawEmail = isset($email) ? $email : '';
-    $decodedEmail = base64_decode($rawEmail);
+    $decodedEmail = base64_decode((string) $rawEmail);
     $userId = isset($user_id) ? $user_id : '';
+    $escDecodedEmail = mysqli_real_escape_string($connection, (string) $decodedEmail);
+    $escSaltKey = mysqli_real_escape_string($connection, (string) $userId);
 
     $message = 'Something went wrong';
 
-    if (!empty($decodedEmail) && !empty($userId) && ($selectUser = mysqli_query($connection, "SELECT user_id, user_status FROM " . TABLE_PREFIX . "user WHERE user_email='{$decodedEmail}' AND user_salt_key='{$userId}'"))) {
+    if (!empty($decodedEmail) && !empty($userId) && ($selectUser = mysqli_query($connection, "SELECT user_id, user_status FROM " . TABLE_PREFIX . "user WHERE user_email='{$escDecodedEmail}' AND user_salt_key='{$escSaltKey}' LIMIT 1"))) {
         if (mysqli_num_rows($selectUser) != 0) {
 
             extract(mysqli_fetch_assoc($selectUser));
+            $uidInt = (int) $user_id;
+            $resolvedAccess = function_exists('iswResolveSiteAccessForUser')
+                ? iswResolveSiteAccessForUser($connection, $uidInt, (int) SITE_ID)
+                : null;
 
-            if ($user_status == 0) {
+            if (!$resolvedAccess || empty($resolvedAccess['has_access'])) {
+                $message = (($resolvedAccess['reason'] ?? '') === 'disabled')
+                    ? 'Your workspace access has been deactivated.'
+                    : 'You do not have access to this workspace.';
+            } elseif ($user_status == 0) {
 
-                if (mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "user SET user_status=1, user_act_time=NOW() WHERE user_id='{$user_id}'")) {
+                if (mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "user SET user_status=1, user_act_time=NOW() WHERE user_id='{$uidInt}'")) {
 
                     $message = 'Thank you for verifying your email';
                 } else {
@@ -119,8 +134,10 @@ function password($connection, $data)
     global $table_prefix;
 
     $rawEmail = isset($email) ? $email : '';
-    $decodedEmail = base64_decode($rawEmail);
+    $decodedEmail = base64_decode((string) $rawEmail);
     $transaction = isset($transaction) ? $transaction : '';
+    $escDecodedEmail = mysqli_real_escape_string($connection, (string) $decodedEmail);
+    $escTransaction = mysqli_real_escape_string($connection, (string) $transaction);
 
     // Ensure $_GET has transaction & raw base64 email for the template forms
     if (!isset($_GET['transaction']) && !empty($transaction)) {
@@ -130,9 +147,29 @@ function password($connection, $data)
         $_GET['email'] = $rawEmail;
     }
 
-    if (!empty($decodedEmail) && !empty($transaction) && ($checkUser = mysqli_query($connection, "SELECT user_id FROM " . TABLE_PREFIX . "user WHERE user_salt_key='{$transaction}' AND user_email='{$decodedEmail}'"))) {
+    if (!empty($decodedEmail) && !empty($transaction) && ($checkUser = mysqli_query($connection, "SELECT user_id FROM " . TABLE_PREFIX . "user WHERE user_salt_key='{$escTransaction}' AND user_email='{$escDecodedEmail}' LIMIT 1"))) {
 
         if (mysqli_num_rows($checkUser) != 0) {
+            $uRow = mysqli_fetch_assoc($checkUser);
+            $uidInt = (int) ($uRow['user_id'] ?? 0);
+            $resolvedAccess = function_exists('iswResolveSiteAccessForUser')
+                ? iswResolveSiteAccessForUser($connection, $uidInt, (int) SITE_ID)
+                : null;
+
+            if (!$resolvedAccess || empty($resolvedAccess['has_access'])) {
+                $message = (($resolvedAccess['reason'] ?? '') === 'disabled')
+                    ? 'Your workspace access has been deactivated.'
+                    : 'You do not have access to this workspace.';
+
+                $template = resolveVerifyTemplate(['verify.php', 'email.php']);
+                if ($template) {
+                    require_once $template;
+                    exit();
+                } else {
+                    echo $message;
+                    exit();
+                }
+            }
 
             $template = resolveVerifyTemplate('update-password.php');
             if ($template) {

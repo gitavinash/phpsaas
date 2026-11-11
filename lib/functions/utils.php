@@ -125,9 +125,22 @@ function truncateText($text, $maxLength = 300)
 
 function clearAllCookies()
 {
+    $ssoFile = defined('MODULES') ? MODULES . 'sso.php' : dirname(__DIR__) . '/modules/sso.php';
+    if (file_exists($ssoFile)) {
+        require_once $ssoFile;
+    }
+
+    if (function_exists('iswClearAllAuthCookies')) {
+        iswClearAllAuthCookies(true);
+        return;
+    }
+
     $isSecure = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on');
 
     foreach ($_COOKIE as $name => $value) {
+        if ($name === 'PHPSESSID') {
+            continue;
+        }
         // Clear cookie without specifying domain — applies to current host
         setcookie($name, '', [
             'expires'  => time() - 3600, // past date
@@ -138,14 +151,17 @@ function clearAllCookies()
         ]);
 
         // Also try clearing with root domain wildcard
-        setcookie($name, '', [
-            'expires'  => time() - 3600,
-            'path'     => '/',
-            'domain'   => '.' . $_SERVER['SERVER_NAME'], // root + subdomains
-            'secure'   => $isSecure,
-            'httponly' => true,
-            'samesite' => $isSecure ? 'None' : 'Lax',
-        ]);
+        $serverName = preg_replace('/:\d+$/', '', (string) ($_SERVER['SERVER_NAME'] ?? ''));
+        if ($serverName !== '' && $serverName !== 'localhost' && !filter_var($serverName, FILTER_VALIDATE_IP)) {
+            setcookie($name, '', [
+                'expires'  => time() - 3600,
+                'path'     => '/',
+                'domain'   => '.' . $serverName, // root + subdomains
+                'secure'   => $isSecure,
+                'httponly' => true,
+                'samesite' => $isSecure ? 'None' : 'Lax',
+            ]);
+        }
     }
 }
 

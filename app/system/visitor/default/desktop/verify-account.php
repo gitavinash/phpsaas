@@ -1,5 +1,10 @@
 <?php
 
+$ssoFile = defined('MODULES') ? MODULES . 'sso.php' : dirname(__DIR__, 5) . '/lib/modules/sso.php';
+if (file_exists($ssoFile)) {
+    require_once $ssoFile;
+}
+
 include_once 'header.php';
 
 $alreadyVerified = false;
@@ -8,22 +13,30 @@ $serverError = false;
 $msg = '';
 
 if (isset($_GET['email'])) {
-    $email = mysqli_real_escape_string($connection, base64_decode($_GET['email']));
-    if ($checkEmail = mysqli_query($connection, "SELECT user_email, user_status FROM " . TABLE_PREFIX . "user WHERE user_email='{$email}'")) {
-        if (mysqli_num_rows($checkEmail) != 0) {
-            extract(mysqli_fetch_assoc($checkEmail));
-            if ($user_status == 1) {
-                $alreadyVerified = true;
-            } else {
-                $showError = true;
-            }
+    $rawDecodedEmail = trim((string) base64_decode((string) $_GET['email']));
+    $email = mysqli_real_escape_string($connection, $rawDecodedEmail);
+    $lookup = ($rawDecodedEmail !== '' && function_exists('iswFindUserAndSiteAccessByIdentifier'))
+        ? iswFindUserAndSiteAccessByIdentifier($connection, $rawDecodedEmail, (int) SITE_ID, 'email')
+        : ['reason' => 'not_found', 'resolved' => null];
+
+    if (!empty($lookup['resolved']) && !empty($lookup['resolved']['has_access'])) {
+        $resolvedUser = $lookup['resolved']['user'] ?? [];
+        $user_email = (string) ($resolvedUser['user_email'] ?? $rawDecodedEmail);
+        $user_status = (int) ($resolvedUser['user_status'] ?? 0);
+        if ($user_status == 1) {
+            $alreadyVerified = true;
         } else {
-            $userNotFound = true;
-            $msg = 'No user account found with this email.';
+            $showError = true;
         }
+    } elseif (($lookup['reason'] ?? '') === 'disabled') {
+        $userNotFound = true;
+        $msg = 'Your workspace access has been deactivated.';
+    } elseif (($lookup['reason'] ?? '') === 'no_access') {
+        $userNotFound = true;
+        $msg = 'You do not have access to this workspace.';
     } else {
-        $serverError = true;
-        $msg = 'Something went wrong while connecting to the server.';
+        $userNotFound = true;
+        $msg = 'No user account found with this email.';
     }
 }
 
@@ -46,7 +59,7 @@ if (isset($_GET['email'])) {
                         <input type="hidden" id="recaptcha_token" name="recaptcha_token">
                         <input type="hidden" name="type" value="auth">
                         <input type="hidden" name="action" value="emailVerification">
-                        <input type="hidden" name="email" value="<?php echo htmlspecialchars($email, ENT_QUOTES, 'UTF-8'); ?>">
+                        <input type="hidden" name="email" value="<?php echo htmlspecialchars($rawDecodedEmail, ENT_QUOTES, 'UTF-8'); ?>">
                         <button type="submit" id="resendVerificationMail" class="button theme-button">Resend Verification Email</button>
                         <div class="form-group">
                             <a href="/login/" class="back-link">

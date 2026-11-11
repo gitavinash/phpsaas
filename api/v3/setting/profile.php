@@ -39,30 +39,61 @@ if (!defined('SITE_ID')) {
     define('SITE_ID', $siteId);
 }
 
-// Resolve authenticated user ID safely
-$userId = defined('USER_ID') && (int)USER_ID > 0 ? (int)USER_ID : (isset($_SESSION['user_id']) ? (int)$_SESSION['user_id'] : 0);
-
-if ($userId <= 0 && isset($_COOKIE['user_data'])) {
-    $saltKey = base64_decode($_COOKIE['user_data']);
-    if (!empty($saltKey)) {
-        $escSalt = mysqli_real_escape_string($connection, $saltKey);
-        $q = mysqli_query($connection, "SELECT user_id FROM {$tblPrefix}user WHERE user_salt_key = '{$escSalt}' LIMIT 1");
-        if ($q && mysqli_num_rows($q) > 0) {
-            $uRow = mysqli_fetch_assoc($q);
-            $userId = (int)$uRow['user_id'];
-        }
-    }
+$ssoFile = defined('MODULES') ? MODULES . 'sso.php' : dirname(__DIR__, 3) . '/lib/modules/sso.php';
+if (file_exists($ssoFile)) {
+    require_once $ssoFile;
 }
 
-if ($userId <= 0) {
-    // Fallback to site owner ID
-    $ownerQuery = mysqli_query($connection, "SELECT site_owner_id FROM {$tblPrefix}site WHERE site_id = {$siteId} LIMIT 1");
-    if ($ownerQuery && mysqli_num_rows($ownerQuery) > 0) {
-        $oRow = mysqli_fetch_assoc($ownerQuery);
-        $userId = (int)($oRow['site_owner_id'] ?? 1);
+// Resolve authenticated user ID safely & verify active site_access on current site
+$userId = 0;
+if (isset($_COOKIE['user_data']) && function_exists('iswValidateCurrentSiteSession')) {
+    $sessionCheck = iswValidateCurrentSiteSession($connection, $siteId);
+    if (!empty($sessionCheck['ok'])) {
+        $userId = (int) ($sessionCheck['user_id'] ?? 0);
     } else {
-        $userId = 1;
+        $reason = (string) ($sessionCheck['reason'] ?? 'invalid_session');
+        if (in_array($reason, ['disabled', 'no_access', 'unverified_user'], true)) {
+            http_response_code(403);
+            echo json_encode([
+                'status' => 'error',
+                'code'   => 'access_denied',
+                'msg'    => ($reason === 'disabled')
+                    ? 'Access denied. Your workspace access has been deactivated.'
+                    : (($reason === 'unverified_user') ? 'Please verify your email address before continuing.' : 'Access denied. You do not have access to this workspace.')
+            ]);
+            exit;
+        }
+        http_response_code(401);
+        echo json_encode(['status' => 'error', 'msg' => 'Authentication required / Session expired.']);
+        exit;
     }
+} else {
+    $candId = defined('USER_ID') && (int) USER_ID > 0 ? (int) USER_ID : (isset($_SESSION['user_id']) ? (int) $_SESSION['user_id'] : 0);
+    if ($candId <= 0 || !function_exists('iswResolveSiteAccessForUser')) {
+        http_response_code(401);
+        echo json_encode(['status' => 'error', 'msg' => 'Authentication required.']);
+        exit;
+    }
+    $resolved = iswResolveSiteAccessForUser($connection, $candId, $siteId);
+    if (!$resolved || empty($resolved['has_access'])) {
+        http_response_code(403);
+        echo json_encode([
+            'status' => 'error',
+            'code'   => 'access_denied',
+            'msg'    => (($resolved['reason'] ?? '') === 'disabled')
+                ? 'Access denied. Your workspace access has been deactivated.'
+                : 'Access denied. You do not have access to this workspace.'
+        ]);
+        exit;
+    }
+    $uStatus = (int) ($resolved['user']['user_status'] ?? 0);
+    $sAppId  = (int) ($resolved['site']['site_app_id'] ?? 0);
+    if ($uStatus !== 1 && $sAppId !== 3) {
+        http_response_code(403);
+        echo json_encode(['status' => 'error', 'msg' => 'Please verify your email address before continuing.']);
+        exit;
+    }
+    $userId = $candId;
 }
 
 $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';

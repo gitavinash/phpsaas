@@ -5,23 +5,35 @@
  * Path: /app/dashboard/v3/default/desktop/login.php
  */
 
-$rawRedirect = isset($redirect_url) && !empty($redirect_url) ? $redirect_url : ($_GET['redirect_url'] ?? ($_GET['redirect'] ?? '/dashboard/'));
-while (is_string($rawRedirect) && (stripos($rawRedirect, '%2f') !== false || stripos($rawRedirect, '%3a') !== false)) {
-    $rawRedirect = urldecode($rawRedirect);
+$ssoFile = defined('MODULES') ? MODULES . 'sso.php' : dirname(__DIR__, 5) . '/lib/modules/sso.php';
+if (file_exists($ssoFile)) {
+    require_once $ssoFile;
 }
-$rawRedirect = trim((string)$rawRedirect);
 
-if (empty($rawRedirect) || $rawRedirect === '#' || $rawRedirect === 'dashboard' || $rawRedirect === 'dashboard/' || $rawRedirect === '/login/dashboard/' || $rawRedirect === '/login/dashboard') {
-    $redirect_url = '/dashboard/';
-} elseif (strpos($rawRedirect, 'http://') === 0 || strpos($rawRedirect, 'https://') === 0) {
-    $redirect_url = $rawRedirect;
+$defaultV3Redirect = (defined('SITE_APP_ID') && (int) SITE_APP_ID === 3) ? '/manage-subscription/' : '/dashboard/';
+$rawRedirect = isset($redirect_url) && !empty($redirect_url) ? $redirect_url : ($_GET['redirect_url'] ?? ($_GET['redirect'] ?? $defaultV3Redirect));
+if (function_exists('iswNormalizeRedirectPath')) {
+    $redirect_url = iswNormalizeRedirectPath($rawRedirect, $defaultV3Redirect);
 } else {
-    $redirect_url = '/' . ltrim($rawRedirect, '/');
+    $redirect_url = '/dashboard/';
 }
 
-if (isset($_COOKIE['isLogin']) && isset($_COOKIE['user_data'])) {
-    header("Location: {$redirect_url}");
-    exit();
+if (
+    isset($connection)
+    && $connection instanceof mysqli
+    && defined('SITE_ID')
+    && function_exists('iswValidateCurrentSiteSession')
+) {
+    $sessionCheck = iswValidateCurrentSiteSession($connection, (int) SITE_ID);
+    if (!empty($sessionCheck['ok'])) {
+        header("Location: {$redirect_url}");
+        exit();
+    }
+    if (!isset($alertMsg) && in_array($sessionCheck['reason'] ?? '', ['disabled', 'no_access'], true)) {
+        $alertMsg = (($sessionCheck['reason'] ?? '') === 'disabled')
+            ? 'Your workspace access has been deactivated.'
+            : 'You do not have access to this workspace.';
+    }
 }
 
 $tblPrefix = defined('TABLE_PREFIX') ? TABLE_PREFIX : 'isw_';
@@ -206,9 +218,10 @@ $activeShowcase = $appShowcaseData[$appKey] ?? $appShowcaseData['aleya'];
                     </div>
 
                     <!-- Dynamic Live Alert Banner -->
-                    <div id="authAlertBox" class="v3-auth-alert">
-                        <i id="authAlertIcon" class="fi fi-rr-exclamation"></i>
-                        <span id="authAlertText"></span>
+                    <?php $hasInitialAlert = !empty($alertMsg); ?>
+                    <div id="authAlertBox" class="v3-auth-alert<?php echo $hasInitialAlert ? ' alert-warning' : ''; ?>">
+                        <i id="authAlertIcon" class="<?php echo $hasInitialAlert ? 'fi fi-rr-triangle-warning' : 'fi fi-rr-exclamation'; ?>"></i>
+                        <span id="authAlertText"><?php echo $hasInitialAlert ? htmlspecialchars((string) $alertMsg, ENT_QUOTES, 'UTF-8') : ''; ?></span>
                     </div>
 
                     <?php if ($siteAuthMethod === 'PASSWORD'): ?>

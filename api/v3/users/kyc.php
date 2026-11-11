@@ -17,6 +17,26 @@ if (!isset($connection)) {
     }
 }
 
+$ssoFile = defined('MODULES') ? MODULES . 'sso.php' : dirname(__DIR__, 3) . '/lib/modules/sso.php';
+if (file_exists($ssoFile)) {
+    require_once $ssoFile;
+}
+
+$tblPrefix = defined('TABLE_PREFIX') ? TABLE_PREFIX : 'isw_';
+$siteId = defined('SITE_ID') && (int) SITE_ID > 0 ? (int) SITE_ID : (isset($_SESSION['site_id']) ? (int) $_SESSION['site_id'] : 0);
+if ($siteId <= 0 && isset($connection) && $connection instanceof mysqli) {
+    $host = preg_replace('/:\d+$/', '', (string) ($_SERVER['HTTP_HOST'] ?? ''));
+    $escapedHost = mysqli_real_escape_string($connection, $host);
+    $siteQuery = mysqli_query($connection, "SELECT site_id FROM {$tblPrefix}site WHERE site_domain = '{$escapedHost}' OR site_url = '{$escapedHost}' OR site_url LIKE '%{$escapedHost}%' ORDER BY (site_domain = '{$escapedHost}') DESC, (site_url = '{$escapedHost}') DESC LIMIT 1");
+    if ($siteQuery && mysqli_num_rows($siteQuery) > 0) {
+        $sRow = mysqli_fetch_assoc($siteQuery);
+        $siteId = (int) $sRow['site_id'];
+    }
+}
+if ($siteId <= 0) {
+    $siteId = 1;
+}
+
 $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 
 // --------------------------------------------------------------------------
@@ -39,18 +59,10 @@ if ($method === 'GET') {
         exit;
     }
 
-    // Check user in database
-    $userQuery = "SELECT u.user_id, u.user_mobile, u.user_email, u.user_status,
-                         sa.site_access_type as role, sa.site_access_site_id,
-                         p.profile_first_name, p.profile_last_name, p.profile_display_name
-                  FROM " . TABLE_PREFIX . "user u
-                  INNER JOIN " . TABLE_PREFIX . "site_access sa ON sa.site_access_user_id = u.user_id
-                  LEFT JOIN " . TABLE_PREFIX . "profile p ON p.profile_user_id = u.user_id
-                  WHERE u.user_id = {$userId}
-                  LIMIT 1";
-
-    $userRes = mysqli_query($connection, $userQuery);
-    if (!$userRes || mysqli_num_rows($userRes) === 0) {
+    $resolved = function_exists('iswResolveSiteAccessForUser')
+        ? iswResolveSiteAccessForUser($connection, $userId, $siteId)
+        : null;
+    if (!$resolved) {
         http_response_code(404);
         echo json_encode([
             'status' => 'error',
@@ -58,8 +70,31 @@ if ($method === 'GET') {
         ]);
         exit;
     }
+    if (empty($resolved['has_access'])) {
+        http_response_code(403);
+        echo json_encode([
+            'status' => 'error',
+            'code' => 'access_denied',
+            'msg' => (($resolved['reason'] ?? '') === 'disabled')
+                ? 'Access denied. Your workspace access has been deactivated.'
+                : 'Access denied. User does not have access to this workspace.'
+        ]);
+        exit;
+    }
 
-    $userRow = mysqli_fetch_assoc($userRes);
+    $uRow = $resolved['user'] ?? [];
+    $aRow = $resolved['access'] ?? [];
+    $userRow = [
+        'user_id' => $uRow['user_id'] ?? $userId,
+        'user_mobile' => $uRow['user_mobile'] ?? '',
+        'user_email' => $uRow['user_email'] ?? '',
+        'user_status' => $uRow['user_status'] ?? 1,
+        'role' => $aRow['site_access_type'] ?? 'agent',
+        'site_access_site_id' => $aRow['site_access_site_id'] ?? $siteId,
+        'profile_first_name' => $uRow['profile_first_name'] ?? '',
+        'profile_last_name' => $uRow['profile_last_name'] ?? '',
+        'profile_display_name' => $uRow['logginUserName'] ?? '',
+    ];
     $firstName = $userRow['profile_first_name'] ?? '';
     $lastName = $userRow['profile_last_name'] ?? '';
     $displayName = $userRow['profile_display_name'] ?? '';
@@ -203,6 +238,29 @@ if ($method === 'POST') {
         echo json_encode([
             'status' => 'error',
             'msg' => 'A valid user ID is required.'
+        ]);
+        exit;
+    }
+
+    $resolved = function_exists('iswResolveSiteAccessForUser')
+        ? iswResolveSiteAccessForUser($connection, $userId, $siteId)
+        : null;
+    if (!$resolved) {
+        http_response_code(404);
+        echo json_encode([
+            'status' => 'error',
+            'msg' => 'User account not found.'
+        ]);
+        exit;
+    }
+    if (empty($resolved['has_access'])) {
+        http_response_code(403);
+        echo json_encode([
+            'status' => 'error',
+            'code' => 'access_denied',
+            'msg' => (($resolved['reason'] ?? '') === 'disabled')
+                ? 'Access denied. Your workspace access has been deactivated.'
+                : 'Access denied. User does not have access to this workspace.'
         ]);
         exit;
     }

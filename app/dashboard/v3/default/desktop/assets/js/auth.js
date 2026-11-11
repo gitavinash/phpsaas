@@ -269,19 +269,33 @@
     cleanRedirectUrl: function (url) {
       if (!url || typeof url !== "string") return "/dashboard/";
       let cleaned = url.trim();
-      while (cleaned.includes("%2F") || cleaned.includes("%2f") || cleaned.includes("%3A") || cleaned.includes("%3a")) {
-        try {
-          cleaned = decodeURIComponent(cleaned);
-        } catch (e) {
+      for (let i = 0; i < 3; i++) {
+        if (cleaned.includes("%2F") || cleaned.includes("%2f") || cleaned.includes("%3A") || cleaned.includes("%3a") || cleaned.includes("%25")) {
+          try {
+            const decoded = decodeURIComponent(cleaned);
+            if (decoded === cleaned) break;
+            cleaned = decoded.trim();
+          } catch (e) {
+            break;
+          }
+        } else {
           break;
         }
       }
-      cleaned = cleaned.trim();
-      if (!cleaned || cleaned === "#" || cleaned === "dashboard" || cleaned === "dashboard/" || cleaned === "/login/dashboard/" || cleaned === "/login/dashboard") {
+      if (!cleaned || cleaned === "#" || cleaned === "dashboard" || cleaned === "dashboard/" || cleaned === "/login/dashboard/" || cleaned === "/login/dashboard" || cleaned.includes("\\") || cleaned.startsWith("//")) {
         return "/dashboard/";
       }
       if (cleaned.startsWith("http://") || cleaned.startsWith("https://")) {
-        return cleaned;
+        try {
+          const parsed = new URL(cleaned);
+          if (parsed.origin === window.location.origin) {
+            return (parsed.pathname || "/") + (parsed.search || "");
+          }
+        } catch (e) {}
+        return "/dashboard/";
+      }
+      if (/^[a-z0-9+.-]+:/i.test(cleaned)) {
+        return "/dashboard/";
       }
       return "/" + cleaned.replace(/^\/+/, "");
     },

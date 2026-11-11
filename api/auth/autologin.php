@@ -2,35 +2,58 @@
 
 /* login module */
 
-$startRedirection = false;
+$ssoFile = defined('MODULES') ? MODULES . 'sso.php' : dirname(__DIR__, 2) . '/lib/modules/sso.php';
+if (file_exists($ssoFile)) {
+    require_once $ssoFile;
+}
 
-if ($checkUser = mysqli_query($connection, "SELECT user_id, user_mobile, user_password, user_salt_key, user_status, user_type_code as user_type, site_app_id, profile_display_name, profile_image, site_access_site_id, site_access_status, site_access_meta FROM " . TABLE_PREFIX . "user INNER JOIN " . TABLE_PREFIX . "profile ON user_id=profile_user_id INNER JOIN " . TABLE_PREFIX . "site_access ON site_access_user_id=user_id INNER JOIN " . TABLE_PREFIX . "site ON site_id=site_access_site_id INNER JOIN " . TABLE_PREFIX . "user_type ON user_type_code=site_access_type AND site_access_site_id=" . SITE_ID . " WHERE user_email='{$email}' LIMIT 1")) {
+$startRedirection = false;
+$escEmail = mysqli_real_escape_string($connection, trim((string) ($email ?? '')));
+$siteIdInt = (int) SITE_ID;
+$saSiteFilter = in_array($siteIdInt, [49, 234], true)
+    ? "sa.site_access_site_id IN (49, 234)"
+    : "sa.site_access_site_id = {$siteIdInt}";
+
+if ($checkUser = mysqli_query($connection, "SELECT u.user_id, u.user_mobile, u.user_password, u.user_salt_key, u.user_status FROM " . TABLE_PREFIX . "user u LEFT JOIN " . TABLE_PREFIX . "site_access sa ON sa.site_access_user_id = u.user_id AND {$saSiteFilter} WHERE u.user_email='{$escEmail}' ORDER BY (sa.site_access_status = 1) DESC, (sa.site_access_site_id = {$siteIdInt}) DESC, (sa.site_access_id IS NOT NULL) DESC, (u.user_status = 1) DESC, u.user_id ASC LIMIT 1")) {
 
     if (mysqli_num_rows($checkUser) != 0) {
 
         extract(mysqli_fetch_assoc($checkUser));
 
-        if ($user_password == hash('sha256', $user_salt_key . $password)) {
+        if ($user_password == hash('sha256', $user_salt_key . ($password ?? ''))) {
+
+            $resolved = function_exists('iswResolveSiteAccessForUser')
+                ? iswResolveSiteAccessForUser($connection, (int) $user_id, $siteIdInt)
+                : null;
 
             /** User has access of this site */
 
-            if ($site_access_status == 1 && $user_status == 1) {
+            if ($resolved && !empty($resolved['has_access']) && ((int) $user_status === 1 || (int) ($resolved['site']['site_app_id'] ?? 0) === 3)) {
 
                 ob_start();
-
-                setcookie('user_name', base64_encode($profile_display_name), time() + 30 * 24 * 60 * 60, '/', MAIN_DOMAIN);
-                setcookie('user_email', base64_encode($email), time() + 30 * 24 * 60 * 60, '/', MAIN_DOMAIN);
-                setcookie('user_mobile', base64_encode($user_mobile), time() + 30 * 24 * 60 * 60, '/', MAIN_DOMAIN);
-                setcookie('user_image', base64_encode($profile_image), time() + 30 * 24 * 60 * 60, '/', MAIN_DOMAIN);
-                setcookie('user_data', base64_encode($user_salt_key), time() + 30 * 24 * 60 * 60, '/', MAIN_DOMAIN);
-                setcookie('user_meta', base64_encode($site_access_meta), time() + 30 * 24 * 60 * 60, '/', MAIN_DOMAIN);
-                setcookie('user_type', base64_encode($user_type), time() + 30 * 24 * 60 * 60, '/', MAIN_DOMAIN);
-                setcookie('site_app', base64_encode(SITE_APP), time() + 30 * 24 * 60 * 60, '/', MAIN_DOMAIN);
-                $_COOKIE['user_data'] = $user_salt_key;
+                $_COOKIE['user_data'] = base64_encode($user_salt_key);
                 require_once API_MODULES . 'analytics/session-record.php';
+
+                $activeDeviceId = trim((string) ($_COOKIE['device_id'] ?? ''));
+                if (function_exists('iswSyncGroupUserSessions') && $activeDeviceId !== '') {
+                    iswSyncGroupUserSessions($connection, (int) $user_id, $activeDeviceId, $siteIdInt, (int) ($analyticsId ?? 0));
+                }
+                if (function_exists('iswSetSiteAuthCookies')) {
+                    iswSetSiteAuthCookies($resolved, $activeDeviceId, 30);
+                }
                 ob_end_flush();
 
                 $startRedirection = true;
+                $status = 'success';
+                $msg = 'Login Successfully';
+            } elseif (!$resolved || empty($resolved['has_access'])) {
+                $status = 'error';
+                $msg = (($resolved['reason'] ?? '') === 'disabled')
+                    ? 'Your workspace access has been deactivated.'
+                    : 'You do not have access to this workspace.';
+            } else {
+                $status = 'error';
+                $msg = 'Please verify your account first.';
             }
         } else {
 

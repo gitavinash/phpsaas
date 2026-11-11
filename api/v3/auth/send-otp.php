@@ -17,6 +17,11 @@ if (!isset($connection)) {
     }
 }
 
+$ssoFile = defined('MODULES') ? MODULES . 'sso.php' : dirname(__DIR__, 3) . '/lib/modules/sso.php';
+if (file_exists($ssoFile)) {
+    require_once $ssoFile;
+}
+
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
     echo json_encode([
@@ -65,27 +70,44 @@ if (empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
 
 $escEmail = mysqli_real_escape_string($connection, $email);
 
-// Look up existing user
-$userQuery = mysqli_query($connection, "
-    SELECT 
-        u.user_id, 
-        u.user_status, 
-        p.profile_display_name,
-        sa.site_access_id,
-        sa.site_access_status
-    FROM {$tblPrefix}user u
-    LEFT JOIN {$tblPrefix}profile p ON p.profile_user_id = u.user_id
-    LEFT JOIN {$tblPrefix}site_access sa ON sa.site_access_user_id = u.user_id AND sa.site_access_site_id = {$siteId}
-    WHERE u.user_email = '{$escEmail}'
-    LIMIT 1
-");
+// Look up user and enforce active site_access on the current site
+$lookup = iswFindUserAndSiteAccessByIdentifier($connection, $email, $siteId, 'email');
+if ($lookup['reason'] === 'disabled') {
+    http_response_code(403);
+    echo json_encode([
+        'status' => 'error',
+        'code'   => 'access_denied',
+        'msg'    => 'Access denied. Your workspace access has been deactivated.'
+    ]);
+    exit;
+}
+if ($lookup['reason'] === 'inactive_user') {
+    http_response_code(403);
+    echo json_encode([
+        'status' => 'error',
+        'code'   => 'account_inactive',
+        'msg'    => 'Access denied. Your account is inactive or pending verification.'
+    ]);
+    exit;
+}
+if ($lookup['reason'] !== 'ok' || empty($lookup['resolved']) || empty($lookup['resolved']['has_access'])) {
+    http_response_code(403);
+    echo json_encode([
+        'status' => 'error',
+        'code'   => 'access_denied',
+        'msg'    => 'Access denied. You do not have access to this workspace.'
+    ]);
+    exit;
+}
 
-$userId = 0;
-$displayName = 'User';
-if ($userQuery && mysqli_num_rows($userQuery) > 0) {
-    $uRow = mysqli_fetch_assoc($userQuery);
-    $userId = (int)$uRow['user_id'];
-    $displayName = !empty($uRow['profile_display_name']) ? $uRow['profile_display_name'] : 'User';
+$resolvedUserRow = $lookup['resolved']['user'] ?? [];
+$userId = (int) ($resolvedUserRow['user_id'] ?? 0);
+$displayName = trim((string) ($resolvedUserRow['logginUserName'] ?? ($resolvedUserRow['profile_display_name'] ?? '')));
+if ($displayName === '') {
+    $displayName = trim(((string) ($resolvedUserRow['profile_first_name'] ?? '')) . ' ' . ((string) ($resolvedUserRow['profile_last_name'] ?? '')));
+}
+if ($displayName === '') {
+    $displayName = (string) ($resolvedUserRow['user_username'] ?? 'User');
 }
 
 // Generate 6-digit OTP
@@ -97,11 +119,11 @@ if ($email === 'appreview@example.com' || $email === 'demo@blumox.com') {
 $escComment = mysqli_real_escape_string($connection, $displayName);
 $escDestination = $escEmail;
 
-// Invalidate previous active OTPs for this destination
+// Invalidate previous active OTPs for this destination on this site
 mysqli_query($connection, "
     UPDATE {$tblPrefix}otp 
     SET otp_status = 2 
-    WHERE otp_destination = '{$escDestination}' AND otp_mode = 'email' AND otp_status = 0
+    WHERE otp_destination = '{$escDestination}' AND otp_mode = 'email' AND otp_site_id = {$siteId} AND otp_status = 0
 ");
 
 // Insert new OTP record

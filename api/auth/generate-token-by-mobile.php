@@ -1,111 +1,76 @@
 <?php
 
+$ssoFile = defined('MODULES') ? MODULES . 'sso.php' : dirname(__DIR__, 2) . '/lib/modules/sso.php';
+if (file_exists($ssoFile)) {
+    require_once $ssoFile;
+}
+
 mysqli_query($connection, "START TRANSACTION");
 
-if ($checkUser = mysqli_query($connection, "SELECT user_id, user_email, user_salt_key, user_status, user_type_code as user_type, site_app_id, profile_display_name, profile_image, site_access_site_id, site_access_status, site_access_meta FROM " . TABLE_PREFIX . "user INNER JOIN " . TABLE_PREFIX . "profile ON user_id=profile_user_id INNER JOIN " . TABLE_PREFIX . "site_access ON site_access_user_id=user_id INNER JOIN " . TABLE_PREFIX . "site ON site_id=site_access_site_id INNER JOIN " . TABLE_PREFIX . "user_type ON user_type_code=site_access_type AND site_access_site_id=" . SITE_ID . " WHERE user_id='{$user_id}' LIMIT 1")) {
+$resolvedUserId = 0;
+$existingUser = false;
+$genarateToken = false;
+$tokenStatus = 'error';
+$tokenMsg = 'You do not have access to this workspace.';
 
-    if (mysqli_num_rows($checkUser) != 0) {
-        extract(mysqli_fetch_assoc($checkUser));
-        $genarateToken = true;
+$candUid = isset($user_id) ? (int) $user_id : 0;
+$resolved = null;
+
+if ($candUid > 0 && function_exists('iswResolveSiteAccessForUser')) {
+    $resolved = iswResolveSiteAccessForUser($connection, $candUid, (int) SITE_ID);
+} elseif (!empty($mobile) && function_exists('iswFindUserAndSiteAccessByIdentifier')) {
+    $lookup = iswFindUserAndSiteAccessByIdentifier($connection, (string) $mobile, (int) SITE_ID, 'email_or_mobile');
+    $resolved = $lookup['resolved'] ?? null;
+}
+
+if ($resolved && !empty($resolved['has_access'])) {
+    $userStatusInt = (int) ($resolved['user']['user_status'] ?? 0);
+    $siteAppInt    = (int) ($resolved['site']['site_app_id'] ?? 0);
+
+    if ($userStatusInt === 1 || $siteAppInt === 3) {
+        $resolvedUserId = (int) ($resolved['user']['user_id'] ?? 0);
+        $user_id = $resolvedUserId;
+        $user_salt_key = (string) ($resolved['user']['user_salt_key'] ?? '');
+        $userEmail = (string) ($resolved['user']['user_email'] ?? '');
+        $mobile = !empty($mobile) ? (string) $mobile : (string) ($resolved['user']['user_mobile'] ?? '');
+        $user_type = (string) ($resolved['access']['site_access_type'] ?? 'visitor');
+        $site_access_meta = (string) ($resolved['access']['site_access_meta'] ?? '');
+        $profile_display_name = (string) ($resolved['user']['logginUserName'] ?? '');
+        $profile_image = (string) ($resolved['user']['profile_image'] ?? '');
         $existingUser = true;
-        $userEmail = $user_email;
-        /** User has access of this site */
+        $genarateToken = true;
     } else {
+        $tokenMsg = 'Your account is inactive or pending verification.';
+    }
+} elseif ($resolved && ($resolved['reason'] ?? '') === 'disabled') {
+    $tokenMsg = 'Your workspace access has been deactivated.';
+}
 
-        if (filter_var($mobile, FILTER_VALIDATE_EMAIL)) {
-            $secondValue = time();
-            $checkUserCondition = "user_email='{$mobile}'";
-            $firstTwoColumnValue = "{$secondValue}', '{$mobile}";
-            $userEmail = $mobile;
-        } elseif (preg_match('/^[6-9]\d{9}$/', $mobile)) {
-            $userEmail =  time() . '@' . SITE_DOMAIN;
-            $checkUserCondition = "user_mobile='{$mobile}'";
-            $firstTwoColumnValue = "{$mobile}', '{$userEmail}";
-        }
+if ($genarateToken === true && $resolvedUserId > 0) {
+    mysqli_query($connection, "COMMIT");
 
-        $existingUser = false;
-        $userName = time();
+    ob_start();
+    $_COOKIE['user_data'] = base64_encode($user_salt_key);
 
-        $user_salt_key = hash('sha256', uniqid(mt_rand(), true) . $mobile . substr(str_shuffle('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_-=+;:,.?'), 0, 12) . time());
-
-        if ($checkUser = mysqli_query($connection, "SELECT user_id as newUserId FROM " . TABLE_PREFIX . "user WHERE {$checkUserCondition}")) {
-            if (mysqli_num_rows($checkUser) == 0) {
-                $addUserTableQuery = "INSERT INTO " . TABLE_PREFIX . "user (user_mobile, user_email, user_username, user_salt_key, user_status, user_reg_time, 
-        user_reg_ip) VALUES ('{$firstTwoColumnValue}', '{$userName}', '{$user_salt_key}', 1, NOW(), '" . IP . "')";
-
-                $createNewUser = mysqli_query($connection, $addUserTableQuery);
-                $newUserId = mysqli_insert_id($connection);
-
-                $insertProfileQuery = "INSERT INTO " . TABLE_PREFIX . "profile (profile_user_id, profile_email) VALUES ('{$newUserId}', '{$userEmail}')";
-                $createNewUserProfile = mysqli_query($connection, $insertProfileQuery);
-            } else {
-                $createNewUser = true;
-                $createNewUserProfile = true;
-                extract(mysqli_fetch_assoc($checkUser));
-            }
-        }
-        $site_access_meta = '';
-        $user_type = ((isset($reg_type)) ? $reg_type : 'customer');
-        $insertSiteAccessQuery = "INSERT INTO " . TABLE_PREFIX . "site_access(site_access_site_id, site_access_user_id, site_access_type, site_access_status, site_access_meta) VALUES('" . SITE_ID . "', '{$newUserId}', '{$user_type}', 1, '')";
-        $createNewSiteAccess = mysqli_query($connection, $insertSiteAccessQuery);
-
-        if ($createNewUser && $createNewSiteAccess && $createNewUserProfile) {
-            mysqli_query($connection, "COMMIT");
-            $tokenStatus = 'success';
-            $genarateToken = true;
-        } else {
-            mysqli_query($connection, "ROLLBACK");
-            $tokenStatus = 'error';
-            $tokenMsg = 'Something went wrong';
-        }
+    if (headers_sent($file, $line)) {
+        error_log("Headers already sent in $file on line $line. Cookies may not work.");
     }
 
-    $profile_display_name = ((isset($profile_display_name)) ? $profile_display_name : '');
-    $profile_image = ((isset($profile_image)) ? $profile_image : '');
+    require_once API_MODULES . 'analytics/session-record.php';
 
-    if (isset($genarateToken) && $genarateToken === true) {
-
-        ob_start();
-
-        $cleanDomain = preg_replace('#^https?://#', '', MAIN_DOMAIN);
-        $cleanDomain = explode(':', $cleanDomain)[0];
-        $cleanDomain = rtrim($cleanDomain, '/');
-
-        $isSecure = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on');
-        $cookieOptions = [
-            'expires'  => time() + (30 * 24 * 60 * 60), // 30 days
-            'path'     => '/',
-            'domain'   => '.' . MAIN_DOMAIN,            // root scope (all subdomains)
-            'secure'   => $isSecure,
-            'httponly' => true,
-            'samesite' => $isSecure ? 'None' : 'Lax',
-        ];
-
-        setcookie('user_name', base64_encode($profile_display_name), $cookieOptions);
-        setcookie('user_mobile', base64_encode($mobile), $cookieOptions);
-        setcookie('user_email', base64_encode($userEmail), $cookieOptions);
-        setcookie('user_image', base64_encode($profile_image), $cookieOptions);
-        setcookie('user_data', base64_encode($user_salt_key), $cookieOptions);
-        setcookie('user_meta', base64_encode($site_access_meta), $cookieOptions);
-        setcookie('user_type', base64_encode($user_type), $cookieOptions);
-        setcookie('site_app', base64_encode(SITE_APP), $cookieOptions);
-        setcookie('isLogin', '1', $cookieOptions);
-
-        $_COOKIE['user_data'] = base64_encode($user_salt_key);
-        $_COOKIE['isLogin'] = '1';
-
-        if (headers_sent($file, $line)) {
-            error_log("Headers already sent in $file on line $line. Cookies may not work.");
-        }
-
-        require_once API_MODULES . 'analytics/session-record.php';
-
-        ob_end_flush();
-    } else {
-        $tokenStatus = 'error';
-        $tokenMsg = 'Something went wrong';
+    $activeDeviceId = trim((string) ($_COOKIE['device_id'] ?? ''));
+    if (function_exists('iswSyncGroupUserSessions') && $activeDeviceId !== '') {
+        iswSyncGroupUserSessions($connection, $resolvedUserId, $activeDeviceId, (int) SITE_ID, (int) ($analyticsId ?? 0));
     }
+
+    if (function_exists('iswSetSiteAuthCookies')) {
+        iswSetSiteAuthCookies($resolved, $activeDeviceId, 30);
+    }
+
+    ob_end_flush();
+    $tokenStatus = 'success';
+    $tokenMsg = 'Token generated';
 } else {
+    mysqli_query($connection, "ROLLBACK");
     $tokenStatus = 'error';
-    $tokenMsg = 'Something went wrong';
 }

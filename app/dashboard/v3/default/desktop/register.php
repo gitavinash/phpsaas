@@ -6,11 +6,27 @@
  * Path: /app/dashboard/v3/default/desktop/register.php
  */
 
-$redirect_url = isset($redirect_url) && !empty($redirect_url) ? $redirect_url : '/website-setup/';
+$ssoFile = defined('MODULES') ? MODULES . 'sso.php' : dirname(__DIR__, 5) . '/lib/modules/sso.php';
+if (file_exists($ssoFile)) {
+    require_once $ssoFile;
+}
 
-if (isset($_COOKIE['isLogin']) && isset($_COOKIE['user_data'])) {
-    header("Location: /dashboard/");
-    exit();
+$rawRegRedirect = isset($redirect_url) && !empty($redirect_url) ? $redirect_url : ($_GET['redirect_url'] ?? '/website-setup/');
+$redirect_url = function_exists('iswNormalizeRedirectPath')
+    ? iswNormalizeRedirectPath($rawRegRedirect, '/website-setup/')
+    : '/website-setup/';
+
+if (
+    isset($connection)
+    && $connection instanceof mysqli
+    && defined('SITE_ID')
+    && function_exists('iswValidateCurrentSiteSession')
+) {
+    $sessionCheck = iswValidateCurrentSiteSession($connection, (int) SITE_ID);
+    if (!empty($sessionCheck['ok'])) {
+        header("Location: /dashboard/");
+        exit();
+    }
 }
 
 $tblPrefix = defined('TABLE_PREFIX') ? TABLE_PREFIX : 'isw_';

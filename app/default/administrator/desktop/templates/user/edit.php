@@ -1,14 +1,26 @@
 <?php
 
-$user_id = base64_decode($id);
+$raw_id = isset($id) ? (string) $id : (string) ($_GET['id'] ?? '');
+$decoded_user_id = base64_decode($raw_id, true);
+$user_id = ($decoded_user_id !== false && ctype_digit((string) $decoded_user_id))
+    ? (int) $decoded_user_id
+    : (int) base64_decode($raw_id);
 
+$user_mobile = '';
+$user_email = '';
+$site_access_type = '';
+$profile_first_name = '';
+$profile_last_name = '';
+$profilePicture = '';
+$facebook_link = $youtube_link = $twitter_link = $linkedin_link = '';
+$user_bio = '';
+$userFound = false;
 
-
-if ($checkUser = mysqli_query($connection, "SELECT user_mobile, user_email, site_access_type, profile_first_name, profile_last_name, profile_image as profilePicture FROM " . TABLE_PREFIX . "user INNER JOIN " . TABLE_PREFIX . "site_access ON site_access_user_id = user_id INNER JOIN " . TABLE_PREFIX . "profile ON profile_user_id = user_id WHERE user_id = {$user_id};")) {
+if ($user_id > 0 && ($checkUser = mysqli_query($connection, "SELECT user_mobile, user_email, site_access_type, profile_first_name, profile_last_name, profile_image as profilePicture FROM " . TABLE_PREFIX . "user INNER JOIN " . TABLE_PREFIX . "site_access ON site_access_user_id = user_id AND site_access_site_id = " . (int) SITE_ID . " INNER JOIN " . TABLE_PREFIX . "profile ON profile_user_id = user_id WHERE user_id = {$user_id} LIMIT 1;"))) {
     if (mysqli_num_rows($checkUser) != 0) {
+        $userFound = true;
         extract(mysqli_fetch_assoc($checkUser));
         // Improved: Fetch social_links from profile_meta table
-        $facebook_link = $youtube_link = $twitter_link = $linkedin_link = '';
         $metaKey = 'social_links';
         $metaQuery = mysqli_query($connection, "SELECT profile_meta_value FROM " . TABLE_PREFIX . "profile_meta WHERE profile_meta_profile_id='{$user_id}' AND profile_meta_key='{$metaKey}' LIMIT 1");
         if ($metaQuery && mysqli_num_rows($metaQuery) > 0) {
@@ -21,26 +33,24 @@ if ($checkUser = mysqli_query($connection, "SELECT user_mobile, user_email, site
         } else {
             // No social_links found, initialize empty array
             $socialLinksArr = [];
-            if (DEVELOPMENT_MODE == true) {
-                echo "No social_links meta found for user_id: {$user_id}";
-            }
         }
 
         // Fetch bio from profile_meta table
-        $user_bio = '';
         $bioMetaQuery = mysqli_query($connection, "SELECT profile_meta_value FROM " . TABLE_PREFIX . "profile_meta WHERE profile_meta_profile_id='{$user_id}' AND profile_meta_key='bio' LIMIT 1");
         if ($bioMetaQuery && mysqli_num_rows($bioMetaQuery) > 0) {
             $bioMetaRow = mysqli_fetch_assoc($bioMetaQuery);
             $user_bio = $bioMetaRow['profile_meta_value'];
         }
-    } else {
+    }
+}
+
+if (!$userFound) {
 ?>
         <script type="text/javascript">
             alert('Invalid action found');
-            window.location.href = 'dashboard/user/?type=list&status=all';
+            window.location.href = '/dashboard/user/?type=list&status=all';
         </script>
 <?php
-    }
 }
 
 ?>
@@ -60,23 +70,23 @@ if ($checkUser = mysqli_query($connection, "SELECT user_mobile, user_email, site
                         <div class="form-group">
                             <label>First name</label>
                             <input type="text" name="first_name" id="first_name" placeholder="First name*"
-                                class="form-control inside-shadow" value="<?php echo $profile_first_name ?>" autofocus
+                                class="form-control inside-shadow" value="<?php echo htmlspecialchars((string) $profile_first_name, ENT_QUOTES, 'UTF-8'); ?>" autofocus
                                 required />
                         </div>
                         <div class="form-group">
                             <label>Last name</label>
                             <input type="text" name="last_name" id="last_name" placeholder="Last name*"
-                                class="form-control inside-shadow" value="<?php echo $profile_last_name ?>" required />
+                                class="form-control inside-shadow" value="<?php echo htmlspecialchars((string) $profile_last_name, ENT_QUOTES, 'UTF-8'); ?>" required />
                         </div>
                         <div class="form-group">
                             <label>Mobile No.</label>
                             <input type="text" name="mobile" id="mobile" placeholder="Mobile no*"
-                                class="form-control inside-shadow" value="<?php echo $user_mobile ?>" disabled />
+                                class="form-control inside-shadow" value="<?php echo htmlspecialchars((string) $user_mobile, ENT_QUOTES, 'UTF-8'); ?>" disabled />
                         </div>
                         <div class="form-group">
                             <label>Email</label>
                             <input type="email" class="form-control inside-shadow" id="email"
-                                placeholder="Email address*" name="email" value="<?php echo $user_email ?>" disabled />
+                                placeholder="Email address*" name="email" value="<?php echo htmlspecialchars((string) $user_email, ENT_QUOTES, 'UTF-8'); ?>" disabled />
                         </div>
                         <div class="form-group">
                             <label>User role</label>
@@ -85,9 +95,9 @@ if ($checkUser = mysqli_query($connection, "SELECT user_mobile, user_email, site
                                 <?php
                                 if ($roleList = mysqli_query($connection, "SELECT user_type_name, user_type_code FROM " . TABLE_PREFIX . "user_type WHERE user_type_app_id='" . SITE_APP_ID . "' AND user_type_status=1")) {
                                     while ($roleData = mysqli_fetch_assoc($roleList)) { ?>
-                                        <option value="<?php echo $roleData['user_type_code']; ?>"
-                                            <?php echo (($roleData['user_type_code'] == $site_access_type) ? 'selected' : '') ?>>
-                                            <?php echo $roleData['user_type_name']; ?></option>
+                                        <option value="<?php echo htmlspecialchars((string) $roleData['user_type_code'], ENT_QUOTES, 'UTF-8'); ?>"
+                                            <?php echo ((strtolower((string) $roleData['user_type_code']) === strtolower((string) $site_access_type)) ? 'selected' : '') ?>>
+                                            <?php echo htmlspecialchars((string) $roleData['user_type_name'], ENT_QUOTES, 'UTF-8'); ?></option>
                                 <?php
                                     }
                                 }
@@ -96,8 +106,8 @@ if ($checkUser = mysqli_query($connection, "SELECT user_mobile, user_email, site
                         </div>
                         <div class="form-group">
                             <label for="bio">Bio</label>
-                            <textarea name="bio" id="bio" class="form-control inside-shadow" rows="4"
-                                placeholder="Enter user bio..."><?php echo isset($user_bio) ? htmlspecialchars($user_bio) : ''; ?></textarea>
+                            <textarea name="bio" id="bio" class="form-control inside-shadow" rows="4" maxlength="255"
+                                placeholder="Enter user bio..."><?php echo isset($user_bio) ? htmlspecialchars((string) $user_bio, ENT_QUOTES, 'UTF-8') : ''; ?></textarea>
                         </div>
                         <!-- Social Media Links Section -->
                         <div class="form-group">
@@ -107,32 +117,33 @@ if ($checkUser = mysqli_query($connection, "SELECT user_mobile, user_email, site
                             <label for="facebook_link">Facebook</label>
                             <input type="url" name="facebook_link" id="facebook_link" class="form-control inside-shadow"
                                 placeholder="Facebook profile/page URL"
-                                value="<?php echo isset($facebook_link) ? htmlspecialchars($facebook_link) : '' ?>" />
+                                value="<?php echo isset($facebook_link) ? htmlspecialchars((string) $facebook_link, ENT_QUOTES, 'UTF-8') : '' ?>" />
                         </div>
                         <div class="form-group">
                             <label for="youtube_link">YouTube</label>
                             <input type="url" name="youtube_link" id="youtube_link" class="form-control inside-shadow"
                                 placeholder="YouTube channel URL"
-                                value="<?php echo isset($youtube_link) ? htmlspecialchars($youtube_link) : '' ?>" />
+                                value="<?php echo isset($youtube_link) ? htmlspecialchars((string) $youtube_link, ENT_QUOTES, 'UTF-8') : '' ?>" />
                         </div>
                         <div class="form-group">
                             <label for="twitter_link">Twitter</label>
                             <input type="url" name="twitter_link" id="twitter_link" class="form-control inside-shadow"
                                 placeholder="Twitter profile URL"
-                                value="<?php echo isset($twitter_link) ? htmlspecialchars($twitter_link) : '' ?>" />
+                                value="<?php echo isset($twitter_link) ? htmlspecialchars((string) $twitter_link, ENT_QUOTES, 'UTF-8') : '' ?>" />
                         </div>
                         <div class="form-group">
                             <label for="linkedin_link">LinkedIn</label>
                             <input type="url" name="linkedin_link" id="linkedin_link" class="form-control inside-shadow"
                                 placeholder="LinkedIn profile/page URL"
-                                value="<?php echo isset($linkedin_link) ? htmlspecialchars($linkedin_link) : '' ?>" />
+                                value="<?php echo isset($linkedin_link) ? htmlspecialchars((string) $linkedin_link, ENT_QUOTES, 'UTF-8') : '' ?>" />
                         </div>
                         <!-- End Social Media Links Section -->
                         <div class="form-group">
+                            <input type="hidden" name="id" value="<?php echo htmlspecialchars((string) base64_encode((string) $user_id), ENT_QUOTES, 'UTF-8'); ?>">
                             <input type="hidden" name="type" value="user">
                             <input type="hidden" name="action" value="update">
-                            <input type="hidden" name="mobile" value="<?php echo $user_mobile ?>">
-                            <input type="hidden" name="email" value="<?php echo $user_email ?>">
+                            <input type="hidden" name="mobile" value="<?php echo htmlspecialchars((string) $user_mobile, ENT_QUOTES, 'UTF-8'); ?>">
+                            <input type="hidden" name="email" value="<?php echo htmlspecialchars((string) $user_email, ENT_QUOTES, 'UTF-8'); ?>">
                             <input type="submit" class="btn btn-green" value="Update user">
                         </div>
                     </form>
@@ -145,7 +156,7 @@ if ($checkUser = mysqli_query($connection, "SELECT user_mobile, user_email, site
         <form id="updateProfileImageForm" enctype="multipart/form-data" onsubmit="return false;">
             <div class="form-group profile-upload-theme">
                 <div class="profile-image-preview">
-                    <img src="<?php echo (($profilePicture == '') ? IMG_LIBRARY . 'default-profile.png' : $profilePicture) ?>"
+                    <img src="<?php echo htmlspecialchars((string) (($profilePicture == '') ? IMG_LIBRARY . 'default-profile.png' : $profilePicture), ENT_QUOTES, 'UTF-8'); ?>"
                         id="profilePath" alt="Profile Picture" />
                 </div>
                 <label class="profile-upload-label">
@@ -226,7 +237,7 @@ if ($checkUser = mysqli_query($connection, "SELECT user_mobile, user_email, site
         </script>
         <?php
         // Handle profile image upload (AJAX)
-        if (isset($_POST['upload_profile_image']) && isset($_FILES['profile_image']) && $_FILES['profile_image']['error'] === 0) {
+        if ($user_id > 0 && isset($_POST['upload_profile_image']) && isset($_FILES['profile_image']) && $_FILES['profile_image']['error'] === 0) {
             $allowed = ['jpg', 'jpeg', 'png', 'gif'];
             $ext = strtolower(pathinfo($_FILES['profile_image']['name'], PATHINFO_EXTENSION));
             if (in_array($ext, $allowed)) {

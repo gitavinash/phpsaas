@@ -1,15 +1,29 @@
 <?php
 
-$redirect_url = ((isset($redirect_url)) ? $redirect_url : '/manage-subscription/');
-
-if (isset($responseMsg)) {
-    echo "<script>alert('{$responseMsg}')</script>";
+$ssoFile = defined('MODULES') ? MODULES . 'sso.php' : dirname(__DIR__, 5) . '/lib/modules/sso.php';
+if (file_exists($ssoFile)) {
+    require_once $ssoFile;
 }
 
-if (isset($_COOKIE['user_data'])) {
+$redirect_url = function_exists('iswNormalizeRedirectPath')
+    ? iswNormalizeRedirectPath($redirect_url ?? '/manage-subscription/', '/manage-subscription/')
+    : '/manage-subscription/';
 
-    header("Location: {$redirect_url}");
-    exit();
+if (isset($responseMsg)) {
+    echo '<script>alert(' . json_encode((string) $responseMsg) . ');</script>';
+}
+
+if (
+    isset($connection)
+    && $connection instanceof mysqli
+    && defined('SITE_ID')
+    && function_exists('iswValidateCurrentSiteSession')
+) {
+    $sessionCheck = iswValidateCurrentSiteSession($connection, (int) SITE_ID);
+    if (!empty($sessionCheck['ok'])) {
+        header("Location: {$redirect_url}");
+        exit();
+    }
 }
 
 ?>
@@ -53,8 +67,8 @@ if (isset($_COOKIE['user_data'])) {
                     <input type="hidden" id="recaptcha_token" name="recaptcha_token">
                     <input type="hidden" name="type" value="auth">
                     <input type="hidden" name="action" value="updatePassword">
-                    <input type="hidden" name="transaction" value="<?php echo $_GET['transaction'] ?>">
-                    <input type="hidden" name="email" value="<?php echo $_GET['email'] ?>">
+                    <input type="hidden" name="transaction" value="<?php echo htmlspecialchars((string) ($_GET['transaction'] ?? ''), ENT_QUOTES, 'UTF-8'); ?>">
+                    <input type="hidden" name="email" value="<?php echo htmlspecialchars((string) ($_GET['email'] ?? ''), ENT_QUOTES, 'UTF-8'); ?>">
                     <button type="submit" id="updatePassword" class="button theme-button">Update Password</button>
                     <div class="login_input" style="margin-top: 20px;">
                         <p>Remembered everything? <a href="/login/">Back to Log in</a></p>
@@ -68,7 +82,7 @@ if (isset($_COOKIE['user_data'])) {
     <?php
 
     if (isset($alertMsg)) {
-        echo "<script>alert('{$alertMsg}')</script>";
+        echo '<script>alert(' . json_encode((string) $alertMsg) . ');</script>';
     }
 
     ?>

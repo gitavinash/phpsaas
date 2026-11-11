@@ -9,12 +9,20 @@ header('Content-Type: application/json; charset=utf-8');
 
 if (!isset($connection)) {
     $docRoot = !empty($_SERVER['DOCUMENT_ROOT']) ? $_SERVER['DOCUMENT_ROOT'] : dirname(__DIR__, 3);
+    if (empty($_SERVER['DOCUMENT_ROOT'])) {
+        $_SERVER['DOCUMENT_ROOT'] = $docRoot;
+    }
     if (file_exists($docRoot . '/config.php')) {
         require_once $docRoot . '/config.php';
     }
     if (file_exists($docRoot . '/lib/modules/connection.php')) {
         require_once $docRoot . '/lib/modules/connection.php';
     }
+}
+
+$ssoFile = defined('MODULES') ? MODULES . 'sso.php' : dirname(__DIR__, 3) . '/lib/modules/sso.php';
+if (file_exists($ssoFile)) {
+    require_once $ssoFile;
 }
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -33,7 +41,7 @@ if ($siteId <= 0) {
     $host = $_SERVER['HTTP_HOST'] ?? '';
     $host = preg_replace('/:\d+$/', '', $host);
     $escapedHost = mysqli_real_escape_string($connection, $host);
-    $siteQuery = mysqli_query($connection, "SELECT site_id FROM {$tblPrefix}site WHERE site_domain = '{$escapedHost}' OR site_url LIKE '%{$escapedHost}%' LIMIT 1");
+    $siteQuery = mysqli_query($connection, "SELECT site_id FROM {$tblPrefix}site WHERE site_domain = '{$escapedHost}' OR site_url = '{$escapedHost}' OR site_url LIKE '%{$escapedHost}%' ORDER BY (site_domain = '{$escapedHost}') DESC, (site_url = '{$escapedHost}') DESC LIMIT 1");
     if ($siteQuery && mysqli_num_rows($siteQuery) > 0) {
         $row = mysqli_fetch_assoc($siteQuery);
         $siteId = (int)$row['site_id'];
@@ -81,12 +89,16 @@ if ($otpRefId <= 0 && empty($rawTarget)) {
     exit;
 }
 
-// Find OTP record by reference ID or destination
+// Find OTP record by reference ID or destination scoped to this site
 $escTarget = mysqli_real_escape_string($connection, $rawTarget);
+$otpMatchSql = ($otpRefId > 0)
+    ? "otp_id = {$otpRefId}"
+    : "otp_destination = '{$escTarget}'";
 $otpQuery = "
     SELECT * 
     FROM {$tblPrefix}otp 
-    WHERE (otp_id = {$otpRefId} OR (otp_destination = '{$escTarget}' AND otp_status = 0))
+    WHERE {$otpMatchSql}
+      AND (otp_site_id = {$siteId} OR otp_site_id = 0)
       AND otp_status = 0
     ORDER BY otp_id DESC 
     LIMIT 1
@@ -129,76 +141,41 @@ if ($otpCode !== $dbOtpCode && $otpCode !== '111111') {
     exit;
 }
 
-// Mark OTP verified
-mysqli_query($connection, "UPDATE {$tblPrefix}otp SET otp_status = 1 WHERE otp_id = {$currentOtpId}");
+// Resolve user & verify active site_access on the current site BEFORE marking OTP verified
+$resolved = null;
+$lookupReason = 'no_access';
+$otpUserId = (int) ($otpRow['otp_user_id'] ?? 0);
 
-// Look up user (support both mobile and email destinations)
-$isMobileDest = ($otpMode === 'sms') || preg_match('/^[6-9]\d{9}$/', $otpDestination) || (is_numeric($otpDestination) && strlen($otpDestination) >= 10);
-$escDest = mysqli_real_escape_string($connection, $otpDestination);
-
-if ($isMobileDest) {
-    $cleanMobile = preg_replace('/\D/', '', $otpDestination);
-    if (strlen($cleanMobile) === 12 && substr($cleanMobile, 0, 2) === '91') {
-        $cleanMobile = substr($cleanMobile, 2);
-    } elseif (strlen($cleanMobile) === 13 && substr($cleanMobile, 0, 3) === '091') {
-        $cleanMobile = substr($cleanMobile, 3);
+if ($otpUserId > 0) {
+    $candResolved = iswResolveSiteAccessForUser($connection, $otpUserId, $siteId);
+    if ($candResolved) {
+        if (!empty($candResolved['has_access'])) {
+            $uStat = (int) ($candResolved['user']['user_status'] ?? 0);
+            $sApp  = (int) ($candResolved['site']['site_app_id'] ?? 0);
+            if ($uStat === 1 || $sApp === 3) {
+                $resolved = $candResolved;
+                $lookupReason = 'ok';
+            } else {
+                $resolved = $candResolved;
+                $lookupReason = 'inactive_user';
+            }
+        } elseif (($candResolved['reason'] ?? '') === 'disabled') {
+            $resolved = $candResolved;
+            $lookupReason = 'disabled';
+        }
     }
-    $escCleanMobile = mysqli_real_escape_string($connection, $cleanMobile);
-    $userCondition = "(u.user_mobile = '{$escDest}' OR u.user_mobile = '{$escCleanMobile}' OR u.user_email = '{$escDest}')";
-} else {
-    $userCondition = "(u.user_email = '{$escDest}' OR u.user_mobile = '{$escDest}')";
 }
 
-$siteAccessSiteCondition = ($siteId == 234 || $siteId == 49) ? "sa.site_access_site_id IN (49, 234)" : "sa.site_access_site_id = {$siteId}";
-
-$userSql = "
-    SELECT 
-        u.user_id, 
-        u.user_username, 
-        u.user_email, 
-        u.user_mobile, 
-        u.user_salt_key, 
-        u.user_status,
-        p.profile_display_name, 
-        p.profile_first_name, 
-        p.profile_last_name, 
-        p.profile_image,
-        sa.site_access_id,
-        sa.site_access_type, 
-        sa.site_access_status, 
-        sa.site_access_meta
-    FROM {$tblPrefix}user u
-    LEFT JOIN {$tblPrefix}profile p ON p.profile_user_id = u.user_id
-    LEFT JOIN {$tblPrefix}site_access sa ON sa.site_access_user_id = u.user_id AND {$siteAccessSiteCondition}
-    WHERE {$userCondition}
-    LIMIT 1
-";
-
-$userRes = mysqli_query($connection, $userSql);
-
-if (!$userRes || mysqli_num_rows($userRes) === 0) {
-    http_response_code(403);
-    echo json_encode([
-        'status' => 'error',
-        'code'   => 'access_denied',
-        'msg'    => 'Access denied. You do not have access to this workspace.'
-    ]);
-    exit;
+if ($lookupReason !== 'ok' && trim($otpDestination) !== '') {
+    $destMode = ($otpMode === 'sms') ? 'mobile' : 'email';
+    $lookup = iswFindUserAndSiteAccessByIdentifier($connection, $otpDestination, $siteId, $destMode);
+    if ($lookup['reason'] === 'ok' || ($resolved === null && !empty($lookup['resolved']))) {
+        $resolved = $lookup['resolved'];
+        $lookupReason = $lookup['reason'];
+    }
 }
 
-$user = mysqli_fetch_assoc($userRes);
-
-if (empty($user['site_access_id'])) {
-    http_response_code(403);
-    echo json_encode([
-        'status' => 'error',
-        'code'   => 'access_denied',
-        'msg'    => 'Access denied. You do not have access to this workspace.'
-    ]);
-    exit;
-}
-
-if ((int)$user['site_access_status'] !== 1) {
+if ($lookupReason === 'disabled') {
     http_response_code(403);
     echo json_encode([
         'status' => 'error',
@@ -208,7 +185,7 @@ if ((int)$user['site_access_status'] !== 1) {
     exit;
 }
 
-if ((int)$user['user_status'] !== 1) {
+if ($lookupReason === 'inactive_user') {
     http_response_code(403);
     echo json_encode([
         'status' => 'error',
@@ -218,79 +195,47 @@ if ((int)$user['user_status'] !== 1) {
     exit;
 }
 
-$userId = (int)$user['user_id'];
-$userSalt = (string)$user['user_salt_key'];
-$userRole = strtolower(trim($user['site_access_type'] ?? 'administrator'));
-$displayName = trim($user['profile_display_name'] ?? '');
+if ($lookupReason !== 'ok' || !$resolved || empty($resolved['has_access'])) {
+    http_response_code(403);
+    echo json_encode([
+        'status' => 'error',
+        'code'   => 'access_denied',
+        'msg'    => 'Access denied. You do not have access to this workspace.'
+    ]);
+    exit;
+}
+
+// Mark OTP verified
+mysqli_query($connection, "UPDATE {$tblPrefix}otp SET otp_status = 1 WHERE otp_id = {$currentOtpId}");
+
+$userDataRow = $resolved['user'] ?? [];
+$accessData  = $resolved['access'] ?? [];
+$userId      = (int)$userDataRow['user_id'];
+$userSalt    = (string)($userDataRow['user_salt_key'] ?? '');
+$userRole    = strtolower(trim((string)($accessData['site_access_type'] ?? 'administrator')));
+$displayName = trim((string)($userDataRow['logginUserName'] ?? ($userDataRow['profile_display_name'] ?? '')));
 if (empty($displayName)) {
-    $displayName = trim(($user['profile_first_name'] ?? '') . ' ' . ($user['profile_last_name'] ?? ''));
+    $displayName = trim((string)(($userDataRow['profile_first_name'] ?? '') . ' ' . ($userDataRow['profile_last_name'] ?? '')));
 }
 if (empty($displayName)) {
-    $displayName = $user['user_username'] ?? 'Team Member';
+    $displayName = $userDataRow['user_username'] ?? 'Team Member';
 }
-$userEmail = $user['user_email'];
-$userMobile = $user['user_mobile'] ?? '';
-$userAvatar = $user['profile_image'] ?? '';
-$siteMeta = $user['site_access_meta'] ?? '';
+$userEmail  = (string)($userDataRow['user_email'] ?? '');
+$userMobile = (string)($userDataRow['user_mobile'] ?? '');
+$userAvatar = (string)($userDataRow['profile_image'] ?? '');
 
 // Ensure site status is active so isLogin doesn't block dashboard
 mysqli_query($connection, "UPDATE {$tblPrefix}site SET site_status = 1 WHERE site_id = {$siteId}");
 mysqli_query($connection, "UPDATE {$tblPrefix}user SET user_status = 1 WHERE user_id = {$userId}");
 
 // Generate/reuse Device ID for user sessions
-$deviceId = !empty($_COOKIE['device_id']) ? (string)$_COOKIE['device_id'] : bin2hex(random_bytes(16));
-
-// Record Session in isw_user_sessions
-$checkUs = mysqli_query($connection, "
-    SELECT us_id 
-    FROM {$tblPrefix}user_sessions 
-    WHERE us_active_device = '{$deviceId}' 
-      AND us_user_id = {$userId} 
-      AND us_site_id = {$siteId}
-    LIMIT 1
-");
-
-if (!$checkUs || mysqli_num_rows($checkUs) === 0) {
-    mysqli_query($connection, "
-        INSERT INTO {$tblPrefix}user_sessions 
-            (us_site_id, us_user_id, us_analytics_id, us_active_device, us_status) 
-        VALUES 
-            ({$siteId}, {$userId}, 0, '{$deviceId}', 1)
-    ");
-} else {
-    mysqli_query($connection, "
-        UPDATE {$tblPrefix}user_sessions 
-        SET us_status = 1 
-        WHERE us_active_device = '{$deviceId}' AND us_user_id = {$userId} AND us_site_id = {$siteId}
-    ");
-}
-
-// Set Cookies & Session
-$cookieExpiry = time() + (30 * 24 * 60 * 60);
-$mainDomain = defined('MAIN_DOMAIN') ? MAIN_DOMAIN : ($_SERVER['HTTP_HOST'] ?? '');
-$mainDomain = preg_replace('/:\d+$/', '', $mainDomain);
-$isHttps = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') || (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https');
-
-$cookieDomain = '.' . ltrim($mainDomain, '.');
-if (filter_var($mainDomain, FILTER_VALIDATE_IP) || strpos($mainDomain, 'localhost') !== false) {
-    $cookieDomain = '';
-}
-
-$siteApp = defined('SITE_APP') ? SITE_APP : 'aleya';
-
-@setcookie('device_id', $deviceId, $cookieExpiry, '/', $cookieDomain, $isHttps, false);
-@setcookie('user_data', base64_encode($userSalt), $cookieExpiry, '/', $cookieDomain, $isHttps, false);
-@setcookie('user_name', base64_encode($displayName), $cookieExpiry, '/', $cookieDomain, $isHttps, false);
-@setcookie('user_email', base64_encode($userEmail), $cookieExpiry, '/', $cookieDomain, $isHttps, false);
-@setcookie('user_mobile', base64_encode($userMobile), $cookieExpiry, '/', $cookieDomain, $isHttps, false);
-@setcookie('user_image', base64_encode($userAvatar), $cookieExpiry, '/', $cookieDomain, $isHttps, false);
-@setcookie('user_type', base64_encode($userRole), $cookieExpiry, '/', $cookieDomain, $isHttps, false);
-@setcookie('user_meta', base64_encode($siteMeta), $cookieExpiry, '/', $cookieDomain, $isHttps, false);
-@setcookie('site_app', base64_encode($siteApp), $cookieExpiry, '/', $cookieDomain, $isHttps, false);
-@setcookie('isLogin', '1', $cookieExpiry, '/', $cookieDomain, $isHttps, false);
-
+$deviceId = !empty($_COOKIE['device_id']) ? trim((string)$_COOKIE['device_id']) : bin2hex(random_bytes(16));
 $_COOKIE['device_id'] = $deviceId;
 $_COOKIE['user_data'] = base64_encode($userSalt);
+
+// Sync session across parent group & set site-specific auth cookies
+iswSyncGroupUserSessions($connection, $userId, $deviceId, $siteId, 0);
+iswSetSiteAuthCookies($resolved, $deviceId, 30);
 
 if (session_status() === PHP_SESSION_ACTIVE) {
     $_SESSION['user_id'] = $userId;
@@ -299,19 +244,7 @@ if (session_status() === PHP_SESSION_ACTIVE) {
     $_SESSION['display_name'] = $displayName;
 }
 
-$rawRedirect = trim((string)($data['redirect_url'] ?? '/dashboard/'));
-while (is_string($rawRedirect) && (stripos($rawRedirect, '%2f') !== false || stripos($rawRedirect, '%3a') !== false)) {
-    $rawRedirect = urldecode($rawRedirect);
-}
-$rawRedirect = trim($rawRedirect);
-
-if (empty($rawRedirect) || $rawRedirect === '#' || $rawRedirect === 'dashboard' || $rawRedirect === 'dashboard/' || $rawRedirect === '/login/dashboard/' || $rawRedirect === '/login/dashboard') {
-    $finalRedirect = '/dashboard/';
-} elseif (strpos($rawRedirect, 'http://') === 0 || strpos($rawRedirect, 'https://') === 0) {
-    $finalRedirect = $rawRedirect;
-} else {
-    $finalRedirect = '/' . ltrim($rawRedirect, '/');
-}
+$finalRedirect = iswNormalizeRedirectPath($data['redirect_url'] ?? '/dashboard/', '/dashboard/');
 
 echo json_encode([
     'status'       => 'success',

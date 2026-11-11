@@ -11,7 +11,7 @@ header('Cache-Control: no-store, no-cache, must-revalidate'); // always fetch fr
 header('Service-Worker-Allowed: /dashboard/');                 // allow scope
 
 // Wire to your constants if you want:
-$APP_VERSION = 'dash-v1.2.4';
+$APP_VERSION = 'dash-v1.2.5';
 $BASE        = '/dashboard';
 $OFFLINE_URL = '/offline/'; // actual offline route (directory)
 $MANIFEST    = $BASE . '/manifest.json';
@@ -257,32 +257,54 @@ for (let i = 0; i < over; i++) { await c.delete(keys[i]); } } // ---------------
     const req = event.request;
     const url = new URL(req.url);
     const sameOrigin = url.origin === self.location.origin;
-    const inDash = (url.pathname === BASE) || url.pathname.startsWith(`${BASE}/`);
+    const inDash = sameOrigin && ((url.pathname === BASE) || url.pathname.startsWith(`${BASE}/`));
 
-    // 1) Navigations (only /dashboard/*)
-    if (req.mode === "navigate" && inDash) {
+    // Never intercept non-GET navigations (e.g. HTML form POST submissions); let browser handle POST & redirects natively
+    if (req.mode === "navigate" && req.method !== "GET") {
+    return;
+    }
+
+    // 1) Navigations (only GET /dashboard/*)
+    if (req.mode === "navigate" && req.method === "GET" && inDash) {
     event.respondWith((async () => {
     const htmlCache = await caches.open(HTML_CACHE);
 
     // Navigation Preload (fast path)
+    try {
     const preload = await event.preloadResponse;
     if (preload) {
-    console.log("[SW] using navigation preload for:", url.href);
-    htmlCache.put(req, preload.clone());
-    trimCache(HTML_CACHE, 50);
+    if (preload.type === "opaqueredirect") {
     return preload;
     }
+    if (!preload.redirected) {
+    console.log("[SW] using navigation preload for:", url.href);
+    if (preload.ok) {
+    htmlCache.put(req, preload.clone()).catch(() => {});
+    trimCache(HTML_CACHE, 50).catch(() => {});
+    }
+    return preload;
+    }
+    }
+    } catch {}
 
-    // Network with timeout
+    // Network with timeout (avoid passing init to fetch(req) so req.redirect stays "manual" for navigate requests)
     try {
     const net = await Promise.race([
-    fetch(req, { credentials: "include" }),
+    fetch(req),
     timeout(NAV_TIMEOUT_MS),
     ]);
-    if (net && net.ok) {
+    if (net) {
+    if (net.type === "opaqueredirect") {
+    return net;
+    }
+    if (net.redirected) {
+    return Response.redirect(net.url, 302);
+    }
+    if (net.ok) {
     console.log("[SW] network OK for:", url.href);
-    htmlCache.put(req, net.clone());
-    trimCache(HTML_CACHE, 50);
+    htmlCache.put(req, net.clone()).catch(() => {});
+    trimCache(HTML_CACHE, 50).catch(() => {});
+    }
     return net;
     }
     } catch (err) {
@@ -322,14 +344,14 @@ for (let i = 0; i < over; i++) { await c.delete(keys[i]); } } // ---------------
     }
 
     // 2) Dashboard API only
-    if (inDash && url.pathname.startsWith(`${BASE}/api/`)) {
+    if (inDash && url.pathname.startsWith(`${BASE}/api/`) && req.mode !== "navigate") {
     if (req.method === "GET") {
     event.respondWith((async () => {
     const c = await caches.open(API_CACHE);
     try {
     const res = await fetch(req, { credentials: "include" });
-    if (res.ok) c.put(req, res.clone());
-    trimCache(API_CACHE, MAX_ENTRIES[API_CACHE]);
+    if (res.ok) c.put(req, res.clone()).catch(() => {});
+    trimCache(API_CACHE, MAX_ENTRIES[API_CACHE]).catch(() => {});
     return res;
     } catch {
     const cached = await c.match(req);
@@ -365,8 +387,8 @@ for (let i = 0; i < over; i++) { await c.delete(keys[i]); } } // ---------------
     const c = await caches.open(RUNTIME_CACHE);
     const cached = await c.match(req);
     const updating = fetch(req).then((res) => {
-    if (res && res.status === 200) c.put(req, res.clone());
-    trimCache(RUNTIME_CACHE, MAX_ENTRIES[RUNTIME_CACHE]);
+    if (res && res.status === 200) c.put(req, res.clone()).catch(() => {});
+    trimCache(RUNTIME_CACHE, MAX_ENTRIES[RUNTIME_CACHE]).catch(() => {});
     return res;
     }).catch(() => null);
     return cached || (await updating) || fetch(req);
@@ -382,8 +404,10 @@ for (let i = 0; i < over; i++) { await c.delete(keys[i]); } } // ---------------
     if (cached) return cached;
     try {
     const res = await fetch(req);
-    await c.put(req, res.clone());
-    trimCache(IMAGE_CACHE, MAX_ENTRIES[IMAGE_CACHE]);
+    if (res && res.ok) {
+    await c.put(req, res.clone()).catch(() => {});
+    trimCache(IMAGE_CACHE, MAX_ENTRIES[IMAGE_CACHE]).catch(() => {});
+    }
     return res;
     } catch {
     return cached || Response.error();

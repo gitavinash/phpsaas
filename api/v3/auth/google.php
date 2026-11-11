@@ -9,12 +9,20 @@ header('Content-Type: application/json; charset=utf-8');
 
 if (!isset($connection)) {
     $docRoot = !empty($_SERVER['DOCUMENT_ROOT']) ? $_SERVER['DOCUMENT_ROOT'] : dirname(__DIR__, 3);
+    if (empty($_SERVER['DOCUMENT_ROOT'])) {
+        $_SERVER['DOCUMENT_ROOT'] = $docRoot;
+    }
     if (file_exists($docRoot . '/config.php')) {
         require_once $docRoot . '/config.php';
     }
     if (file_exists($docRoot . '/lib/modules/connection.php')) {
         require_once $docRoot . '/lib/modules/connection.php';
     }
+}
+
+$ssoFile = defined('MODULES') ? MODULES . 'sso.php' : dirname(__DIR__, 3) . '/lib/modules/sso.php';
+if (file_exists($ssoFile)) {
+    require_once $ssoFile;
 }
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -33,7 +41,7 @@ if ($siteId <= 0) {
     $host = $_SERVER['HTTP_HOST'] ?? '';
     $host = preg_replace('/:\d+$/', '', $host);
     $escapedHost = mysqli_real_escape_string($connection, $host);
-    $siteQuery = mysqli_query($connection, "SELECT site_id FROM {$tblPrefix}site WHERE site_domain = '{$escapedHost}' OR site_url LIKE '%{$escapedHost}%' LIMIT 1");
+    $siteQuery = mysqli_query($connection, "SELECT site_id FROM {$tblPrefix}site WHERE site_domain = '{$escapedHost}' OR site_url = '{$escapedHost}' OR site_url LIKE '%{$escapedHost}%' ORDER BY (site_domain = '{$escapedHost}') DESC, (site_url = '{$escapedHost}') DESC LIMIT 1");
     if ($siteQuery && mysqli_num_rows($siteQuery) > 0) {
         $row = mysqli_fetch_assoc($siteQuery);
         $siteId = (int)$row['site_id'];
@@ -115,17 +123,9 @@ $userSql = "
         u.user_mobile, 
         u.user_salt_key, 
         u.user_status,
-        p.profile_display_name, 
-        p.profile_first_name, 
-        p.profile_last_name, 
-        p.profile_image,
-        sa.site_access_id,
-        sa.site_access_type, 
-        sa.site_access_status, 
-        sa.site_access_meta
+        p.profile_image
     FROM {$tblPrefix}user u
     LEFT JOIN {$tblPrefix}profile p ON p.profile_user_id = u.user_id
-    LEFT JOIN {$tblPrefix}site_access sa ON sa.site_access_user_id = u.user_id AND sa.site_access_site_id = {$siteId}
     WHERE u.user_email = '{$escEmail}'
     LIMIT 1
 ";
@@ -135,16 +135,29 @@ $userRes = mysqli_query($connection, $userSql);
 if ($userRes && mysqli_num_rows($userRes) > 0) {
     $user = mysqli_fetch_assoc($userRes);
     $userId = (int)$user['user_id'];
-    $userSalt = (string)$user['user_salt_key'];
-    $userRole = strtolower(trim($user['site_access_type'] ?? 'administrator'));
-    $displayName = trim($user['profile_display_name'] ?? '');
-    if (empty($displayName)) {
-        $displayName = !empty($googleName) ? $googleName : ($user['user_username'] ?? 'Team Member');
+
+    $resolved = iswResolveSiteAccessForUser($connection, $userId, $siteId);
+    if (!$resolved || empty($resolved['has_access'])) {
+        http_response_code(403);
+        echo json_encode([
+            'status' => 'error',
+            'code'   => 'access_denied',
+            'msg'    => (($resolved['reason'] ?? '') === 'disabled')
+                ? 'Access denied. Your workspace access has been deactivated.'
+                : 'Access denied. You do not have access to this workspace.'
+        ]);
+        exit;
     }
-    $userEmail = $user['user_email'];
-    $userMobile = $user['user_mobile'] ?? '';
-    $userAvatar = !empty($user['profile_image']) ? $user['profile_image'] : $googlePicture;
-    $siteMeta = $user['site_access_meta'] ?? '';
+
+    if ((int)$user['user_status'] !== 1) {
+        http_response_code(403);
+        echo json_encode([
+            'status' => 'error',
+            'code'   => 'account_inactive',
+            'msg'    => 'Your account is inactive or pending email verification.'
+        ]);
+        exit;
+    }
 
     // Update avatar if currently empty
     if (empty($user['profile_image']) && !empty($googlePicture)) {
@@ -152,15 +165,18 @@ if ($userRes && mysqli_num_rows($userRes) > 0) {
         mysqli_query($connection, "UPDATE {$tblPrefix}profile SET profile_image = '{$escPic}' WHERE profile_user_id = {$userId}");
     }
 
-    if (empty($user['site_access_id']) || (int)$user['site_access_status'] !== 1) {
-        http_response_code(403);
-        echo json_encode([
-            'status' => 'error',
-            'code'   => 'access_denied',
-            'msg'    => 'Access denied. You do not have access to this workspace.'
-        ]);
-        exit;
+    $userDataRow = $resolved['user'] ?? $user;
+    $accessData  = $resolved['access'] ?? [];
+    $userSalt    = (string)($userDataRow['user_salt_key'] ?? '');
+    $userRole    = strtolower(trim((string)($accessData['site_access_type'] ?? 'administrator')));
+    $displayName = trim((string)($userDataRow['logginUserName'] ?? ''));
+    if (empty($displayName)) {
+        $displayName = !empty($googleName) ? $googleName : ($userDataRow['user_username'] ?? 'Team Member');
+        $resolved['user']['logginUserName'] = $displayName;
     }
+    $userEmail  = (string)($userDataRow['user_email'] ?? $googleEmail);
+    $userMobile = (string)($userDataRow['user_mobile'] ?? '');
+    $userAvatar = !empty($userDataRow['profile_image']) ? (string)$userDataRow['profile_image'] : $googlePicture;
 } else {
     http_response_code(403);
     echo json_encode([
@@ -171,30 +187,13 @@ if ($userRes && mysqli_num_rows($userRes) > 0) {
     exit;
 }
 
-// Establish Cookies & Session
-$cookieExpiry = time() + (30 * 24 * 60 * 60);
-$mainDomain = defined('MAIN_DOMAIN') ? MAIN_DOMAIN : ($_SERVER['HTTP_HOST'] ?? '');
-$mainDomain = preg_replace('/:\d+$/', '', $mainDomain);
-$isHttps = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') || (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https');
+// Establish Device ID, Group Sessions & Cookies
+$deviceId = !empty($_COOKIE['device_id']) ? trim((string)$_COOKIE['device_id']) : bin2hex(random_bytes(16));
+$_COOKIE['device_id'] = $deviceId;
+$_COOKIE['user_data'] = base64_encode($userSalt);
 
-$cookieDomain = '.' . ltrim($mainDomain, '.');
-if (filter_var($mainDomain, FILTER_VALIDATE_IP) || strpos($mainDomain, 'localhost') !== false) {
-    $cookieDomain = '';
-}
-
-$siteApp = defined('SITE_APP') ? SITE_APP : 'aleya';
-
-@setcookie('user_data', base64_encode($userSalt), $cookieExpiry, '/', $cookieDomain, $isHttps, false);
-@setcookie('user_name', base64_encode($displayName), $cookieExpiry, '/', $cookieDomain, $isHttps, false);
-@setcookie('user_email', base64_encode($userEmail), $cookieExpiry, '/', $cookieDomain, $isHttps, false);
-@setcookie('user_mobile', base64_encode($userMobile), $cookieExpiry, '/', $cookieDomain, $isHttps, false);
-@setcookie('user_image', base64_encode($userAvatar), $cookieExpiry, '/', $cookieDomain, $isHttps, false);
-@setcookie('user_type', base64_encode($userRole), $cookieExpiry, '/', $cookieDomain, $isHttps, false);
-@setcookie('user_meta', base64_encode($siteMeta), $cookieExpiry, '/', $cookieDomain, $isHttps, false);
-@setcookie('site_app', base64_encode($siteApp), $cookieExpiry, '/', $cookieDomain, $isHttps, false);
-@setcookie('isLogin', '1', $cookieExpiry, '/', $cookieDomain, $isHttps, false);
-
-$_COOKIE['user_data'] = $userSalt;
+iswSyncGroupUserSessions($connection, $userId, $deviceId, $siteId, 0);
+iswSetSiteAuthCookies($resolved, $deviceId, 30);
 
 if (session_status() === PHP_SESSION_ACTIVE) {
     $_SESSION['user_id'] = $userId;
@@ -203,7 +202,7 @@ if (session_status() === PHP_SESSION_ACTIVE) {
     $_SESSION['display_name'] = $displayName;
 }
 
-$finalRedirect = !empty($redirectUrl) && $redirectUrl !== '#' ? $redirectUrl : '/dashboard/';
+$finalRedirect = iswNormalizeRedirectPath($redirectUrl, '/dashboard/');
 
 echo json_encode([
     'status'       => 'success',
