@@ -492,24 +492,6 @@ if ($plDataList = mysqli_query($connection, $plProductsSql)) {
 }
 $plMatchedCount = count($plRows);
 
-$plAdvancedActiveCount = 0;
-if ($plFilterFeatured !== 'all') {
-    $plAdvancedActiveCount++;
-}
-if ($plFilterDiscount !== 'all') {
-    $plAdvancedActiveCount++;
-}
-if ($plFilterTag !== '') {
-    $plAdvancedActiveCount++;
-}
-if ($plFilterMinPrice !== '' || $plFilterMaxPrice !== '') {
-    $plAdvancedActiveCount++;
-}
-if ($plFilterDateFrom !== '' || $plFilterDateTo !== '') {
-    $plAdvancedActiveCount++;
-}
-$plShowAdvanced = ($plAdvancedActiveCount > 0);
-
 $plCurrentParams = array('type' => $plTypeParam);
 if ($plFilterSearch !== '') {
     $plCurrentParams['q'] = $plFilterSearch;
@@ -656,13 +638,18 @@ if ($plFilterSort !== 'newest') {
         'remove_aria' => 'Reset sort order to newest first',
     );
 }
+$plActiveFilterCount = count($plActiveChips);
+$plCountUnit = ($plTotalProducts === 1) ? 'product' : 'products';
 ?>
 <link rel="stylesheet" type="text/css" href="<?php echo $plEsc($plCssBase . 'app/default/desktop/product-list.css?v=' . $plCssVer); ?>">
 <script defer src="<?php echo $plEsc($plJsBase . 'app/default/desktop/product-list.js?v=' . $plJsVer); ?>"></script>
 
 <div class="modern-product-list">
     <div class="product-list-header">
-        <h2 id="productListHeading">All Products</h2>
+        <div class="product-heading-group">
+            <h2 id="productListHeading">All Products</h2>
+            <span class="product-total-badge"><?php echo (int)$plTotalProducts; ?><span class="visually-hidden"> total <?php echo $plEsc($plCountUnit); ?></span></span>
+        </div>
         <a href="<?php echo $plEsc($plAddProductUrl); ?>" class="product-add-link">
             <i class="fas fa-plus" aria-hidden="true"></i>
             <span>Add New Product</span>
@@ -670,298 +657,321 @@ if ($plFilterSort !== 'newest') {
     </div>
 
     <div class="product-list-panel">
-        <search>
-            <section class="product-filter-card" aria-labelledby="productFiltersHeading">
-                <h3 id="productFiltersHeading" class="visually-hidden">Filter products</h3>
-                <form id="productFilterForm" class="product-filter-form" method="GET" action="<?php echo $plEsc($plRouteBaseUrl); ?>" aria-labelledby="productFiltersHeading">
-                    <input type="hidden" name="type" value="<?php echo $plEsc($plTypeParam); ?>">
+        <div class="product-toolbar">
+            <div class="product-toolbar-start">
+                <p class="filter-result-summary">
+                    Showing <strong><?php echo (int)$plMatchedCount; ?></strong> of <strong><?php echo (int)$plTotalProducts; ?></strong> <?php echo $plEsc($plCountUnit); ?>
+                </p>
+                <div class="dt-length-slot" id="productTableLengthSlot"></div>
+            </div>
 
-                    <div class="filter-primary-grid">
-                        <div class="filter-field filter-field-search">
-                            <label for="filterSearch">Search products</label>
-                            <input
-                                type="search"
-                                id="filterSearch"
-                                name="q"
-                                class="filter-control"
-                                value="<?php echo $plEsc($plFilterSearch); ?>"
-                                placeholder="Search by product title or SKU"
-                                autocomplete="off"
-                                autocorrect="off"
-                                autocapitalize="none"
-                                spellcheck="false"
-                                enterkeyhint="search"
-                                maxlength="120"
-                                aria-describedby="filterSearchHint">
-                            <span id="filterSearchHint" class="filter-hint">Matches product title or SKU code.</span>
-                        </div>
+            <div class="product-toolbar-end">
+                <div class="dt-search-slot" id="productTableSearchSlot"></div>
+                <?php if ($plActiveFilterCount > 0) { ?>
+                    <a href="<?php echo $plEsc($plResetUrl); ?>" class="btn-toolbar-clear">
+                        <i class="fas fa-undo-alt" aria-hidden="true"></i>
+                        <span>Reset</span>
+                    </a>
+                <?php } ?>
+                <button
+                    type="button"
+                    id="toggleProductFilters"
+                    class="btn-filter-toggle"
+                    data-has-active="<?php echo $plActiveFilterCount > 0 ? 'true' : 'false'; ?>"
+                    aria-expanded="false"
+                    aria-controls="productFilterPanel">
+                    <i class="fas fa-sliders-h" aria-hidden="true"></i>
+                    <span>Filters</span>
+                    <?php if ($plActiveFilterCount > 0) { ?>
+                        <span class="filter-count-badge"><?php echo (int)$plActiveFilterCount; ?><span class="visually-hidden"> active</span></span>
+                    <?php } ?>
+                    <i class="fas fa-chevron-down filter-toggle-chevron" aria-hidden="true"></i>
+                </button>
+            </div>
+        </div>
 
+        <search id="productFilterPanel" class="product-filter-drawer" aria-labelledby="productFiltersHeading" hidden>
+            <div class="filter-drawer-head">
+                <div class="filter-drawer-title-group">
+                    <h3 id="productFiltersHeading">Filter Products</h3>
+                    <p class="filter-drawer-subtitle">Narrow results by title, SKU, category<?php echo !empty($plBrandOptions) ? ', brand' : ''; ?>, status, stock, price, or publish date.</p>
+                </div>
+                <button type="button" id="closeProductFilters" class="btn-drawer-close" aria-label="Close filters">
+                    <i class="fas fa-times" aria-hidden="true"></i>
+                </button>
+            </div>
+
+            <form id="productFilterForm" class="product-filter-form" method="GET" action="<?php echo $plEsc($plRouteBaseUrl); ?>" aria-labelledby="productFiltersHeading">
+                <input type="hidden" name="type" value="<?php echo $plEsc($plTypeParam); ?>">
+
+                <div class="filter-grid-primary">
+                    <div class="filter-field filter-field-search">
+                        <label for="filterSearch">Title or SKU</label>
+                        <input
+                            type="search"
+                            id="filterSearch"
+                            name="q"
+                            class="filter-control"
+                            value="<?php echo $plEsc($plFilterSearch); ?>"
+                            placeholder="Search by product title or SKU"
+                            autocomplete="off"
+                            autocorrect="off"
+                            autocapitalize="none"
+                            spellcheck="false"
+                            enterkeyhint="search"
+                            maxlength="120">
+                    </div>
+
+                    <div class="filter-field">
+                        <label for="filterCategory">Category</label>
+                        <select id="filterCategory" name="category" class="filter-control">
+                            <option value="0" <?php echo ($plFilterCategory === 0) ? 'selected' : ''; ?>>All categories</option>
+                            <?php foreach ($plCategoryOptions as $plCatOpt) { ?>
+                                <option value="<?php echo (int)$plCatOpt['id']; ?>" <?php echo ($plFilterCategory === (int)$plCatOpt['id']) ? 'selected' : ''; ?>>
+                                    <?php echo $plEsc($plCatOpt['path'] . ' (' . (int)$plCatOpt['subtree_count'] . ')'); ?>
+                                </option>
+                            <?php } ?>
+                        </select>
+                    </div>
+
+                    <?php if (!empty($plBrandOptions)) { ?>
                         <div class="filter-field">
-                            <label for="filterCategory">Category</label>
-                            <select id="filterCategory" name="category" class="filter-control">
-                                <option value="0" <?php echo ($plFilterCategory === 0) ? 'selected' : ''; ?>>All categories</option>
-                                <?php foreach ($plCategoryOptions as $plCatOpt) { ?>
-                                    <option value="<?php echo (int)$plCatOpt['id']; ?>" <?php echo ($plFilterCategory === (int)$plCatOpt['id']) ? 'selected' : ''; ?>>
-                                        <?php echo $plEsc($plCatOpt['path'] . ' (' . (int)$plCatOpt['subtree_count'] . ')'); ?>
+                            <label for="filterBrand">Brand</label>
+                            <select id="filterBrand" name="brand" class="filter-control">
+                                <option value="0" <?php echo ($plFilterBrand === 0) ? 'selected' : ''; ?>>All brands</option>
+                                <?php foreach ($plBrandOptions as $plBrandOpt) { ?>
+                                    <option value="<?php echo (int)$plBrandOpt['id']; ?>" <?php echo ($plFilterBrand === (int)$plBrandOpt['id']) ? 'selected' : ''; ?>>
+                                        <?php echo $plEsc($plBrandOpt['title'] . ' (' . (int)$plBrandOpt['product_count'] . ')'); ?>
                                     </option>
                                 <?php } ?>
                             </select>
                         </div>
+                    <?php } ?>
 
-                        <?php if (!empty($plBrandOptions)) { ?>
+                    <div class="filter-field">
+                        <label for="filterSort">Sort by</label>
+                        <select id="filterSort" name="sort" class="filter-control">
+                            <?php foreach ($plSortMap as $plSortKey => $plSortInfo) { ?>
+                                <option value="<?php echo $plEsc($plSortKey); ?>" <?php echo ($plFilterSort === $plSortKey) ? 'selected' : ''; ?>>
+                                    <?php echo $plEsc($plSortInfo['label']); ?>
+                                </option>
+                            <?php } ?>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="filter-grid-segmented">
+                    <fieldset class="filter-fieldset">
+                        <legend class="filter-legend">Status</legend>
+                        <div class="filter-radio-group">
+                            <div class="filter-radio-option">
+                                <input type="radio" id="filterStatusAll" name="status" value="all" <?php echo ($plFilterStatus === 'all') ? 'checked' : ''; ?>>
+                                <label for="filterStatusAll">All</label>
+                            </div>
+                            <div class="filter-radio-option">
+                                <input type="radio" id="filterStatusPublished" name="status" value="1" <?php echo ($plFilterStatus === '1') ? 'checked' : ''; ?>>
+                                <label for="filterStatusPublished">Published</label>
+                            </div>
+                            <div class="filter-radio-option">
+                                <input type="radio" id="filterStatusDraft" name="status" value="0" <?php echo ($plFilterStatus === '0') ? 'checked' : ''; ?>>
+                                <label for="filterStatusDraft">Draft</label>
+                            </div>
+                        </div>
+                    </fieldset>
+
+                    <fieldset class="filter-fieldset">
+                        <legend class="filter-legend">Stock availability</legend>
+                        <div class="filter-radio-group">
+                            <div class="filter-radio-option">
+                                <input type="radio" id="filterStockAll" name="stock" value="all" <?php echo ($plFilterStock === 'all') ? 'checked' : ''; ?>>
+                                <label for="filterStockAll">All</label>
+                            </div>
+                            <div class="filter-radio-option">
+                                <input type="radio" id="filterStockIn" name="stock" value="1" <?php echo ($plFilterStock === '1') ? 'checked' : ''; ?>>
+                                <label for="filterStockIn">In Stock</label>
+                            </div>
+                            <div class="filter-radio-option">
+                                <input type="radio" id="filterStockOut" name="stock" value="0" <?php echo ($plFilterStock === '0') ? 'checked' : ''; ?>>
+                                <label for="filterStockOut">Out of Stock</label>
+                            </div>
+                        </div>
+                    </fieldset>
+
+                    <fieldset class="filter-fieldset">
+                        <legend class="filter-legend">Visibility</legend>
+                        <div class="filter-radio-group">
+                            <div class="filter-radio-option">
+                                <input type="radio" id="filterFeaturedAll" name="featured" value="all" <?php echo ($plFilterFeatured === 'all') ? 'checked' : ''; ?>>
+                                <label for="filterFeaturedAll">All</label>
+                            </div>
+                            <div class="filter-radio-option">
+                                <input type="radio" id="filterFeaturedOnly" name="featured" value="1" <?php echo ($plFilterFeatured === '1') ? 'checked' : ''; ?>>
+                                <label for="filterFeaturedOnly">Featured</label>
+                            </div>
+                            <div class="filter-radio-option">
+                                <input type="radio" id="filterFeaturedStandard" name="featured" value="0" <?php echo ($plFilterFeatured === '0') ? 'checked' : ''; ?>>
+                                <label for="filterFeaturedStandard">Standard</label>
+                            </div>
+                        </div>
+                    </fieldset>
+
+                    <fieldset class="filter-fieldset">
+                        <legend class="filter-legend">Pricing &amp; discount</legend>
+                        <div class="filter-radio-group">
+                            <div class="filter-radio-option">
+                                <input type="radio" id="filterDiscountAll" name="discount" value="all" <?php echo ($plFilterDiscount === 'all') ? 'checked' : ''; ?>>
+                                <label for="filterDiscountAll">All</label>
+                            </div>
+                            <div class="filter-radio-option">
+                                <input type="radio" id="filterDiscountYes" name="discount" value="yes" <?php echo ($plFilterDiscount === 'yes') ? 'checked' : ''; ?>>
+                                <label for="filterDiscountYes">On discount</label>
+                            </div>
+                            <div class="filter-radio-option">
+                                <input type="radio" id="filterDiscountNo" name="discount" value="no" <?php echo ($plFilterDiscount === 'no') ? 'checked' : ''; ?>>
+                                <label for="filterDiscountNo">No discount</label>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+
+                <div class="filter-grid-secondary">
+                    <div class="filter-field">
+                        <label for="filterTag">Product tag</label>
+                        <span id="filterTagHint" class="filter-hint">Partial or exact match on product tags.</span>
+                        <input
+                            type="text"
+                            id="filterTag"
+                            name="tag"
+                            list="productTagOptions"
+                            class="filter-control"
+                            value="<?php echo $plEsc($plFilterTag); ?>"
+                            placeholder="Choose or type a tag"
+                            autocomplete="off"
+                            autocorrect="off"
+                            autocapitalize="none"
+                            spellcheck="false"
+                            enterkeyhint="search"
+                            maxlength="120"
+                            aria-describedby="filterTagHint">
+                        <datalist id="productTagOptions">
+                            <?php foreach ($plTagSuggestions as $plTagVal) { ?>
+                                <option value="<?php echo $plEsc($plTagVal); ?>"></option>
+                            <?php } ?>
+                        </datalist>
+                    </div>
+
+                    <fieldset class="filter-fieldset">
+                        <legend class="filter-legend">Selling price range (<?php echo $plEsc($plSiteCurrency); ?>)</legend>
+                        <span id="filterPriceHint" class="filter-hint">Numeric amounts (up to 2 decimals).</span>
+                        <div class="filter-range-group">
                             <div class="filter-field">
-                                <label for="filterBrand">Brand</label>
-                                <select id="filterBrand" name="brand" class="filter-control">
-                                    <option value="0" <?php echo ($plFilterBrand === 0) ? 'selected' : ''; ?>>All brands</option>
-                                    <?php foreach ($plBrandOptions as $plBrandOpt) { ?>
-                                        <option value="<?php echo (int)$plBrandOpt['id']; ?>" <?php echo ($plFilterBrand === (int)$plBrandOpt['id']) ? 'selected' : ''; ?>>
-                                            <?php echo $plEsc($plBrandOpt['title'] . ' (' . (int)$plBrandOpt['product_count'] . ')'); ?>
-                                        </option>
-                                    <?php } ?>
-                                </select>
+                                <label for="filterMinPrice">Min price</label>
+                                <input
+                                    type="text"
+                                    id="filterMinPrice"
+                                    name="min_price"
+                                    class="filter-control"
+                                    value="<?php echo $plEsc($plFilterMinPrice); ?>"
+                                    inputmode="decimal"
+                                    placeholder="e.g. 500"
+                                    autocorrect="off"
+                                    autocapitalize="none"
+                                    spellcheck="false"
+                                    enterkeyhint="next"
+                                    aria-describedby="filterPriceHint">
                             </div>
-                        <?php } ?>
-
-                        <div class="filter-field">
-                            <label for="filterSort">Sort by</label>
-                            <select id="filterSort" name="sort" class="filter-control">
-                                <?php foreach ($plSortMap as $plSortKey => $plSortInfo) { ?>
-                                    <option value="<?php echo $plEsc($plSortKey); ?>" <?php echo ($plFilterSort === $plSortKey) ? 'selected' : ''; ?>>
-                                        <?php echo $plEsc($plSortInfo['label']); ?>
-                                    </option>
-                                <?php } ?>
-                            </select>
+                            <div class="filter-field">
+                                <label for="filterMaxPrice">Max price</label>
+                                <input
+                                    type="text"
+                                    id="filterMaxPrice"
+                                    name="max_price"
+                                    class="filter-control"
+                                    value="<?php echo $plEsc($plFilterMaxPrice); ?>"
+                                    inputmode="decimal"
+                                    placeholder="e.g. 5000"
+                                    autocorrect="off"
+                                    autocapitalize="none"
+                                    spellcheck="false"
+                                    enterkeyhint="done"
+                                    aria-describedby="filterPriceHint">
+                            </div>
                         </div>
+                    </fieldset>
 
-                        <fieldset class="filter-fieldset filter-fieldset-wide">
-                            <legend class="filter-legend">Status</legend>
-                            <div class="filter-radio-group">
-                                <div class="filter-radio-option">
-                                    <input type="radio" id="filterStatusAll" name="status" value="all" <?php echo ($plFilterStatus === 'all') ? 'checked' : ''; ?>>
-                                    <label for="filterStatusAll">All</label>
-                                </div>
-                                <div class="filter-radio-option">
-                                    <input type="radio" id="filterStatusPublished" name="status" value="1" <?php echo ($plFilterStatus === '1') ? 'checked' : ''; ?>>
-                                    <label for="filterStatusPublished">Published</label>
-                                </div>
-                                <div class="filter-radio-option">
-                                    <input type="radio" id="filterStatusDraft" name="status" value="0" <?php echo ($plFilterStatus === '0') ? 'checked' : ''; ?>>
-                                    <label for="filterStatusDraft">Draft</label>
-                                </div>
+                    <fieldset class="filter-fieldset">
+                        <legend class="filter-legend">Publish date range</legend>
+                        <span class="filter-hint">Filter by published or creation date.</span>
+                        <div class="filter-range-group">
+                            <div class="filter-field">
+                                <label for="filterDateFrom">From date</label>
+                                <input
+                                    type="date"
+                                    id="filterDateFrom"
+                                    name="date_from"
+                                    class="filter-control"
+                                    value="<?php echo $plEsc($plFilterDateFrom); ?>">
                             </div>
-                        </fieldset>
-
-                        <fieldset class="filter-fieldset filter-fieldset-wide">
-                            <legend class="filter-legend">Stock availability</legend>
-                            <div class="filter-radio-group">
-                                <div class="filter-radio-option">
-                                    <input type="radio" id="filterStockAll" name="stock" value="all" <?php echo ($plFilterStock === 'all') ? 'checked' : ''; ?>>
-                                    <label for="filterStockAll">All</label>
-                                </div>
-                                <div class="filter-radio-option">
-                                    <input type="radio" id="filterStockIn" name="stock" value="1" <?php echo ($plFilterStock === '1') ? 'checked' : ''; ?>>
-                                    <label for="filterStockIn">In Stock</label>
-                                </div>
-                                <div class="filter-radio-option">
-                                    <input type="radio" id="filterStockOut" name="stock" value="0" <?php echo ($plFilterStock === '0') ? 'checked' : ''; ?>>
-                                    <label for="filterStockOut">Out of Stock</label>
-                                </div>
+                            <div class="filter-field">
+                                <label for="filterDateTo">To date</label>
+                                <input
+                                    type="date"
+                                    id="filterDateTo"
+                                    name="date_to"
+                                    class="filter-control"
+                                    value="<?php echo $plEsc($plFilterDateTo); ?>">
                             </div>
-                        </fieldset>
-                    </div>
+                        </div>
+                    </fieldset>
+                </div>
 
-                    <div id="advancedProductFilters" class="advanced-filters-panel" <?php echo $plShowAdvanced ? '' : 'hidden'; ?>>
-                        <fieldset class="advanced-filters-fieldset">
-                            <legend>Advanced filters</legend>
-                            <div class="filter-advanced-grid">
-                                <div class="filter-field">
-                                    <label for="filterTag">Product tag</label>
-                                    <input
-                                        type="text"
-                                        id="filterTag"
-                                        name="tag"
-                                        list="productTagOptions"
-                                        class="filter-control"
-                                        value="<?php echo $plEsc($plFilterTag); ?>"
-                                        placeholder="Choose or type a tag"
-                                        autocomplete="off"
-                                        autocorrect="off"
-                                        autocapitalize="none"
-                                        spellcheck="false"
-                                        enterkeyhint="search"
-                                        maxlength="120"
-                                        aria-describedby="filterTagHint">
-                                    <span id="filterTagHint" class="filter-hint">Partial or exact match on assigned product tags.</span>
-                                    <datalist id="productTagOptions">
-                                        <?php foreach ($plTagSuggestions as $plTagVal) { ?>
-                                            <option value="<?php echo $plEsc($plTagVal); ?>"></option>
-                                        <?php } ?>
-                                    </datalist>
-                                </div>
+                <div id="productFilterFeedback" class="filter-form-feedback" role="status" aria-live="polite"></div>
 
-                                <fieldset class="filter-fieldset filter-fieldset-wide">
-                                    <legend class="filter-legend">Visibility</legend>
-                                    <div class="filter-radio-group">
-                                        <div class="filter-radio-option">
-                                            <input type="radio" id="filterFeaturedAll" name="featured" value="all" <?php echo ($plFilterFeatured === 'all') ? 'checked' : ''; ?>>
-                                            <label for="filterFeaturedAll">All</label>
-                                        </div>
-                                        <div class="filter-radio-option">
-                                            <input type="radio" id="filterFeaturedOnly" name="featured" value="1" <?php echo ($plFilterFeatured === '1') ? 'checked' : ''; ?>>
-                                            <label for="filterFeaturedOnly">Featured only</label>
-                                        </div>
-                                        <div class="filter-radio-option">
-                                            <input type="radio" id="filterFeaturedStandard" name="featured" value="0" <?php echo ($plFilterFeatured === '0') ? 'checked' : ''; ?>>
-                                            <label for="filterFeaturedStandard">Standard only</label>
-                                        </div>
-                                    </div>
-                                </fieldset>
-
-                                <fieldset class="filter-fieldset filter-fieldset-wide">
-                                    <legend class="filter-legend">Pricing &amp; discount</legend>
-                                    <div class="filter-radio-group">
-                                        <div class="filter-radio-option">
-                                            <input type="radio" id="filterDiscountAll" name="discount" value="all" <?php echo ($plFilterDiscount === 'all') ? 'checked' : ''; ?>>
-                                            <label for="filterDiscountAll">All</label>
-                                        </div>
-                                        <div class="filter-radio-option">
-                                            <input type="radio" id="filterDiscountYes" name="discount" value="yes" <?php echo ($plFilterDiscount === 'yes') ? 'checked' : ''; ?>>
-                                            <label for="filterDiscountYes">On discount</label>
-                                        </div>
-                                        <div class="filter-radio-option">
-                                            <input type="radio" id="filterDiscountNo" name="discount" value="no" <?php echo ($plFilterDiscount === 'no') ? 'checked' : ''; ?>>
-                                            <label for="filterDiscountNo">No discount</label>
-                                        </div>
-                                    </div>
-                                </fieldset>
-
-                                <fieldset class="filter-fieldset filter-fieldset-wide">
-                                    <legend class="filter-legend">Selling price range (<?php echo $plEsc($plSiteCurrency); ?>)</legend>
-                                    <div class="filter-range-group">
-                                        <div class="filter-field">
-                                            <label for="filterMinPrice">Min price</label>
-                                            <input
-                                                type="text"
-                                                id="filterMinPrice"
-                                                name="min_price"
-                                                class="filter-control"
-                                                value="<?php echo $plEsc($plFilterMinPrice); ?>"
-                                                inputmode="decimal"
-                                                placeholder="e.g. 500"
-                                                autocorrect="off"
-                                                autocapitalize="none"
-                                                spellcheck="false"
-                                                enterkeyhint="next"
-                                                aria-describedby="filterPriceHint">
-                                        </div>
-                                        <div class="filter-field">
-                                            <label for="filterMaxPrice">Max price</label>
-                                            <input
-                                                type="text"
-                                                id="filterMaxPrice"
-                                                name="max_price"
-                                                class="filter-control"
-                                                value="<?php echo $plEsc($plFilterMaxPrice); ?>"
-                                                inputmode="decimal"
-                                                placeholder="e.g. 5000"
-                                                autocorrect="off"
-                                                autocapitalize="none"
-                                                spellcheck="false"
-                                                enterkeyhint="done"
-                                                aria-describedby="filterPriceHint">
-                                        </div>
-                                    </div>
-                                    <span id="filterPriceHint" class="filter-hint">Numeric values only (up to 2 decimals).</span>
-                                </fieldset>
-
-                                <fieldset class="filter-fieldset filter-fieldset-wide">
-                                    <legend class="filter-legend">Publish date range</legend>
-                                    <div class="filter-range-group">
-                                        <div class="filter-field">
-                                            <label for="filterDateFrom">From date</label>
-                                            <input
-                                                type="date"
-                                                id="filterDateFrom"
-                                                name="date_from"
-                                                class="filter-control"
-                                                value="<?php echo $plEsc($plFilterDateFrom); ?>">
-                                        </div>
-                                        <div class="filter-field">
-                                            <label for="filterDateTo">To date</label>
-                                            <input
-                                                type="date"
-                                                id="filterDateTo"
-                                                name="date_to"
-                                                class="filter-control"
-                                                value="<?php echo $plEsc($plFilterDateTo); ?>">
-                                        </div>
-                                    </div>
-                                </fieldset>
-                            </div>
-                        </fieldset>
-                    </div>
-
-                    <div id="productFilterFeedback" class="filter-form-feedback" role="status" aria-live="polite"></div>
-
-                    <div class="filter-actions">
+                <div class="filter-actions">
+                    <a href="<?php echo $plEsc($plResetUrl); ?>" class="btn-filter-reset">
+                        <i class="fas fa-undo-alt" aria-hidden="true"></i>
+                        <span>Reset all</span>
+                    </a>
+                    <div class="filter-actions-primary">
+                        <button type="button" id="cancelProductFilters" class="btn-filter-cancel">Cancel</button>
                         <button type="submit" class="btn-filter-apply">
-                            <i class="fas fa-filter" aria-hidden="true"></i>
+                            <i class="fas fa-check" aria-hidden="true"></i>
                             <span>Apply Filters</span>
                         </button>
-                        <button
-                            type="button"
-                            id="toggleAdvancedFilters"
-                            class="btn-filter-more"
-                            aria-expanded="<?php echo $plShowAdvanced ? 'true' : 'false'; ?>"
-                            aria-controls="advancedProductFilters">
-                            <i class="fas fa-sliders-h" aria-hidden="true"></i>
-                            <span
-                                data-toggle-label
-                                data-label-closed="More Filters"
-                                data-label-open="Less Filters"><?php echo $plShowAdvanced ? 'Less Filters' : 'More Filters'; ?></span>
-                            <?php if ($plAdvancedActiveCount > 0) { ?>
-                                <span class="advanced-filter-badge" aria-label="<?php echo (int)$plAdvancedActiveCount; ?> active advanced filters"><?php echo (int)$plAdvancedActiveCount; ?></span>
-                            <?php } ?>
-                        </button>
-                        <a href="<?php echo $plEsc($plResetUrl); ?>" class="btn-filter-reset">
-                            <i class="fas fa-undo-alt" aria-hidden="true"></i>
-                            <span>Reset</span>
-                        </a>
                     </div>
-                </form>
-            </section>
+                </div>
+            </form>
         </search>
 
-        <div class="filter-status-bar">
-            <p class="filter-result-summary">
-                Showing <strong><?php echo (int)$plMatchedCount; ?></strong> of <strong><?php echo (int)$plTotalProducts; ?></strong> product(s)
-            </p>
-            <?php if (!empty($plActiveChips)) { ?>
-                <div class="active-filter-chips" aria-label="Active product filters">
+        <?php if (!empty($plActiveChips)) { ?>
+            <div class="active-filters-strip">
+                <span class="active-filters-label">Active:</span>
+                <div class="active-filter-chips">
                     <?php foreach ($plActiveChips as $plChip) { ?>
                         <a
                             href="<?php echo $plEsc($plChip['remove_url']); ?>"
                             class="active-filter-chip"
                             aria-label="<?php echo $plEsc($plChip['remove_aria'] . ' (' . $plChip['label'] . ')'); ?>">
                             <span><?php echo $plEsc($plChip['label']); ?></span>
-                            <span aria-hidden="true">&times;</span>
+                            <span class="chip-remove-icon" aria-hidden="true">&times;</span>
                         </a>
                     <?php } ?>
                     <a href="<?php echo $plEsc($plResetUrl); ?>" class="active-filter-clear-all">Clear all</a>
                 </div>
-            <?php } ?>
-        </div>
+            </div>
+        <?php } ?>
 
         <?php if ($plMatchedCount === 0) { ?>
             <div class="empty-filter-banner" role="status">
                 <span>No products matched the selected filter criteria.</span>
-                <?php if (!empty($plActiveChips)) { ?>
-                    <a href="<?php echo $plEsc($plResetUrl); ?>" class="btn-filter-reset">Reset Filters</a>
-                <?php } ?>
+                <div class="empty-banner-actions">
+                    <button type="button" class="btn-empty-open-filters" data-open-filters="true">Adjust Filters</button>
+                    <?php if (!empty($plActiveChips)) { ?>
+                        <a href="<?php echo $plEsc($plResetUrl); ?>" class="btn-filter-reset">Reset Filters</a>
+                    <?php } ?>
+                </div>
             </div>
         <?php } ?>
-
-        <div class="dt-controls-top" id="productTableControlsTop"></div>
 
         <div class="table-container-shell">
         <div class="table-wrapper" tabindex="0" role="region" aria-labelledby="productListHeading">
