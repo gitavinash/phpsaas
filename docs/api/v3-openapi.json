@@ -4260,6 +4260,482 @@
         }
       }
     },
+    "/setting/redirection.php": {
+      "get": {
+        "summary": "List or Retrieve Tenant URL Redirection Rules",
+        "description": "Returns all URL redirection rules (excluding link-shortener entries) for the active tenant site along with KPI counters. Supports HTTP status and keyword filtering or fetching a single rule by ID.",
+        "tags": [
+          "Site Settings"
+        ],
+        "operationId": "v3_setting_redirection_list",
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardSuccessResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error or invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - Insufficient permissions for user role",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Optional redirection ID (numeric or base64) to fetch a single record"
+          },
+          {
+            "name": "http_status",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "all",
+                "301",
+                "302",
+                "307",
+                "308",
+                "300",
+                "303",
+                "304"
+              ],
+              "default": "all"
+            },
+            "description": "Filter by HTTP redirect status code"
+          },
+          {
+            "name": "q",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Case-insensitive keyword filter across source path, destination URL, or HTTP status"
+          }
+        ],
+        "x-ai-tool-definition": {
+          "name": "v3_setting_redirection_list",
+          "description": "List or Retrieve Tenant URL Redirection Rules"
+        }
+      },
+      "post": {
+        "summary": "Create URL Redirection Rule (or Dispatch Update/Delete Action)",
+        "description": "Creates a new URL redirection rule and activates the matching isw_link redirect route atomically. Also accepts action='update' or action='delete' for clients limited to POST.",
+        "tags": [
+          "Site Settings"
+        ],
+        "operationId": "v3_setting_redirection_create",
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardSuccessResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error or invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - Insufficient permissions for user role",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "from_url",
+                  "to_url",
+                  "http_status"
+                ],
+                "properties": {
+                  "action": {
+                    "type": "string",
+                    "enum": [
+                      "create",
+                      "update",
+                      "delete"
+                    ],
+                    "default": "create"
+                  },
+                  "id": {
+                    "type": "string",
+                    "description": "Redirection ID (required for update/delete)",
+                    "example": "151"
+                  },
+                  "from_url": {
+                    "type": "string",
+                    "description": "Relative source path on the active site",
+                    "example": "/old-page/"
+                  },
+                  "to_url": {
+                    "type": "string",
+                    "description": "Relative target path (/new-page/) or absolute https:// URL",
+                    "example": "/new-page/"
+                  },
+                  "http_status": {
+                    "type": "string",
+                    "enum": [
+                      "301",
+                      "302",
+                      "307",
+                      "308",
+                      "300",
+                      "303",
+                      "304"
+                    ],
+                    "default": "301"
+                  }
+                }
+              }
+            },
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "from_url",
+                  "to_url",
+                  "http_status"
+                ],
+                "properties": {
+                  "action": {
+                    "type": "string",
+                    "enum": [
+                      "create",
+                      "update",
+                      "delete"
+                    ],
+                    "default": "create"
+                  },
+                  "id": {
+                    "type": "string",
+                    "description": "Redirection ID (required for update/delete)",
+                    "example": "151"
+                  },
+                  "from_url": {
+                    "type": "string",
+                    "description": "Relative source path on the active site",
+                    "example": "/old-page/"
+                  },
+                  "to_url": {
+                    "type": "string",
+                    "description": "Relative target path (/new-page/) or absolute https:// URL",
+                    "example": "/new-page/"
+                  },
+                  "http_status": {
+                    "type": "string",
+                    "enum": [
+                      "301",
+                      "302",
+                      "307",
+                      "308",
+                      "300",
+                      "303",
+                      "304"
+                    ],
+                    "default": "301"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-ai-tool-definition": {
+          "name": "v3_setting_redirection_create",
+          "description": "Create URL Redirection Rule (or Dispatch Update/Delete Action)"
+        }
+      },
+      "put": {
+        "summary": "Update Existing URL Redirection Rule",
+        "description": "Updates source path, destination URL, and HTTP status code for an existing tenant redirection rule while keeping the linked router route synchronized.",
+        "tags": [
+          "Site Settings"
+        ],
+        "operationId": "v3_setting_redirection_update",
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardSuccessResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error or invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - Insufficient permissions for user role",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "id",
+                  "from_url",
+                  "to_url",
+                  "http_status"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "description": "Numeric or base64 redirection ID",
+                    "example": "151"
+                  },
+                  "from_url": {
+                    "type": "string",
+                    "example": "/old-page-renamed/"
+                  },
+                  "to_url": {
+                    "type": "string",
+                    "example": "/updated-destination/"
+                  },
+                  "http_status": {
+                    "type": "string",
+                    "enum": [
+                      "301",
+                      "302",
+                      "307",
+                      "308",
+                      "300",
+                      "303",
+                      "304"
+                    ],
+                    "example": "301"
+                  }
+                }
+              }
+            },
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "id",
+                  "from_url",
+                  "to_url",
+                  "http_status"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "description": "Numeric or base64 redirection ID",
+                    "example": "151"
+                  },
+                  "from_url": {
+                    "type": "string",
+                    "example": "/old-page-renamed/"
+                  },
+                  "to_url": {
+                    "type": "string",
+                    "example": "/updated-destination/"
+                  },
+                  "http_status": {
+                    "type": "string",
+                    "enum": [
+                      "301",
+                      "302",
+                      "307",
+                      "308",
+                      "300",
+                      "303",
+                      "304"
+                    ],
+                    "example": "301"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-ai-tool-definition": {
+          "name": "v3_setting_redirection_update",
+          "description": "Update Existing URL Redirection Rule"
+        }
+      },
+      "delete": {
+        "summary": "Delete URL Redirection Rule",
+        "description": "Deletes a tenant-scoped URL redirection rule and removes its associated redirect route from isw_link.",
+        "tags": [
+          "Site Settings"
+        ],
+        "operationId": "v3_setting_redirection_delete",
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardSuccessResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error or invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - Insufficient permissions for user role",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "id"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "description": "Numeric or base64 redirection ID",
+                    "example": "151"
+                  }
+                }
+              }
+            },
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "id"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "description": "Numeric or base64 redirection ID",
+                    "example": "151"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-ai-tool-definition": {
+          "name": "v3_setting_redirection_delete",
+          "description": "Delete URL Redirection Rule"
+        }
+      }
+    },
     "/integration/index.php": {
       "get": {
         "summary": "List Configured Third-Party Integrations & Gateways",

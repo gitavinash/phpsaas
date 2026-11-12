@@ -753,7 +753,69 @@ add_endpoint(
     ai_tool_name="v3_accounts_verify_payment"
 )
 
-# 11. INTEGRATIONS HUB
+# 11. SITE SETTINGS & REDIRECTIONS
+add_endpoint(
+    "/setting/redirection.php", "GET", "List or Retrieve Tenant URL Redirection Rules",
+    "Returns all URL redirection rules (excluding link-shortener entries) for the active tenant site along with KPI counters. Supports HTTP status and keyword filtering or fetching a single rule by ID.",
+    "Site Settings",
+    params=[
+        {"name": "id", "in": "query", "schema": {"type": "string"}, "description": "Optional redirection ID (numeric or base64) to fetch a single record"},
+        {"name": "http_status", "in": "query", "schema": {"type": "string", "enum": ["all", "301", "302", "307", "308", "300", "303", "304"], "default": "all"}, "description": "Filter by HTTP redirect status code"},
+        {"name": "q", "in": "query", "schema": {"type": "string"}, "description": "Case-insensitive keyword filter across source path, destination URL, or HTTP status"}
+    ],
+    ai_tool_name="v3_setting_redirection_list"
+)
+
+add_endpoint(
+    "/setting/redirection.php", "POST", "Create URL Redirection Rule (or Dispatch Update/Delete Action)",
+    "Creates a new URL redirection rule and activates the matching isw_link redirect route atomically. Also accepts action='update' or action='delete' for clients limited to POST.",
+    "Site Settings",
+    body_schema={
+        "type": "object",
+        "required": ["from_url", "to_url", "http_status"],
+        "properties": {
+            "action": {"type": "string", "enum": ["create", "update", "delete"], "default": "create"},
+            "id": {"type": "string", "description": "Redirection ID (required for update/delete)", "example": "151"},
+            "from_url": {"type": "string", "description": "Relative source path on the active site", "example": "/old-page/"},
+            "to_url": {"type": "string", "description": "Relative target path (/new-page/) or absolute https:// URL", "example": "/new-page/"},
+            "http_status": {"type": "string", "enum": ["301", "302", "307", "308", "300", "303", "304"], "default": "301"}
+        }
+    },
+    ai_tool_name="v3_setting_redirection_create"
+)
+
+add_endpoint(
+    "/setting/redirection.php", "PUT", "Update Existing URL Redirection Rule",
+    "Updates source path, destination URL, and HTTP status code for an existing tenant redirection rule while keeping the linked router route synchronized.",
+    "Site Settings",
+    body_schema={
+        "type": "object",
+        "required": ["id", "from_url", "to_url", "http_status"],
+        "properties": {
+            "id": {"type": "string", "description": "Numeric or base64 redirection ID", "example": "151"},
+            "from_url": {"type": "string", "example": "/old-page-renamed/"},
+            "to_url": {"type": "string", "example": "/updated-destination/"},
+            "http_status": {"type": "string", "enum": ["301", "302", "307", "308", "300", "303", "304"], "example": "301"}
+        }
+    },
+    ai_tool_name="v3_setting_redirection_update"
+)
+
+add_endpoint(
+    "/setting/redirection.php", "DELETE", "Delete URL Redirection Rule",
+    "Deletes a tenant-scoped URL redirection rule and removes its associated redirect route from isw_link.",
+    "Site Settings",
+    body_schema={
+        "type": "object",
+        "required": ["id"],
+        "properties": {
+            "id": {"type": "string", "description": "Numeric or base64 redirection ID", "example": "151"}
+        }
+    },
+    ai_tool_name="v3_setting_redirection_delete"
+)
+
+# 12. INTEGRATIONS HUB
 add_endpoint(
     "/integration/index.php", "GET", "List Configured Third-Party Integrations & Gateways",
     "Returns status of payment gateways (Razorpay, Cashfree, PhonePe), Google Ads conversion pixels, WhatsApp Web engines, and Webhooks.",
@@ -761,7 +823,7 @@ add_endpoint(
     ai_tool_name="v3_integrations_list"
 )
 
-# 12. UTILITIES & GEOGRAPHY
+# 13. UTILITIES & GEOGRAPHY
 add_endpoint(
     "/geo/cities.php", "GET", "Cities Lookup by State",
     "Returns list of active cities within a specified state ID.",

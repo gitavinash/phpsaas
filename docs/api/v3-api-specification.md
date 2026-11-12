@@ -505,6 +505,20 @@ Approves or rejects a payment note.
 #### `GET /api/v3/setting/configuration.php`
 Retrieves tenant website configuration (company branding, contact info, banking details, social links).
 
+#### `GET|POST|PUT|DELETE /api/v3/setting/redirection.php`
+Full tenant-scoped CRUD endpoint for URL redirections (`isw_redirection` and linked `isw_link` `redirect` routes). Automatically excludes URL shortener placeholders (`redirection_from = '#'`), normalizes internal paths, detects self-redirect loops, and returns KPI counters (`total`, `permanent`, `temporary`, `other`).
+- **Query Params (`GET`):** `id` (optional single numeric/base64 ID), `http_status` (`301|302|307|308|300|303|304|all`), `q` (keyword filter matching `from_url`, `to_url`, or `http_status`).
+- **Request Body (`POST` Create / `PUT` Update / `DELETE` Remove):**
+  ```json
+  {
+    "id": 151,
+    "from_url": "/old-promo-page/",
+    "to_url": "/featured-collections/",
+    "http_status": "301"
+  }
+  ```
+- **Response `200 OK`:** Returns `{ "status": "success", "message": "...", "data": [...], "stats": {"total": 1, "permanent": 1, "temporary": 0, "other": 0} }`.
+
 #### `GET /api/v3/integration/index.php`
 Lists active integrations (Razorpay, Cashfree, PhonePe, Google Ads, SMTP, Webhooks).
 
