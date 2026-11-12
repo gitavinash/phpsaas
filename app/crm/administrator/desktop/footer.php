@@ -16,55 +16,7 @@
 			<script src="<?php echo PLUGIN_LIBRARY ?>select2/js/select2.min.js" type="text/javascript"></script>
 			<script src="<?php echo ADMIN_JS_LIBRARY ?>script.min.js"></script>
 			<script src="<?php echo APP_JS_LIBRARY ?>app.min.js"></script>
-			<script>
-				(function() {
-					var body = document.body;
-					var toggleBtn = document.getElementById('nav-toggle');
-					var overlay = document.getElementById('nav-overlay');
-					var mediaQuery = window.matchMedia('(max-width: 1024px)');
-
-					function closeMobileNav() {
-						body.classList.remove('sidebar-open');
-					}
-
-					if (toggleBtn && !toggleBtn.dataset.navToggleBound) {
-						toggleBtn.dataset.navToggleBound = '1';
-						toggleBtn.addEventListener('click', function() {
-							if (!mediaQuery.matches) {
-								return;
-							}
-							body.classList.toggle('sidebar-open');
-						});
-
-						if (overlay) {
-							overlay.addEventListener('click', closeMobileNav);
-						}
-
-						window.addEventListener('resize', function() {
-							if (!mediaQuery.matches) {
-								closeMobileNav();
-							}
-						});
-
-						document.addEventListener('keydown', function(event) {
-							if (event.key === 'Escape') {
-								closeMobileNav();
-							}
-						});
-
-						document.addEventListener('click', function(event) {
-							if (!mediaQuery.matches) {
-								return;
-							}
-							var insideSidebar = event.target.closest('aside');
-							var clickedToggle = event.target.closest('#nav-toggle');
-							if (!insideSidebar && !clickedToggle && body.classList.contains('sidebar-open')) {
-								closeMobileNav();
-							}
-						});
-					}
-				})();
-			</script>
+			<script src="/lib/resource/ui/js/app/crm/crm-responsive.js?v=<?php echo @filemtime(ROOT . '/lib/resource/ui/js/app/crm/crm-responsive.js') ?: 1; ?>"></script>
 
 			<?php
 
@@ -120,7 +72,7 @@
 							var attrOrderCol = parseInt($table.attr('data-default-order-column'), 10);
 							var attrOrderDir = (($table.attr('data-default-order-dir') || 'asc').toLowerCase() === 'desc') ? 'desc' : 'asc';
 							var pageLength = parseInt($table.attr('data-page-length'), 10);
-							var isModernList = $table.closest('.modern-user-list, .modern-customer-list, .modern-company-list, .modern-vendor-list, .modern-user-sessions').length > 0;
+							var isModernList = $table.closest('.modern-user-list, .modern-customer-list, .modern-company-list, .modern-vendor-list, .modern-user-sessions, .crm-list-panel').length > 0;
 
 							var tableOptions = {
 								autoWidth: false

@@ -1,3 +1,4 @@
+<div class="crm-lead-ui">
 <h2>Add new <?php echo rtrim(ltrim(ADMIN_BASE_URL, '/'), '/'); ?></h2>
 
 <div class="form-box">
@@ -136,4 +137,5 @@
             </div>
         </div>
     </form>
+</div>
 </div>

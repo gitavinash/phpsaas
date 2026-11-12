@@ -1229,18 +1229,18 @@ $_formTarget = rtrim($_formTarget, '?&');
                                     list($sText, $sClass) = egOrderLabel($ord['order_status']);
                             ?>
                             <tr>
-                                <td><a href="order/?type=view&amp;id=<?php echo base64_encode($ord['order_id']); ?>"
+                                <td data-label="Order"><a href="order/?type=view&amp;id=<?php echo base64_encode($ord['order_id']); ?>"
                                         class="oid">#<?php echo (int)$ord['order_id']; ?></a></td>
-                                <td>
+                                <td data-label="Customer">
                                     <div class="cust-name"><?php echo htmlspecialchars($ord['profile_display_name']); ?>
                                     </div>
                                     <div class="cust-ph"><?php echo htmlspecialchars($ord['address_mobile']); ?></div>
                                 </td>
-                                <td class="amt-cell">
+                                <td data-label="Amount" class="amt-cell">
                                     <?php echo htmlspecialchars($_dashCur) . number_format((float)$ord['order_total_price'], 2); ?>
                                 </td>
-                                <td><span class="chip chip-<?php echo $sClass; ?>"><?php echo $sText; ?></span></td>
-                                <td class="time-cell">
+                                <td data-label="Status"><span class="chip chip-<?php echo $sClass; ?>"><?php echo $sText; ?></span></td>
+                                <td data-label="Date" class="time-cell">
                                     <?php echo date('d M, h:i A', strtotime($ord['order_generate'])); ?>
                                 </td>
                             </tr>
@@ -1315,7 +1315,7 @@ $_formTarget = rtrim($_formTarget, '?&');
                                         $isLive = (int)$pr['link_status'] === 200;
                                 ?>
                                 <tr>
-                                    <td>
+                                    <td data-label="Product">
                                         <div class="prod-cell">
                                             <img src="<?php echo htmlspecialchars($img); ?>" class="prod-img" alt="">
                                             <div>
@@ -1328,10 +1328,10 @@ $_formTarget = rtrim($_formTarget, '?&');
                                             </div>
                                         </div>
                                     </td>
-                                    <td style="font-size:12px;font-weight:600;white-space:nowrap;">
+                                    <td data-label="Price" style="font-size:12px;font-weight:600;white-space:nowrap;">
                                         <?php echo htmlspecialchars($pr['inventory_currency_symbol']); ?><?php echo number_format((float)$pr['inventory_price'], 2); ?>
                                     </td>
-                                    <td><span
+                                    <td data-label="Status"><span
                                             class="chip <?php echo $isLive ? 'chip-live' : 'chip-draft'; ?>"><?php echo $isLive ? 'Live' : 'Draft'; ?></span>
                                     </td>
                                 </tr>
@@ -1408,6 +1408,7 @@ $_formTarget = rtrim($_formTarget, '?&');
                                 <span class="qa-meta">Manage customer accounts</span>
                             </span>
                         </a>
+                        <?php if (!defined('USER_TYPE') || USER_TYPE === 'administrator') { ?>
                         <a href="user/?type=list&amp;status=all" class="qa-a">
                             <span class="qa-icon">
                                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -1423,6 +1424,7 @@ $_formTarget = rtrim($_formTarget, '?&');
                                 <span class="qa-meta">Open internal user list</span>
                             </span>
                         </a>
+                        <?php } ?>
                         <a href="order/?type=list&amp;status=all" class="qa-a">
                             <span class="qa-icon">
                                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"

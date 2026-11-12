@@ -238,6 +238,7 @@ $orderStatus = (($orderStatus == 'all') ? '' : "AND order_status='{$orderStatus}
             <div class="right-box"></div>
         </div>
 
+        <div class="crm-dt-scroll">
         <table id="table">
             <thead>
                 <tr>
@@ -246,7 +247,7 @@ $orderStatus = (($orderStatus == 'all') ? '' : "AND order_status='{$orderStatus}
                     <th>Customer</th>
                     <th style="width: 150px">Mobile</th>
                     <th style="width: 120px">Status</th>
-                    <th style="width: 120px"></th>
+                    <th style="width: 120px">Action</th>
                 </tr>
             </thead>
             <tbody>
@@ -281,9 +282,9 @@ $orderStatus = (($orderStatus == 'all') ? '' : "AND order_status='{$orderStatus}
                             }
                 ?>
                 <tr>
-                    <td><?php echo $i; ?></td>
-                    <td>OD<?php echo (int)$order_id; ?></td>
-                    <td>
+                    <td data-label="#"><?php echo $i; ?></td>
+                    <td data-label="Order">OD<?php echo (int)$order_id; ?></td>
+                    <td data-label="Customer">
                         <div class="cust-cell">
                             <span class="cust-avatar"><?php echo htmlspecialchars($initials); ?></span>
                             <div>
@@ -293,12 +294,12 @@ $orderStatus = (($orderStatus == 'all') ? '' : "AND order_status='{$orderStatus}
                             </div>
                         </div>
                     </td>
-                    <td>
+                    <td data-label="Mobile">
                         <a class="cust-name"
                             href="customer/?type=profile&id=<?php echo base64_encode($profile_user_id); ?>"><?php echo htmlspecialchars($profile_mobile); ?></a>
                     </td>
-                    <td><span class="status-chip <?php echo $statusClass; ?>"><?php echo $statusLabel; ?></span></td>
-                    <td>
+                    <td data-label="Status"><span class="status-chip <?php echo $statusClass; ?>"><?php echo $statusLabel; ?></span></td>
+                    <td data-label="Action">
                         <a href="customer/?type=profile&id=<?php echo base64_encode($profile_user_id); ?>"
                             class="view-profile-btn"><i class="fas fa-eye"></i> View</a>
                     </td>
@@ -315,5 +316,6 @@ $orderStatus = (($orderStatus == 'all') ? '' : "AND order_status='{$orderStatus}
                 ?>
             </tbody>
         </table>
+        </div>
     </div>
 </div>

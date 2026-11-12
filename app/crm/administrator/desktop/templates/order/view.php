@@ -478,6 +478,10 @@ if (isset($id)) {
                             position: static;
                         }
 
+                        .order-action-row {
+                            width: 100%;
+                        }
+
                         .order-action-row .btn {
                             width: 100%;
                             margin-right: 0;

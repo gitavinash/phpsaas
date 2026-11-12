@@ -1,0 +1,1357 @@
+/* ==========================================================================
+   CRM Responsive Layout, Navigation Drawer, Tables & Forms
+   Targets Mobile (320px-680px), Tablet (681px-1024px) & Coarse Touch Devices
+   while preserving Desktop (>1024px) layout.
+   ========================================================================== */
+
+:root {
+  --crm-resp-header-h: 62px;
+  --crm-resp-border: #e2e8f0;
+  --crm-resp-surface: #ffffff;
+  --crm-resp-soft: #f8fafc;
+  --crm-resp-text: #0f172a;
+  --crm-resp-muted: #64748b;
+  --crm-resp-accent: #1d4ed8;
+}
+
+/* Global box-sizing and horizontal overflow guard */
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body.premium-admin {
+  overflow-x: clip;
+}
+
+body.premium-admin.crm-nav-locked {
+  overflow: hidden;
+  touch-action: none;
+}
+
+body.premium-admin *,
+body.premium-admin *::before,
+body.premium-admin *::after {
+  box-sizing: border-box;
+}
+
+body.premium-admin main,
+body.premium-admin main .container {
+  max-width: 100%;
+  min-width: 0;
+  overflow-x: clip;
+}
+
+/* Clear legacy floats cleanly inside main container */
+body.premium-admin main .container::after,
+body.premium-admin .form-box::after,
+body.premium-admin .form-box form::after,
+body.premium-admin .options-bar::after,
+body.premium-admin .box-1::after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+/* Accessible focus ring for new CRM interactive controls */
+body.premium-admin .nav-toggle:focus-visible,
+body.premium-admin .crm-drawer-close:focus-visible,
+body.premium-admin .crm-submenu-toggle:focus-visible,
+body.premium-admin .right-side > ul > li > a:focus-visible {
+  outline: 2px solid #2563eb;
+  outline-offset: 2px;
+}
+
+/* Drawer header strip (shown inside drawer on tablet/mobile only) */
+.crm-drawer-top {
+  display: none;
+}
+
+/* Submenu accordion toggle button inside nav items */
+body.premium-admin nav.side-nav > ul > li {
+  position: relative;
+}
+
+.crm-submenu-toggle {
+  display: none;
+}
+
+/* Profile dropdown click/tap open support alongside hover/focus-within */
+body.premium-admin .right-side > ul > li.is-open > ul {
+  display: block;
+}
+
+/* Responsive DataTables scroll wrapper */
+.crm-dt-scroll {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: visible;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+  border-radius: 12px;
+}
+
+/* Consistent list panel card for subscription/legacy list templates */
+.crm-list-panel {
+  background: var(--crm-resp-surface);
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06);
+  padding: 16px;
+  margin-top: 8px;
+}
+
+.crm-list-panel h2 {
+  margin: 0 0 12px;
+  font-size: clamp(1.2rem, 2vw, 1.5rem);
+  font-weight: 700;
+  color: #111827;
+  letter-spacing: -0.02em;
+}
+
+/* Order view base desktop fix: action row spans full grid below box-1 columns */
+.order-info-ui .order-action-row {
+  width: 100%;
+}
+
+/* Subscription view base layout & cards (matches order view across desktop/tablet/mobile) */
+.crm-subscription-view {
+  background: #f8fafc;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06);
+  padding: 16px;
+  color: #111827;
+}
+
+.crm-subscription-view .order-info-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.crm-subscription-view .order-info-head h2 {
+  margin: 0;
+  color: #0f172a;
+  letter-spacing: -0.02em;
+  font-weight: 700;
+  font-size: clamp(1.2rem, 2vw, 1.375rem);
+}
+
+.crm-subscription-view .order-info-subtitle {
+  margin: 5px 0 0;
+  color: #6b7280;
+  font-size: 13px;
+}
+
+.crm-subscription-view .order-info-shell {
+  background: transparent;
+  border-radius: 12px;
+  padding: 0;
+  border: 0;
+}
+
+.crm-subscription-view .box-1 {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr;
+  gap: 12px;
+  float: none;
+  width: 100%;
+}
+
+.crm-subscription-view .box-1 > .box-2 {
+  min-width: 0;
+  width: auto;
+  float: none;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 14px;
+  box-shadow: none;
+}
+
+.crm-subscription-view .order-summary-sticky {
+  position: sticky;
+  top: 16px;
+  align-self: start;
+}
+
+.crm-subscription-view .order-section-title {
+  margin: 14px 0 10px;
+  color: #111827;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.crm-subscription-view .order-item-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 150px;
+  gap: 10px;
+  margin-bottom: 10px;
+  padding: 10px;
+  border-radius: 10px;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+}
+
+.crm-subscription-view .order-item-row .form-group {
+  margin-bottom: 0;
+}
+
+.crm-subscription-view .order-customer-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.crm-subscription-view .order-customer-grid .form-group {
+  margin-bottom: 0;
+}
+
+.crm-subscription-view .form-group {
+  float: none;
+  margin-bottom: 12px;
+}
+
+.crm-subscription-view .form-group label {
+  display: block;
+  float: none;
+  margin-bottom: 6px;
+  color: #6b7280;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.crm-subscription-view .inside-shadow,
+.crm-subscription-view .form-control {
+  float: none;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  box-shadow: none;
+  min-height: 40px;
+}
+
+.crm-subscription-view .order-summary-image {
+  width: 100%;
+  max-width: 230px;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+  margin-bottom: 14px;
+  background: #f3f4f6;
+}
+
+.crm-subscription-view .order-action-row {
+  grid-column: 1 / -1;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 12px;
+  margin-top: 4px;
+  width: 100%;
+}
+
+.crm-subscription-view .order-action-row .btn {
+  margin-right: 8px;
+  margin-bottom: 8px;
+  border-radius: 8px;
+  min-width: 110px;
+  text-align: center;
+  box-shadow: none;
+}
+
+.crm-subscription-view .order-action-row .btn-green {
+  background: #ecfdf5;
+  border: 1px solid #bbf7d0;
+}
+
+.crm-subscription-view .order-action-row .btn-yellow {
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+}
+
+.crm-subscription-view .order-action-row .btn-red {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+}
+
+/* Legacy form-box base responsive safety for 1025px-1280px laptops & large tablets */
+body.premium-admin .form-box {
+  float: none;
+  width: 100%;
+}
+
+body.premium-admin .form-box form {
+  float: none;
+  width: 100%;
+}
+
+@media (min-width: 992px) {
+  body.premium-admin .crm-lead-ui .form-box form {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 18px;
+  }
+
+  body.premium-admin .crm-lead-ui .form-box .left-box {
+    float: none;
+    flex: 1 1 0%;
+    width: auto;
+    min-width: 0;
+    padding-right: 0;
+  }
+
+  body.premium-admin .crm-lead-ui .form-box .right-box {
+    float: none;
+    flex: 0 0 260px;
+    width: 260px;
+  }
+}
+
+/* Modern options-bar flex layout */
+body.premium-admin .options-bar {
+  float: none;
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+body.premium-admin .options-bar .left-box,
+body.premium-admin .options-bar .right-box {
+  float: none;
+  width: auto;
+  max-width: 100%;
+}
+
+body.premium-admin .options-bar .left-box form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Dashboard (#egDash) grid overflow prevention & chart safety */
+#egDash {
+  float: none;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+}
+
+#egDash .chart-row > *,
+#egDash .bottom-row > *,
+#egDash .right-col,
+#egDash .dc,
+#egDash .kpi-card {
+  min-width: 0;
+}
+
+#egDash .panel-title {
+  white-space: normal;
+}
+
+#egDash .table-wrap {
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+}
+
+/* Order list container query refinement for tablet & narrow desktop */
+@container (width < 820px) {
+  .crm-orders-table,
+  .crm-orders-table caption,
+  .crm-orders-table thead,
+  .crm-orders-table tbody,
+  .crm-orders-table tr,
+  .crm-orders-table th,
+  .crm-orders-table td {
+    display: block;
+    width: 100%;
+  }
+
+  .crm-orders-table thead {
+    display: none;
+  }
+
+  .crm-orders-table tbody tr.crm-order-row {
+    margin-block-end: 12px;
+    border: 1px solid var(--crm-border);
+    border-radius: 10px;
+    background: var(--crm-bg);
+    padding: 8px;
+  }
+
+  .crm-orders-table tbody tr.crm-order-row.is-expanded {
+    margin-block-end: 0;
+    border-end-start-radius: 0;
+    border-end-end-radius: 0;
+    border-color: #bfdbfe;
+    border-block-end: 0;
+  }
+
+  .crm-orders-table tbody tr.crm-detail-row {
+    margin-block-end: 12px;
+    border: 1px solid #bfdbfe;
+    border-block-start: 0;
+    border-start-start-radius: 0;
+    border-start-end-radius: 0;
+    border-end-start-radius: 10px;
+    border-end-end-radius: 10px;
+    background: var(--crm-surface-soft);
+    overflow: hidden;
+  }
+
+  .crm-orders-table tbody tr.crm-detail-row td.crm-detail-cell {
+    border-block-end: 0;
+    padding: 0;
+  }
+
+  .crm-orders-table tbody th,
+  .crm-orders-table tbody td {
+    border-block-end: 1px solid #f1f5f9;
+    padding: 8px 6px;
+    text-align: start !important;
+  }
+
+  .crm-orders-table tbody th[scope="row"] {
+    background: var(--crm-surface-soft);
+    border-radius: 6px;
+  }
+
+  .crm-orders-table tbody td.crm-action-cell {
+    border-block-end: 0;
+    padding-inline-end: 6px;
+  }
+
+  .crm-action-group {
+    display: flex;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .crm-orders-table tbody th[scope="row"]::before,
+  .crm-orders-table tbody td:not(.crm-empty-cell):not(.crm-detail-cell)::before {
+    display: block;
+    font-size: 0.7rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--crm-muted);
+    margin-block-end: 4px;
+  }
+
+  .crm-orders-table tbody th[scope="row"]::before { content: var(--crm-col-1) ": "; }
+  .crm-orders-table tbody td:nth-child(2):not(.crm-empty-cell):not(.crm-detail-cell)::before { content: var(--crm-col-2) ": "; }
+  .crm-orders-table tbody td:nth-child(3):not(.crm-empty-cell):not(.crm-detail-cell)::before { content: var(--crm-col-3) ": "; }
+  .crm-orders-table tbody td:nth-child(4):not(.crm-empty-cell):not(.crm-detail-cell)::before { content: var(--crm-col-4) ": "; }
+  .crm-orders-table tbody td:nth-child(5):not(.crm-empty-cell):not(.crm-detail-cell)::before { content: var(--crm-col-5) ": "; }
+  .crm-orders-table tbody td:nth-child(6):not(.crm-empty-cell):not(.crm-detail-cell)::before { content: var(--crm-col-6) ": "; }
+  .crm-orders-table tbody td:nth-child(7):not(.crm-empty-cell):not(.crm-detail-cell)::before { content: var(--crm-col-7) ": "; }
+}
+
+/* ==========================================================================
+   Touch Devices (coarse pointer / hover: none — covers iPads & large tablets)
+   ========================================================================== */
+@media (hover: none), (pointer: coarse) {
+  body.premium-admin .nav-toggle,
+  body.premium-admin .crm-drawer-close {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  body.premium-admin nav.side-nav > ul > li.has-submenu > a {
+    padding-right: 48px !important;
+  }
+
+  body.premium-admin .crm-submenu-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 2px;
+    right: 4px;
+    width: 40px;
+    height: 40px;
+    border: 0;
+    border-radius: 8px;
+    background: transparent;
+    color: rgba(255, 255, 255, 0.82);
+    cursor: pointer;
+    z-index: 2;
+    transition: transform 0.18s ease, background-color 0.15s ease;
+  }
+
+  body.premium-admin nav.side-nav > ul > li.is-submenu-open > .crm-submenu-toggle {
+    transform: rotate(180deg);
+    background: rgba(255, 255, 255, 0.12);
+  }
+
+  /* Prevent unreachable hover flyouts on coarse touch tablets >1024px */
+  body.premium-admin nav.side-nav ul li:hover > .side-menu ul {
+    display: none;
+  }
+
+  body.premium-admin nav.side-nav ul li.is-submenu-open > .bottom-menu ul,
+  body.premium-admin nav.side-nav ul li.is-submenu-open > .side-menu ul {
+    display: block !important;
+    position: static !important;
+    left: auto !important;
+    width: 100% !important;
+    margin: 4px 0 6px !important;
+    padding: 4px 0 !important;
+    background: rgba(15, 23, 42, 0.25) !important;
+    border-radius: 8px;
+    box-shadow: none !important;
+  }
+
+  body.premium-admin nav.side-nav ul li.is-submenu-open > .side-menu ul::after {
+    display: none !important;
+  }
+
+  body.premium-admin nav.side-nav ul li > .bottom-menu ul li a,
+  body.premium-admin nav.side-nav ul li > .side-menu ul li a {
+    min-height: 44px;
+    padding: 10px 12px 10px 34px !important;
+    display: flex !important;
+    align-items: center;
+  }
+
+  /* Coarse touch targets across dashboard, order view & lists */
+  #egDash .dh-btn,
+  #egDash .df-preset,
+  #egDash .df-apply,
+  #egDash .df-date,
+  body.premium-admin .options-bar .form-control,
+  body.premium-admin .options-bar .btn,
+  .order-info-ui .order-collapse-toggle,
+  .order-info-ui .form-control,
+  .order-info-ui .btn,
+  .crm-lead-ui .form-control,
+  .crm-lead-ui .btn {
+    min-height: 44px;
+  }
+}
+
+/* ==========================================================================
+   Tablet & Mobile Breakpoint (<= 1024px)
+   ========================================================================== */
+@media (max-width: 1024px) {
+  :root {
+    --crm-resp-header-h: 56px;
+  }
+
+  body.premium-admin header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    height: 56px;
+    padding: 0 max(12px, env(safe-area-inset-right)) 0 max(12px, env(safe-area-inset-left));
+  }
+
+  body.premium-admin header .left-side,
+  body.premium-admin header .right-side {
+    float: none !important;
+    margin-right: 0 !important;
+    height: 56px;
+    min-width: 0;
+  }
+
+  body.premium-admin header .left-side {
+    flex: 1 1 auto;
+  }
+
+  body.premium-admin header .left-side ul,
+  body.premium-admin header .right-side > ul {
+    height: 56px;
+  }
+
+  body.premium-admin header .logo {
+    max-width: min(170px, 46vw);
+  }
+
+  body.premium-admin header img {
+    height: 30px;
+    max-width: 100%;
+  }
+
+  body.premium-admin .nav-toggle {
+    display: inline-flex !important;
+    min-width: 44px;
+    min-height: 44px;
+    border-radius: 10px;
+  }
+
+  body.premium-admin .right-side > ul > li > a {
+    min-height: 44px;
+    max-width: 240px;
+    padding: 4px 8px;
+    gap: 8px;
+  }
+
+  body.premium-admin .right-side > ul > li > a strong {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 120px;
+    display: inline-block;
+  }
+
+  body.premium-admin .right-side > ul > li.is-open > ul,
+  body.premium-admin .right-side > ul > li:focus-within > ul {
+    display: block;
+    top: 48px;
+    right: 0;
+    width: 185px;
+    z-index: 1200;
+  }
+
+  body.premium-admin .right-side > ul > li > ul li a {
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* Slide-out Drawer: full height, svh-safe, contained overscroll */
+  body.premium-admin aside {
+    position: fixed;
+    top: 56px;
+    left: 0;
+    width: min(300px, 85vw);
+    height: calc(100vh - 56px) !important;
+    height: calc(100svh - 56px) !important;
+    padding: 12px 10px max(28px, env(safe-area-inset-bottom)) max(10px, env(safe-area-inset-left));
+    transform: translateX(-104%);
+    transition: transform 0.24s cubic-bezier(0.22, 1, 0.36, 1), visibility 0.24s;
+    overflow-y: auto;
+    overflow-x: hidden;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    z-index: 1050;
+    visibility: hidden;
+  }
+
+  body.premium-admin.sidebar-open aside {
+    transform: translateX(0);
+    visibility: visible;
+  }
+
+  body.premium-admin .mobile-nav-overlay {
+    inset: 56px 0 0 0;
+    z-index: 1040;
+    background: rgba(15, 23, 42, 0.45);
+    backdrop-filter: blur(2px);
+    touch-action: none;
+  }
+
+  body.premium-admin.sidebar-open .mobile-nav-overlay {
+    display: block;
+  }
+
+  /* Fix admin_new.css 220px tablet truncation bug */
+  body.premium-admin nav.side-nav {
+    height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+  }
+
+  .crm-drawer-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 2px 4px 10px;
+    margin-bottom: 8px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+  }
+
+  .crm-drawer-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: rgba(255, 255, 255, 0.72);
+  }
+
+  .crm-drawer-close {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.08);
+    color: #ffffff;
+    cursor: pointer;
+    font-size: 15px;
+  }
+
+  body.premium-admin nav.side-nav > ul > li.has-submenu > a {
+    padding-right: 48px !important;
+  }
+
+  body.premium-admin nav.side-nav > ul > li > a {
+    min-height: 46px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 11px 12px;
+    border-radius: 10px;
+  }
+
+  body.premium-admin nav.side-nav ul li.active::after {
+    display: none;
+  }
+
+  body.premium-admin .crm-submenu-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 3px;
+    right: 4px;
+    width: 40px;
+    height: 40px;
+    border: 0;
+    border-radius: 8px;
+    background: transparent;
+    color: rgba(255, 255, 255, 0.85);
+    cursor: pointer;
+    z-index: 2;
+    transition: transform 0.18s ease, background-color 0.15s ease;
+  }
+
+  body.premium-admin nav.side-nav > ul > li.is-submenu-open > .crm-submenu-toggle {
+    transform: rotate(180deg);
+    background: rgba(255, 255, 255, 0.14);
+  }
+
+  /* Inline collapsible submenus inside drawer (never hover flyouts) */
+  body.premium-admin nav.side-nav ul li > .side-menu ul,
+  body.premium-admin nav.side-nav ul li:hover > .side-menu ul,
+  body.premium-admin nav.side-nav ul li:active > .side-menu ul {
+    display: none;
+    position: static;
+    left: auto;
+    width: 100%;
+    box-shadow: none;
+  }
+
+  body.premium-admin nav.side-nav ul li > .bottom-menu ul {
+    display: none;
+  }
+
+  body.premium-admin nav.side-nav ul li.is-submenu-open > .bottom-menu ul,
+  body.premium-admin nav.side-nav ul li.is-submenu-open > .side-menu ul {
+    display: block;
+    position: static;
+    width: 100%;
+    margin: 4px 0 8px;
+    padding: 4px;
+    background: rgba(15, 23, 42, 0.24);
+    border-radius: 8px;
+  }
+
+  body.premium-admin nav.side-nav ul li > .bottom-menu ul li a,
+  body.premium-admin nav.side-nav ul li > .side-menu ul li a {
+    min-height: 42px;
+    padding: 9px 10px 9px 34px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-radius: 7px;
+  }
+
+  body.premium-admin main {
+    margin-left: 0 !important;
+    padding: 68px max(12px, env(safe-area-inset-right)) max(16px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left));
+  }
+
+  body.premium-admin main .container {
+    padding: 14px;
+  }
+
+  /* Legacy forms stack cleanly on tablet portrait & smaller */
+  body.premium-admin .form-box .left-box,
+  body.premium-admin .form-box .right-box {
+    float: none;
+    width: 100%;
+    padding-right: 0;
+  }
+
+  body.premium-admin .form-box .right-box {
+    margin-top: 14px;
+  }
+}
+
+/* ==========================================================================
+   Order View Tablet / Mobile Refinements (<= 991px)
+   ========================================================================== */
+@media (max-width: 991px) {
+  body.premium-admin .order-info-ui .order-overview,
+  body.premium-admin .order-info-ui .order-item-row,
+  body.premium-admin .order-info-ui .order-customer-grid,
+  body.premium-admin .order-info-ui .box-1 {
+    grid-template-columns: 1fr;
+  }
+
+  body.premium-admin .order-info-ui .order-metric-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  body.premium-admin .order-info-ui .order-summary-sticky {
+    position: static;
+  }
+
+  body.premium-admin .order-info-ui .order-action-row {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(135px, 1fr));
+    gap: 8px;
+  }
+
+  body.premium-admin .order-info-ui .order-action-row .btn {
+    width: 100%;
+    margin: 0;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  body.premium-admin .order-info-ui .order-summary-image {
+    max-width: 100%;
+    width: min(260px, 100%);
+    height: auto;
+    aspect-ratio: 4 / 3;
+  }
+
+  /* Customer profile 2-col tablet KPI grid before full stack */
+  body.premium-admin .modern-customer-profile .cp-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  body.premium-admin .modern-customer-profile .cp-sections {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ==========================================================================
+   Small Tablet & Large Phone (<= 768px)
+   ========================================================================== */
+@media (max-width: 768px) {
+  /* Stack legacy .box-2/.box-3/.box-4 inside forms */
+  body.premium-admin .form-box .box-2,
+  body.premium-admin .form-box .box-3,
+  body.premium-admin .form-box .box-4 {
+    float: none;
+    width: 100%;
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  /* Dashboard filter bar: fluid custom date inputs */
+  body.premium-admin #egDash .df-bar {
+    padding: 12px;
+    gap: 10px;
+  }
+
+  body.premium-admin #egDash .df-label {
+    width: 100%;
+    margin-bottom: -4px;
+  }
+
+  body.premium-admin #egDash .df-presets {
+    width: 100%;
+  }
+
+  body.premium-admin #egDash .df-divider {
+    display: none;
+  }
+
+  body.premium-admin #egDash .df-custom {
+    width: 100%;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    gap: 8px;
+    align-items: center;
+  }
+
+  body.premium-admin #egDash .df-date {
+    width: 100%;
+    min-width: 0;
+    min-height: 40px;
+  }
+
+  body.premium-admin #egDash .df-apply {
+    grid-column: 1 / -1;
+    width: 100%;
+    min-height: 42px;
+  }
+
+  body.premium-admin #egDash .df-active-badge {
+    margin-left: 0;
+  }
+
+  body.premium-admin #egDash .chart-wrap {
+    height: 210px;
+  }
+
+  body.premium-admin #egDash .chart-wrap-sm {
+    height: 200px;
+  }
+
+  /* Prevent iOS Safari zoom on input focus while maintaining compact UI */
+  body.premium-admin .form-control,
+  body.premium-admin .options-bar select,
+  body.premium-admin .options-bar input,
+  body.premium-admin .nav-search-input input,
+  body.premium-admin #egDash .df-date,
+  body.premium-admin .crm-lead-ui input,
+  body.premium-admin .crm-lead-ui select,
+  body.premium-admin .crm-lead-ui textarea {
+    font-size: max(1rem, 16px);
+  }
+
+  /* Responsive DataTables / Table Stacked Card Transformation */
+  .crm-dt-scroll {
+    overflow-x: visible;
+  }
+
+  .modern-customer-list #table,
+  .crm-list-panel #table,
+  .modern-customer-list table.dataTable,
+  .crm-list-panel table.dataTable {
+    border: 0 !important;
+    background: transparent !important;
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  .modern-customer-list #table thead,
+  .crm-list-panel #table thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .modern-customer-list #table tbody,
+  .crm-list-panel #table tbody,
+  .modern-customer-list #table tr,
+  .crm-list-panel #table tr {
+    display: block;
+    width: 100%;
+  }
+
+  .modern-customer-list #table tbody tr,
+  .crm-list-panel #table tbody tr {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 8px 12px;
+    margin-bottom: 12px;
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+  }
+
+  .modern-customer-list #table tbody tr:last-child,
+  .crm-list-panel #table tbody tr:last-child {
+    margin-bottom: 0;
+  }
+
+  .modern-customer-list #table tbody td,
+  .crm-list-panel #table tbody td {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    width: 100% !important;
+    padding: 8px 0 !important;
+    border-bottom: 1px solid #f1f5f9 !important;
+    text-align: right;
+    min-width: 0;
+    word-break: break-word;
+  }
+
+  .modern-customer-list #table tbody td:last-child,
+  .crm-list-panel #table tbody td:last-child {
+    border-bottom: 0 !important;
+    padding-top: 10px !important;
+    justify-content: flex-end;
+  }
+
+  .modern-customer-list #table tbody td[data-label]::before,
+  .crm-list-panel #table tbody td[data-label]::before {
+    content: attr(data-label);
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #64748b;
+    text-align: left;
+    flex-shrink: 0;
+  }
+
+  .modern-customer-list #table tbody td.dataTables_empty,
+  .crm-list-panel #table tbody td.dataTables_empty,
+  .modern-customer-list #table tbody td[colspan],
+  .crm-list-panel #table tbody td[colspan] {
+    display: block;
+    text-align: center;
+    justify-content: center;
+    border-bottom: 0 !important;
+  }
+
+  .modern-customer-list #table tbody td.dataTables_empty::before,
+  .crm-list-panel #table tbody td.dataTables_empty::before,
+  .modern-customer-list #table tbody td[colspan]::before,
+  .crm-list-panel #table tbody td[colspan]::before {
+    display: none;
+  }
+
+  .modern-customer-list .cust-cell {
+    text-align: left;
+  }
+
+  .modern-customer-list .view-profile-btn,
+  .crm-list-panel .btn-blue {
+    min-height: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+
+  body.premium-admin .container .dataTables_wrapper .dataTables_length select,
+  body.premium-admin .container .dataTables_wrapper .dataTables_filter input {
+    min-height: 40px;
+  }
+
+  body.premium-admin .container .dataTables_wrapper .dataTables_paginate {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+
+  body.premium-admin .container .dataTables_wrapper .dataTables_paginate .paginate_button {
+    min-width: 38px;
+    min-height: 38px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+/* ==========================================================================
+   Mobile Phones (<= 680px)
+   ========================================================================== */
+@media (max-width: 680px) {
+  :root {
+    --crm-resp-header-h: 52px;
+  }
+
+  body.premium-admin header,
+  body.premium-admin header .left-side,
+  body.premium-admin header .right-side,
+  body.premium-admin header .left-side ul,
+  body.premium-admin header .right-side > ul {
+    height: 52px;
+  }
+
+  body.premium-admin .right-side > ul > li > a {
+    min-width: 44px;
+    min-height: 44px;
+    justify-content: center;
+  }
+
+  body.premium-admin aside {
+    top: 52px;
+    height: calc(100vh - 52px) !important;
+    height: calc(100svh - 52px) !important;
+  }
+
+  body.premium-admin .mobile-nav-overlay {
+    inset: 52px 0 0 0;
+  }
+
+  body.premium-admin main {
+    padding: 60px max(8px, env(safe-area-inset-right)) max(14px, env(safe-area-inset-bottom)) max(8px, env(safe-area-inset-left));
+  }
+
+  body.premium-admin main .container {
+    padding: 12px;
+  }
+
+  body.premium-admin .right-side > ul > li.is-open > ul,
+  body.premium-admin .right-side > ul > li:hover > ul,
+  body.premium-admin .right-side > ul > li:focus-within > ul {
+    position: fixed;
+    top: auto;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    border-radius: 16px 16px 0 0;
+    padding: 16px 12px max(20px, env(safe-area-inset-bottom));
+    box-shadow: 0 -6px 28px rgba(15, 23, 42, 0.16);
+    z-index: 1200;
+  }
+
+  body.premium-admin .right-side > ul > li.is-open > ul li,
+  body.premium-admin .right-side > ul > li:hover > ul li,
+  body.premium-admin .right-side > ul > li:focus-within > ul li {
+    width: 100%;
+  }
+
+  body.premium-admin .right-side > ul > li.is-open > ul li a,
+  body.premium-admin .right-side > ul > li > ul li a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 1;
+    padding: 14px 12px;
+    border-radius: 10px;
+    color: #0f172a;
+    background: #f8fafc;
+    margin-bottom: 6px;
+    min-height: 48px;
+  }
+
+  /* Customer profile stacks to 1 column cleanly on phones */
+  body.premium-admin .modern-customer-profile .cp-grid {
+    grid-template-columns: 1fr;
+  }
+
+  body.premium-admin .modern-customer-profile .cp-panel {
+    padding: 12px;
+  }
+
+  /* Order export column modal: 1-column checkboxes on narrow phones */
+  .crm-col-group-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Filter bar controls fill cleanly on narrow viewports */
+  body.premium-admin .options-bar .left-box,
+  body.premium-admin .options-bar .left-box form {
+    width: 100%;
+  }
+
+  body.premium-admin .options-bar .left-box select.form-control {
+    flex: 1 1 180px;
+    min-width: 0;
+    width: 100%;
+  }
+
+  body.premium-admin .options-bar .left-box input[type="submit"] {
+    min-height: 44px;
+    flex: 0 0 auto;
+  }
+}
+
+/* ==========================================================================
+   Compact / Small Phones (<= 560px)
+   ========================================================================== */
+@media (max-width: 560px) {
+  body.premium-admin #egDash .kpi-row {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  body.premium-admin #egDash .kpi-card {
+    padding: 16px;
+  }
+
+  body.premium-admin #egDash .kpi-value {
+    font-size: clamp(1.375rem, 6vw, 1.75rem);
+  }
+
+  body.premium-admin #egDash .dh-actions {
+    width: 100%;
+    flex-wrap: wrap;
+  }
+
+  body.premium-admin #egDash .dh-btn {
+    flex: 1 1 130px;
+    justify-content: center;
+    min-height: 42px;
+  }
+
+  body.premium-admin #egDash .df-custom {
+    grid-template-columns: 1fr;
+  }
+
+  body.premium-admin #egDash .df-sep {
+    display: none;
+  }
+
+  /* Dashboard .dt tables convert to readable compact cards on <=560px */
+  body.premium-admin #egDash .table-wrap {
+    overflow-x: visible;
+  }
+
+  body.premium-admin #egDash .dt {
+    min-width: 0 !important;
+    width: 100%;
+  }
+
+  body.premium-admin #egDash .dt thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  body.premium-admin #egDash .dt tbody,
+  body.premium-admin #egDash .dt tr {
+    display: block;
+    width: 100%;
+  }
+
+  body.premium-admin #egDash .dt tbody tr {
+    padding: 10px 12px;
+    border-bottom: 1px solid #eef2f7;
+  }
+
+  body.premium-admin #egDash .dt tbody td {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 5px 0;
+    border-bottom: 0;
+    text-align: right;
+  }
+
+  body.premium-admin #egDash .dt tbody td[data-label]::before {
+    content: attr(data-label);
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #9ca3af;
+    text-align: left;
+    flex-shrink: 0;
+  }
+
+  body.premium-admin #egDash .dt tbody td[colspan] {
+    display: block;
+    text-align: center;
+    justify-content: center;
+  }
+
+  body.premium-admin #egDash .dt tbody td[colspan]::before {
+    display: none;
+  }
+
+  body.premium-admin #egDash .prod-cell {
+    text-align: left;
+  }
+
+  body.premium-admin #egDash .top-item {
+    flex-wrap: wrap;
+  }
+
+  /* Order view metrics grid: 2-up/1-up on compact phones */
+  body.premium-admin .order-info-ui {
+    padding: 12px;
+  }
+
+  body.premium-admin .order-info-ui .order-metric-grid {
+    grid-template-columns: 1fr;
+  }
+
+  body.premium-admin .order-info-ui .order-action-row {
+    grid-template-columns: 1fr;
+  }
+
+  body.premium-admin .crm-order-header .crm-export-toolbar {
+    width: 100%;
+  }
+
+  body.premium-admin .crm-order-header .crm-export-group {
+    flex: 1 1 auto;
+  }
+
+  body.premium-admin .crm-order-header .crm-export-toolbar .crm-btn {
+    flex: 1 1 auto;
+  }
+}
+
+/* ==========================================================================
+   Extra Small Phones (<= 480px)
+   ========================================================================== */
+@media (max-width: 480px) {
+  :root {
+    --crm-resp-header-h: 50px;
+  }
+
+  body.premium-admin header,
+  body.premium-admin header .left-side,
+  body.premium-admin header .right-side,
+  body.premium-admin header .left-side ul,
+  body.premium-admin header .right-side > ul {
+    height: 50px;
+  }
+
+  body.premium-admin aside {
+    top: 50px;
+    height: calc(100vh - 50px) !important;
+    height: calc(100svh - 50px) !important;
+  }
+
+  body.premium-admin .mobile-nav-overlay {
+    inset: 50px 0 0 0;
+  }
+
+  .modern-customer-profile .cp-overview {
+    grid-template-columns: 56px minmax(0, 1fr);
+    gap: 12px;
+  }
+
+  .modern-customer-profile .cp-avatar {
+    width: 56px;
+    height: 56px;
+    font-size: 18px;
+  }
+
+  .modern-customer-profile .cp-name {
+    font-size: 17px;
+  }
+}
+
+/* Narrow Compact Phones (<= 380px) */
+@media (max-width: 380px) {
+  .crm-summary-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.premium-admin aside,
+  .crm-submenu-toggle,
+  .order-info-ui .order-collapse-body,
+  .order-info-ui .order-collapse-toggle-icon {
+    transition: none !important;
+  }
+}

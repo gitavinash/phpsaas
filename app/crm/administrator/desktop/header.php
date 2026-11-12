@@ -8,7 +8,7 @@ $postType = rtrim(ltrim(ADMIN_BASE_URL, '/'), '/');
     <base href="/dashboard/">
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <link rel="icon" href="<?php echo SITE_ICON ?>">
     <title>
         <?php echo str_replace('_', ' ', ucwords(((ADMIN_BASE_URL == '/') ? 'Dashboard' : str_replace('/', ' ', ADMIN_BASE_URL . ' ' . @$_GET['type'])) . ' | ' . SITE_NAME)); ?>
@@ -24,6 +24,7 @@ $postType = rtrim(ltrim(ADMIN_BASE_URL, '/'), '/');
     <?php if (defined('ADMIN_BASE_URL') && ADMIN_BASE_URL === '/order/') { ?>
         <link rel="stylesheet" type="text/css" href="/lib/resource/ui/css/app/crm/orders-list.css?v=<?php echo @filemtime(ROOT . '/lib/resource/ui/css/app/crm/orders-list.css') ?: 1; ?>">
     <?php } ?>
+    <link rel="stylesheet" type="text/css" href="/lib/resource/ui/css/app/crm/crm-responsive.css?v=<?php echo @filemtime(ROOT . '/lib/resource/ui/css/app/crm/crm-responsive.css') ?: 1; ?>">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap">
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap">
@@ -35,8 +36,8 @@ $postType = rtrim(ltrim(ADMIN_BASE_URL, '/'), '/');
         <div class="left-side">
             <ul>
                 <li>
-                    <button type="button" class="nav-toggle" id="nav-toggle" aria-label="Open navigation">
-                        <i class="fas fa-bars"></i>
+                    <button type="button" class="nav-toggle" id="nav-toggle" aria-expanded="false" aria-controls="crm-sidebar-aside" aria-label="Open navigation">
+                        <i class="fas fa-bars" aria-hidden="true"></i>
                     </button>
                     <div class="logo"><a href="/dashboard/"><img src="<?php echo SITE_LOGO ?>" alt=""></a></div>
                 </li>
@@ -58,7 +59,7 @@ $postType = rtrim(ltrim(ADMIN_BASE_URL, '/'), '/');
         </div>
     </header>
 
-    <aside>
+    <aside id="crm-sidebar-aside">
         <div class="nav-search-wrapper">
             <label for="side-nav-search">Quick Navigation</label>
             <div class="nav-search-input">
@@ -66,11 +67,10 @@ $postType = rtrim(ltrim(ADMIN_BASE_URL, '/'), '/');
                 <input type="text" id="side-nav-search" placeholder="Search dashboard menu">
             </div>
         </div>
-        <nav class="side-nav">
+        <nav class="side-nav" aria-label="Dashboard navigation">
             <ul>
                 <li <?php echo ((ADMIN_BASE_URL == '/') ? 'class="active"' : '') ?>><a href="/dashboard/"><i
                             class="fas fa-tachometer-alt"></i> Dashboard</a></li>
-                </li>
                 <li <?php echo ((ADMIN_BASE_URL == '/order/') ? 'class="active"' : '') ?>>
                     <a href="order/?type=list&status=all"><i class="fas fa-rupee-sign" aria-hidden="true"></i> Manage order</a>
                     <div class="side-menu">
@@ -176,45 +176,6 @@ $postType = rtrim(ltrim(ADMIN_BASE_URL, '/'), '/');
     </aside>
 
     <div class="mobile-nav-overlay" id="nav-overlay"></div>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            var menuSearch = document.getElementById('side-nav-search');
-            if (!menuSearch) {
-                return;
-            }
-
-            var menuRoot = document.querySelector('nav.side-nav > ul');
-            if (!menuRoot) {
-                return;
-            }
-
-            var menuItems = menuRoot.children;
-
-            menuSearch.addEventListener('input', function() {
-                var searchTerm = menuSearch.value.toLowerCase().trim();
-
-                for (var i = 0; i < menuItems.length; i++) {
-                    var item = menuItems[i];
-                    var topAnchor = item.firstElementChild;
-
-                    if (!topAnchor || topAnchor.tagName !== 'A') {
-                        continue;
-                    }
-
-                    var searchableText = topAnchor.textContent.toLowerCase();
-                    var subLinks = item.querySelectorAll('.side-menu a, .bottom-menu a');
-
-                    for (var j = 0; j < subLinks.length; j++) {
-                        searchableText += ' ' + subLinks[j].textContent.toLowerCase();
-                    }
-
-                    item.style.display = (searchTerm === '' || searchableText.indexOf(searchTerm) !== -1) ?
-                        '' : 'none';
-                }
-            });
-        });
-    </script>
 
     <main>
 
