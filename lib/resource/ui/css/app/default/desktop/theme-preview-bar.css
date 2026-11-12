@@ -1,0 +1,281 @@
+/* ==========================================================================
+   Website Theme Preview Highlight Frame & Floating Control Bar
+   Injected exclusively when ISW_THEME_PREVIEW_RENDERING is active.
+   ========================================================================== */
+
+#iswThemePreviewFrame {
+  position: fixed;
+  inset: 0;
+  z-index: 2147483640;
+  pointer-events: none;
+  box-shadow:
+    inset 0 0 0 4px #f59e0b,
+    inset 0 0 0 6px rgba(15, 23, 42, 0.25);
+  box-sizing: border-box;
+}
+
+#iswThemePreviewFrame .isw-tpb-top-ribbon {
+  position: fixed;
+  inset-block-start: 0;
+  inset-inline: 0;
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
+  z-index: 2147483641;
+}
+
+#iswThemePreviewFrame .isw-tpb-top-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 12px 4px;
+  border-end-start-radius: 8px;
+  border-end-end-radius: 8px;
+  background: linear-gradient(90deg, #d97706, #f59e0b);
+  color: #111827;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  line-height: 1.3;
+  text-transform: uppercase;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.25);
+  max-inline-size: calc(100vw - 32px);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+#iswThemePreviewBar {
+  position: fixed;
+  inset-block-end: max(14px, env(safe-area-inset-bottom, 0px));
+  inset-inline: 14px;
+  z-index: 2147483645;
+  max-inline-size: 860px;
+  margin-inline: auto;
+  padding: 10px 14px;
+  border-radius: 14px;
+  background: rgba(15, 23, 42, 0.94);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  border: 1.5px solid rgba(245, 158, 11, 0.72);
+  box-shadow: 0 18px 42px -10px rgba(2, 6, 23, 0.55);
+  color: #f8fafc;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 13px;
+  line-height: 1.4;
+  box-sizing: border-box;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+#iswThemePreviewBar *,
+#iswThemePreviewBar *::before,
+#iswThemePreviewBar *::after {
+  box-sizing: border-box;
+  font-family: inherit;
+}
+
+#iswThemePreviewBar.is-collapsed {
+  inline-size: max-content;
+  max-inline-size: calc(100vw - 28px);
+  inset-inline-start: auto;
+  inset-inline-end: 14px;
+  margin-inline: 0;
+  padding: 8px 12px;
+}
+
+#iswThemePreviewBar.is-collapsed .isw-tpb-note,
+#iswThemePreviewBar.is-collapsed .isw-tpb-btn-apply,
+#iswThemePreviewBar.is-collapsed .isw-tpb-btn-manage,
+#iswThemePreviewBar.is-collapsed .isw-tpb-btn-exit {
+  display: none;
+}
+
+#iswThemePreviewBar.isw-tpb-in-frame .isw-tpb-btn-manage {
+  display: none;
+}
+
+#iswThemePreviewBar .isw-tpb-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px 16px;
+  flex-wrap: wrap;
+}
+
+#iswThemePreviewBar .isw-tpb-status {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-inline-size: 0;
+  flex: 1 1 240px;
+}
+
+#iswThemePreviewBar .isw-tpb-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 9px;
+  border-radius: 999px;
+  background: rgba(245, 158, 11, 0.18);
+  border: 1px solid rgba(245, 158, 11, 0.55);
+  color: #fcd34d;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+  flex: none;
+}
+
+#iswThemePreviewBar .isw-tpb-dot {
+  inline-size: 7px;
+  block-size: 7px;
+  border-radius: 50%;
+  background: #fbbf24;
+  box-shadow: 0 0 0 0 rgba(251, 191, 36, 0.7);
+  animation: iswTpbPulse 1.8s infinite;
+}
+
+@keyframes iswTpbPulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(251, 191, 36, 0.75);
+  }
+  70% {
+    box-shadow: 0 0 0 7px rgba(251, 191, 36, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(251, 191, 36, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #iswThemePreviewBar .isw-tpb-dot {
+    animation: none;
+  }
+}
+
+#iswThemePreviewBar .isw-tpb-text {
+  display: flex;
+  flex-direction: column;
+  min-inline-size: 0;
+}
+
+#iswThemePreviewBar .isw-tpb-title {
+  color: #ffffff;
+  font-size: 13.5px;
+  font-weight: 700;
+  line-height: 1.25;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+#iswThemePreviewBar .isw-tpb-note {
+  color: #cbd5e1;
+  font-size: 11.5px;
+  line-height: 1.3;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+#iswThemePreviewBar .isw-tpb-note.is-error {
+  color: #fca5a5;
+}
+
+#iswThemePreviewBar .isw-tpb-note.is-success {
+  color: #6ee7b7;
+}
+
+#iswThemePreviewBar .isw-tpb-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  flex: none;
+}
+
+#iswThemePreviewBar .isw-tpb-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-block-size: 32px;
+  padding: 6px 12px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  font-size: 12.5px;
+  font-weight: 700;
+  line-height: 1.2;
+  text-decoration: none;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color 0.15s ease, border-color 0.15s ease, opacity 0.15s ease;
+}
+
+#iswThemePreviewBar .isw-tpb-btn:focus-visible {
+  outline: 2px solid #fbbf24;
+  outline-offset: 2px;
+}
+
+#iswThemePreviewBar .isw-tpb-btn:disabled {
+  opacity: 0.65;
+  cursor: wait;
+}
+
+#iswThemePreviewBar .isw-tpb-btn-apply {
+  background: #10b981;
+  color: #052e16;
+  border-color: #34d399;
+}
+
+#iswThemePreviewBar .isw-tpb-btn-apply:hover:not(:disabled) {
+  background: #34d399;
+}
+
+#iswThemePreviewBar .isw-tpb-btn-manage {
+  background: rgba(148, 163, 184, 0.16);
+  color: #f1f5f9;
+  border-color: rgba(148, 163, 184, 0.32);
+}
+
+#iswThemePreviewBar .isw-tpb-btn-manage:hover {
+  background: rgba(148, 163, 184, 0.28);
+}
+
+#iswThemePreviewBar .isw-tpb-btn-exit {
+  background: rgba(239, 68, 68, 0.18);
+  color: #fecaca;
+  border-color: rgba(248, 113, 113, 0.45);
+}
+
+#iswThemePreviewBar .isw-tpb-btn-exit:hover {
+  background: rgba(239, 68, 68, 0.3);
+  color: #ffffff;
+}
+
+#iswThemePreviewBar .isw-tpb-btn-toggle {
+  min-inline-size: 32px;
+  padding: 6px 8px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #e2e8f0;
+  border-color: rgba(255, 255, 255, 0.16);
+  font-size: 15px;
+  line-height: 1;
+}
+
+#iswThemePreviewBar .isw-tpb-btn-toggle:hover {
+  background: rgba(255, 255, 255, 0.16);
+}
+
+@media (max-width: 600px) {
+  #iswThemePreviewBar {
+    inset-inline: 10px;
+    padding: 9px 11px;
+  }
+
+  #iswThemePreviewBar .isw-tpb-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+}
+

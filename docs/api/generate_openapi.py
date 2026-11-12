@@ -815,6 +815,31 @@ add_endpoint(
     ai_tool_name="v3_setting_redirection_delete"
 )
 
+add_endpoint(
+    "/appearance/themes.php", "GET", "List Current App Themes & Preview State",
+    "Returns active themes from isw_theme matching the current tenant site's application along with disk template verification, live theme metadata, and isolated preview status.",
+    "Appearance",
+    params=[
+        {"name": "q", "in": "query", "schema": {"type": "string"}, "description": "Case-insensitive keyword filter matching theme title, path, description, or version"}
+    ],
+    ai_tool_name="v3_appearance_themes_list"
+)
+
+add_endpoint(
+    "/appearance/themes.php", "POST", "Preview, Switch, or Exit Website Theme Preview",
+    "Applies a theme live (action='apply'), starts an isolated signed preview session without modifying live visitor rendering (action='preview'), or exits preview mode (action='exit_preview').",
+    "Appearance",
+    body_schema={
+        "type": "object",
+        "required": ["action"],
+        "properties": {
+            "action": {"type": "string", "enum": ["preview", "apply", "exit_preview"], "example": "preview"},
+            "theme_id": {"type": "integer", "description": "Target theme ID (required for preview and apply)", "example": 6}
+        }
+    },
+    ai_tool_name="v3_appearance_themes_action"
+)
+
 # 12. INTEGRATIONS HUB
 add_endpoint(
     "/integration/index.php", "GET", "List Configured Third-Party Integrations & Gateways",

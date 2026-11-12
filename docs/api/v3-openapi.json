@@ -4736,6 +4736,179 @@
         }
       }
     },
+    "/appearance/themes.php": {
+      "get": {
+        "summary": "List Current App Themes & Preview State",
+        "description": "Returns active themes from isw_theme matching the current tenant site's application along with disk template verification, live theme metadata, and isolated preview status.",
+        "tags": [
+          "Appearance"
+        ],
+        "operationId": "v3_appearance_themes_list",
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardSuccessResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error or invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - Insufficient permissions for user role",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Case-insensitive keyword filter matching theme title, path, description, or version"
+          }
+        ],
+        "x-ai-tool-definition": {
+          "name": "v3_appearance_themes_list",
+          "description": "List Current App Themes & Preview State"
+        }
+      },
+      "post": {
+        "summary": "Preview, Switch, or Exit Website Theme Preview",
+        "description": "Applies a theme live (action='apply'), starts an isolated signed preview session without modifying live visitor rendering (action='preview'), or exits preview mode (action='exit_preview').",
+        "tags": [
+          "Appearance"
+        ],
+        "operationId": "v3_appearance_themes_action",
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardSuccessResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error or invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - Insufficient permissions for user role",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "action"
+                ],
+                "properties": {
+                  "action": {
+                    "type": "string",
+                    "enum": [
+                      "preview",
+                      "apply",
+                      "exit_preview"
+                    ],
+                    "example": "preview"
+                  },
+                  "theme_id": {
+                    "type": "integer",
+                    "description": "Target theme ID (required for preview and apply)",
+                    "example": 6
+                  }
+                }
+              }
+            },
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "action"
+                ],
+                "properties": {
+                  "action": {
+                    "type": "string",
+                    "enum": [
+                      "preview",
+                      "apply",
+                      "exit_preview"
+                    ],
+                    "example": "preview"
+                  },
+                  "theme_id": {
+                    "type": "integer",
+                    "description": "Target theme ID (required for preview and apply)",
+                    "example": 6
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-ai-tool-definition": {
+          "name": "v3_appearance_themes_action",
+          "description": "Preview, Switch, or Exit Website Theme Preview"
+        }
+      }
+    },
     "/integration/index.php": {
       "get": {
         "summary": "List Configured Third-Party Integrations & Gateways",

@@ -519,6 +519,19 @@ Full tenant-scoped CRUD endpoint for URL redirections (`isw_redirection` and lin
   ```
 - **Response `200 OK`:** Returns `{ "status": "success", "message": "...", "data": [...], "stats": {"total": 1, "permanent": 1, "temporary": 0, "other": 0} }`.
 
+#### `GET|POST|PUT /api/v3/appearance/themes.php`
+Lists active themes from `isw_theme` scoped to the current website's application (`site_app_id`), checks visitor template availability on disk, switches the live theme (`isw_site.site_theme_id`), and manages isolated HMAC-signed browser preview mode without modifying the live site for visitors.
+- **Query Params (`GET`):** `q` / `search` (optional keyword filter across theme title, path, description, version).
+- **Request Body (`POST`):**
+  ```json
+  {
+    "action": "preview",
+    "theme_id": 6
+  }
+  ```
+  - `action`: `"preview"` (sets signed `isw_theme_preview` cookie and returns signed `preview_url`), `"apply"` (updates `isw_site.site_theme_id`, purges site HTML cache, clears preview cookie), or `"exit_preview"` (clears `isw_theme_preview` cookie).
+- **Response `200 OK`:** Returns `{ "status": "success", "message": "...", "data": [...], "site": {...}, "preview": {...}, "stats": {...} }`.
+
 #### `GET /api/v3/integration/index.php`
 Lists active integrations (Razorpay, Cashfree, PhonePe, Google Ads, SMTP, Webhooks).
 

@@ -158,6 +158,15 @@ $url = BASE_URL;
 
 $themeRouterFile = USER_PATH . 'router.php';
 
+if (defined('ISW_THEME_PREVIEW_RENDERING') && ISW_THEME_PREVIEW_RENDERING === true && function_exists('iswInjectThemePreviewBanner')) {
+	if (!headers_sent()) {
+		header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
+		header('Pragma: no-cache');
+		header('X-Robots-Tag: noindex, nofollow');
+	}
+	ob_start('iswInjectThemePreviewBanner');
+}
+
 switch ($urlStructure[0]) {
 
 	case '':

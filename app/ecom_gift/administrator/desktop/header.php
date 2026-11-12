@@ -134,10 +134,11 @@ $egNavSections = array(
     array(
         'id' => 'appearance',
         'label' => 'Appearance',
-        'href' => 'appearance/?type=menu',
+        'href' => 'appearance/?type=themes',
         'icon' => 'fas fa-paint-brush',
         'active' => (ADMIN_BASE_URL == '/appearance/'),
         'children' => array(
+            array('label' => 'Themes', 'href' => 'appearance/?type=themes', 'icon' => 'fas fa-palette'),
             array('label' => 'Menu', 'href' => 'appearance/?type=menu', 'icon' => 'fas fa-ellipsis-v'),
             array('label' => 'Sliders', 'href' => 'appearance/?type=sliders', 'icon' => 'fas fa-images'),
         ),
