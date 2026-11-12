@@ -4,39 +4,103 @@ require_once MENU_FUNCTIONS;
 require_once DATA_FUNCTIONS;
 
 /**
- * Renders the mobile menu tree recursively with a beautiful luxury design.
+ * Checks whether any descendant menu item matches the active route.
  */
-function render_andblooms_mobile_menu_tree(array $items, int $depth = 0): void
+function andblooms_menu_branch_has_active(array $items): bool
 {
     foreach ($items as $item) {
-        $label = safe_html($item['label'] ?? '');
-        $url   = safe_html($item['url'] ?? '#');
+        if (!is_array($item) || empty($item['label'])) {
+            continue;
+        }
+        $url = (string) ($item['url'] ?? '');
+        if ($url !== '' && $url !== '#' && is_menu_active($url)) {
+            return true;
+        }
+        if (!empty($item['children']) && is_array($item['children']) && andblooms_menu_branch_has_active($item['children'])) {
+            return true;
+        }
+    }
+    return false;
+}
+
+/**
+ * Renders the unified semantic navigation tree used across both wide and collapsed viewports.
+ */
+function render_andblooms_nav_tree(array $items, int $depth = 0, string $idPrefix = 'site-nav'): void
+{
+    static $uidCounter = 0;
+
+    foreach ($items as $item) {
+        if (!is_array($item) || empty($item['label'])) {
+            continue;
+        }
+
+        $rawLabel = (string) $item['label'];
+        $rawUrl   = (string) ($item['url'] ?? '#');
+        $label    = safe_html($rawLabel);
+        $url      = safe_html($rawUrl !== '' ? $rawUrl : '#');
+
         $children = (isset($item['children']) && is_array($item['children'])) ? $item['children'] : [];
         $children = array_values(array_filter($children, function ($child) {
             return is_array($child) && !empty($child['label']);
         }));
 
-        $isActive = is_menu_active($url);
-        $hasChildren = !empty($children);
+        if (!empty($children)) {
+            if ($rawUrl !== '' && $rawUrl !== '#') {
+                $normalizedParent = trim((string) parse_url($rawUrl, PHP_URL_PATH), '/');
+                $hasParentTarget = false;
+                foreach ($children as $child) {
+                    $childUrl = (string) ($child['url'] ?? '');
+                    if ($childUrl === $rawUrl || ($normalizedParent !== '' && trim((string) parse_url($childUrl, PHP_URL_PATH), '/') === $normalizedParent)) {
+                        $hasParentTarget = true;
+                        break;
+                    }
+                }
+                if (!$hasParentTarget) {
+                    array_unshift($children, [
+                        'label'    => 'All ' . $rawLabel,
+                        'url'      => $rawUrl,
+                        'children' => [],
+                    ]);
+                }
+            }
 
-        if ($hasChildren) {
-            echo '<div class="border-b border-gray-100/60 py-0.5">';
-            echo '<details class="group">';
-            echo '<summary class="flex items-center justify-between px-6 py-3 font-medium text-gray-800 hover:text-primary transition font-sans text-base cursor-pointer list-none">';
-            echo '<span>' . $label . '</span>';
-            echo '<i class="ri-arrow-down-s-line text-xl transition-transform duration-300 group-open:rotate-180 text-gray-400"></i>';
-            echo '</summary>';
-            echo '<ul class="pl-6 pr-6 pb-3 space-y-2 border-l border-primary/20 ml-8 my-1">';
-            render_andblooms_mobile_menu_tree($children, $depth + 1);
-            echo '</ul>';
-            echo '</details>';
-            echo '</div>';
+            $uidCounter++;
+            $subId = $idPrefix . '-sub-' . $uidCounter;
+            $isBranchActive = ($rawUrl !== '' && $rawUrl !== '#' && is_menu_active($rawUrl))
+                || andblooms_menu_branch_has_active($children);
+
+            if ($depth === 0) {
+                $colsClass = count($children) > 7 ? ' site-dropdown-list--columns' : '';
+                echo '<li class="site-nav-dropdown">';
+                echo '<button type="button" class="site-nav-link site-dropdown-trigger" aria-expanded="false" aria-controls="' . $subId . '" popovertarget="' . $subId . '"' . ($isBranchActive ? ' data-active-branch="true"' : '') . '>';
+                echo '<span>' . $label . '</span>';
+                echo '<i class="ri-arrow-down-s-line site-nav-chevron" aria-hidden="true"></i>';
+                echo '</button>';
+                echo '<ul id="' . $subId . '" class="site-dropdown-list' . $colsClass . '">';
+                render_andblooms_nav_tree($children, $depth + 1, $subId);
+                echo '</ul>';
+                echo '</li>';
+            } else {
+                echo '<li class="site-subdropdown">';
+                echo '<button type="button" class="site-dropdown-link site-subdropdown-trigger" aria-expanded="false" aria-controls="' . $subId . '"' . ($isBranchActive ? ' data-active-branch="true"' : '') . '>';
+                echo '<span>' . $label . '</span>';
+                echo '<i class="ri-arrow-down-s-line site-nav-chevron" aria-hidden="true"></i>';
+                echo '</button>';
+                echo '<ul id="' . $subId . '" class="site-subdropdown-list">';
+                render_andblooms_nav_tree($children, $depth + 1, $subId);
+                echo '</ul>';
+                echo '</li>';
+            }
         } else {
-            echo '<div class="border-b border-gray-100/60 py-0.5">';
-            echo '<a href="' . $url . '" class="block px-6 py-3 font-medium text-gray-700 hover:text-primary transition font-sans text-base' . ($isActive ? ' text-primary font-semibold bg-primary/5 pl-5 border-l-4 border-primary' : '') . '">';
+            $isActive = ($rawUrl !== '' && $rawUrl !== '#' && is_menu_active($rawUrl));
+            $linkClass = ($depth === 0) ? 'site-nav-link' : 'site-dropdown-link';
+
+            echo '<li>';
+            echo '<a href="' . $url . '" class="' . $linkClass . '"' . ($isActive ? ' aria-current="page"' : '') . '>';
             echo $label;
             echo '</a>';
-            echo '</div>';
+            echo '</li>';
         }
     }
 }
@@ -84,6 +148,7 @@ function render_andblooms_mobile_menu_tree(array $items, int $depth = 0): void
     <!-- Social Proof Plugin -->
     <link rel="stylesheet" href="<?php echo PLUGIN_LIBRARY ?>social_proof/social_proof.css?v=<?php echo time(); ?>">
     <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>style.min.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>header-nav.css?v=<?php echo assetVersion('css/header-nav.css'); ?>">
     <?php require_once DEFAULT_META; ?>
     <meta name="google-site-verification" content="HT7OlsigSJmSLCG9PCz7JmCbyRGmzUeJapljsV4KRIg" />
 
@@ -211,37 +276,47 @@ function render_andblooms_mobile_menu_tree(array $items, int $depth = 0): void
 
 <body class="bg-white">
     <!-- Header -->
-    <header class="fixed w-full top-0 z-[55] bg-white shadow-sm">
-        <div class="container mx-auto px-4 py-4 flex items-center justify-between">
+    <header id="site-header" class="site-header fixed inset-x-0 top-0 z-[55] bg-white shadow-sm">
+        <div id="site-header-inner" class="site-header-inner">
             <!-- Logo -->
-            <div class="flex items-center space-x-8">
-                <a href="/" class="flex items-center">
-                    <img src="<?php echo SITE_LOGO ?>" alt="<?php echo SITE_NAME ?> Logo" class="h-8">
-                </a>
+            <a href="/" class="site-logo">
+                <img src="<?php echo SITE_LOGO ?>" alt="<?php echo safe_html(SITE_NAME) ?>" class="h-8 w-auto">
+            </a>
 
-                <!-- Desktop Menu -->
-                <nav class="hidden md:flex space-x-6">
+            <!-- Unified Responsive Navigation (inline on wide viewports, popover menu when collapsed) -->
+            <nav class="site-nav" aria-label="Primary">
+                <ul id="site-menu" class="site-menu" popover="auto">
                     <?php
-
-                    generateMenu('SITE_NAV_MAIN_HEADER', 'dropdown', true);
-
+                    $menuItems = get_object_from_constant('SITE_NAV_MAIN_HEADER');
+                    if (!empty($menuItems)) {
+                        render_andblooms_nav_tree($menuItems);
+                    } else {
+                        $isHomeActive = is_menu_active('/');
+                        echo '<li><a href="/" class="site-nav-link"' . ($isHomeActive ? ' aria-current="page"' : '') . '>Home</a></li>';
+                    }
                     ?>
-                </nav>
-            </div>
+                </ul>
+            </nav>
 
-            <!-- Right Icons -->
-            <div class="flex items-center space-x-4">
-                <!-- Desktop Search -->
-                <div class="relative hidden md:block">
-                    <form action="/search/" method="get">
-                        <input type="text" name="q" placeholder="Search..."
-                            class="pl-10 pr-4 py-2 rounded-full border border-gray-200 focus:outline-none focus:border-primary w-64 text-sm"
-                            style="width: 100%">
-                        <div class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
-                            <i class="ri-search-line"></i>
-                        </div>
+            <!-- Right Actions -->
+            <div class="site-actions">
+                <!-- Wide Desktop Search Input -->
+                <div class="site-search-desktop">
+                    <form action="/search/" method="get" role="search" class="site-search-form">
+                        <button type="submit" class="site-search-icon-btn" aria-label="Search">
+                            <i class="ri-search-line" aria-hidden="true"></i>
+                        </button>
+                        <input type="search" name="q" placeholder="Search..." aria-label="Search products"
+                            class="site-search-input">
                     </form>
                 </div>
+
+                <!-- Compact / Mobile Search Icon Toggle (opens search bar popover on click) -->
+                <button type="button" id="header-search-button" class="site-action-btn header-search-button"
+                    popovertarget="header-search-popover" popovertargetaction="toggle"
+                    aria-controls="header-search-popover" aria-expanded="false" aria-label="Search products">
+                    <i class="ri-search-line text-xl" aria-hidden="true"></i>
+                </button>
 
                 <!-- Cart -->
                 <?php
@@ -252,22 +327,22 @@ function render_andblooms_mobile_menu_tree(array $items, int $depth = 0): void
                 }
                 ?>
                 <div class="relative cart-dropdown-trigger group">
-                    <a href="/checkout/"
-                        class="w-10 h-10 flex items-center justify-center text-gray-700 hover:text-primary transition">
-                        <i class="ri-shopping-bag-line text-xl"></i>
+                    <a href="/checkout/" aria-label="Shopping cart"
+                        class="site-action-btn relative">
+                        <i class="ri-shopping-bag-line text-xl" aria-hidden="true"></i>
                     </a>
                     <?php if ($cartItems > 0) { ?>
                         <span id="cartItems"
-                            class="absolute -top-1 -right-1 bg-primary text-white text-xs w-5 h-5 flex items-center justify-center rounded-full font-medium"><?php echo $cartItems ?></span>
+                            class="absolute -top-0.5 -right-0.5 bg-primary text-white text-xs w-5 h-5 flex items-center justify-center rounded-full font-medium pointer-events-none"><?php echo $cartItems ?></span>
 
                         <!-- Cart Dropdown Preview -->
                         <div
-                            class="absolute right-0 top-full mt-3 w-80 bg-white rounded-xl shadow-2xl border border-gray-100 invisible opacity-0 group-hover:visible group-hover:opacity-100 transition-all duration-300 transform group-hover:translate-y-0 translate-y-2 z-50">
+                            class="absolute right-0 top-full mt-3 w-80 max-w-[calc(100dvw-1.5rem)] bg-white rounded-xl shadow-2xl border border-gray-100 invisible opacity-0 group-hover:visible group-hover:opacity-100 transition-all duration-300 transform group-hover:translate-y-0 translate-y-2 z-50">
                             <!-- Header -->
                             <div class="p-4 border-b border-gray-100 bg-gradient-to-r from-primary/5 to-transparent">
                                 <div class="flex items-center justify-between">
                                     <h3 class="font-semibold text-gray-800 flex items-center">
-                                        <i class="ri-shopping-bag-3-line text-primary mr-2"></i>
+                                        <i class="ri-shopping-bag-3-line text-primary mr-2" aria-hidden="true"></i>
                                         Your Cart
                                     </h3>
                                     <span
@@ -279,7 +354,7 @@ function render_andblooms_mobile_menu_tree(array $items, int $depth = 0): void
                             <!-- Quick Message -->
                             <div class="p-4 text-center bg-secondary/50">
                                 <p class="text-sm text-gray-600">
-                                    <i class="ri-checkbox-circle-line text-green-500 mr-1"></i>
+                                    <i class="ri-checkbox-circle-line text-green-500 mr-1" aria-hidden="true"></i>
                                     You have <strong class="text-primary"><?php echo $cartItems ?></strong>
                                     item<?php echo $cartItems > 1 ? 's' : '' ?> in your cart
                                 </p>
@@ -289,10 +364,10 @@ function render_andblooms_mobile_menu_tree(array $items, int $depth = 0): void
                             <div class="p-4 space-y-2">
                                 <a href="/checkout/"
                                     class="block w-full bg-primary text-white text-center py-3 rounded-lg font-medium hover:bg-opacity-90 transition shadow-sm">
-                                    <i class="ri-shopping-cart-2-line mr-2"></i>
-                                    View Cart & Checkout
+                                    <i class="ri-shopping-cart-2-line mr-2" aria-hidden="true"></i>
+                                    View Cart &amp; Checkout
                                 </a>
-                                <button onclick="this.closest('.cart-dropdown-trigger').querySelector('a').click()"
+                                <button type="button" data-cart-continue
                                     class="block w-full bg-gray-100 text-gray-700 text-center py-2.5 rounded-lg font-medium hover:bg-gray-200 transition text-sm">
                                     Continue Shopping
                                 </button>
@@ -301,177 +376,36 @@ function render_andblooms_mobile_menu_tree(array $items, int $depth = 0): void
                             <!-- Footer Note -->
                             <div class="px-4 pb-4 text-center">
                                 <p class="text-xs text-gray-500">
-                                    <i class="ri-secure-payment-line text-primary"></i>
+                                    <i class="ri-secure-payment-line text-primary" aria-hidden="true"></i>
                                     Secure checkout • Same day delivery
                                 </p>
                             </div>
                         </div>
                     <?php } else { ?>
                         <span id="cartItems"
-                            class="absolute -top-1 -right-1 bg-gray-300 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">0</span>
+                            class="absolute -top-0.5 -right-0.5 bg-gray-300 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full pointer-events-none">0</span>
                     <?php } ?>
                 </div>
 
-                <!-- Hamburger -->
-                <button class="md:hidden w-10 h-10 flex items-center justify-center text-gray-700"
-                    id="mobile-menu-button">
-                    <i class="ri-menu-line text-xl"></i>
+                <!-- Menu Trigger (visible whenever inline row does not fit) -->
+                <button type="button" id="mobile-menu-button" class="site-action-btn menu-button"
+                    popovertarget="site-menu" popovertargetaction="toggle"
+                    aria-controls="site-menu" aria-expanded="false" aria-label="Toggle navigation menu">
+                    <i class="ri-menu-line text-xl" aria-hidden="true"></i>
                 </button>
             </div>
         </div>
 
-        <!-- Mobile Menu full screen drawer -->
-        <div class="md:hidden fixed inset-0 bg-white z-[60] transition-transform duration-300 ease-in-out flex flex-col"
-            id="mobile-menu" style="transform: translateX(-100%);">
-            <!-- Header -->
-            <div class="flex items-center justify-between px-6 py-5 border-b border-gray-100">
-                <div class="flex flex-col">
-                    <img src="<?php echo SITE_LOGO ?>" alt="<?php echo SITE_NAME ?> Logo" class="h-6">
-                </div>
-                <div class="flex items-center space-x-2">
-                    <button id="close-mobile-menu"
-                        class="w-9 h-9 flex items-center justify-center text-gray-400 hover:text-primary hover:bg-primary/5 rounded-full transition-all duration-300 focus:outline-none">
-                        <i class="ri-close-line text-xl"></i>
-                    </button>
-                </div>
-            </div>
-
-            <!-- Search Bar under Header -->
-            <div class="px-6 py-4 bg-secondary/30 border-b border-gray-100">
-                <form action="/search/" method="get" class="relative">
-                    <input type="text" name="q" id="mobile-search-input" placeholder="Search for luxury flowers..."
-                        class="w-full pl-10 pr-4 py-2.5 rounded-full border border-gray-200 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 text-sm transition bg-white font-sans text-gray-800 placeholder-gray-400">
-                    <button type="submit"
-                        class="absolute left-3.5 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-primary transition focus:outline-none">
-                        <i class="ri-search-line text-base"></i>
-                    </button>
-                </form>
-            </div>
-
-            <!-- Scrollable Content -->
-            <div class="overflow-y-auto flex-grow flex flex-col justify-between">
-                <!-- Dynamic Navigation Links -->
-                <nav class="flex flex-col py-2">
-                    <?php
-                    $menuItems = get_object_from_constant('SITE_NAV_MAIN_HEADER');
-                    if (!empty($menuItems)) {
-                        render_andblooms_mobile_menu_tree($menuItems);
-                    } else {
-                        echo '<a href="/" class="block px-6 py-3 text-gray-700 hover:text-primary transition font-sans text-base">Home</a>';
-                    }
-                    ?>
-                </nav>
-
-            </div>
+        <!-- Search Popover (mobile & compact-search widths) -->
+        <div id="header-search-popover" class="header-search-popover" popover="auto">
+            <form action="/search/" method="get" role="search" class="site-search-form">
+                <button type="submit" class="site-search-icon-btn" aria-label="Search">
+                    <i class="ri-search-line" aria-hidden="true"></i>
+                </button>
+                <input type="search" name="q" id="header-search-popover-input" placeholder="Search for luxury flowers..."
+                    aria-label="Search products" class="site-search-input">
+                <button type="submit" class="site-search-submit">Search</button>
+            </form>
         </div>
-
-        <!-- Mobile Menu Overlay Backdrop -->
-        <div class="md:hidden fixed inset-0 z-50 transition-all duration-300 ease-in-out pointer-events-none bg-black/0"
-            id="mobile-menu-overlay"></div>
     </header>
-
-    <style>
-        #mobile-menu-overlay {
-            transition: background-color 300ms ease-in-out, backdrop-filter 300ms ease-in-out, -webkit-backdrop-filter 300ms ease-in-out;
-        }
-
-        summary::-webkit-details-marker {
-            display: none;
-        }
-
-        summary {
-            list-style: none;
-        }
-    </style>
-
-    <script>
-        // Initialize mobile menu
-        (function() {
-            let menuOpen = false;
-
-            function initMobileMenu() {
-                const mobileMenuButton = document.getElementById('mobile-menu-button');
-                const closeMobileMenuButton = document.getElementById('close-mobile-menu');
-                const mobileMenu = document.getElementById('mobile-menu');
-                const mobileMenuOverlay = document.getElementById('mobile-menu-overlay');
-
-                if (!mobileMenuButton || !mobileMenu || !mobileMenuOverlay) {
-                    console.error('Menu elements not found');
-                    return;
-                }
-
-                function openMenu(e) {
-                    if (e) e.preventDefault();
-                    if (menuOpen) return;
-
-                    console.log('Opening menu');
-                    menuOpen = true;
-
-                    // Force reflow to ensure transition works
-                    mobileMenu.offsetHeight;
-
-                    mobileMenu.style.transform = 'translateX(0)';
-
-                    // Overlay enhancements
-                    mobileMenuOverlay.style.backgroundColor = 'rgba(0, 0, 0, 0.4)';
-                    mobileMenuOverlay.style.backdropFilter = 'blur(4px)';
-                    mobileMenuOverlay.style.webkitBackdropFilter = 'blur(4px)';
-                    mobileMenuOverlay.style.pointerEvents = 'auto';
-                    document.body.style.overflow = 'hidden';
-                }
-
-                function closeMenu(e) {
-                    if (e) e.preventDefault();
-                    if (!menuOpen) return;
-
-                    console.log('Closing menu');
-                    menuOpen = false;
-
-                    mobileMenu.style.transform = 'translateX(-100%)';
-
-                    mobileMenuOverlay.style.backgroundColor = 'rgba(0, 0, 0, 0)';
-                    mobileMenuOverlay.style.backdropFilter = 'none';
-                    mobileMenuOverlay.style.webkitBackdropFilter = 'none';
-                    mobileMenuOverlay.style.pointerEvents = 'none';
-                    document.body.style.overflow = '';
-
-                    // Close all dynamic details accordions when closing menu
-                    document.querySelectorAll('#mobile-menu details').forEach(details => {
-                        details.removeAttribute('open');
-                    });
-                }
-
-                // Attach event listeners
-                mobileMenuButton.addEventListener('click', openMenu);
-                closeMobileMenuButton.addEventListener('click', closeMenu);
-                mobileMenuOverlay.addEventListener('click', closeMenu);
-
-                // Close menu on link click (only direct navigation links, not accordion summaries)
-                document.querySelectorAll('#mobile-menu a').forEach(link => {
-                    link.addEventListener('click', function() {
-                        closeMenu();
-                    });
-                });
-
-                // Handle search input focus - scroll into view when keyboard appears
-                const mobileSearchInput = document.getElementById('mobile-search-input');
-                if (mobileSearchInput) {
-                    mobileSearchInput.addEventListener('focus', function() {
-                        setTimeout(() => {
-                            this.scrollIntoView({
-                                behavior: 'smooth',
-                                block: 'center'
-                            });
-                        }, 300); // Delay to allow keyboard to appear
-                    });
-                }
-            }
-
-            // Wait for DOM to be ready
-            if (document.readyState === 'loading') {
-                document.addEventListener('DOMContentLoaded', initMobileMenu);
-            } else {
-                initMobileMenu();
-            }
-        })();
-    </script>
+    <script src="<?php echo USER_JS ?>header-nav.js?v=<?php echo assetVersion('js/header-nav.js'); ?>"></script>
