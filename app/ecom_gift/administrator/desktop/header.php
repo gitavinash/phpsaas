@@ -150,6 +150,7 @@ $egNavSections = array(
         'active' => (ADMIN_BASE_URL == '/setting/'),
         'children' => array(
             array('label' => 'Configuration', 'href' => 'setting/?type=configuration', 'icon' => 'fas fa-tools'),
+            array('label' => 'URL redirection', 'href' => 'setting/?type=redirection&status=all', 'icon' => 'fas fa-external-link-alt'),
             array('label' => 'Profile', 'href' => 'setting/?type=profile', 'icon' => 'fas fa-user'),
         ),
     ),
@@ -279,7 +280,7 @@ $egNavSections = array(
                             <li<?php echo $egIsActive ? ' class="active"' : ''; ?>>
                                 <?php if ($egHasChildren): ?>
                                     <div class="eg-nav-row">
-                                        <a class="eg-nav-link" href="<?php echo htmlspecialchars($egSec['href'], ENT_QUOTES, 'UTF-8'); ?>"<?php echo ($egIsActive && empty($_GET['type'])) ? ' aria-current="page"' : ''; ?>>
+                                        <a class="eg-nav-link" href="<?php echo htmlspecialchars($egSec['href'], ENT_QUOTES, 'UTF-8'); ?>" <?php echo ($egIsActive && empty($_GET['type'])) ? ' aria-current="page"' : ''; ?>>
                                             <i class="<?php echo htmlspecialchars($egSec['icon'], ENT_QUOTES, 'UTF-8'); ?>" aria-hidden="true"></i>
                                             <span class="eg-nav-label"><?php echo htmlspecialchars($egSec['label'], ENT_QUOTES, 'UTF-8'); ?></span>
                                         </a>
@@ -292,7 +293,7 @@ $egNavSections = array(
                                             <i class="fas fa-chevron-down" aria-hidden="true"></i>
                                         </button>
                                     </div>
-                                    <ul id="<?php echo htmlspecialchars($egSubId, ENT_QUOTES, 'UTF-8'); ?>" class="eg-submenu"<?php echo $egIsActive ? '' : ' hidden'; ?>>
+                                    <ul id="<?php echo htmlspecialchars($egSubId, ENT_QUOTES, 'UTF-8'); ?>" class="eg-submenu" <?php echo $egIsActive ? '' : ' hidden'; ?>>
                                         <?php foreach ($egSec['children'] as $egChild): ?>
                                             <li>
                                                 <a href="<?php echo htmlspecialchars($egChild['href'], ENT_QUOTES, 'UTF-8'); ?>">
@@ -304,14 +305,14 @@ $egNavSections = array(
                                     </ul>
                                 <?php else: ?>
                                     <div class="eg-nav-row">
-                                        <a class="eg-nav-link" href="<?php echo htmlspecialchars($egSec['href'], ENT_QUOTES, 'UTF-8'); ?>"<?php echo $egIsActive ? ' aria-current="page"' : ''; ?>>
+                                        <a class="eg-nav-link" href="<?php echo htmlspecialchars($egSec['href'], ENT_QUOTES, 'UTF-8'); ?>" <?php echo $egIsActive ? ' aria-current="page"' : ''; ?>>
                                             <i class="<?php echo htmlspecialchars($egSec['icon'], ENT_QUOTES, 'UTF-8'); ?>" aria-hidden="true"></i>
                                             <span class="eg-nav-label"><?php echo htmlspecialchars($egSec['label'], ENT_QUOTES, 'UTF-8'); ?></span>
                                         </a>
                                     </div>
                                 <?php endif; ?>
-                            </li>
-                        <?php endforeach; ?>
+                                </li>
+                            <?php endforeach; ?>
                     </ul>
                     <div id="nav-search-empty" class="eg-nav-empty" hidden>No matching menu items.</div>
                 </nav>
