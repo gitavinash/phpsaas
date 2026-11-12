@@ -7,10 +7,16 @@ $page_description = !empty($page_description) ? $page_description : 'Discover & 
 $bannerImage = $page_image ?? '';
 $bannerFromProduct = false;
 
-// Sort parameter
+// Sort & filter parameters
 $sort = $_GET['sort'] ?? 'newest';
-$sortQuery = "ORDER BY e.event_start_date ASC";
+$allowedSorts = ['newest', 'oldest', 'price_low', 'price_high', 'title_asc'];
+if (!in_array($sort, $allowedSorts, true)) {
+    $sort = 'newest';
+}
 
+$searchQuery = trim((string) ($_GET['q'] ?? ''));
+
+$sortQuery = "ORDER BY e.event_start_date ASC, e.event_id DESC";
 if ($sort === 'price_low') {
     $sortQuery = "ORDER BY inv.inventory_price ASC, e.event_id DESC";
 } elseif ($sort === 'price_high') {
@@ -84,7 +90,6 @@ $previousEvents = [];
 foreach ($siteEvents as $ev) {
     $startDate = $ev['event_start_date'] ?? '';
     $hasDate = (!empty($startDate) && $startDate !== '0000-00-00');
-    // If no date specified or start date is today or in the future -> upcoming
     if (!$hasDate || $startDate >= $today) {
         $upcomingEvents[] = $ev;
     } else {
@@ -92,9 +97,31 @@ foreach ($siteEvents as $ev) {
     }
 }
 
+// On default chronological sort, show soonest upcoming first (TBA at end) and latest previous events first
+if ($sort === 'newest') {
+    usort($upcomingEvents, function ($a, $b) {
+        $dateA = $a['event_start_date'] ?? '';
+        $dateB = $b['event_start_date'] ?? '';
+        $hasA = (!empty($dateA) && $dateA !== '0000-00-00');
+        $hasB = (!empty($dateB) && $dateB !== '0000-00-00');
+        if ($hasA !== $hasB) {
+            return $hasA ? -1 : 1;
+        }
+        return strcmp((string)$dateA, (string)$dateB);
+    });
+
+    usort($previousEvents, function ($a, $b) {
+        $dateCmp = strcmp((string)($b['event_start_date'] ?? ''), (string)($a['event_start_date'] ?? ''));
+        if ($dateCmp !== 0) {
+            return $dateCmp;
+        }
+        return ((int)($b['event_id'] ?? 0)) <=> ((int)($a['event_id'] ?? 0));
+    });
+}
+
 // Active tab selection (upcoming, previous, all)
 $activeTab = $_GET['tab'] ?? '';
-if (!in_array($activeTab, ['upcoming', 'previous', 'all'])) {
+if (!in_array($activeTab, ['upcoming', 'previous', 'all'], true)) {
     $activeTab = (!empty($upcomingEvents) || empty($previousEvents)) ? 'upcoming' : 'previous';
 }
 
@@ -113,22 +140,22 @@ if (empty($bannerImage)) {
     }
 }
 
-// Reusable Event Card Renderer
+// Compact Event Card Renderer (4 direct card regions: media, header, meta, footer)
 if (!function_exists('renderEventCardItem')) {
-    function renderEventCardItem($event, $today)
+    function renderEventCardItem($event, $today, $cardIndex = 0)
     {
         $eventId = $event['event_id'] ?? 0;
-        $eventTitle = ucwords($event['event_title'] ?? '');
-        $categoryName = !empty($event['category_title']) ? ucwords($event['category_title']) : 'Workshop';
-        $eventImg = !empty($event['event_image']) ? $event['event_image'] : (!empty($event['event_thumbnail']) ? $event['event_thumbnail'] : 'assets/images/placeholder.jpg');
-        $eventLink = !empty($event['link_url']) ? $event['link_url'] : ('event.php?id=' . $eventId);
+        $eventTitle = ucwords((string) ($event['event_title'] ?? ''));
+        $categoryName = !empty($event['category_title']) ? ucwords((string) $event['category_title']) : 'Workshop';
+        $eventImg = !empty($event['event_image']) ? (string) $event['event_image'] : (!empty($event['event_thumbnail']) ? (string) $event['event_thumbnail'] : '');
+        $eventLink = !empty($event['link_url']) ? (string) $event['link_url'] : ('event.php?id=' . $eventId);
 
         // Date formatting
         $startDate = $event['event_start_date'] ?? '';
         $hasDate = (!empty($startDate) && $startDate !== '0000-00-00');
         $dateDay = $hasDate ? date('d', strtotime($startDate)) : '--';
         $dateMonth = $hasDate ? date('M', strtotime($startDate)) : 'TBA';
-        $fullDateStr = $hasDate ? date('D, d M Y', strtotime($startDate)) : 'Date to be announced';
+        $fullDateStr = $hasDate ? date('D, d M Y', strtotime($startDate)) : 'Date TBA';
 
         // Past event check
         $isPast = ($hasDate && $startDate < $today);
@@ -147,342 +174,307 @@ if (!function_exists('renderEventCardItem')) {
         $invMrp = $event['inventory_mrp'] ?? 0;
         $price = (isset($invPrice) && $invPrice != 0 ? $invPrice : ($invMrp ?? 0));
         $mrp = $invMrp ?? 0;
-        $currencySymbol = !empty($event['inventory_currency_symbol']) ? $event['inventory_currency_symbol'] : '₹';
+        $currencySymbol = !empty($event['inventory_currency_symbol']) ? (string) $event['inventory_currency_symbol'] : '₹';
         $discount = (isset($invPrice) && $invPrice != 0 && isset($invMrp) && $invPrice < $invMrp)
-            ? round((($invMrp - $invPrice) / $invMrp) * 100)
+            ? (int) round((($invMrp - $invPrice) / $invMrp) * 100)
             : 0;
 
-        // Location & description
-        $locationStr = !empty($event['event_location']) ? htmlspecialchars($event['event_location'], ENT_QUOTES, 'UTF-8') : 'Venue to be announced';
-        $descSnippet = !empty($event['event_description']) ? htmlspecialchars(mb_strimwidth(strip_tags($event['event_description']), 0, 160, '...'), ENT_QUOTES, 'UTF-8') : '';
-        $seatsAvailable = isset($event['inventory_current_stock']) ? (int)$event['inventory_current_stock'] : 0;
+        $locationRaw = !empty($event['event_location']) ? (string) $event['event_location'] : 'Venue TBA';
+        $locationStr = htmlspecialchars($locationRaw, ENT_QUOTES, 'UTF-8');
+        $seatsAvailable = isset($event['inventory_current_stock']) ? (int) $event['inventory_current_stock'] : 0;
+
+        $searchIndex = function_exists('mb_strtolower')
+            ? mb_strtolower($eventTitle . ' ' . $categoryName . ' ' . $locationRaw . ' ' . $fullDateStr, 'UTF-8')
+            : strtolower($eventTitle . ' ' . $categoryName . ' ' . $locationRaw . ' ' . $fullDateStr);
 ?>
-        <article class="bg-white rounded-2xl border <?= $isPast ? 'border-gray-200/80' : 'border-gray-100' ?> shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden flex flex-col md:flex-row group">
+        <article class="event-card<?= $isPast ? ' is-past' : '' ?>"
+                 data-search="<?= htmlspecialchars($searchIndex, ENT_QUOTES, 'UTF-8') ?>">
+            <?php if ($eventImg !== ''): ?>
+                <img src="<?= htmlspecialchars($eventImg, ENT_QUOTES, 'UTF-8') ?>"
+                     alt="<?= htmlspecialchars($eventTitle, ENT_QUOTES, 'UTF-8') ?>"
+                     class="event-card-media"
+                     loading="<?= $cardIndex < 3 ? 'eager' : 'lazy' ?>"
+                     decoding="async">
+            <?php endif; ?>
 
-            <!-- Left: Event Image & Date Badge Overlay -->
-            <div class="relative md:w-2/5 lg:w-1/3 min-h-[220px] md:min-h-full overflow-hidden bg-gray-100">
-                <a href="<?= htmlspecialchars($eventLink, ENT_QUOTES, 'UTF-8') ?>" class="block h-full">
-                    <img src="<?= htmlspecialchars($eventImg, ENT_QUOTES, 'UTF-8') ?>"
-                        alt="<?= htmlspecialchars($eventTitle, ENT_QUOTES, 'UTF-8') ?>"
-                        class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 <?= $isPast ? 'filter saturate-90' : '' ?>">
-                </a>
-
-                <!-- Calendar Badge Overlay -->
-                <div class="absolute top-4 left-4 bg-white/95 backdrop-blur-md text-gray-900 rounded-xl px-3 py-2 text-center shadow-lg border border-white/40 min-w-[60px]">
-                    <span class="block text-xl font-extrabold leading-none <?= $isPast ? 'text-gray-700' : 'text-primary' ?>"><?= $dateDay ?></span>
-                    <span class="block text-xs font-bold uppercase tracking-wider text-gray-600 mt-1"><?= $dateMonth ?></span>
-                </div>
-
-                <?php if ($isPast): ?>
-                    <!-- Past Event Overlay Badge -->
-                    <div class="absolute top-4 right-4 bg-gray-900/85 backdrop-blur-md text-white font-semibold text-xs px-3 py-1 rounded-full shadow-md flex items-center gap-1.5">
-                        <i class="ri-history-line"></i> Past Event
-                    </div>
-                <?php elseif ($discount > 0): ?>
-                    <div class="absolute top-4 right-4 bg-red-600 text-white font-semibold text-xs px-3 py-1 rounded-full shadow-md">
-                        <?= $discount ?>% OFF
-                    </div>
-                <?php endif; ?>
-            </div>
-
-            <!-- Right: Event Content & Actions -->
-            <div class="p-6 md:p-8 flex-1 flex flex-col justify-between">
-                <div>
-                    <!-- Header Meta -->
-                    <div class="flex items-center gap-3 mb-3 flex-wrap">
-                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold <?= $isPast ? 'bg-gray-100 text-gray-700' : 'bg-primary/10 text-primary' ?>">
-                            <i class="ri-price-tag-3-line mr-1.5"></i> <?= htmlspecialchars($categoryName, ENT_QUOTES, 'UTF-8') ?>
-                        </span>
-
-                        <?php if ($isPast): ?>
-                            <span class="inline-flex items-center text-xs font-medium text-gray-600 bg-gray-100 px-2.5 py-1 rounded-full border border-gray-200">
-                                <i class="ri-checkbox-circle-line text-emerald-600 mr-1"></i> Concluded
-                            </span>
-                        <?php elseif ($seatsAvailable > 0): ?>
-                            <span class="inline-flex items-center text-xs font-medium text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-100">
-                                <i class="ri-user-line mr-1"></i> <?= $seatsAvailable ?> seats left
-                            </span>
-                        <?php endif; ?>
-                    </div>
-
-                    <!-- Event Title -->
-                    <h3 class="text-xl md:text-2xl font-bold font-serif text-gray-900 group-hover:text-primary transition-colors mb-3 leading-snug">
-                        <a href="<?= htmlspecialchars($eventLink, ENT_QUOTES, 'UTF-8') ?>">
-                            <?= htmlspecialchars($eventTitle, ENT_QUOTES, 'UTF-8') ?>
-                        </a>
-                    </h3>
-
-                    <!-- Details Grid -->
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm text-gray-600 mb-4">
-                        <div class="flex items-center gap-2">
-                            <i class="ri-calendar-line <?= $isPast ? 'text-gray-400' : 'text-primary' ?> text-base"></i>
-                            <span><?= htmlspecialchars($fullDateStr, ENT_QUOTES, 'UTF-8') ?></span>
-                        </div>
-                        <?php
-
-                        if ($timeStr != '') { ?>
-                            <div class="flex items-center gap-2">
-                                <i class="ri-time-line <?= $isPast ? 'text-gray-400' : 'text-primary' ?> text-base"></i>
-                                <span><?= htmlspecialchars($timeStr, ENT_QUOTES, 'UTF-8') ?></span>
-                            </div>
-                        <?php
-                        }
-
-                        ?>
-                        <div class="flex items-center gap-2 sm:col-span-2">
-                            <i class="ri-map-pin-line <?= $isPast ? 'text-gray-400' : 'text-primary' ?> text-base"></i>
-                            <span class="truncate"><?= $locationStr ?></span>
-                        </div>
-                    </div>
-
-                    <?php if (!empty($descSnippet)): ?>
-                        <p class="text-gray-600 text-sm line-clamp-2 leading-relaxed mb-6">
-                            <?= $descSnippet ?>
-                        </p>
-                    <?php endif; ?>
-                </div>
-
-                <!-- Card Footer / CTA -->
-                <div class="pt-4 border-t border-gray-100 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                    <div>
-                        <?php if ($price > 0): ?>
-                            <div class="flex items-baseline gap-2">
-                                <span class="text-2xl font-bold text-gray-900">
-                                    <?= $currencySymbol . number_format($price) ?>
-                                </span>
-                                <?php if ($discount > 0 && !$isPast): ?>
-                                    <span class="text-sm text-gray-400 line-through">
-                                        <?= $currencySymbol . number_format($mrp) ?>
-                                    </span>
-                                <?php endif; ?>
-                            </div>
-                        <?php else: ?>
-                            <span class="text-lg font-bold text-emerald-600">Free Event</span>
-                        <?php endif; ?>
-                    </div>
-
+            <header class="event-card-header">
+                <div class="event-card-badges">
+                    <time class="event-date-pill"<?= $hasDate ? ' datetime="' . htmlspecialchars($startDate, ENT_QUOTES, 'UTF-8') . '"' : '' ?>>
+                        <span><?= htmlspecialchars($dateDay, ENT_QUOTES, 'UTF-8') ?></span>
+                        <span class="event-date-month"><?= htmlspecialchars($dateMonth, ENT_QUOTES, 'UTF-8') ?></span>
+                    </time>
+                    <span class="event-category-pill"><?= htmlspecialchars($categoryName, ENT_QUOTES, 'UTF-8') ?></span>
                     <?php if ($isPast): ?>
-                        <a href="<?= htmlspecialchars($eventLink, ENT_QUOTES, 'UTF-8') ?>"
-                            class="inline-flex items-center justify-center px-6 py-3 rounded-xl font-semibold text-sm bg-gray-100 hover:bg-gray-200 text-gray-800 border border-gray-200 transition-all duration-200 shadow-sm group-hover:shadow group-hover:translate-x-0.5">
-                            View Event Details <i class="ri-arrow-right-line ml-2"></i>
-                        </a>
-                    <?php else: ?>
-                        <a href="<?= htmlspecialchars($eventLink, ENT_QUOTES, 'UTF-8') ?>"
-                            class="inline-flex items-center justify-center px-6 py-3 rounded-xl font-semibold text-sm bg-primary text-white hover:bg-opacity-90 transition-all duration-200 shadow-sm group-hover:shadow group-hover:translate-x-0.5">
-                            Explore & Book Seat <i class="ri-arrow-right-line ml-2"></i>
-                        </a>
+                        <span class="event-status-pill is-past">Concluded</span>
+                    <?php elseif ($discount > 0): ?>
+                        <span class="event-status-pill is-discount"><?= $discount ?>% OFF</span>
+                    <?php elseif ($seatsAvailable > 0): ?>
+                        <span class="event-status-pill is-seats"><?= $seatsAvailable ?> left</span>
                     <?php endif; ?>
                 </div>
-            </div>
+                <h3 class="event-card-title">
+                    <a href="<?= htmlspecialchars($eventLink, ENT_QUOTES, 'UTF-8') ?>" class="event-card-link">
+                        <?= htmlspecialchars($eventTitle, ENT_QUOTES, 'UTF-8') ?>
+                    </a>
+                </h3>
+            </header>
+
+            <dl class="event-card-meta">
+                <div class="event-meta-row">
+                    <dt class="sr-only">Date &amp; Time</dt>
+                    <dd>
+                        <i class="ri-calendar-line" aria-hidden="true"></i>
+                        <span><?= htmlspecialchars($fullDateStr . ($timeStr !== '' ? ' · ' . $timeStr : ''), ENT_QUOTES, 'UTF-8') ?></span>
+                    </dd>
+                </div>
+                <div class="event-meta-row">
+                    <dt class="sr-only">Location</dt>
+                    <dd>
+                        <i class="ri-map-pin-line" aria-hidden="true"></i>
+                        <span><?= $locationStr ?></span>
+                    </dd>
+                </div>
+            </dl>
+
+            <footer class="event-card-footer">
+                <div class="event-price">
+                    <?php if ($price > 0): ?>
+                        <span class="event-price-current"><?= htmlspecialchars($currencySymbol, ENT_QUOTES, 'UTF-8') . number_format((float) $price) ?></span>
+                        <?php if ($discount > 0 && !$isPast): ?>
+                            <span class="event-price-mrp"><?= htmlspecialchars($currencySymbol, ENT_QUOTES, 'UTF-8') . number_format((float) $mrp) ?></span>
+                        <?php endif; ?>
+                    <?php else: ?>
+                        <span class="event-price-free">Free</span>
+                    <?php endif; ?>
+                </div>
+                <span class="event-card-cta" aria-hidden="true">
+                    <?= $isPast ? 'Details' : 'Book Seat' ?> <i class="ri-arrow-right-line"></i>
+                </span>
+            </footer>
         </article>
 <?php
     }
 }
 ?>
 
-<!-- Hero Banner -->
-<div class="relative min-h-[320px] md:min-h-[380px] w-full mb-12 mt-16 overflow-hidden flex items-center justify-center bg-gray-900">
-    <?php if (!empty($bannerImage)) { ?>
-        <?php
-        $bannerStyle = "background-image: url('{$bannerImage}');";
-        if ($bannerFromProduct) {
-            $bannerStyle .= ' filter: blur(4px); transform: scale(1.08);';
-        }
-        ?>
-        <div style="<?= $bannerStyle ?>" class="absolute inset-0 bg-cover bg-center transition-all duration-700"></div>
-    <?php } else { ?>
-        <div class="absolute inset-0 bg-gradient-to-r from-[#D4946D] via-[#c68259] to-[#8d4f2b]"></div>
-    <?php } ?>
+<link rel="stylesheet" href="<?= USER_STYLESHEET ?>events.css?v=<?= assetVersion('css/events.css') ?>">
 
-    <!-- Gradient Overlay -->
-    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-black/30"></div>
+<main class="events-page">
+    <!-- Hero Banner -->
+    <div class="relative min-h-[320px] md:min-h-[380px] w-full mb-12 mt-16 overflow-hidden flex items-center justify-center bg-gray-900">
+        <?php if (!empty($bannerImage)) { ?>
+            <img src="<?= htmlspecialchars((string) $bannerImage, ENT_QUOTES, 'UTF-8') ?>"
+                 alt=""
+                 aria-hidden="true"
+                 loading="eager"
+                 decoding="async"
+                 class="events-hero-bg<?= $bannerFromProduct ? ' is-blurred' : '' ?>">
+        <?php } else { ?>
+            <div class="absolute inset-0 bg-gradient-to-r from-[#D4946D] via-[#c68259] to-[#8d4f2b]"></div>
+        <?php } ?>
 
-    <div class="container mx-auto px-4 py-12 h-full flex flex-col justify-center items-center text-center relative z-10">
-        <!-- Breadcrumb -->
-        <nav class="flex items-center text-sm text-white/80 mb-6 bg-white/10 backdrop-blur-md px-4 py-1.5 rounded-full border border-white/20">
-            <a href="/" class="hover:text-white transition-colors">Home</a>
-            <span class="mx-2 text-white/50">/</span>
-            <span class="text-white font-medium"><?= htmlspecialchars($page_title, ENT_QUOTES, 'UTF-8') ?></span>
-        </nav>
+        <!-- Gradient Overlay -->
+        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-black/30"></div>
 
-        <h1 class="font-serif text-4xl md:text-6xl text-white font-bold mb-4 tracking-tight drop-shadow-md">
-            <?= htmlspecialchars($page_title, ENT_QUOTES, 'UTF-8') ?>
-        </h1>
-        <p class="text-white/90 text-lg md:text-xl max-w-2xl font-light leading-relaxed drop-shadow-sm">
-            <?= htmlspecialchars($page_description, ENT_QUOTES, 'UTF-8') ?>
-        </p>
-    </div>
-</div>
+        <div class="container mx-auto px-4 py-12 h-full flex flex-col justify-center items-center text-center relative z-10">
+            <!-- Breadcrumb -->
+            <nav class="flex items-center text-sm text-white/80 mb-6 bg-white/10 backdrop-blur-md px-4 py-1.5 rounded-full border border-white/20" aria-label="Breadcrumb">
+                <a href="/" class="hover:text-white transition-colors">Home</a>
+                <span class="mx-2 text-white/50">/</span>
+                <span class="text-white font-medium" aria-current="page"><?= htmlspecialchars($page_title, ENT_QUOTES, 'UTF-8') ?></span>
+            </nav>
 
-<!-- Main Content Area -->
-<div class="container mx-auto px-4 pb-16">
-
-    <!-- Filter & Tabs Toolbar Header -->
-    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 md:p-6 mb-8 flex flex-col lg:flex-row justify-between items-stretch lg:items-center gap-4">
-
-        <!-- Tabs Switcher -->
-        <div class="flex flex-wrap items-center gap-2 p-1.5 bg-gray-100/80 rounded-xl border border-gray-200/60 w-full lg:w-auto">
-            <!-- Upcoming Events Tab -->
-            <a href="?tab=upcoming<?= !empty($sort) && $sort !== 'newest' ? '&sort=' . urlencode($sort) : '' ?>"
-                data-tab="upcoming"
-                class="event-tab-btn flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold transition-all <?= $activeTab === 'upcoming' ? 'bg-white text-gray-900 shadow-sm border border-gray-200/80' : 'text-gray-600 hover:text-gray-900 hover:bg-white/60' ?>">
-                <i class="ri-calendar-event-line <?= $activeTab === 'upcoming' ? 'text-primary' : 'text-gray-400' ?>"></i>
-                <span>Upcoming</span>
-                <span class="tab-count-badge px-2 py-0.5 text-xs rounded-full <?= $activeTab === 'upcoming' ? 'bg-primary/10 text-primary font-bold' : 'bg-gray-200/80 text-gray-600' ?>">
-                    <?= count($upcomingEvents) ?>
-                </span>
-            </a>
-
-            <!-- Previous Events Tab -->
-            <a href="?tab=previous<?= !empty($sort) && $sort !== 'newest' ? '&sort=' . urlencode($sort) : '' ?>"
-                data-tab="previous"
-                class="event-tab-btn flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold transition-all <?= $activeTab === 'previous' ? 'bg-white text-gray-900 shadow-sm border border-gray-200/80' : 'text-gray-600 hover:text-gray-900 hover:bg-white/60' ?>">
-                <i class="ri-history-line <?= $activeTab === 'previous' ? 'text-primary' : 'text-gray-400' ?>"></i>
-                <span>Previous</span>
-                <span class="tab-count-badge px-2 py-0.5 text-xs rounded-full <?= $activeTab === 'previous' ? 'bg-primary/10 text-primary font-bold' : 'bg-gray-200/80 text-gray-600' ?>">
-                    <?= count($previousEvents) ?>
-                </span>
-            </a>
-
-            <!-- All Events Tab -->
-            <a href="?tab=all<?= !empty($sort) && $sort !== 'newest' ? '&sort=' . urlencode($sort) : '' ?>"
-                data-tab="all"
-                class="event-tab-btn flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold transition-all <?= $activeTab === 'all' ? 'bg-white text-gray-900 shadow-sm border border-gray-200/80' : 'text-gray-600 hover:text-gray-900 hover:bg-white/60' ?>">
-                <i class="ri-apps-2-line <?= $activeTab === 'all' ? 'text-primary' : 'text-gray-400' ?>"></i>
-                <span>All Events</span>
-                <span class="tab-count-badge px-2 py-0.5 text-xs rounded-full <?= $activeTab === 'all' ? 'bg-primary/10 text-primary font-bold' : 'bg-gray-200/80 text-gray-600' ?>">
-                    <?= count($siteEvents) ?>
-                </span>
-            </a>
-        </div>
-
-        <!-- Sort Control -->
-        <div class="flex items-center gap-3 w-full lg:w-auto justify-end">
-            <label for="eventSortSelect" class="text-xs font-semibold text-gray-500 uppercase tracking-wider hidden sm:inline-block">Sort By:</label>
-            <form method="GET" class="w-full sm:w-auto" id="eventSortForm">
-                <input type="hidden" name="tab" id="eventSortTabInput" value="<?= htmlspecialchars($activeTab, ENT_QUOTES, 'UTF-8') ?>">
-                <select id="eventSortSelect" name="sort"
-                    class="w-full sm:w-auto bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm font-medium text-gray-700 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary transition-all cursor-pointer">
-                    <option value="newest" <?= $sort === 'newest' ? 'selected' : '' ?>>Date: Newest First</option>
-                    <option value="oldest" <?= $sort === 'oldest' ? 'selected' : '' ?>>Date: Oldest First</option>
-                    <option value="price_low" <?= $sort === 'price_low' ? 'selected' : '' ?>>Price: Low to High</option>
-                    <option value="price_high" <?= $sort === 'price_high' ? 'selected' : '' ?>>Price: High to Low</option>
-                    <option value="title_asc" <?= $sort === 'title_asc' ? 'selected' : '' ?>>Title: A to Z</option>
-                </select>
-            </form>
+            <h1 class="font-serif text-4xl md:text-6xl text-white font-bold mb-4 tracking-tight drop-shadow-md">
+                <?= htmlspecialchars($page_title, ENT_QUOTES, 'UTF-8') ?>
+            </h1>
+            <p class="text-white/90 text-lg md:text-xl max-w-2xl font-light leading-relaxed drop-shadow-sm">
+                <?= htmlspecialchars($page_description, ENT_QUOTES, 'UTF-8') ?>
+            </p>
         </div>
     </div>
 
-    <!-- TAB PANEL: Upcoming Events -->
-    <div id="tab-panel-upcoming" class="<?= $activeTab === 'upcoming' ? 'block' : 'hidden' ?> space-y-6">
-        <?php if (!empty($upcomingEvents)) { ?>
-            <div class="space-y-6">
-                <?php foreach ($upcomingEvents as $event) {
-                    renderEventCardItem($event, $today);
-                } ?>
-            </div>
-        <?php } else { ?>
-            <!-- Upcoming Empty State -->
-            <div class="text-center py-16 bg-white rounded-2xl border border-gray-100 shadow-sm max-w-xl mx-auto px-6">
-                <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4 text-primary text-2xl">
-                    <i class="ri-calendar-check-line"></i>
-                </div>
-                <h3 class="text-xl font-bold text-gray-900 mb-2">No Upcoming Events Right Now</h3>
-                <p class="text-gray-500 mb-6 text-sm leading-relaxed">
-                    We are currently curating new workshops, masterclasses, and floral experiences. Stay tuned for upcoming dates, or explore our previous sessions!
-                </p>
-                <?php if (!empty($previousEvents)) { ?>
-                    <button type="button" data-switch-tab="previous" class="event-switch-tab-btn inline-flex items-center px-5 py-2.5 bg-primary text-white text-sm font-semibold rounded-xl hover:bg-opacity-90 transition shadow-sm">
-                        <i class="ri-history-line mr-2"></i> Explore Previous Events (<?= count($previousEvents) ?>)
-                    </button>
-                <?php } else { ?>
-                    <a href="/" class="inline-flex items-center px-5 py-2.5 bg-primary text-white text-sm font-semibold rounded-xl hover:bg-opacity-90 transition shadow-sm">
-                        <i class="ri-home-4-line mr-2"></i> Back to Homepage
-                    </a>
-                <?php } ?>
-            </div>
-        <?php } ?>
-    </div>
+    <!-- Main Listing Content -->
+    <div class="events-shell">
+        <!-- Single-Row Filter, Search, Sort & View Toolbar -->
+        <div class="events-toolbar">
+            <div class="events-tabs" aria-label="Event schedule filter">
+                <a href="?tab=upcoming<?= $sort !== 'newest' ? '&amp;sort=' . urlencode($sort) : '' ?><?= $searchQuery !== '' ? '&amp;q=' . urlencode($searchQuery) : '' ?>"
+                    data-tab="upcoming"
+                    class="event-tab-btn<?= $activeTab === 'upcoming' ? ' is-active' : '' ?>"<?= $activeTab === 'upcoming' ? ' aria-current="page"' : '' ?>>
+                    <i class="ri-calendar-event-line" aria-hidden="true"></i>
+                    <span>Upcoming</span>
+                    <span class="tab-count-badge"><?= count($upcomingEvents) ?></span>
+                </a>
 
-    <!-- TAB PANEL: Previous Events -->
-    <div id="tab-panel-previous" class="<?= $activeTab === 'previous' ? 'block' : 'hidden' ?> space-y-6">
-        <?php if (!empty($previousEvents)) { ?>
-            <div class="space-y-6">
-                <?php foreach ($previousEvents as $event) {
-                    renderEventCardItem($event, $today);
-                } ?>
-            </div>
-        <?php } else { ?>
-            <!-- Previous Empty State -->
-            <div class="text-center py-16 bg-white rounded-2xl border border-gray-100 shadow-sm max-w-xl mx-auto px-6">
-                <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4 text-gray-500 text-2xl">
-                    <i class="ri-history-line"></i>
-                </div>
-                <h3 class="text-xl font-bold text-gray-900 mb-2">No Previous Events</h3>
-                <p class="text-gray-500 mb-6 text-sm leading-relaxed">
-                    Past event archives and completed workshop highlights will appear here.
-                </p>
-                <?php if (!empty($upcomingEvents)) { ?>
-                    <button type="button" data-switch-tab="upcoming" class="event-switch-tab-btn inline-flex items-center px-5 py-2.5 bg-primary text-white text-sm font-semibold rounded-xl hover:bg-opacity-90 transition shadow-sm">
-                        <i class="ri-calendar-event-line mr-2"></i> View Upcoming Events (<?= count($upcomingEvents) ?>)
-                    </button>
-                <?php } ?>
-            </div>
-        <?php } ?>
-    </div>
+                <a href="?tab=previous<?= $sort !== 'newest' ? '&amp;sort=' . urlencode($sort) : '' ?><?= $searchQuery !== '' ? '&amp;q=' . urlencode($searchQuery) : '' ?>"
+                    data-tab="previous"
+                    class="event-tab-btn<?= $activeTab === 'previous' ? ' is-active' : '' ?>"<?= $activeTab === 'previous' ? ' aria-current="page"' : '' ?>>
+                    <i class="ri-history-line" aria-hidden="true"></i>
+                    <span>Previous</span>
+                    <span class="tab-count-badge"><?= count($previousEvents) ?></span>
+                </a>
 
-    <!-- TAB PANEL: All Events -->
-    <div id="tab-panel-all" class="<?= $activeTab === 'all' ? 'block' : 'hidden' ?> space-y-8">
-        <?php if (!empty($siteEvents)) { ?>
-            <?php if (!empty($upcomingEvents)) { ?>
-                <div>
-                    <div class="flex items-center gap-2 mb-4 pb-2 border-b border-gray-200">
-                        <span class="w-3 h-3 rounded-full bg-primary"></span>
-                        <h3 class="text-lg font-bold text-gray-900">Upcoming Events</h3>
-                        <span class="ml-2 text-xs font-semibold px-2 py-0.5 rounded-full bg-primary/10 text-primary">
-                            <?= count($upcomingEvents) ?>
-                        </span>
-                    </div>
-                    <div class="space-y-6">
-                        <?php foreach ($upcomingEvents as $event) {
-                            renderEventCardItem($event, $today);
-                        } ?>
-                    </div>
-                </div>
-            <?php } ?>
-
-            <?php if (!empty($previousEvents)) { ?>
-                <div class="<?= !empty($upcomingEvents) ? 'mt-10' : '' ?>">
-                    <div class="flex items-center gap-2 mb-4 pb-2 border-b border-gray-200">
-                        <span class="w-3 h-3 rounded-full bg-gray-400"></span>
-                        <h3 class="text-lg font-bold text-gray-900">Previous Events</h3>
-                        <span class="ml-2 text-xs font-semibold px-2 py-0.5 rounded-full bg-gray-100 text-gray-600">
-                            <?= count($previousEvents) ?>
-                        </span>
-                    </div>
-                    <div class="space-y-6">
-                        <?php foreach ($previousEvents as $event) {
-                            renderEventCardItem($event, $today);
-                        } ?>
-                    </div>
-                </div>
-            <?php } ?>
-        <?php } else { ?>
-            <!-- Global No Events Found Message -->
-            <div class="text-center py-20 bg-white rounded-2xl border border-gray-100 shadow-sm max-w-2xl mx-auto px-6">
-                <div class="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6 text-primary text-3xl">
-                    <i class="ri-calendar-event-line"></i>
-                </div>
-                <h2 class="text-2xl font-bold text-gray-900 mb-2">No Active Events Found</h2>
-                <p class="text-gray-500 mb-8 max-w-md mx-auto">There are currently no events listed with active status. Please check back soon for upcoming workshops and masterclasses.</p>
-                <a href="/" class="inline-flex items-center px-6 py-3 bg-primary text-white font-medium rounded-xl hover:bg-opacity-90 transition shadow-sm">
-                    <i class="ri-home-4-line mr-2"></i> Back to Homepage
+                <a href="?tab=all<?= $sort !== 'newest' ? '&amp;sort=' . urlencode($sort) : '' ?><?= $searchQuery !== '' ? '&amp;q=' . urlencode($searchQuery) : '' ?>"
+                    data-tab="all"
+                    class="event-tab-btn<?= $activeTab === 'all' ? ' is-active' : '' ?>"<?= $activeTab === 'all' ? ' aria-current="page"' : '' ?>>
+                    <i class="ri-apps-2-line" aria-hidden="true"></i>
+                    <span>All</span>
+                    <span class="tab-count-badge"><?= $totalEventsCount ?></span>
                 </a>
             </div>
-        <?php } ?>
+
+            <div class="events-controls">
+                <div class="events-search-box">
+                    <i class="ri-search-line events-search-icon" aria-hidden="true"></i>
+                    <input type="search" id="eventSearchInput" class="events-search-input"
+                        value="<?= htmlspecialchars($searchQuery, ENT_QUOTES, 'UTF-8') ?>"
+                        placeholder="Filter events..." aria-label="Filter events by title, category, or venue">
+                    <button type="button" id="eventSearchClear" class="events-search-clear"
+                        aria-label="Clear filter"<?= $searchQuery === '' ? ' hidden' : '' ?>>
+                        <i class="ri-close-line" aria-hidden="true"></i>
+                    </button>
+                </div>
+
+                <form method="GET" class="events-sort-form" id="eventSortForm">
+                    <input type="hidden" name="tab" id="eventSortTabInput" value="<?= htmlspecialchars($activeTab, ENT_QUOTES, 'UTF-8') ?>">
+                    <input type="hidden" name="q" id="eventSortSearchInput" value="<?= htmlspecialchars($searchQuery, ENT_QUOTES, 'UTF-8') ?>">
+                    <label for="eventSortSelect" class="sr-only">Sort events by</label>
+                    <select id="eventSortSelect" name="sort" class="events-sort-select" aria-label="Sort events by">
+                        <option value="newest" <?= $sort === 'newest' ? 'selected' : '' ?>>Sort: Latest / Soonest</option>
+                        <option value="oldest" <?= $sort === 'oldest' ? 'selected' : '' ?>>Sort: Oldest First</option>
+                        <option value="price_low" <?= $sort === 'price_low' ? 'selected' : '' ?>>Price: Low to High</option>
+                        <option value="price_high" <?= $sort === 'price_high' ? 'selected' : '' ?>>Price: High to Low</option>
+                        <option value="title_asc" <?= $sort === 'title_asc' ? 'selected' : '' ?>>Title: A to Z</option>
+                    </select>
+                </form>
+
+                <div class="events-view-switch" role="group" aria-label="Layout view">
+                    <button type="button" class="events-view-btn" data-events-view="grid" aria-pressed="true" aria-label="Grid view" title="Grid view">
+                        <i class="ri-layout-grid-line" aria-hidden="true"></i>
+                    </button>
+                    <button type="button" class="events-view-btn" data-events-view="list" aria-pressed="false" aria-label="Compact list view" title="Compact list view">
+                        <i class="ri-list-check-2" aria-hidden="true"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Live Filter Status -->
+        <div id="eventsFilterStatus" class="events-filter-status" aria-live="polite" hidden>
+            <span id="eventsFilterStatusText"></span>
+            <button type="button" id="eventsResetSearch" class="events-reset-btn">
+                <i class="ri-close-line" aria-hidden="true"></i> Clear filter
+            </button>
+        </div>
+
+        <!-- TAB PANEL: Upcoming Events -->
+        <div id="tab-panel-upcoming"<?= $activeTab !== 'upcoming' ? ' hidden' : '' ?>>
+            <?php if (!empty($upcomingEvents)) { ?>
+                <div class="events-grid events-view-grid">
+                    <?php foreach ($upcomingEvents as $idx => $event) {
+                        renderEventCardItem($event, $today, $idx);
+                    } ?>
+                </div>
+            <?php } else { ?>
+                <div class="events-empty-card">
+                    <div class="events-empty-icon"><i class="ri-calendar-check-line" aria-hidden="true"></i></div>
+                    <h3>No Upcoming Events Right Now</h3>
+                    <p>We are curating new floral workshops and masterclasses. Explore our past sessions in the meantime.</p>
+                    <?php if (!empty($previousEvents)) { ?>
+                        <button type="button" data-switch-tab="previous" class="event-switch-tab-btn events-empty-btn">
+                            <i class="ri-history-line" aria-hidden="true"></i> View Previous Events (<?= count($previousEvents) ?>)
+                        </button>
+                    <?php } else { ?>
+                        <a href="/" class="events-empty-btn">
+                            <i class="ri-home-4-line" aria-hidden="true"></i> Back to Homepage
+                        </a>
+                    <?php } ?>
+                </div>
+            <?php } ?>
+        </div>
+
+        <!-- TAB PANEL: Previous Events -->
+        <div id="tab-panel-previous"<?= $activeTab !== 'previous' ? ' hidden' : '' ?>>
+            <?php if (!empty($previousEvents)) { ?>
+                <div class="events-grid events-view-grid">
+                    <?php foreach ($previousEvents as $idx => $event) {
+                        renderEventCardItem($event, $today, $idx);
+                    } ?>
+                </div>
+            <?php } else { ?>
+                <div class="events-empty-card">
+                    <div class="events-empty-icon"><i class="ri-history-line" aria-hidden="true"></i></div>
+                    <h3>No Previous Events</h3>
+                    <p>Completed workshop highlights and past event archives will appear here.</p>
+                    <?php if (!empty($upcomingEvents)) { ?>
+                        <button type="button" data-switch-tab="upcoming" class="event-switch-tab-btn events-empty-btn">
+                            <i class="ri-calendar-event-line" aria-hidden="true"></i> View Upcoming Events (<?= count($upcomingEvents) ?>)
+                        </button>
+                    <?php } ?>
+                </div>
+            <?php } ?>
+        </div>
+
+        <!-- TAB PANEL: All Events -->
+        <div id="tab-panel-all"<?= $activeTab !== 'all' ? ' hidden' : '' ?>>
+            <?php if (!empty($siteEvents)) { ?>
+                <?php if (!empty($upcomingEvents)) { ?>
+                    <section class="events-group" aria-label="Upcoming events">
+                        <div class="events-group-header">
+                            <span class="events-group-dot" aria-hidden="true"></span>
+                            <h2 class="events-group-title">Upcoming Events</h2>
+                            <span class="events-group-count"><?= count($upcomingEvents) ?></span>
+                        </div>
+                        <div class="events-grid events-view-grid">
+                            <?php foreach ($upcomingEvents as $idx => $event) {
+                                renderEventCardItem($event, $today, $idx);
+                            } ?>
+                        </div>
+                    </section>
+                <?php } ?>
+
+                <?php if (!empty($previousEvents)) { ?>
+                    <section class="events-group" aria-label="Previous events">
+                        <div class="events-group-header">
+                            <span class="events-group-dot is-past" aria-hidden="true"></span>
+                            <h2 class="events-group-title">Previous Events</h2>
+                            <span class="events-group-count is-past"><?= count($previousEvents) ?></span>
+                        </div>
+                        <div class="events-grid events-view-grid">
+                            <?php foreach ($previousEvents as $idx => $event) {
+                                renderEventCardItem($event, $today, $idx);
+                            } ?>
+                        </div>
+                    </section>
+                <?php } ?>
+            <?php } else { ?>
+                <div class="events-empty-card">
+                    <div class="events-empty-icon"><i class="ri-calendar-event-line" aria-hidden="true"></i></div>
+                    <h3>No Active Events Found</h3>
+                    <p>There are currently no active workshops or events listed. Please check back soon.</p>
+                    <a href="/" class="events-empty-btn">
+                        <i class="ri-home-4-line" aria-hidden="true"></i> Back to Homepage
+                    </a>
+                </div>
+            <?php } ?>
+        </div>
+
+        <!-- No Filter Matches Fallback -->
+        <div id="eventsNoFilterMatch" class="events-empty-card" hidden>
+            <div class="events-empty-icon"><i class="ri-search-line" aria-hidden="true"></i></div>
+            <h3>No Matching Events</h3>
+            <p>Try a different keyword, clear your search filter, or browse all scheduled workshops.</p>
+            <div class="events-empty-actions">
+                <button type="button" id="eventsNoMatchClearBtn" class="events-empty-btn">
+                    <i class="ri-close-line" aria-hidden="true"></i> Clear Filter
+                </button>
+                <button type="button" id="eventsNoMatchAllBtn" data-switch-tab="all" class="event-switch-tab-btn events-empty-btn is-secondary">
+                    <i class="ri-apps-2-line" aria-hidden="true"></i> Show All Events (<?= $totalEventsCount ?>)
+                </button>
+            </div>
+        </div>
     </div>
+</main>
 
-</div>
-
-<script src="<?= USER_JS ?>events.js" defer></script>
+<script src="<?= USER_JS ?>events.js?v=<?= assetVersion('js/events.js') ?>"></script>
 <?php include_once 'footer.php'; ?>
