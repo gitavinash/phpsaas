@@ -2,9 +2,9 @@
 
 function sendOTPviaNimbus($mobile, $otpCode, $name = 'User', $site_name = 'Aleya.in'): bool
 {
-    $smsUserName = defined('SMS_USERNAME') ? SMS_USERNAME : 'blumoxbiz';
-    $smsPassword = defined('SMS_PASSWORD') ? SMS_PASSWORD : 'nvb!f1pY';
-    $smsHeader   = defined('SMS_HEADER')   ? SMS_HEADER   : 'BLUMOX';
+    $smsUserName = (defined('SMS_USERNAME') && SMS_USERNAME !== '' && strtolower((string) SMS_USERNAME) !== 'blumoxsms') ? SMS_USERNAME : 'blumoxbiz';
+    $smsPassword = (defined('SMS_PASSWORD') && SMS_PASSWORD !== '' && (string) SMS_PASSWORD !== '123456') ? SMS_PASSWORD : 'nvb!f1pY';
+    $smsHeader   = (defined('SMS_HEADER') && SMS_HEADER !== '') ? SMS_HEADER : 'BLUMOX';
 
     $message = "Your OTP is {$otpCode}. Please use this code to verify your account. Do not share this code with anyone. - Blumox";
 
@@ -43,43 +43,7 @@ function sendOTPviaNimbus($mobile, $otpCode, $name = 'User', $site_name = 'Aleya
 
 function sendOTPviaSMS($mobile, $otpCode, $name = 'User', $site_name = 'Aleya.in'): bool
 {
-    $smsUserName = defined('SMS_USERNAME') ? SMS_USERNAME : 'blumoxsms';
-    $smsPassword = defined('SMS_PASSWORD') ? SMS_PASSWORD : '123456';
-    $smsHeader   = defined('SMS_HEADER')   ? SMS_HEADER   : 'BLUMOX';
-
-    $message = "Your OTP is {$otpCode}. Please use this code to verify your account. Do not share this code with anyone. - Blumox";
-
-    $queryParams = http_build_query([
-        'user'     => $smsUserName,
-        'pass'     => $smsPassword,
-        'sender'   => $smsHeader,
-        'phone'    => $mobile,
-        'text'     => $message,
-        'priority' => 'ndnd',
-        'stype'    => 'normal',
-    ], '', '&', PHP_QUERY_RFC3986);
-
-    $url = "https://bhash.notify360.in/api/sendmsg.php?{$queryParams}";
-
-    $ch = curl_init($url);
-    curl_setopt_array($ch, [
-        CURLOPT_CUSTOMREQUEST       => 'GET',            // force GET
-        CURLOPT_NOBODY              => false,            // MUST be false (true => HEAD)
-        CURLOPT_RETURNTRANSFER      => false,            // don't buffer
-        CURLOPT_HEADER              => false,            // ignore headers
-        CURLOPT_HTTPHEADER          => ['Connection: close'],
-        CURLOPT_HTTP_VERSION        => CURL_HTTP_VERSION_1_0, // simple close semantics
-        CURLOPT_IPRESOLVE           => CURL_IPRESOLVE_V4,     // avoid IPv6 delays
-        CURLOPT_CONNECTTIMEOUT_MS   => 2000,              // enough to actually connect
-        CURLOPT_TIMEOUT_MS          => 5000,             // short, but lets request be sent
-        // Discard any body ASAP (don’t block on reading)
-        CURLOPT_WRITEFUNCTION       => static function ($ch, $data) {
-            return strlen($data);
-        },
-    ]);
-    @curl_exec($ch); // fire the GET; we don't care about the response
-    @curl_close($ch);
-    return true;
+    return sendOTPviaNimbus($mobile, $otpCode, $name, $site_name);
 }
 
 function sendOTPviaMSG91($mobile, $otpCode, $name = 'User', $site_name = 'Aleya.in')

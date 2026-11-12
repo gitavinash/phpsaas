@@ -40,7 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $sql = "INSERT INTO " . TABLE_PREFIX . "otp(otp_user_id, otp_site_id, otp_mode, otp_destination, otp_code, otp_comment, otp_status, otp_time, otp_expire) VALUES ('{$user_id}', " . SITE_ID . ", 'sms', '{$user_mobile}', '{$otpCode}', '{$otpComment}', 0, NOW(), DATE_ADD(NOW(), INTERVAL 10 MINUTE))";
                 $insertOTP = mysqli_query($connection, $sql);
                 $otpRefId = base64_encode(mysqli_insert_id($connection));
-                $sendResult = sendOTPviaSMS($user_mobile, $otpCode);
+                $sendResult = sendOTPviaNimbus($user_mobile, $otpCode);
 
                 if ($sendResult !== true) {
                     $status = 'warning';

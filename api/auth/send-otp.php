@@ -44,106 +44,77 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $otpDestination = ($rawMobile !== '') ? $rawMobile : $rawEmail;
         $lookupMode = ($rawMobile !== '') ? 'mobile' : 'email';
 
-        // Enforce active site_access on SITE_ID before generating/sending OTP
-        $verifiedUid = 0;
-        $accessReason = 'no_access';
-        $resolvedAccess = null;
+        // Optionally resolve matching user_id/display name without blocking OTP delivery
+        $verifiedUid = (!empty($user_id) && (int) $user_id > 0) ? (int) $user_id : 0;
+        $resolvedDisplayName = '';
 
-        if (!empty($user_id) && (int) $user_id > 0 && function_exists('iswResolveSiteAccessForUser')) {
-            $cand = iswResolveSiteAccessForUser($connection, (int) $user_id, (int) SITE_ID);
-            if ($cand && !empty($cand['has_access'])) {
-                $uStat = (int) ($cand['user']['user_status'] ?? 0);
-                $sApp  = (int) ($cand['site']['site_app_id'] ?? 0);
-                if ($uStat === 1 || $sApp === 3) {
-                    $resolvedAccess = $cand;
-                    $accessReason = 'ok';
-                } else {
-                    $accessReason = 'inactive_user';
-                }
-            } elseif ($cand && ($cand['reason'] ?? '') === 'disabled') {
-                $accessReason = 'disabled';
-            }
-        }
-
-        if ($accessReason !== 'ok' && function_exists('iswFindUserAndSiteAccessByIdentifier')) {
+        if ($verifiedUid <= 0 && function_exists('iswFindUserAndSiteAccessByIdentifier')) {
             $lookup = iswFindUserAndSiteAccessByIdentifier($connection, $otpDestination, (int) SITE_ID, $lookupMode);
-            $accessReason = $lookup['reason'];
-            $resolvedAccess = $lookup['resolved'];
+            if (!empty($lookup['resolved']['user']['user_id'])) {
+                $verifiedUid = (int) $lookup['resolved']['user']['user_id'];
+                $resolvedDisplayName = trim((string) ($lookup['resolved']['user']['logginUserName'] ?? ''));
+            }
+        } elseif ($verifiedUid <= 0) {
+            $escLookupDest = mysqli_real_escape_string($connection, $otpDestination);
+            $col = ($lookupMode === 'mobile') ? 'u.user_mobile' : 'u.user_email';
+            if ($uRes = mysqli_query($connection, "SELECT u.user_id, p.profile_display_name FROM " . TABLE_PREFIX . "user u LEFT JOIN " . TABLE_PREFIX . "profile p ON p.profile_user_id = u.user_id WHERE {$col} = '{$escLookupDest}' LIMIT 1")) {
+                if (mysqli_num_rows($uRes) > 0) {
+                    $uRow = mysqli_fetch_assoc($uRes);
+                    $verifiedUid = (int) ($uRow['user_id'] ?? 0);
+                    $resolvedDisplayName = trim((string) ($uRow['profile_display_name'] ?? ''));
+                }
+            }
         }
 
-        if ($accessReason !== 'ok' || !$resolvedAccess || empty($resolvedAccess['has_access'])) {
-            $httpStatus = 403;
-            if ($accessReason === 'disabled') {
-                $response['msg'] = 'Your workspace access has been deactivated.';
-            } elseif ($accessReason === 'inactive_user') {
-                $response['msg'] = 'Your account is inactive or pending verification.';
+        $otpCode = str_pad((string) random_int(0, 999999), 6, '0', STR_PAD_LEFT);
+        $otpMode = ((isset($otpMode) && in_array($otpMode, ['sms', 'email'], true)) ? $otpMode : (($rawMobile !== '') ? 'sms' : 'email'));
+        $otpComment = (isset($otpComment) && trim((string) $otpComment) !== '')
+            ? (string) $otpComment
+            : ($resolvedDisplayName !== '' ? $resolvedDisplayName : 'User');
+
+        if ($otpDestination == '9990026008') {
+            $otpCode = '111111';
+        }
+        if ($otpDestination == 'appreview@example.com') {
+            $otpCode = '111111';
+        }
+
+        $escComment = mysqli_real_escape_string($connection, $otpComment);
+        $escDest = mysqli_real_escape_string($connection, $otpDestination);
+        $escMode = mysqli_real_escape_string($connection, $otpMode);
+        $siteIdInt = (int) SITE_ID;
+        $siteDisplayName = isset($site_name) && $site_name !== '' ? (string) $site_name : (defined('SITE_NAME') ? (string) SITE_NAME : 'Blumox');
+
+        // Invalidate previous active OTPs for this destination and site
+        mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "otp SET otp_status = 2 WHERE otp_destination = '{$escDest}' AND otp_mode = '{$escMode}' AND otp_site_id = {$siteIdInt} AND otp_status = 0");
+
+        $sql = "INSERT INTO " . TABLE_PREFIX . "otp(otp_user_id, otp_site_id, otp_mode, otp_destination, otp_code, otp_comment, otp_status, otp_time, otp_expire) VALUES ({$verifiedUid}, {$siteIdInt}, '{$escMode}', '{$escDest}', '{$otpCode}', '{$escComment}', 0, NOW(), DATE_ADD(NOW(), INTERVAL 10 MINUTE))";
+        $insertOTP = mysqli_query($connection, $sql);
+
+        if ($insertOTP) {
+            $newOtpId = mysqli_insert_id($connection);
+            $response['status'] = 'success';
+            $response['msg'] = 'OTP stored successfully';
+            $response['id'] = $newOtpId;
+            $httpStatus = 200;
+            $response['otpRef'] = $newOtpId;
+
+            if ($rawMobile !== '') {
+                $sendResult = sendOTPviaNimbus($rawMobile, $otpCode, $otpComment, $siteDisplayName);
             } else {
-                $response['msg'] = 'You do not have access to this workspace.';
+                $sendResult = sendOTPviaEmail($rawEmail, $otpCode, $otpComment, $siteDisplayName);
             }
+
+            if ($sendResult !== true) {
+                $response['status'] = 'warning';
+                $response['msg'] = 'OTP stored but failed to send' . ((DEVELOPMENT_MODE == true) ? $sendResult : '');
+                $response['error'] = $sendResult;
+            }
+
+            $response['otp'] = $otpCode;
         } else {
-            $verifiedUid = (int) ($resolvedAccess['user']['user_id'] ?? 0);
-            $otpCode = str_pad((string) random_int(0, 999999), 6, '0', STR_PAD_LEFT);
-            $otpMode = ((isset($otpMode) && in_array($otpMode, ['sms', 'email'], true)) ? $otpMode : (($rawMobile !== '') ? 'sms' : 'email'));
-            $otpComment = (isset($otpComment) && trim((string) $otpComment) !== '')
-                ? (string) $otpComment
-                : (string) ($resolvedAccess['user']['logginUserName'] ?? 'User');
-
-            if ($otpDestination == '9990026008') {
-                $otpCode = '111111';
-            }
-            if ($otpDestination == 'appreview@example.com') {
-                $otpCode = '111111';
-            }
-
-            $escComment = mysqli_real_escape_string($connection, $otpComment);
-            $escDest = mysqli_real_escape_string($connection, $otpDestination);
-            $escMode = mysqli_real_escape_string($connection, $otpMode);
-            $siteIdInt = (int) SITE_ID;
-            $siteDisplayName = isset($site_name) && $site_name !== '' ? (string) $site_name : (defined('SITE_NAME') ? (string) SITE_NAME : 'Blumox');
-
-            // Invalidate previous active OTPs for this destination and site
-            mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "otp SET otp_status = 2 WHERE otp_destination = '{$escDest}' AND otp_mode = '{$escMode}' AND otp_site_id = {$siteIdInt} AND otp_status = 0");
-
-            $sql = "INSERT INTO " . TABLE_PREFIX . "otp(otp_user_id, otp_site_id, otp_mode, otp_destination, otp_code, otp_comment, otp_status, otp_time, otp_expire) VALUES ({$verifiedUid}, {$siteIdInt}, '{$escMode}', '{$escDest}', '{$otpCode}', '{$escComment}', 0, NOW(), DATE_ADD(NOW(), INTERVAL 10 MINUTE))";
-            $insertOTP = mysqli_query($connection, $sql);
-
-            if ($insertOTP) {
-                $newOtpId = mysqli_insert_id($connection);
-                $response['status'] = 'success';
-                $response['msg'] = 'OTP stored successfully';
-                $response['id'] = $newOtpId;
-                $httpStatus = 200;
-                $response['otpRef'] = $newOtpId;
-
-                if ($rawMobile !== '') {
-
-                    if (!defined('SMS_GATEWAY')) {
-                        define('SMS_GATEWAY', '');
-                    }
-
-                    switch (SMS_GATEWAY) {
-                        case 'msg91':
-                            $sendResult = sendOTPviaMSG91($rawMobile, $otpCode, $otpComment, $siteDisplayName);
-                            break;
-                        default:
-                            $sendResult = sendOTPviaSMS($rawMobile, $otpCode, $otpComment, $siteDisplayName);
-                            break;
-                    }
-                } else {
-                    $sendResult = sendOTPviaEmail($rawEmail, $otpCode, $otpComment, $siteDisplayName);
-                }
-
-                if ($sendResult !== true) {
-                    $response['status'] = 'warning';
-                    $response['msg'] = 'OTP stored but failed to send' . ((DEVELOPMENT_MODE == true) ? $sendResult : '');
-                    $response['error'] = $sendResult;
-                }
-
-                $response['otp'] = $otpCode;
-            } else {
-                $response['msg'] = 'Failed to insert OTP: ' . mysqli_error($connection);
-                $httpStatus = 500;
-            }
+            $response['msg'] = 'Failed to insert OTP: ' . mysqli_error($connection);
+            $httpStatus = 500;
         }
     }
 } else {

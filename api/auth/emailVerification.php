@@ -16,8 +16,8 @@ function emailVerification($connection, $data)
         ? iswFindUserAndSiteAccessByIdentifier($connection, $rawEmail, (int) SITE_ID, 'email')
         : ['reason' => 'not_found', 'resolved' => null];
 
-    if (!empty($lookup['resolved']) && !empty($lookup['resolved']['has_access'])) {
-        $resolvedUser = $lookup['resolved']['user'] ?? [];
+    if (!empty($lookup['resolved']['user'])) {
+        $resolvedUser = $lookup['resolved']['user'];
         $user_salt_key = (string) ($resolvedUser['user_salt_key'] ?? '');
         $user_status = (int) ($resolvedUser['user_status'] ?? 0);
         $email = (string) ($resolvedUser['user_email'] ?? $rawEmail);
@@ -29,12 +29,6 @@ function emailVerification($connection, $data)
 
         $status = 'success';
         $msg = 'New verification mail has been sent';
-    } elseif (($lookup['reason'] ?? '') === 'disabled') {
-        $status = 'error';
-        $msg = 'Your workspace access has been deactivated.';
-    } elseif (($lookup['reason'] ?? '') === 'no_access') {
-        $status = 'error';
-        $msg = 'You do not have access to this workspace.';
     } else {
         $status = 'warning';
         $msg = 'No Email Found';

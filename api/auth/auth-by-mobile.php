@@ -24,40 +24,44 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $httpStatus = 400;
     } else {
         $mobile = $cleanMobile;
-        $lookup = iswFindUserAndSiteAccessByIdentifier($connection, $mobile, (int) SITE_ID, 'mobile');
+        $user_id = 0;
+        $saltKey = '';
+        $profile_display_name = '';
 
-        if ($lookup['reason'] === 'disabled') {
-            $status = 'error';
-            $msg = 'Your workspace access has been deactivated.';
-            $httpStatus = 403;
-        } elseif ($lookup['reason'] === 'inactive_user') {
-            $status = 'error';
-            $msg = 'Your account is inactive or pending verification.';
-            $httpStatus = 403;
-        } elseif ($lookup['reason'] !== 'ok' || empty($lookup['resolved']) || empty($lookup['resolved']['has_access'])) {
-            $status = 'error';
-            $msg = 'You do not have access to this workspace.';
-            $httpStatus = 403;
-        } else {
-            $resolvedUser = $lookup['resolved']['user'] ?? [];
-            $user_id = (int) ($resolvedUser['user_id'] ?? 0);
-            $saltKey = (string) ($resolvedUser['user_salt_key'] ?? '');
-            $profile_display_name = trim((string) ($resolvedUser['logginUserName'] ?? ($resolvedUser['profile_display_name'] ?? '')));
-            $otpComment = ($profile_display_name !== '') ? $profile_display_name : 'User';
-
-            // Send OTP
-            $showOutput = false;
-            $otpMode = 'sms';
-            require_once 'send-otp.php';
-            if (isset($response['status']) && $response['status'] == 'success') {
-                $status = 'success';
-                $msg = 'OTP sent successfully';
-                $httpStatus = 200;
-            } else {
-                $status = 'error';
-                $msg = !empty($response['msg']) ? $response['msg'] : 'Failed to send OTP';
-                $httpStatus = isset($httpStatus) && $httpStatus >= 400 ? (int) $httpStatus : 500;
+        if (function_exists('iswFindUserAndSiteAccessByIdentifier')) {
+            $lookup = iswFindUserAndSiteAccessByIdentifier($connection, $mobile, (int) SITE_ID, 'mobile');
+            if (!empty($lookup['resolved']['user'])) {
+                $resolvedUser = $lookup['resolved']['user'];
+                $user_id = (int) ($resolvedUser['user_id'] ?? 0);
+                $saltKey = (string) ($resolvedUser['user_salt_key'] ?? '');
+                $profile_display_name = trim((string) ($resolvedUser['logginUserName'] ?? ($resolvedUser['profile_display_name'] ?? '')));
             }
+        } else {
+            $escMobile = mysqli_real_escape_string($connection, $mobile);
+            if ($checkMobile = mysqli_query($connection, "SELECT u.user_id, u.user_salt_key AS saltKey, p.profile_display_name FROM " . TABLE_PREFIX . "user u LEFT JOIN " . TABLE_PREFIX . "profile p ON p.profile_user_id = u.user_id WHERE u.user_mobile = '{$escMobile}' LIMIT 1")) {
+                if (mysqli_num_rows($checkMobile) > 0) {
+                    $uRow = mysqli_fetch_assoc($checkMobile);
+                    $user_id = (int) ($uRow['user_id'] ?? 0);
+                    $saltKey = (string) ($uRow['saltKey'] ?? '');
+                    $profile_display_name = trim((string) ($uRow['profile_display_name'] ?? ''));
+                }
+            }
+        }
+
+        $otpComment = ($profile_display_name !== '') ? $profile_display_name : 'User';
+
+        // Send OTP
+        $showOutput = false;
+        $otpMode = 'sms';
+        require_once 'send-otp.php';
+        if (isset($response['status']) && ($response['status'] == 'success' || $response['status'] == 'warning')) {
+            $status = 'success';
+            $msg = 'OTP sent successfully';
+            $httpStatus = 200;
+        } else {
+            $status = 'error';
+            $msg = !empty($response['msg']) ? $response['msg'] : 'Failed to send OTP';
+            $httpStatus = isset($httpStatus) && $httpStatus >= 400 ? (int) $httpStatus : 500;
         }
     }
 } else {

@@ -70,44 +70,41 @@ if (empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
 
 $escEmail = mysqli_real_escape_string($connection, $email);
 
-// Look up user and enforce active site_access on the current site
-$lookup = iswFindUserAndSiteAccessByIdentifier($connection, $email, $siteId, 'email');
-if ($lookup['reason'] === 'disabled') {
-    http_response_code(403);
-    echo json_encode([
-        'status' => 'error',
-        'code'   => 'access_denied',
-        'msg'    => 'Access denied. Your workspace access has been deactivated.'
-    ]);
-    exit;
-}
-if ($lookup['reason'] === 'inactive_user') {
-    http_response_code(403);
-    echo json_encode([
-        'status' => 'error',
-        'code'   => 'account_inactive',
-        'msg'    => 'Access denied. Your account is inactive or pending verification.'
-    ]);
-    exit;
-}
-if ($lookup['reason'] !== 'ok' || empty($lookup['resolved']) || empty($lookup['resolved']['has_access'])) {
-    http_response_code(403);
-    echo json_encode([
-        'status' => 'error',
-        'code'   => 'access_denied',
-        'msg'    => 'Access denied. You do not have access to this workspace.'
-    ]);
-    exit;
-}
+// Optionally resolve user_id and display name without blocking OTP delivery on workspace/session checks
+$userId = 0;
+$displayName = 'User';
 
-$resolvedUserRow = $lookup['resolved']['user'] ?? [];
-$userId = (int) ($resolvedUserRow['user_id'] ?? 0);
-$displayName = trim((string) ($resolvedUserRow['logginUserName'] ?? ($resolvedUserRow['profile_display_name'] ?? '')));
-if ($displayName === '') {
-    $displayName = trim(((string) ($resolvedUserRow['profile_first_name'] ?? '')) . ' ' . ((string) ($resolvedUserRow['profile_last_name'] ?? '')));
-}
-if ($displayName === '') {
-    $displayName = (string) ($resolvedUserRow['user_username'] ?? 'User');
+if (function_exists('iswFindUserAndSiteAccessByIdentifier')) {
+    $lookup = iswFindUserAndSiteAccessByIdentifier($connection, $email, $siteId, 'email');
+    if (!empty($lookup['resolved']['user'])) {
+        $resolvedUserRow = $lookup['resolved']['user'];
+        $userId = (int) ($resolvedUserRow['user_id'] ?? 0);
+        $candName = trim((string) ($resolvedUserRow['logginUserName'] ?? ($resolvedUserRow['profile_display_name'] ?? '')));
+        if ($candName === '') {
+            $candName = trim(((string) ($resolvedUserRow['profile_first_name'] ?? '')) . ' ' . ((string) ($resolvedUserRow['profile_last_name'] ?? '')));
+        }
+        if ($candName === '') {
+            $candName = trim((string) ($resolvedUserRow['user_username'] ?? ''));
+        }
+        if ($candName !== '') {
+            $displayName = $candName;
+        }
+    }
+} else {
+    $userQuery = mysqli_query($connection, "
+        SELECT u.user_id, p.profile_display_name
+        FROM {$tblPrefix}user u
+        LEFT JOIN {$tblPrefix}profile p ON p.profile_user_id = u.user_id
+        WHERE u.user_email = '{$escEmail}'
+        LIMIT 1
+    ");
+    if ($userQuery && mysqli_num_rows($userQuery) > 0) {
+        $uRow = mysqli_fetch_assoc($userQuery);
+        $userId = (int) ($uRow['user_id'] ?? 0);
+        if (!empty($uRow['profile_display_name'])) {
+            $displayName = (string) $uRow['profile_display_name'];
+        }
+    }
 }
 
 // Generate 6-digit OTP
