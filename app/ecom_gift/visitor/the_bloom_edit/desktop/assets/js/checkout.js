@@ -259,7 +259,6 @@ $(document).ready(function () {
   // Remove item from cart
   $(".removeFromCart").on("click", function (e) {
     e.preventDefault();
-    var totalCartItems = parseInt($("#cartItems").text(), 10) || 0;
     var id = $(this).attr("id");
     var $item = $("#product_" + id);
 
@@ -278,10 +277,15 @@ $(document).ready(function () {
 
             var totalPrice = 0;
             var totalMRP = 0;
+            var remainingUnits = 0;
 
             $(".cart-item").each(function () {
-              totalPrice += parseFloat($(this).data("price")) || 0;
-              totalMRP += parseFloat($(this).data("mrp")) || 0;
+              var unitQty = Math.max(1, parseInt($(this).attr("data-qty"), 10) || 1);
+              var unitPrice = parseFloat($(this).data("price")) || 0;
+              var unitMrp = parseFloat($(this).data("mrp")) || 0;
+              totalPrice += unitPrice * unitQty;
+              totalMRP += (unitMrp > 0 ? unitMrp : unitPrice) * unitQty;
+              remainingUnits += unitQty;
             });
 
             var hasDiscount = totalMRP > totalPrice && totalMRP != 0;
@@ -291,6 +295,43 @@ $(document).ready(function () {
               : 0;
 
             $("#grandTotal, #mobileGrandTotal").text("₹" + totalPrice.toLocaleString("en-IN"));
+            $("#checkoutItemCount").text(remainingUnits + (remainingUnits === 1 ? " Item" : " Items"));
+
+            var $cartBadge = $("#cartItems");
+            if ($cartBadge.length) {
+              $cartBadge.text(remainingUnits);
+              if (remainingUnits > 0) {
+                $cartBadge
+                  .removeClass("bg-[#EFE8DC] text-[#5E5650] border border-[#D4C8BA]")
+                  .addClass("bg-[#183028] text-white");
+              } else {
+                $cartBadge
+                  .removeClass("bg-[#183028] text-white")
+                  .addClass("bg-[#EFE8DC] text-[#5E5650] border border-[#D4C8BA]");
+              }
+              $cartBadge
+                .siblings('a[href="/checkout/"]')
+                .attr("aria-label", "Shopping bag, " + remainingUnits + (remainingUnits === 1 ? " item" : " items"));
+            }
+
+            $(".tbe-cart-count-pill").text(remainingUnits + (remainingUnits === 1 ? " item" : " items"));
+
+            var $statusEl = $("#tbeCartDropdownStatus");
+            if ($statusEl.length && remainingUnits > 0) {
+              $statusEl.text("");
+              var icon = document.createElement("i");
+              icon.className = "ri-checkbox-circle-line text-[#183028] mr-1";
+              icon.setAttribute("aria-hidden", "true");
+              var strong = document.createElement("strong");
+              strong.className = "text-[#1C1A18] font-semibold";
+              strong.textContent = String(remainingUnits);
+              $statusEl[0].appendChild(icon);
+              $statusEl[0].appendChild(document.createTextNode("You have "));
+              $statusEl[0].appendChild(strong);
+              $statusEl[0].appendChild(
+                document.createTextNode(" curated " + (remainingUnits === 1 ? "item" : "items") + " ready for checkout.")
+              );
+            }
 
             if (hasDiscount) {
               $("#totalMRP")
@@ -316,7 +357,6 @@ $(document).ready(function () {
               location.reload();
             }
           });
-          $("#cartItems").text(Math.max(0, totalCartItems - 1));
         } else {
           popUpMessage("center", (data && data.msg) || "Could not remove item.", "error");
         }

@@ -342,10 +342,23 @@ function render_andblooms_nav_tree(array $items, int $depth = 0, string $idPrefi
 
                 <!-- Cart -->
                 <?php
-                if ($cartNumber = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "cart INNER JOIN " . TABLE_PREFIX . "product ON cart_relation_id=product_id WHERE cart_session_id='" . SESSION_ID . "' AND cart_status=0 AND product_status=1 AND cart_site_id=" . SITE_ID)) {
-                    $cartItems = mysqli_num_rows($cartNumber);
-                } else {
-                    $cartItems = 0;
+                $cartItems = 0;
+                $cartCountQuery = "SELECT COALESCE(SUM(GREATEST(c.cart_qty, 1)), 0) AS total_items
+                    FROM " . TABLE_PREFIX . "cart c
+                    LEFT JOIN " . TABLE_PREFIX . "product p
+                        ON (c.cart_relation_id = p.product_id AND c.cart_relation_type = 'product')
+                    LEFT JOIN " . TABLE_PREFIX . "event e
+                        ON (c.cart_relation_id = e.event_id AND c.cart_relation_type = 'event')
+                    WHERE c.cart_session_id = '" . SESSION_ID . "'
+                      AND c.cart_site_id = " . SITE_ID . "
+                      AND (c.cart_status = 0 OR c.cart_status = 2)
+                      AND (
+                          (c.cart_relation_type = 'product' AND p.product_status = 1)
+                          OR (c.cart_relation_type = 'event' AND e.event_status = 1)
+                      )";
+                if ($cartNumber = mysqli_query($connection, $cartCountQuery)) {
+                    $cartCountRow = mysqli_fetch_assoc($cartNumber);
+                    $cartItems = (int) ($cartCountRow['total_items'] ?? 0);
                 }
                 ?>
                 <div class="relative cart-dropdown-trigger group">

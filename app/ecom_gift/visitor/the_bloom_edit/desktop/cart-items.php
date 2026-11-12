@@ -2,12 +2,14 @@
 
 $totalPriceMRP = 0;
 $totalPrice = 0;
+$totalBagUnits = 0;
 $hasEventInCart = false;
 $cartItemsList = [];
 
 if (isset($checkCart) && $checkCart) {
     while ($cartRow = mysqli_fetch_assoc($checkCart)) {
         $cartItemsList[] = $cartRow;
+        $totalBagUnits += max(1, (int) ($cartRow['cart_qty'] ?? 1));
         if (isset($cartRow['cart_relation_type']) && strtolower($cartRow['cart_relation_type']) === 'event') {
             $hasEventInCart = true;
         }
@@ -69,19 +71,26 @@ include_once 'header.php';
                             <h2 class="font-serif text-2xl text-[#1C1A18]">Curated Selection</h2>
                             <p class="text-sm text-[#5E5650] mt-0.5">Hand-prepared fresh creations ready for courier dispatch</p>
                         </div>
-                        <span class="text-xs uppercase tracking-[0.14em] text-[#9B5637] font-semibold">
-                            <?php echo count($cartItemsList); ?> Item<?php echo count($cartItemsList) === 1 ? '' : 's'; ?>
+                        <span id="checkoutItemCount" class="text-xs uppercase tracking-[0.14em] text-[#9B5637] font-semibold">
+                            <?php echo $totalBagUnits; ?> Item<?php echo $totalBagUnits === 1 ? '' : 's'; ?>
                         </span>
                     </div>
 
                     <div class="divide-y divide-[#E6DDD3]">
                         <?php foreach ($cartItemsList as $cartData):
                             extract($cartData);
-                            $totalPriceMRP += (float) $inventory_mrp;
-                            $totalPrice += (float) $inventory_price;
-                            $priceToShow = (float) $inventory_price;
-                            $mrpValue = (float) $inventory_mrp;
-                            $showDiscount = ($mrpValue > $priceToShow && $mrpValue > 0);
+                            $itemQty = max(1, (int) ($cart_qty ?? 1));
+                            $priceToShow = (float) ($inventory_price ?? 0);
+                            if ($priceToShow <= 0 && !empty($cart_price)) {
+                                $priceToShow = (float) $cart_price;
+                            }
+                            $mrpValue = (float) ($inventory_mrp ?? 0);
+                            if ($mrpValue <= 0) {
+                                $mrpValue = $priceToShow;
+                            }
+                            $totalPriceMRP += $mrpValue * $itemQty;
+                            $totalPrice += $priceToShow * $itemQty;
+                            $showDiscount = ($mrpValue > $priceToShow && $mrpValue > 0 && $priceToShow > 0);
                             $discount = $showDiscount ? round((($mrpValue - $priceToShow) / $mrpValue) * 100) : 0;
                             $safeTitle = safe_html(ucwords((string) ($product_title ?? 'Floral Creation')));
                             $safeLink = !empty($link_url) ? safe_html((string) $link_url) : '/shop/';
@@ -90,6 +99,7 @@ include_once 'header.php';
                             <div id="product_<?php echo (int) $cart_id; ?>"
                                 data-price="<?php echo $priceToShow; ?>"
                                 data-mrp="<?php echo $mrpValue; ?>"
+                                data-qty="<?php echo $itemQty; ?>"
                                 class="cart-item flex items-start gap-3 sm:gap-5 py-4 sm:py-5 first:pt-0 last:pb-0">
                                 <a href="<?php echo $safeLink; ?>" class="w-20 h-20 sm:w-28 sm:h-28 flex-shrink-0 rounded-lg overflow-hidden border border-[#E6DDD3] bg-[#FAF7F2]">
                                     <img src="<?php echo $safeImg; ?>" alt="<?php echo $safeTitle; ?>" class="w-full h-full object-cover">

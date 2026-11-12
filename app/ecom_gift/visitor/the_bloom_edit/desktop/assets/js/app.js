@@ -439,6 +439,7 @@ $(document).ready(function () {
     var id = parts[0];
     var price = parts[1];
     var qty = parseInt($("#quantity").val(), 10) || parseInt(parts[2], 10) || 1;
+    var itemType = $("#productInfo").attr("data-item-type") || "product";
     var fallbackTitle = $("h1").first().text().trim();
     var fallbackImg = $("#mainProductImage").attr("src") || "";
 
@@ -452,6 +453,7 @@ $(document).ready(function () {
         id: id,
         quantity: qty,
         price: price,
+        itemType: itemType,
         type: "cart",
         action: "add",
       },
@@ -531,12 +533,12 @@ $(document).ready(function () {
         $.ajax({
           type: "POST",
           dataType: "json",
-          data: { id: mainId, quantity: mainQty, price: mainPrice, type: "cart", action: "add" },
+          data: { id: mainId, quantity: mainQty, price: mainPrice, itemType: "product", type: "cart", action: "add" },
         }),
         $.ajax({
           type: "POST",
           dataType: "json",
-          data: { id: addonId, quantity: addonQtyVal, price: addonPrice, type: "cart", action: "add" },
+          data: { id: addonId, quantity: addonQtyVal, price: addonPrice, itemType: "product", type: "cart", action: "add" },
         }),
       ])
         .then(function (responses) {
@@ -571,7 +573,7 @@ $(document).ready(function () {
       $.ajax({
         type: "POST",
         dataType: "json",
-        data: { id: addonId, quantity: addonQtyVal, price: addonPrice, type: "cart", action: "add" },
+        data: { id: addonId, quantity: addonQtyVal, price: addonPrice, itemType: "product", type: "cart", action: "add" },
         success: function (data) {
           $allAddonBtns.prop("disabled", false);
           if (data && data.status == 200) {
@@ -625,6 +627,7 @@ $(document).ready(function () {
         id: id,
         quantity: qty,
         price: price,
+        itemType: "product",
         type: "cart",
         action: "add",
       },

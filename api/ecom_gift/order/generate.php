@@ -13,11 +13,31 @@ function generate($connection, $data)
 
             extract(mysqli_fetch_assoc($checkOrderStatus));
 
-            if ($checkCart = mysqli_query($connection, "SELECT GROUP_CONCAT(cart_relation_id SEPARATOR ', ') as product, GROUP_CONCAT(cart_qty SEPARATOR ', ') as quantity, GROUP_CONCAT(cart_price SEPARATOR ', ') as price, SUM(cart_price) as totalPrice, cart_currency, cart_user_id as user_id FROM isw_cart WHERE cart_session_id='" . SESSION_ID . "' AND cart_status=2 AND cart_user_id!=0 AND cart_site_id=" . SITE_ID)) {
+            $cartSummarySql = "SELECT
+                    GROUP_CONCAT(c.cart_relation_id SEPARATOR ', ') as product,
+                    GROUP_CONCAT(GREATEST(c.cart_qty, 1) SEPARATOR ', ') as quantity,
+                    GROUP_CONCAT(COALESCE(NULLIF(CAST(c.cart_price AS DECIMAL(12,2)), 0), NULLIF(i.inventory_price, 0), NULLIF(i.inventory_mrp, 0), 0) SEPARATOR ', ') as price,
+                    SUM(COALESCE(NULLIF(CAST(c.cart_price AS DECIMAL(12,2)), 0), NULLIF(i.inventory_price, 0), NULLIF(i.inventory_mrp, 0), 0) * GREATEST(c.cart_qty, 1)) as totalPrice,
+                    COALESCE(MAX(NULLIF(c.cart_currency, '')), 'INR') as cart_currency,
+                    MAX(c.cart_user_id) as user_id
+                FROM " . TABLE_PREFIX . "cart c
+                LEFT JOIN " . TABLE_PREFIX . "inventory i
+                    ON i.inventory_relation_id = c.cart_relation_id
+                   AND i.inventory_site_id = " . SITE_ID . "
+                   AND ((c.cart_relation_type = 'product' AND i.inventory_type = 'product') OR (c.cart_relation_type = 'event' AND i.inventory_type = 'event'))
+                WHERE c.cart_session_id = '" . SESSION_ID . "'
+                  AND c.cart_status = 2
+                  AND c.cart_user_id != 0
+                  AND c.cart_site_id = " . SITE_ID;
 
-                if (mysqli_num_rows($checkCart) != 0) {
+            if ($checkCart = mysqli_query($connection, $cartSummarySql)) {
 
-                    extract(mysqli_fetch_assoc($checkCart));
+                $cartRow = mysqli_fetch_assoc($checkCart);
+                if (!empty($cartRow) && !empty($cartRow['product'])) {
+
+                    extract($cartRow);
+                    $cart_currency = !empty($cart_currency) ? $cart_currency : 'INR';
+                    $totalPrice = (float) ($totalPrice ?? 0);
 
                     if ($paymentMode == 'cash') {
 

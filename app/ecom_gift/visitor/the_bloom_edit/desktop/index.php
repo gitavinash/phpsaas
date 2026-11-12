@@ -350,6 +350,7 @@ if ($checkSlider = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "
                     FROM " . TABLE_PREFIX . "order
                     INNER JOIN " . TABLE_PREFIX . "inventory 
                         ON inventory_relation_id = order_product_id 
+                        AND inventory_type = 'product'
                         AND inventory_site_id = " . SITE_ID . "
                         AND inventory_price > 0
                     WHERE order_site_id = " . SITE_ID . "
@@ -361,6 +362,7 @@ if ($checkSlider = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "
                 INNER JOIN " . TABLE_PREFIX . "product ON o.order_product_id = product_id
                 INNER JOIN " . TABLE_PREFIX . "link ON link_relation_id = product_id
                 INNER JOIN " . TABLE_PREFIX . "inventory ON inventory_relation_id = product_id 
+                    AND inventory_type = 'product'
                     AND inventory_site_id = " . SITE_ID . "
                 WHERE product_status = 1
                   AND link_status = 200
@@ -523,6 +525,7 @@ if (!empty($socialProofs)):
                     AND link_site_id = " . SITE_ID . "
                 INNER JOIN " . TABLE_PREFIX . "inventory 
                     ON inventory_relation_id = product_id 
+                    AND inventory_type = 'product'
                     AND inventory_site_id = " . SITE_ID . "
                     AND inventory_price > 0
                 WHERE product_status = 1

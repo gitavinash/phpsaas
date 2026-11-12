@@ -36,7 +36,7 @@ if (isset($id)) {
                 }
 
                 /** Update cart table */
-                if (!mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "cart SET cart_status=1 WHERE cart_session_id='" . SESSION_ID . "'")) { ?>
+                if (!mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "cart SET cart_status=1 WHERE cart_session_id='" . SESSION_ID . "' AND cart_site_id=" . SITE_ID . " AND (cart_status=0 OR cart_status=2)")) { ?>
 
                     <section class="bg-[#FAF7F2] py-10 sm:py-16 md:py-24 px-4">
                         <div class="max-w-2xl mx-auto bg-white border border-[#E6DDD3] shadow-sm rounded-2xl p-6 sm:p-12 text-center">

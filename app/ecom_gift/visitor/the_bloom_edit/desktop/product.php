@@ -1,4 +1,14 @@
 <?php
+if (empty($product_id)) {
+    http_response_code(404);
+    if (defined('ERROR_404') && file_exists(ERROR_404)) {
+        include_once ERROR_404;
+    } else {
+        include_once __DIR__ . '/404.php';
+    }
+    return;
+}
+
 $whatsappUrl = 'https://wa.me/919910744119?text=' . ((isset($link_type)) ? (($link_type == 'product') ? urlencode('i want to know about ' . $product_title . ' ' . SITE_URL . ACTIVE_URL) : 'Hello') : 'Hello');
 
 if ($checkProductMeta = mysqli_query($connection, "SELECT product_meta_key, product_meta_value FROM " . TABLE_PREFIX . "product_meta WHERE product_meta_relation_id='{$product_id}' AND product_meta_site_id=" . SITE_ID)) {
@@ -34,7 +44,7 @@ if (isset($inventory_addons) && !empty($inventory_addons)) {
         $addOnQuery = "SELECT p.product_id, p.product_title, p.product_image, 
                              i.inventory_price, i.inventory_mrp, i.inventory_currency_symbol, l.link_url, c.category_title
                       FROM " . TABLE_PREFIX . "product p
-                      INNER JOIN " . TABLE_PREFIX . "inventory i ON p.product_id = i.inventory_relation_id AND i.inventory_site_id = " . SITE_ID . "
+                      INNER JOIN " . TABLE_PREFIX . "inventory i ON p.product_id = i.inventory_relation_id AND i.inventory_type = 'product' AND i.inventory_site_id = " . SITE_ID . "
                       INNER JOIN " . TABLE_PREFIX . "link l ON l.link_relation_id = p.product_id 
                         AND l.link_status = 200 AND l.link_type = 'product'
                       INNER JOIN " . TABLE_PREFIX . "category c ON c.category_id = p.product_category
@@ -694,7 +704,7 @@ $galleryJson = safe_html(json_encode($thumbnails, JSON_UNESCAPED_SLASHES | JSON_
                     i.inventory_currency_symbol, 
                     l.link_url
                 FROM " . TABLE_PREFIX . "product p
-                INNER JOIN " . TABLE_PREFIX . "inventory i ON p.product_id = i.inventory_relation_id
+                INNER JOIN " . TABLE_PREFIX . "inventory i ON p.product_id = i.inventory_relation_id AND i.inventory_type = 'product' AND i.inventory_site_id = " . SITE_ID . "
                 INNER JOIN " . TABLE_PREFIX . "link l ON l.link_relation_id = p.product_id 
                     AND l.link_status = 200 
                     AND l.link_type = 'product'

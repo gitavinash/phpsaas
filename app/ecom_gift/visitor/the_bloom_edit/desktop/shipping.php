@@ -2,6 +2,66 @@
 $id = base64_decode($id);
 
 include_once 'header.php';
+
+$safeOrderId = mysqli_real_escape_string($connection, (string) $id);
+$orderQuery = "
+    SELECT 
+        o.order_id, o.order_currency, 
+        o.order_delivery_charges,
+        o.order_total_price, o.order_coupon, o.order_payment_mode,
+        
+        c.cart_id, c.cart_relation_id,
+        GROUP_CONCAT(c.cart_relation_type) AS relation_types,
+        GROUP_CONCAT(GREATEST(c.cart_qty, 1)) AS cart_qty, 
+        c.cart_currency,
+        SUM(COALESCE(NULLIF(CAST(c.cart_price AS DECIMAL(12,2)), 0), NULLIF(i.inventory_price, 0), NULLIF(i.inventory_mrp, 0), 0) * GREATEST(c.cart_qty, 1)) AS cart_price,
+        c.cart_status, 
+        GROUP_CONCAT(COALESCE(NULLIF(p.product_image, ''), NULLIF(e.event_image, ''), e.event_thumbnail)) AS product_image,
+        GROUP_CONCAT(COALESCE(p.product_title, e.event_title)) AS product_title,
+        
+        i.inventory_currency, 
+        GROUP_CONCAT(COALESCE(NULLIF(CAST(c.cart_price AS DECIMAL(12,2)), 0), NULLIF(i.inventory_price, 0), NULLIF(i.inventory_mrp, 0), 0)) AS productPrices,
+        GROUP_CONCAT(COALESCE(NULLIF(i.inventory_mrp, 0), NULLIF(i.inventory_price, 0), NULLIF(CAST(c.cart_price AS DECIMAL(12,2)), 0), 0)) AS productMRPs,
+        
+        pr.profile_first_name, pr.profile_last_name, pr.profile_display_name, 
+        pr.profile_mobile, pr.profile_email, 
+        
+        a.address_name, a.address_house_no, a.address_landmark, a.address_area,
+        ci.city_name, s.state_name, a.address_pin_code, a.address_mobile
+
+    FROM " . TABLE_PREFIX . "order o
+    INNER JOIN " . TABLE_PREFIX . "cart c 
+        ON c.cart_session_id = o.order_cart_session_id AND c.cart_status=2
+    LEFT JOIN " . TABLE_PREFIX . "product p 
+        ON (p.product_id = c.cart_relation_id AND c.cart_relation_type = 'product')
+    LEFT JOIN " . TABLE_PREFIX . "event e 
+        ON (e.event_id = c.cart_relation_id AND c.cart_relation_type = 'event')
+    LEFT JOIN " . TABLE_PREFIX . "inventory i 
+        ON (i.inventory_relation_id = c.cart_relation_id 
+            AND i.inventory_site_id = " . SITE_ID . " 
+            AND ((c.cart_relation_type = 'product' AND i.inventory_type = 'product') OR (c.cart_relation_type = 'event' AND i.inventory_type = 'event')))
+    INNER JOIN " . TABLE_PREFIX . "user u 
+        ON o.order_user_id = u.user_id
+    INNER JOIN " . TABLE_PREFIX . "profile pr 
+        ON pr.profile_user_id = u.user_id
+    INNER JOIN " . TABLE_PREFIX . "address a 
+        ON o.order_address_id = a.address_id
+    INNER JOIN " . TABLE_PREFIX . "city ci 
+        ON ci.city_id = a.address_city_id
+    INNER JOIN " . TABLE_PREFIX . "state s 
+        ON s.state_id = a.address_state_id
+
+    WHERE o.order_id = '{$safeOrderId}'
+      AND o.order_cart_session_id = '" . SESSION_ID . "'
+      AND o.order_status = 0
+      AND c.cart_site_id = " . SITE_ID . "
+    
+    GROUP BY o.order_id";
+
+$checkOrder = mysqli_query($connection, $orderQuery);
+$orderRowData = ($checkOrder && mysqli_num_rows($checkOrder) != 0) ? mysqli_fetch_assoc($checkOrder) : null;
+$relationTypesList = !empty($orderRowData['relation_types']) ? array_map('trim', explode(',', (string) $orderRowData['relation_types'])) : [];
+$hasEventInOrder = in_array('event', $relationTypesList, true);
 ?>
 
 <section class="bg-[#FAF7F2] py-6 md:py-12 pb-28 lg:pb-12">
@@ -32,14 +92,16 @@ include_once 'header.php';
                 <span class="tbe-step-num">2</span>
                 <span>Shipping Details</span>
             </div>
-            <span class="text-[#D4C8BA] hidden sm:inline" aria-hidden="true">/</span>
-            <div class="tbe-step-item is-complete">
-                <span class="tbe-step-num">3</span>
-                <span>Delivery Window &amp; Card</span>
-            </div>
+            <?php if (!$hasEventInOrder): ?>
+                <span class="text-[#D4C8BA] hidden sm:inline" aria-hidden="true">/</span>
+                <div class="tbe-step-item is-complete">
+                    <span class="tbe-step-num">3</span>
+                    <span>Delivery Window &amp; Card</span>
+                </div>
+            <?php endif; ?>
             <span class="text-[#D4C8BA] hidden sm:inline" aria-hidden="true">/</span>
             <div class="tbe-step-item is-active" aria-current="step">
-                <span class="tbe-step-num">4</span>
+                <span class="tbe-step-num"><?php echo $hasEventInOrder ? '3' : '4'; ?></span>
                 <span>Order Review &amp; Pay</span>
             </div>
         </nav>
@@ -49,62 +111,9 @@ include_once 'header.php';
             <div class="lg:col-span-2 space-y-6 sm:space-y-8">
                 <div class="bg-white border border-[#E6DDD3] shadow-sm rounded-xl p-4 sm:p-8">
                     <?php
-                    $orderQuery = "
-    SELECT 
-        o.order_id, o.order_currency, 
-        o.order_delivery_charges,
-        o.order_total_price, o.order_coupon, o.order_payment_mode,
-        
-        c.cart_id, c.cart_relation_id, c.cart_relation_type,
-        GROUP_CONCAT(c.cart_qty) AS cart_qty, 
-        c.cart_currency, SUM(c.cart_price) AS cart_price,
-        c.cart_status, 
-        GROUP_CONCAT(COALESCE(p.product_image, e.event_image, e.event_thumbnail)) AS product_image,
-        GROUP_CONCAT(COALESCE(p.product_title, e.event_title)) AS product_title,
-        
-        i.inventory_currency, 
-        GROUP_CONCAT(COALESCE(i.inventory_price, c.cart_price)) AS productPrices,
-        GROUP_CONCAT(COALESCE(i.inventory_mrp, c.cart_price)) AS productMRPs,
-        
-        pr.profile_first_name, pr.profile_last_name, pr.profile_display_name, 
-        pr.profile_mobile, pr.profile_email, 
-        
-        a.address_name, a.address_house_no, a.address_landmark, a.address_area,
-        ci.city_name, s.state_name, a.address_pin_code, a.address_mobile
-
-    FROM " . TABLE_PREFIX . "order o
-    INNER JOIN " . TABLE_PREFIX . "cart c 
-        ON c.cart_session_id = o.order_cart_session_id AND c.cart_status=2
-    LEFT JOIN " . TABLE_PREFIX . "product p 
-        ON (p.product_id = c.cart_relation_id AND c.cart_relation_type = 'product')
-    LEFT JOIN " . TABLE_PREFIX . "event e 
-        ON (e.event_id = c.cart_relation_id AND c.cart_relation_type = 'event')
-    LEFT JOIN " . TABLE_PREFIX . "inventory i 
-        ON (i.inventory_relation_id = c.cart_relation_id 
-            AND i.inventory_site_id = " . SITE_ID . " 
-            AND ((c.cart_relation_type = 'product' AND i.inventory_type = 'product') OR (c.cart_relation_type = 'event' AND i.inventory_type = 'event')))
-    INNER JOIN " . TABLE_PREFIX . "user u 
-        ON o.order_user_id = u.user_id
-    INNER JOIN " . TABLE_PREFIX . "profile pr 
-        ON pr.profile_user_id = u.user_id
-    INNER JOIN " . TABLE_PREFIX . "address a 
-        ON o.order_address_id = a.address_id
-    INNER JOIN " . TABLE_PREFIX . "city ci 
-        ON ci.city_id = a.address_city_id
-    INNER JOIN " . TABLE_PREFIX . "state s 
-        ON s.state_id = a.address_state_id
-
-    WHERE o.order_id = '{$id}'
-      AND o.order_cart_session_id = '" . SESSION_ID . "'
-      AND o.order_status = 0
-      AND c.cart_site_id = " . SITE_ID . "
-    
-    GROUP BY o.order_id";
-
-                    if ($checkOrder = mysqli_query($connection, $orderQuery)) {
-                        if (mysqli_num_rows($checkOrder) != 0) {
-                            $showSiderbar = true;
-                            extract(mysqli_fetch_assoc($checkOrder));
+                    if ($orderRowData !== null) {
+                        $showSiderbar = true;
+                        extract($orderRowData);
 
                             $orderMetas = [];
                             $metaQuery = "SELECT order_meta_key, order_meta_value 
@@ -235,9 +244,7 @@ include_once 'header.php';
                                 <p class="text-sm text-[#5E5650] max-w-md mx-auto">Order not found or expired. Please return to your bag to verify your selections.</p>
                                 <a href="/checkout/" class="tbe-btn-forest">Return to Bag</a>
                             </div>
-                    <?php
-                        }
-                    } ?>
+                    <?php } ?>
                 </div>
             </div>
 
@@ -248,12 +255,27 @@ include_once 'header.php';
                         <h2 class="font-serif text-xl text-[#1C1A18] pb-3 border-b border-[#E6DDD3]">Payment Breakdown</h2>
 
                         <?php
-                        $subtotal = (float) ($cart_price ?? 0);
+                        $subtotal = 0.0;
+                        $totalMRP = 0.0;
+                        if (isset($productPrices) && is_array($productPrices)) {
+                            for ($idx = 0; $idx < count($productPrices); $idx++) {
+                                $lineQty = isset($productQtys[$idx]) ? max(1, (int) $productQtys[$idx]) : 1;
+                                $linePrice = isset($productPrices[$idx]) ? (float) $productPrices[$idx] : 0.0;
+                                $lineMrp = isset($productMRPs[$idx]) ? (float) $productMRPs[$idx] : $linePrice;
+                                if ($lineMrp <= 0) {
+                                    $lineMrp = $linePrice;
+                                }
+                                $subtotal += $linePrice * $lineQty;
+                                $totalMRP += $lineMrp * $lineQty;
+                            }
+                        }
+                        if ($subtotal <= 0 && !empty($cart_price)) {
+                            $subtotal = (float) $cart_price;
+                        }
                         $deliveryCharges = (float) ($order_delivery_charges ?? 0);
                         $grandTotal = $subtotal + $deliveryCharges;
-                        $totalMRP = isset($productMRPs) ? array_sum(array_map('floatval', $productMRPs)) : 0.0;
                         $discountAmount = $totalMRP - $subtotal;
-                        $showDiscount = $totalMRP > $subtotal && $totalMRP > 0;
+                        $showDiscount = $totalMRP > $subtotal && $totalMRP > 0 && $subtotal > 0;
                         ?>
 
                         <div class="space-y-2.5 text-sm text-[#1C1A18]">

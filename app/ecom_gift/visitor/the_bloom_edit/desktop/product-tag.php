@@ -29,7 +29,7 @@
         $query = "SELECT link_url, link_published, product_id, product_title, product_image, inventory_currency_symbol, inventory_price, inventory_mrp, inventory_in_stock 
                   FROM " . TABLE_PREFIX . "link 
                   INNER JOIN " . TABLE_PREFIX . "product ON link_relation_id=product_id 
-                  INNER JOIN " . TABLE_PREFIX . "inventory ON inventory_relation_id=product_id 
+                  INNER JOIN " . TABLE_PREFIX . "inventory ON inventory_relation_id=product_id AND inventory_type='product' AND inventory_site_id=" . SITE_ID . " 
                   WHERE link_relation_id IN ($resultTags) AND link_site_id=" . SITE_ID . " 
                   AND link_type='product' AND link_status=200 
                   GROUP BY link_url 
