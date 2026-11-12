@@ -52,10 +52,7 @@ if ($site_dashboard_version == 1) {
 
 	if (!is_dir($dashboardDirectory)) {
 
-		if (!is_dir($dashboardDirectory = str_replace('/default/', '/default/', ADMIN_PATH))) {
-
-			$dashboardDirectory = str_replace('/mobile/', '/desktop/', $dashboardDirectory);
-		}
+		$dashboardDirectory = str_replace('/' . SITE_VERSION . '/', '/desktop/', $dashboardDirectory);
 	}
 } else {
 
@@ -85,6 +82,10 @@ if (!file_exists($dashboardFile)) {
 	// When dashboard theme need to call file from the default theme directory ( v1 )
 
 	$dashboardFile = ROOT . '/app/default/' . USER_TYPE . '/' . SITE_VERSION . '/' . $dashboardFilePath;
+
+	if (!file_exists($dashboardFile)) {
+		$dashboardFile = ROOT . '/app/default/' . USER_TYPE . '/desktop/' . $dashboardFilePath;
+	}
 
 	if (!file_exists($dashboardFile)) {
 		$dashboardFile = $dashboardDirectory . '404.php';

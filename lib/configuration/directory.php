@@ -166,15 +166,23 @@ if (is_dir(ROOT . $tempDashboardDir)) {
 } else {
 
 	// Default or previous admin dashbaord url
+	$v1AdminAppDir = '/app/' . SITE_APP . '/' . USER_TYPE . '/' . SITE_VERSION . '/';
+	$v1HasDeviceDir = is_dir(ROOT . $v1AdminAppDir);
+	$v1EffectiveDir = $v1HasDeviceDir ? $v1AdminAppDir : ('/app/' . SITE_APP . '/' . USER_TYPE . '/desktop/');
+	$v1CssLibVersion = ($v1HasDeviceDir && is_dir(ROOT . CSS_LIBRARY . 'app/default/' . SITE_VERSION . '/')) ? SITE_VERSION : 'desktop';
+	$v1JsLibVersion = ($v1HasDeviceDir && is_dir(ROOT . JS_LIBRARY . 'app/default/' . SITE_VERSION . '/')) ? SITE_VERSION : 'desktop';
+	$v1StylesheetVersion = is_dir(ROOT . CSS_LIBRARY . 'app/' . SITE_APP . '/' . SITE_VERSION . '/') ? SITE_VERSION : 'desktop';
+	$v1JsVersion = is_dir(ROOT . JS_LIBRARY . 'app/' . SITE_APP . '/' . SITE_VERSION . '/') ? SITE_VERSION : 'desktop';
+	$v1ImagesVersion = is_dir(ROOT . IMG_LIBRARY . 'app/' . SITE_APP . '/' . SITE_VERSION . '/') ? SITE_VERSION : 'desktop';
 
-	define('ADMIN_DIR', '/app/' . SITE_APP . '/' . USER_TYPE . '/' . SITE_VERSION . '/');
+	define('ADMIN_DIR', $v1EffectiveDir);
 	define('ADMIN_PATH', ROOT . ADMIN_DIR);
 	define('ADMIN_URL', SITE_URL . ADMIN_DIR);
-	define('ADMIN_STYLESHEET', CSS_LIBRARY . 'app/' . SITE_APP . '/' . SITE_VERSION . '/');
-	define('ADMIN_CSS_LIBRARY', CSS_LIBRARY . 'app/default/' . SITE_VERSION . '/');
-	define('ADMIN_JS', JS_LIBRARY . 'app/' . SITE_APP . '/' . SITE_VERSION . '/');
-	define('ADMIN_JS_LIBRARY', JS_LIBRARY . 'app/default/' . SITE_VERSION . '/');
-	define('ADMIN_IMAGES', IMG_LIBRARY . 'app/' . SITE_APP . '/' . SITE_VERSION . '/');
+	define('ADMIN_STYLESHEET', CSS_LIBRARY . 'app/' . SITE_APP . '/' . $v1StylesheetVersion . '/');
+	define('ADMIN_CSS_LIBRARY', CSS_LIBRARY . 'app/default/' . $v1CssLibVersion . '/');
+	define('ADMIN_JS', JS_LIBRARY . 'app/' . SITE_APP . '/' . $v1JsVersion . '/');
+	define('ADMIN_JS_LIBRARY', JS_LIBRARY . 'app/default/' . $v1JsLibVersion . '/');
+	define('ADMIN_IMAGES', IMG_LIBRARY . 'app/' . SITE_APP . '/' . $v1ImagesVersion . '/');
 }
 
 /* Visitor directory managment */

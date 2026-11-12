@@ -1,0 +1,2297 @@
+/*
+ * ecom_gift Administrator Responsive Stylesheet
+ * Scoped under body.premium-admin.ecom-gift-admin to safely override
+ * base admin_new.css and template inline <style> rules across all viewports.
+ */
+
+:root {
+  --eg-target-size: 32px;
+  --eg-header-h: 62px;
+  --eg-sidebar-w: 248px;
+  --eg-bg: #f1f5f9;
+  --eg-surface: #ffffff;
+  --eg-surface-alt: #f8fafc;
+  --eg-text: #0f172a;
+  --eg-text-muted: #64748b;
+  --eg-border: #e2e8f0;
+  --eg-accent: #2563eb;
+  --eg-accent-hover: #1d4ed8;
+  --eg-nav-bg-top: #0f172a;
+  --eg-nav-bg-bot: #1e293b;
+  --eg-nav-text: #e2e8f0;
+  --eg-nav-muted: #94a3b8;
+  --eg-radius: 12px;
+}
+
+@media (max-width: 1024px) {
+  :root {
+    --eg-header-h: 56px;
+  }
+}
+
+@media (pointer: coarse) {
+  :root {
+    --eg-target-size: 44px;
+  }
+}
+
+/* Prevent horizontal viewport overflow while preserving sticky positioning */
+html,
+body.premium-admin.ecom-gift-admin {
+  max-width: 100%;
+  overflow-x: clip;
+  background-color: var(--eg-bg);
+}
+
+/* Accessibility Helpers */
+.visually-hidden {
+  position: absolute !important;
+  inline-size: 1px !important;
+  block-size: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip-path: inset(50%) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+body.premium-admin.ecom-gift-admin .eg-skip-link {
+  position: fixed;
+  top: -120px;
+  left: max(12px, env(safe-area-inset-left));
+  z-index: 20000;
+  padding: 10px 16px;
+  border-radius: 10px;
+  background: #0f172a;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+  box-shadow: 0 8px 24px rgba(2, 6, 23, 0.35);
+  transition: top 0.12s ease;
+}
+
+body.premium-admin.ecom-gift-admin .eg-skip-link:focus {
+  top: max(12px, env(safe-area-inset-top));
+  outline: 3px solid #60a5fa;
+  outline-offset: 2px;
+}
+
+body.premium-admin.ecom-gift-admin :where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: 2px solid var(--eg-accent);
+  outline-offset: 2px;
+}
+
+/* Coarse pointer sizing and iOS zoom prevention */
+@media (pointer: coarse) {
+  body.premium-admin.ecom-gift-admin :where(
+    button,
+    select,
+    textarea,
+    input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]),
+    .btn,
+    .dh-btn,
+    .df-preset,
+    .df-apply,
+    .nav-toggle
+  ) {
+    min-block-size: var(--eg-target-size);
+  }
+
+  body.premium-admin.ecom-gift-admin :where(
+    input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="hidden"]):not([type="color"]),
+    select,
+    textarea
+  ) {
+    font-size: 16px;
+  }
+}
+
+/* =========================================================
+   Header & Profile Action Menu
+   ========================================================= */
+body.premium-admin.ecom-gift-admin header.eg-topbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: var(--eg-header-h);
+  padding: 0 max(16px, env(safe-area-inset-right)) 0 max(16px, env(safe-area-inset-left));
+  background: #ffffff;
+  border-bottom: 1px solid var(--eg-border);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  filter: none;
+  transform: none;
+  will-change: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  z-index: 1000;
+  box-sizing: border-box;
+}
+
+body.premium-admin.ecom-gift-admin header.eg-topbar .left-side,
+body.premium-admin.ecom-gift-admin header.eg-topbar .right-side {
+  float: none;
+  width: auto;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+
+body.premium-admin.ecom-gift-admin header.eg-topbar .left-side {
+  gap: 10px;
+  flex: 1 1 auto;
+}
+
+body.premium-admin.ecom-gift-admin .nav-toggle {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  margin: 0;
+  padding: 0;
+  border: 1px solid var(--eg-border);
+  border-radius: 10px;
+  background: var(--eg-surface-alt);
+  color: var(--eg-text);
+  font-size: 16px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+body.premium-admin.ecom-gift-admin .nav-toggle:hover {
+  background: #e2e8f0;
+}
+
+@media (max-width: 1024px) {
+  body.premium-admin.ecom-gift-admin header.eg-topbar {
+    padding: 0 max(10px, env(safe-area-inset-right)) 0 max(10px, env(safe-area-inset-left));
+  }
+
+  body.premium-admin.ecom-gift-admin .nav-toggle {
+    display: inline-flex;
+  }
+}
+
+body.premium-admin.ecom-gift-admin header.eg-topbar .logo {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+
+body.premium-admin.ecom-gift-admin header.eg-topbar .logo a {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 8px;
+}
+
+body.premium-admin.ecom-gift-admin header.eg-topbar .logo img {
+  display: block;
+  width: auto;
+  max-width: min(175px, 40dvw);
+  height: 36px;
+  object-fit: contain;
+}
+
+@media (max-width: 1024px) {
+  body.premium-admin.ecom-gift-admin header.eg-topbar .logo img {
+    height: 30px;
+    max-width: min(145px, 38dvw);
+  }
+}
+
+/* Profile button & dropdown */
+body.premium-admin.ecom-gift-admin .eg-profile-menu {
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+body.premium-admin.ecom-gift-admin .eg-profile-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 40px;
+  padding: 4px 10px 4px 12px;
+  border: 1px solid var(--eg-border);
+  border-radius: 999px;
+  background: var(--eg-surface-alt);
+  color: var(--eg-text);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+body.premium-admin.ecom-gift-admin .eg-profile-trigger:hover,
+body.premium-admin.ecom-gift-admin .eg-profile-trigger[aria-expanded="true"] {
+  background: #eff6ff;
+  border-color: #bfdbfe;
+}
+
+body.premium-admin.ecom-gift-admin .eg-profile-welcome {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  max-width: 190px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+body.premium-admin.ecom-gift-admin .eg-profile-welcome strong {
+  font-weight: 700;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+body.premium-admin.ecom-gift-admin .eg-profile-trigger .profile-img {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 1px solid #cbd5e1;
+  background: #e2e8f0;
+  flex-shrink: 0;
+  display: inline-flex;
+}
+
+body.premium-admin.ecom-gift-admin .eg-profile-trigger .profile-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+body.premium-admin.ecom-gift-admin .eg-profile-caret {
+  font-size: 11px;
+  color: var(--eg-text-muted);
+  transition: transform 0.15s ease;
+}
+
+body.premium-admin.ecom-gift-admin .eg-profile-trigger[aria-expanded="true"] .eg-profile-caret {
+  transform: rotate(180deg);
+}
+
+@media (max-width: 680px) {
+  body.premium-admin.ecom-gift-admin .eg-profile-greeting {
+    display: none;
+  }
+
+  body.premium-admin.ecom-gift-admin .eg-profile-welcome {
+    max-width: 90px;
+  }
+
+  body.premium-admin.ecom-gift-admin .eg-profile-trigger {
+    padding: 3px 8px;
+    gap: 6px;
+  }
+}
+
+@media (max-width: 400px) {
+  body.premium-admin.ecom-gift-admin .eg-profile-welcome {
+    display: none;
+  }
+
+  body.premium-admin.ecom-gift-admin .eg-profile-trigger {
+    padding: 4px 7px;
+  }
+}
+
+body.premium-admin.ecom-gift-admin header.eg-topbar .right-side ul.eg-profile-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  left: auto;
+  bottom: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  width: 224px;
+  height: auto;
+  margin: 0;
+  padding: 6px;
+  list-style: none;
+  background: #ffffff;
+  border: 1px solid var(--eg-border);
+  border-radius: 12px;
+  box-shadow: 0 16px 36px rgba(15, 23, 42, 0.14);
+  box-sizing: border-box;
+  z-index: 1200;
+}
+
+body.premium-admin.ecom-gift-admin header.eg-topbar .right-side ul.eg-profile-dropdown > li {
+  float: none;
+  display: block;
+  width: 100%;
+  height: auto;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body.premium-admin.ecom-gift-admin header.eg-topbar .right-side ul.eg-profile-dropdown .eg-profile-sheet-header {
+  display: none;
+}
+
+body.premium-admin.ecom-gift-admin header.eg-topbar .right-side ul.eg-profile-dropdown a {
+  float: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 40px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  color: var(--eg-text);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.3;
+  text-decoration: none;
+  box-sizing: border-box;
+  transition: background-color 0.12s ease;
+}
+
+body.premium-admin.ecom-gift-admin header.eg-topbar .right-side ul.eg-profile-dropdown a:hover,
+body.premium-admin.ecom-gift-admin header.eg-topbar .right-side ul.eg-profile-dropdown a:focus-visible {
+  background: #f1f5f9;
+  color: var(--eg-accent);
+}
+
+body.premium-admin.ecom-gift-admin header.eg-topbar .right-side ul.eg-profile-dropdown a i {
+  width: 16px;
+  text-align: center;
+  color: var(--eg-text-muted);
+}
+
+body.premium-admin.ecom-gift-admin .eg-profile-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(2, 6, 23, 0.45);
+  z-index: 1190;
+}
+
+body.premium-admin.ecom-gift-admin .eg-profile-backdrop[hidden] {
+  display: none;
+}
+
+@media (max-width: 680px) {
+  body.premium-admin.ecom-gift-admin header.eg-topbar .right-side ul.eg-profile-dropdown {
+    position: fixed;
+    top: auto;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    max-height: 75svh;
+    overflow-y: auto;
+    border-radius: 18px 18px 0 0;
+    border-left: 0;
+    border-right: 0;
+    border-bottom: 0;
+    padding: 10px max(14px, env(safe-area-inset-right)) max(16px, env(safe-area-inset-bottom)) max(14px, env(safe-area-inset-left));
+    box-shadow: 0 -14px 40px rgba(2, 6, 23, 0.25);
+    box-sizing: border-box;
+    z-index: 1200;
+  }
+
+  body.premium-admin.ecom-gift-admin header.eg-topbar .right-side ul.eg-profile-dropdown > li.eg-profile-sheet-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    padding: 4px 8px 12px;
+    margin-bottom: 6px;
+    border-bottom: 1px solid var(--eg-border);
+    text-align: center;
+  }
+
+  body.premium-admin.ecom-gift-admin .eg-sheet-handle {
+    width: 36px;
+    height: 4px;
+    border-radius: 999px;
+    background: #cbd5e1;
+    margin-bottom: 8px;
+  }
+
+  body.premium-admin.ecom-gift-admin .eg-profile-sheet-header strong {
+    font-size: 14px;
+    color: var(--eg-text);
+  }
+
+  body.premium-admin.ecom-gift-admin .eg-profile-sheet-header small {
+    font-size: 12px;
+    color: var(--eg-text-muted);
+  }
+
+  body.premium-admin.ecom-gift-admin header.eg-topbar .right-side ul.eg-profile-dropdown a {
+    min-height: 46px;
+    font-size: 14px;
+    padding: 10px 12px;
+  }
+}
+
+body.premium-admin.ecom-gift-admin header.eg-topbar .right-side ul.eg-profile-dropdown[hidden] {
+  display: none;
+}
+
+/* =========================================================
+   "Also a Sidebar" Navigation Drawer
+   Desktop (>1024px): fixed persistent sidebar
+   Tablet/Mobile (<=1024px): swipe-capable top-layer drawer
+   ========================================================= */
+@media (min-width: 1025px) {
+  body.premium-admin.ecom-gift-admin aside.Drawer {
+    display: block !important;
+    position: fixed;
+    top: var(--eg-header-h);
+    left: 0;
+    bottom: 0;
+    width: var(--eg-sidebar-w);
+    height: calc(100dvh - var(--eg-header-h)) !important;
+    min-height: 0;
+    max-width: none;
+    max-height: none;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: linear-gradient(180deg, var(--eg-nav-bg-top) 0%, var(--eg-nav-bg-bot) 100%);
+    overflow: hidden;
+    transform: none;
+    z-index: 998;
+  }
+
+  body.premium-admin.ecom-gift-admin aside.Drawer .Drawer-scroller {
+    display: block;
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    overscroll-behavior-y: contain;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(148, 163, 184, 0.35) transparent;
+  }
+
+  body.premium-admin.ecom-gift-admin aside.Drawer .Drawer-scroller::after {
+    display: none;
+  }
+
+  body.premium-admin.ecom-gift-admin aside.Drawer .Drawer-sheet {
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+    height: auto;
+    padding: 14px 10px 24px;
+    background: transparent;
+    color: var(--eg-nav-text);
+    overflow: visible;
+    box-sizing: border-box;
+  }
+
+  body.premium-admin.ecom-gift-admin .eg-drawer-header {
+    display: none;
+  }
+}
+
+@media (max-width: 1024px) {
+  body.premium-admin.ecom-gift-admin aside.Drawer {
+    --drawer-width: min(300px, 84dvw, 100dvw - 24px);
+    --drawer-backdrop: 0;
+    position: fixed;
+    inset: 0;
+    width: auto;
+    height: auto !important;
+    min-height: 0;
+    max-width: none;
+    max-height: none;
+    margin: 0;
+    padding: 0;
+    background: rgba(2, 6, 23, calc(var(--drawer-backdrop, 0) * 0.55));
+    border: 0;
+    overflow: visible;
+    transform: none;
+    box-shadow: none;
+    z-index: 10050;
+  }
+
+  body.premium-admin.ecom-gift-admin aside.Drawer:not(:popover-open):not(.sidebar-open) {
+    display: none;
+  }
+
+  body.premium-admin.ecom-gift-admin aside.Drawer:popover-open,
+  body.premium-admin.ecom-gift-admin aside.Drawer.sidebar-open {
+    display: block;
+  }
+
+  body.premium-admin.ecom-gift-admin aside.Drawer::backdrop {
+    background: transparent;
+  }
+
+  body.premium-admin.ecom-gift-admin aside.Drawer .Drawer-scroller {
+    position: relative;
+    display: grid;
+    grid-template-columns: var(--drawer-width) 100%;
+    width: 100%;
+    height: 100svh;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    overscroll-behavior: none;
+    scrollbar-width: none;
+    scroll-snap-type: x mandatory;
+  }
+
+  body.premium-admin.ecom-gift-admin aside.Drawer .Drawer-scroller::-webkit-scrollbar {
+    display: none;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    body.premium-admin.ecom-gift-admin aside.Drawer .Drawer-scroller {
+      scroll-behavior: smooth;
+    }
+  }
+
+  body.premium-admin.ecom-gift-admin aside.Drawer .Drawer-scroller::after {
+    content: "";
+    scroll-snap-align: end;
+    scroll-initial-target: nearest;
+  }
+
+  body.premium-admin.ecom-gift-admin aside.Drawer .Drawer-sheet {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100svh;
+    margin: 0;
+    padding: max(12px, env(safe-area-inset-top)) 10px max(20px, env(safe-area-inset-bottom)) max(10px, env(safe-area-inset-left));
+    background: linear-gradient(180deg, var(--eg-nav-bg-top) 0%, var(--eg-nav-bg-bot) 100%);
+    color: var(--eg-nav-text);
+    overflow-y: auto;
+    overscroll-behavior-y: contain;
+    scroll-snap-align: start;
+    box-shadow: 12px 0 36px rgba(2, 6, 23, 0.38);
+    box-sizing: border-box;
+  }
+
+  body.premium-admin.ecom-gift-admin .eg-drawer-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 4px 6px 12px;
+    margin-bottom: 8px;
+    border-bottom: 1px solid rgba(148, 163, 184, 0.2);
+  }
+
+  body.premium-admin.ecom-gift-admin .eg-drawer-title {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #f8fafc;
+  }
+
+  body.premium-admin.ecom-gift-admin .eg-drawer-close {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border: 1px solid rgba(148, 163, 184, 0.28);
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.08);
+    color: #f8fafc;
+    font-size: 16px;
+    cursor: pointer;
+  }
+
+  body.premium-admin.ecom-gift-admin .eg-drawer-close:hover {
+    background: rgba(255, 255, 255, 0.16);
+  }
+}
+
+@supports (animation-timeline: scroll()) {
+  @media (max-width: 1024px) {
+    body.premium-admin.ecom-gift-admin aside.Drawer {
+      timeline-scope: --eg-drawer-fade;
+      animation: eg-fade-drawer-backdrop linear both;
+      animation-timeline: --eg-drawer-fade;
+    }
+
+    body.premium-admin.ecom-gift-admin aside.Drawer .Drawer-scroller {
+      scroll-timeline: --eg-drawer-fade x;
+    }
+  }
+
+  @property --drawer-backdrop {
+    syntax: "<number>";
+    inherits: true;
+    initial-value: 0;
+  }
+
+  @keyframes eg-fade-drawer-backdrop {
+    0% {
+      --drawer-backdrop: 1;
+    }
+    100% {
+      --drawer-backdrop: 0;
+    }
+  }
+}
+
+/* Sidebar Search & Accordion Navigation */
+body.premium-admin.ecom-gift-admin .nav-search-wrapper {
+  padding: 0 4px 12px;
+}
+
+body.premium-admin.ecom-gift-admin .nav-search-wrapper label {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--eg-nav-muted);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+body.premium-admin.ecom-gift-admin .nav-search-input {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 6px 0 10px;
+  border: 1px solid rgba(201, 213, 230, 0.22);
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 9px;
+}
+
+body.premium-admin.ecom-gift-admin .nav-search-input:focus-within {
+  border-color: #60a5fa;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+body.premium-admin.ecom-gift-admin .nav-search-input > i {
+  position: static;
+  transform: none;
+  color: var(--eg-nav-muted);
+  font-size: 12px;
+  flex-shrink: 0;
+}
+
+body.premium-admin.ecom-gift-admin #side-nav-search {
+  width: 100%;
+  min-width: 0;
+  height: 36px;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  background: transparent;
+  color: #f8fafc;
+  font-size: 13px;
+  font-family: inherit;
+}
+
+body.premium-admin.ecom-gift-admin #side-nav-search:focus {
+  outline: none;
+}
+
+body.premium-admin.ecom-gift-admin #side-nav-search::placeholder {
+  color: #94a3b8;
+}
+
+body.premium-admin.ecom-gift-admin .eg-search-clear {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: 0;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.14);
+  color: #f8fafc;
+  font-size: 11px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+body.premium-admin.ecom-gift-admin .eg-search-clear[hidden] {
+  display: none;
+}
+
+body.premium-admin.ecom-gift-admin nav.side-nav,
+body.premium-admin.ecom-gift-admin .Drawer-sheet nav.side-nav {
+  float: none;
+  width: 100%;
+  height: auto !important;
+  max-height: none;
+  overflow: visible !important;
+  padding: 0;
+  margin: 0;
+}
+
+body.premium-admin.ecom-gift-admin nav.side-nav > ul {
+  float: none;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+body.premium-admin.ecom-gift-admin nav.side-nav > ul > li {
+  float: none;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  position: relative;
+}
+
+body.premium-admin.ecom-gift-admin nav.side-nav .eg-nav-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  width: 100%;
+  border-radius: 9px;
+  transition: background-color 0.14s ease;
+}
+
+body.premium-admin.ecom-gift-admin nav.side-nav > ul > li.active > .eg-nav-row,
+body.premium-admin.ecom-gift-admin nav.side-nav > ul > li.active > a.eg-nav-link {
+  background: rgba(37, 99, 235, 0.24);
+  color: #ffffff;
+}
+
+body.premium-admin.ecom-gift-admin nav.side-nav a.eg-nav-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 38px;
+  padding: 8px 10px;
+  border-radius: 9px;
+  color: #dbeafe;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.25;
+  text-decoration: none;
+  float: none;
+  width: auto;
+}
+
+body.premium-admin.ecom-gift-admin nav.side-nav a.eg-nav-link:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+}
+
+body.premium-admin.ecom-gift-admin nav.side-nav a.eg-nav-link i {
+  width: 18px;
+  text-align: center;
+  font-size: 14px;
+  flex-shrink: 0;
+  color: #93c5fd;
+}
+
+body.premium-admin.ecom-gift-admin nav.side-nav .eg-nav-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+body.premium-admin.ecom-gift-admin .eg-nav-sub-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: #94a3b8;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background-color 0.14s ease, color 0.14s ease, transform 0.16s ease;
+}
+
+body.premium-admin.ecom-gift-admin .eg-nav-sub-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+}
+
+body.premium-admin.ecom-gift-admin .eg-nav-sub-btn[aria-expanded="true"] i {
+  transform: rotate(180deg);
+}
+
+@media (pointer: coarse) {
+  body.premium-admin.ecom-gift-admin nav.side-nav a.eg-nav-link,
+  body.premium-admin.ecom-gift-admin .eg-nav-sub-btn,
+  body.premium-admin.ecom-gift-admin nav.side-nav .eg-submenu a {
+    min-height: 44px;
+  }
+
+  body.premium-admin.ecom-gift-admin .eg-nav-sub-btn {
+    width: 44px;
+    height: 44px;
+  }
+}
+
+body.premium-admin.ecom-gift-admin nav.side-nav ul.eg-submenu {
+  position: static;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 4px 0 6px 14px;
+  padding: 2px 0 2px 10px;
+  border-left: 1px solid rgba(148, 163, 184, 0.28);
+  background: transparent;
+  box-shadow: none;
+  list-style: none;
+  width: auto;
+  float: none;
+}
+
+body.premium-admin.ecom-gift-admin nav.side-nav ul.eg-submenu[hidden] {
+  display: none;
+}
+
+body.premium-admin.ecom-gift-admin nav.side-nav ul.eg-submenu a {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 36px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  color: #cbd5e1;
+  font-size: 12.5px;
+  font-weight: 500;
+  text-decoration: none;
+  float: none;
+  width: auto;
+}
+
+body.premium-admin.ecom-gift-admin nav.side-nav ul.eg-submenu a:hover,
+body.premium-admin.ecom-gift-admin nav.side-nav ul.eg-submenu a.nav-hit {
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+}
+
+body.premium-admin.ecom-gift-admin nav.side-nav ul.eg-submenu a[aria-current="page"] {
+  background: rgba(37, 99, 235, 0.32);
+  color: #ffffff;
+  font-weight: 700;
+}
+
+body.premium-admin.ecom-gift-admin nav.side-nav ul.eg-submenu a i {
+  width: 14px;
+  text-align: center;
+  font-size: 12px;
+  color: #94a3b8;
+}
+
+body.premium-admin.ecom-gift-admin .eg-nav-empty {
+  padding: 14px 10px;
+  margin-top: 8px;
+  border-radius: 9px;
+  background: rgba(255, 255, 255, 0.06);
+  color: #cbd5e1;
+  font-size: 12px;
+  text-align: center;
+}
+
+body.premium-admin.ecom-gift-admin .eg-nav-empty[hidden] {
+  display: none;
+}
+
+/* =========================================================
+   Main Content Shell & Footer
+   ========================================================= */
+body.premium-admin.ecom-gift-admin main {
+  float: none;
+  width: 100%;
+  min-width: 0;
+  padding: calc(var(--eg-header-h) + 16px) max(18px, env(safe-area-inset-right)) 20px calc(var(--eg-sidebar-w) + 18px);
+  box-sizing: border-box;
+}
+
+body.premium-admin.ecom-gift-admin main .container {
+  float: none;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  min-height: calc(100svh - var(--eg-header-h) - 96px);
+  padding: 18px 20px;
+  border-radius: 14px;
+  box-sizing: border-box;
+  overflow-x: clip;
+}
+
+body.premium-admin.ecom-gift-admin footer {
+  clear: both;
+  width: auto;
+  margin: 0;
+  margin-left: var(--eg-sidebar-w);
+  padding: 0 max(18px, env(safe-area-inset-right)) max(18px, env(safe-area-inset-bottom)) 18px;
+  box-sizing: border-box;
+}
+
+@media (max-width: 1024px) {
+  body.premium-admin.ecom-gift-admin main {
+    padding: calc(var(--eg-header-h) + 12px) max(12px, env(safe-area-inset-right)) 16px max(12px, env(safe-area-inset-left));
+  }
+
+  body.premium-admin.ecom-gift-admin main .container {
+    min-height: auto;
+    padding: 14px;
+  }
+
+  body.premium-admin.ecom-gift-admin footer {
+    margin-left: 0;
+    padding: 0 max(12px, env(safe-area-inset-right)) max(16px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left));
+  }
+}
+
+@media (max-width: 480px) {
+  body.premium-admin.ecom-gift-admin main {
+    padding: calc(var(--eg-header-h) + 8px) max(8px, env(safe-area-inset-right)) 14px max(8px, env(safe-area-inset-left));
+  }
+
+  body.premium-admin.ecom-gift-admin main .container {
+    padding: 12px;
+    border-radius: 10px;
+  }
+
+  body.premium-admin.ecom-gift-admin footer {
+    padding: 0 max(8px, env(safe-area-inset-right)) max(14px, env(safe-area-inset-bottom)) max(8px, env(safe-area-inset-left));
+  }
+}
+
+/* =========================================================
+   Dashboard (#egDash) Responsive Architecture
+   ========================================================= */
+body.premium-admin.ecom-gift-admin #egDash {
+  float: none;
+  display: flow-root;
+  width: 100%;
+  min-width: 0;
+  padding: 2px 0 28px;
+  color: var(--eg-text);
+  font-family: "Manrope", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  container-type: inline-size;
+  container-name: eg-dash;
+}
+
+body.premium-admin.ecom-gift-admin #egDash *,
+body.premium-admin.ecom-gift-admin #egDash *::before,
+body.premium-admin.ecom-gift-admin #egDash *::after {
+  box-sizing: border-box;
+}
+
+body.premium-admin.ecom-gift-admin #egDash .dh-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+body.premium-admin.ecom-gift-admin #egDash .dh-title {
+  margin: 0;
+  font-size: clamp(1.15rem, 1rem + 0.65vw, 1.5rem);
+  font-weight: 800;
+  color: var(--eg-text);
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+body.premium-admin.ecom-gift-admin #egDash .dh-sub {
+  margin-top: 3px;
+  font-size: 13px;
+  color: var(--eg-text-muted);
+}
+
+body.premium-admin.ecom-gift-admin #egDash .dh-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+body.premium-admin.ecom-gift-admin #egDash .dh-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 38px;
+  padding: 8px 14px;
+  border-radius: 9px;
+  border: 1px solid var(--eg-border);
+  background: var(--eg-surface);
+  color: #334155;
+  font-size: 12.5px;
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+body.premium-admin.ecom-gift-admin #egDash .dh-btn:hover {
+  background: var(--eg-surface-alt);
+  color: var(--eg-text);
+}
+
+body.premium-admin.ecom-gift-admin #egDash .dh-btn.primary {
+  background: var(--eg-accent);
+  border-color: var(--eg-accent);
+  color: #ffffff;
+}
+
+body.premium-admin.ecom-gift-admin #egDash .dh-btn.primary:hover {
+  background: var(--eg-accent-hover);
+  border-color: var(--eg-accent-hover);
+}
+
+/* Date Filter Bar */
+body.premium-admin.ecom-gift-admin #egDash .df-bar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 18px;
+  padding: 12px 14px;
+  background: var(--eg-surface);
+  border: 1px solid var(--eg-border);
+  border-radius: 14px;
+  box-shadow: 0 1px 4px rgba(15, 23, 42, 0.04);
+}
+
+body.premium-admin.ecom-gift-admin #egDash .df-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--eg-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+}
+
+body.premium-admin.ecom-gift-admin #egDash .df-presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  min-width: 0;
+}
+
+body.premium-admin.ecom-gift-admin #egDash .df-preset {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 34px;
+  padding: 6px 12px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  background: #f1f5f9;
+  color: #334155;
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background-color 0.14s ease, color 0.14s ease;
+}
+
+body.premium-admin.ecom-gift-admin #egDash .df-preset:hover {
+  background: #e2e8f0;
+  color: var(--eg-text);
+}
+
+body.premium-admin.ecom-gift-admin #egDash .df-preset.active {
+  background: #0f172a;
+  color: #ffffff;
+  border-color: #0f172a;
+}
+
+body.premium-admin.ecom-gift-admin #egDash .df-divider {
+  width: 1px;
+  height: 24px;
+  background: var(--eg-border);
+  flex-shrink: 0;
+}
+
+body.premium-admin.ecom-gift-admin #egDash .df-custom {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+body.premium-admin.ecom-gift-admin #egDash .df-date {
+  width: 138px;
+  min-height: 36px;
+  padding: 6px 10px;
+  border: 1px solid var(--eg-border);
+  border-radius: 8px;
+  background: var(--eg-surface-alt);
+  color: var(--eg-text);
+  font-size: 12px;
+  font-family: inherit;
+}
+
+body.premium-admin.ecom-gift-admin #egDash .df-sep {
+  font-size: 12px;
+  color: var(--eg-text-muted);
+  font-weight: 600;
+}
+
+body.premium-admin.ecom-gift-admin #egDash .df-apply {
+  min-height: 36px;
+  padding: 6px 14px;
+  border: 0;
+  border-radius: 8px;
+  background: var(--eg-accent);
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+body.premium-admin.ecom-gift-admin #egDash .df-apply:hover {
+  background: var(--eg-accent-hover);
+}
+
+body.premium-admin.ecom-gift-admin #egDash .df-active-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  color: #1d4ed8;
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+  margin-left: auto;
+}
+
+/* Cards & Grids */
+body.premium-admin.ecom-gift-admin #egDash .dc {
+  background: var(--eg-surface);
+  border-radius: 14px;
+  border: 1px solid var(--eg-border);
+  box-shadow: 0 1px 4px rgba(15, 23, 42, 0.04);
+  min-width: 0;
+}
+
+body.premium-admin.ecom-gift-admin #egDash .kpi-row {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+body.premium-admin.ecom-gift-admin #egDash .kpi-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+  padding: 18px;
+  background: var(--eg-surface);
+  border: 1px solid var(--eg-border);
+  border-radius: 14px;
+  box-shadow: 0 1px 4px rgba(15, 23, 42, 0.04);
+}
+
+body.premium-admin.ecom-gift-admin #egDash .kpi-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+body.premium-admin.ecom-gift-admin #egDash .kpi-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+body.premium-admin.ecom-gift-admin #egDash .kpi-icon.blue { background: #eff6ff; color: #2563eb; }
+body.premium-admin.ecom-gift-admin #egDash .kpi-icon.green { background: #f0fdf4; color: #059669; }
+body.premium-admin.ecom-gift-admin #egDash .kpi-icon.amber { background: #fffbeb; color: #d97706; }
+body.premium-admin.ecom-gift-admin #egDash .kpi-icon.violet { background: #f5f3ff; color: #7c3aed; }
+
+body.premium-admin.ecom-gift-admin #egDash .kpi-badge {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+body.premium-admin.ecom-gift-admin #egDash .kpi-badge.up { background: #f0fdf4; color: #047857; }
+body.premium-admin.ecom-gift-admin #egDash .kpi-badge.down { background: #fef2f2; color: #b91c1c; }
+body.premium-admin.ecom-gift-admin #egDash .kpi-badge.neu { background: #f1f5f9; color: #475569; }
+
+body.premium-admin.ecom-gift-admin #egDash .kpi-value {
+  font-size: clamp(1.375rem, 1.15rem + 0.9vw, 1.875rem);
+  font-weight: 800;
+  color: var(--eg-text);
+  letter-spacing: -0.03em;
+  line-height: 1.08;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+
+body.premium-admin.ecom-gift-admin #egDash .kpi-label {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--eg-text-muted);
+  margin-top: -2px;
+}
+
+body.premium-admin.ecom-gift-admin #egDash .kpi-meta {
+  font-size: 11.5px;
+  color: #64748b;
+  padding-top: 10px;
+  border-top: 1px solid #f1f5f9;
+}
+
+/* Charts */
+body.premium-admin.ecom-gift-admin #egDash .chart-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1.7fr) minmax(280px, 1fr);
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+body.premium-admin.ecom-gift-admin #egDash .panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 14px 18px;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+body.premium-admin.ecom-gift-admin #egDash .panel-title {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--eg-text);
+}
+
+body.premium-admin.ecom-gift-admin #egDash .panel-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 32px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--eg-accent);
+  text-decoration: none;
+}
+
+body.premium-admin.ecom-gift-admin #egDash .panel-link:hover {
+  background: #eff6ff;
+}
+
+body.premium-admin.ecom-gift-admin #egDash .panel-period {
+  font-size: 11px;
+  font-weight: 600;
+  color: #475569;
+  background: #f1f5f9;
+  padding: 4px 10px;
+  border-radius: 6px;
+}
+
+body.premium-admin.ecom-gift-admin #egDash .panel-body {
+  padding: 16px 18px 18px;
+}
+
+body.premium-admin.ecom-gift-admin #egDash .panel-body-compact {
+  padding: 8px 18px;
+}
+
+body.premium-admin.ecom-gift-admin #egDash .panel-body-flush {
+  padding: 0 6px 10px;
+}
+
+body.premium-admin.ecom-gift-admin #egDash .eg-chart-figure {
+  margin: 0;
+}
+
+body.premium-admin.ecom-gift-admin #egDash .chart-wrap {
+  position: relative;
+  height: 230px;
+}
+
+body.premium-admin.ecom-gift-admin #egDash .chart-wrap-sm {
+  position: relative;
+  height: 210px;
+}
+
+body.premium-admin.ecom-gift-admin #egDash .eg-chart-fallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: 16px;
+  text-align: center;
+  color: var(--eg-text-muted);
+  font-size: 13px;
+}
+
+body.premium-admin.ecom-gift-admin #egDash .bottom-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+  gap: 16px;
+  align-items: start;
+}
+
+body.premium-admin.ecom-gift-admin #egDash .right-col {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
+}
+
+/* Dashboard Tables + Container-Driven Stacked Card Transformation */
+body.premium-admin.ecom-gift-admin #egDash .table-wrap {
+  overflow: auto;
+  max-inline-size: 100%;
+  border-radius: 10px;
+  container-type: inline-size;
+  container-name: eg-table;
+}
+
+body.premium-admin.ecom-gift-admin #egDash .dt {
+  width: 100%;
+  min-width: 520px;
+  border-collapse: separate;
+  border-spacing: 0;
+  box-shadow: none;
+  border-radius: 0;
+  overflow: visible;
+}
+
+body.premium-admin.ecom-gift-admin #egDash .dt--products {
+  min-width: 360px;
+}
+
+body.premium-admin.ecom-gift-admin #egDash .dt thead th {
+  position: sticky;
+  inset-block-start: 0;
+  z-index: 1;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #64748b;
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #e2e8f0;
+  background: #f8fafc;
+}
+
+body.premium-admin.ecom-gift-admin #egDash .dt tbody th,
+body.premium-admin.ecom-gift-admin #egDash .dt tbody td {
+  font-size: 13px;
+  color: #334155;
+  padding: 11px 12px;
+  border-bottom: 1px solid #f1f5f9;
+  vertical-align: middle;
+  text-align: left;
+  font-weight: 500;
+}
+
+body.premium-admin.ecom-gift-admin #egDash .dt tbody tr:nth-child(2n) th,
+body.premium-admin.ecom-gift-admin #egDash .dt tbody tr:nth-child(2n) td {
+  background: #fcfdff;
+}
+
+body.premium-admin.ecom-gift-admin #egDash .dt tbody tr:last-child th,
+body.premium-admin.ecom-gift-admin #egDash .dt tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+body.premium-admin.ecom-gift-admin #egDash .dt tbody tr:hover th,
+body.premium-admin.ecom-gift-admin #egDash .dt tbody tr:hover td {
+  background: #f3f7ff;
+}
+
+body.premium-admin.ecom-gift-admin #egDash .oid {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--eg-accent);
+  text-decoration: none;
+}
+
+body.premium-admin.ecom-gift-admin #egDash .oid:hover {
+  text-decoration: underline;
+}
+
+body.premium-admin.ecom-gift-admin #egDash .cust-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--eg-text);
+}
+
+body.premium-admin.ecom-gift-admin #egDash .cust-ph {
+  font-size: 11.5px;
+  color: var(--eg-text-muted);
+  margin-top: 2px;
+}
+
+body.premium-admin.ecom-gift-admin #egDash .amt-cell {
+  font-weight: 700;
+  color: var(--eg-text);
+  font-size: 13px;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+body.premium-admin.ecom-gift-admin #egDash .time-cell {
+  font-size: 11.5px;
+  color: var(--eg-text-muted);
+  white-space: nowrap;
+}
+
+body.premium-admin.ecom-gift-admin #egDash .prod-cell {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  color: inherit;
+  text-decoration: none;
+}
+
+body.premium-admin.ecom-gift-admin #egDash .prod-cell:hover .prod-name {
+  color: var(--eg-accent);
+  text-decoration: underline;
+}
+
+body.premium-admin.ecom-gift-admin #egDash .prod-img,
+body.premium-admin.ecom-gift-admin #egDash .top-img {
+  width: 34px;
+  height: 34px;
+  border-radius: 7px;
+  object-fit: cover;
+  border: 1px solid var(--eg-border);
+  background: #f1f5f9;
+  flex-shrink: 0;
+  aspect-ratio: 1;
+}
+
+body.premium-admin.ecom-gift-admin #egDash .prod-thumb-fallback {
+  width: 34px;
+  height: 34px;
+  border-radius: 7px;
+  border: 1px solid var(--eg-border);
+  background: #f1f5f9;
+  color: #94a3b8;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+body.premium-admin.ecom-gift-admin #egDash .prod-thumb-fallback.is-visible {
+  display: inline-flex;
+}
+
+body.premium-admin.ecom-gift-admin #egDash img.is-broken {
+  display: none;
+}
+
+body.premium-admin.ecom-gift-admin #egDash .prod-copy {
+  min-width: 0;
+}
+
+body.premium-admin.ecom-gift-admin #egDash .prod-name {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--eg-text);
+  line-height: 1.3;
+}
+
+body.premium-admin.ecom-gift-admin #egDash .prod-cat {
+  font-size: 11px;
+  color: var(--eg-text-muted);
+  margin-top: 1px;
+}
+
+/* Status Chips */
+body.premium-admin.ecom-gift-admin #egDash .chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 9px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+  line-height: 1.4;
+}
+
+body.premium-admin.ecom-gift-admin #egDash .chip-pending { background: #fffbeb; color: #b45309; }
+body.premium-admin.ecom-gift-admin #egDash .chip-confirm { background: #f0fdf4; color: #047857; }
+body.premium-admin.ecom-gift-admin #egDash .chip-delivered { background: #ecfdf5; color: #065f46; }
+body.premium-admin.ecom-gift-admin #egDash .chip-reject { background: #fef2f2; color: #b91c1c; }
+body.premium-admin.ecom-gift-admin #egDash .chip-cancel { background: #fff7ed; color: #c2410c; }
+body.premium-admin.ecom-gift-admin #egDash .chip-rto { background: #fdf4ff; color: #7e22ce; }
+body.premium-admin.ecom-gift-admin #egDash .chip-waiting { background: #eff6ff; color: #1d4ed8; }
+body.premium-admin.ecom-gift-admin #egDash .chip-unknown { background: #f1f5f9; color: #475569; }
+body.premium-admin.ecom-gift-admin #egDash .chip-live { background: #f0fdf4; color: #047857; }
+body.premium-admin.ecom-gift-admin #egDash .chip-draft { background: #f8fafc; color: #64748b; border: 1px solid var(--eg-border); }
+
+/* Top Selling List */
+body.premium-admin.ecom-gift-admin #egDash .top-list {
+  display: flex;
+  flex-direction: column;
+}
+
+body.premium-admin.ecom-gift-admin #egDash .top-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 4px;
+  border-bottom: 1px solid #f1f5f9;
+  color: inherit;
+  text-decoration: none;
+  border-radius: 8px;
+}
+
+body.premium-admin.ecom-gift-admin #egDash .top-item:hover {
+  background: #f8fafc;
+}
+
+body.premium-admin.ecom-gift-admin #egDash .top-item:last-child {
+  border-bottom: 0;
+}
+
+body.premium-admin.ecom-gift-admin #egDash .rank {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+
+body.premium-admin.ecom-gift-admin #egDash .rank-1 { background: #fef9c3; color: #854d0e; }
+body.premium-admin.ecom-gift-admin #egDash .rank-2 { background: #f1f5f9; color: #334155; }
+body.premium-admin.ecom-gift-admin #egDash .rank-3 { background: #fff7ed; color: #9a3412; }
+body.premium-admin.ecom-gift-admin #egDash .rank-n { background: #f1f5f9; color: #64748b; }
+
+body.premium-admin.ecom-gift-admin #egDash .top-name {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--eg-text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+body.premium-admin.ecom-gift-admin #egDash .top-item:hover .top-name {
+  color: var(--eg-accent);
+}
+
+body.premium-admin.ecom-gift-admin #egDash .top-cnt {
+  font-size: 11px;
+  font-weight: 700;
+  color: #475569;
+  background: #f1f5f9;
+  padding: 3px 8px;
+  border-radius: 999px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+body.premium-admin.ecom-gift-admin #egDash .empty-state {
+  padding: 26px 12px;
+  text-align: center;
+  color: var(--eg-text-muted);
+  font-size: 13px;
+}
+
+/* Quick Actions */
+body.premium-admin.ecom-gift-admin #egDash .qa-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+body.premium-admin.ecom-gift-admin #egDash .qa-a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  min-height: 58px;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid var(--eg-border);
+  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+  color: var(--eg-text);
+  text-decoration: none;
+  transition: background-color 0.14s ease, border-color 0.14s ease, transform 0.14s ease;
+}
+
+body.premium-admin.ecom-gift-admin #egDash .qa-a:hover {
+  background: #eff6ff;
+  border-color: #bfdbfe;
+  color: var(--eg-accent-hover);
+  transform: translateY(-1px);
+}
+
+body.premium-admin.ecom-gift-admin #egDash .qa-icon {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  background: #eaf2ff;
+  color: var(--eg-accent);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+body.premium-admin.ecom-gift-admin #egDash .qa-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+
+body.premium-admin.ecom-gift-admin #egDash .qa-title {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: inherit;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+body.premium-admin.ecom-gift-admin #egDash .qa-meta {
+  font-size: 11px;
+  color: var(--eg-text-muted);
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Container Queries for Dashboard Grid Layout */
+@container eg-dash (width < 1120px) {
+  body.premium-admin.ecom-gift-admin #egDash .df-divider {
+    display: none;
+  }
+}
+
+@container eg-dash (width < 900px) {
+  body.premium-admin.ecom-gift-admin #egDash .kpi-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  body.premium-admin.ecom-gift-admin #egDash .chart-row {
+    grid-template-columns: 1fr;
+  }
+
+  body.premium-admin.ecom-gift-admin #egDash .bottom-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+@container eg-dash (width < 680px) {
+  body.premium-admin.ecom-gift-admin #egDash .df-divider {
+    display: none;
+  }
+
+  body.premium-admin.ecom-gift-admin #egDash .df-active-badge {
+    margin-left: 0;
+  }
+
+  body.premium-admin.ecom-gift-admin #egDash .df-custom {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    width: 100%;
+    gap: 6px;
+  }
+
+  body.premium-admin.ecom-gift-admin #egDash .df-custom .df-date {
+    width: 100%;
+    min-width: 0;
+  }
+
+  body.premium-admin.ecom-gift-admin #egDash .df-custom .df-apply {
+    grid-column: 1 / -1;
+    width: 100%;
+  }
+}
+
+@container eg-dash (width < 460px) {
+  body.premium-admin.ecom-gift-admin #egDash .kpi-row,
+  body.premium-admin.ecom-gift-admin #egDash .qa-grid {
+    grid-template-columns: 1fr;
+  }
+
+  body.premium-admin.ecom-gift-admin #egDash .dh-head {
+    flex-direction: column;
+  }
+
+  body.premium-admin.ecom-gift-admin #egDash .dh-actions {
+    width: 100%;
+  }
+
+  body.premium-admin.ecom-gift-admin #egDash .dh-actions .dh-btn {
+    flex: 1 1 120px;
+  }
+
+  body.premium-admin.ecom-gift-admin #egDash .df-custom {
+    grid-template-columns: 1fr;
+  }
+
+  body.premium-admin.ecom-gift-admin #egDash .df-sep {
+    display: none;
+  }
+}
+
+/* Container Query for Responsive Dashboard Tables (Stacked Card Mode) */
+@container eg-table (width < 520px) {
+  body.premium-admin.ecom-gift-admin #egDash .dt,
+  body.premium-admin.ecom-gift-admin #egDash .dt--products {
+    min-width: 0;
+    width: 100%;
+  }
+
+  body.premium-admin.ecom-gift-admin #egDash .dt,
+  body.premium-admin.ecom-gift-admin #egDash .dt tbody,
+  body.premium-admin.ecom-gift-admin #egDash .dt tbody tr,
+  body.premium-admin.ecom-gift-admin #egDash .dt tbody th,
+  body.premium-admin.ecom-gift-admin #egDash .dt tbody td {
+    display: block;
+    width: 100%;
+  }
+
+  body.premium-admin.ecom-gift-admin #egDash .dt thead {
+    display: none;
+  }
+
+  body.premium-admin.ecom-gift-admin #egDash .dt--orders {
+    --label-2: "Customer";
+    --label-3: "Amount";
+    --label-4: "Status";
+    --label-5: "Date";
+  }
+
+  body.premium-admin.ecom-gift-admin #egDash .dt--products {
+    --label-2: "Price";
+    --label-3: "Status";
+  }
+
+  body.premium-admin.ecom-gift-admin #egDash .dt tbody tr {
+    margin-bottom: 10px;
+    border: 1px solid var(--eg-border);
+    border-radius: 10px;
+    background: #ffffff;
+    overflow: hidden;
+  }
+
+  body.premium-admin.ecom-gift-admin #egDash .dt tbody th {
+    position: sticky;
+    inset-block-start: 0;
+    z-index: 2;
+    padding: 10px 12px;
+    background: #f8fafc;
+    border-bottom: 1px solid var(--eg-border);
+  }
+
+  body.premium-admin.ecom-gift-admin #egDash .dt tbody td {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 9px 12px;
+    border-bottom: 1px solid #f1f5f9;
+    text-align: right;
+  }
+
+  body.premium-admin.ecom-gift-admin #egDash .dt tbody td .cust-info {
+    min-width: 0;
+    text-align: right;
+    overflow-wrap: anywhere;
+  }
+
+  body.premium-admin.ecom-gift-admin #egDash .dt tbody td:last-child {
+    border-bottom: 0;
+  }
+
+  body.premium-admin.ecom-gift-admin #egDash .dt tbody td:nth-child(2)::before {
+    content: var(--label-2);
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--eg-text-muted);
+    text-align: left;
+    flex-shrink: 0;
+  }
+
+  body.premium-admin.ecom-gift-admin #egDash .dt tbody td:nth-child(3)::before {
+    content: var(--label-3);
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--eg-text-muted);
+    text-align: left;
+    flex-shrink: 0;
+  }
+
+  body.premium-admin.ecom-gift-admin #egDash .dt tbody td:nth-child(4)::before {
+    content: var(--label-4);
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--eg-text-muted);
+    text-align: left;
+    flex-shrink: 0;
+  }
+
+  body.premium-admin.ecom-gift-admin #egDash .dt tbody td:nth-child(5)::before {
+    content: var(--label-5);
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--eg-text-muted);
+    text-align: left;
+    flex-shrink: 0;
+  }
+
+  body.premium-admin.ecom-gift-admin #egDash .dt tbody tr.eg-empty-row td {
+    display: block;
+    text-align: center;
+  }
+
+  body.premium-admin.ecom-gift-admin #egDash .dt tbody tr.eg-empty-row td::before {
+    content: none;
+  }
+}
+
+/* =========================================================
+   Shared Admin Sub-Pages Responsive Overrides
+   (High specificity beats mid-body admin_new.css + inline <style>)
+   ========================================================= */
+
+/* Accessible horizontal table scroll region for DataTables & standard admin tables */
+body.premium-admin.ecom-gift-admin main .container .eg-table-scroll {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border-radius: 10px;
+}
+
+body.premium-admin.ecom-gift-admin main .container .eg-table-scroll > table {
+  margin-bottom: 0;
+}
+
+/* DataTables controls alignment & full-width wrapping */
+body.premium-admin.ecom-gift-admin main .container .dataTables_wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  max-width: 100%;
+}
+
+body.premium-admin.ecom-gift-admin main .container .dataTables_wrapper > .eg-table-scroll,
+body.premium-admin.ecom-gift-admin main .container .dataTables_wrapper > table.dataTable {
+  flex: 1 0 100%;
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  body.premium-admin.ecom-gift-admin main .container .dataTables_wrapper .dataTables_length,
+  body.premium-admin.ecom-gift-admin main .container .dataTables_wrapper .dataTables_filter,
+  body.premium-admin.ecom-gift-admin main .container .dataTables_wrapper .dataTables_info,
+  body.premium-admin.ecom-gift-admin main .container .dataTables_wrapper .dataTables_paginate {
+    float: none;
+    width: 100%;
+    text-align: left;
+    margin: 0;
+  }
+
+  body.premium-admin.ecom-gift-admin main .container .dataTables_wrapper .dataTables_filter input {
+    width: 100%;
+    margin-left: 0;
+    box-sizing: border-box;
+  }
+
+  body.premium-admin.ecom-gift-admin main .container .dataTables_wrapper .dataTables_paginate {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+}
+
+/* Hover actions always visible on touch devices */
+@media (hover: none), (pointer: coarse) {
+  body.premium-admin.ecom-gift-admin main .container tr .hover {
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+}
+
+/* Forms, grid boxes & multi-column layouts */
+body.premium-admin.ecom-gift-admin main .container .form-box,
+body.premium-admin.ecom-gift-admin main .container .product-add-ui .form-box {
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+@media (max-width: 1200px) {
+  body.premium-admin.ecom-gift-admin main .container .form-box .left-box,
+  body.premium-admin.ecom-gift-admin main .container .form-box .right-box,
+  body.premium-admin.ecom-gift-admin main .container .product-add-ui .form-box .left-box,
+  body.premium-admin.ecom-gift-admin main .container .product-add-ui .form-box .right-box,
+  body.premium-admin.ecom-gift-admin main .container > h2 + .form-box .left-box,
+  body.premium-admin.ecom-gift-admin main .container > h2 + .form-box .right-box {
+    float: none;
+    width: 100%;
+    padding: 0;
+  }
+
+  body.premium-admin.ecom-gift-admin main .container .category .form-box,
+  body.premium-admin.ecom-gift-admin main .container .category .category-list {
+    float: none;
+    width: 100%;
+    max-width: 100%;
+    margin-bottom: 16px;
+  }
+
+  body.premium-admin.ecom-gift-admin main .container .menu-box {
+    float: none;
+    width: 100%;
+    max-width: 100%;
+    padding: 14px;
+  }
+}
+
+@media (max-width: 960px) {
+  body.premium-admin.ecom-gift-admin main .container .form-box.main-box {
+    flex-direction: column !important;
+    gap: 16px;
+  }
+
+  body.premium-admin.ecom-gift-admin main .container .fix-box {
+    min-width: 0 !important;
+    max-width: 100% !important;
+    width: 100% !important;
+  }
+
+  body.premium-admin.ecom-gift-admin main .container .mb-row {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  body.premium-admin.ecom-gift-admin main .container .box-2,
+  body.premium-admin.ecom-gift-admin main .container .box-3,
+  body.premium-admin.ecom-gift-admin main .container .box-4,
+  body.premium-admin.ecom-gift-admin main .container .col-4,
+  body.premium-admin.ecom-gift-admin main .container .col-6,
+  body.premium-admin.ecom-gift-admin main .container .options-bar .left-box,
+  body.premium-admin.ecom-gift-admin main .container .options-bar .right-box {
+    float: none;
+    width: 100%;
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  body.premium-admin.ecom-gift-admin main .container .options-bar .left-box select.form-control {
+    width: 100%;
+    margin-right: 0;
+    margin-bottom: 8px;
+  }
+}
+
+/* Product tabs wrapping cleanly */
+body.premium-admin.ecom-gift-admin main .container ul.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  height: auto;
+  padding: 6px 0;
+}
+
+body.premium-admin.ecom-gift-admin main .container ul.tabs li {
+  float: none;
+  width: auto;
+  flex: 0 1 auto;
+}
+
+/* Settings configuration tabs & previews */
+@media (max-width: 768px) {
+  body.premium-admin.ecom-gift-admin main .container .configMenu ul {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    gap: 6px;
+    padding-bottom: 4px;
+    scrollbar-width: thin;
+  }
+
+  body.premium-admin.ecom-gift-admin main .container .configMenu li {
+    float: none;
+    white-space: nowrap;
+    flex-shrink: 0;
+    border-radius: 8px 8px 0 0;
+    padding: 8px 14px;
+  }
+
+  body.premium-admin.ecom-gift-admin main .container .siteIconPreviewBox .img,
+  body.premium-admin.ecom-gift-admin main .container .profilePreviewBox .img {
+    float: none;
+    width: min(256px, 100%);
+    height: auto;
+    aspect-ratio: 1;
+    margin: 0 0 12px;
+  }
+}
+
+/* Modern Product List filters on narrow viewports */
+body.premium-admin.ecom-gift-admin .modern-product-list,
+body.premium-admin.ecom-gift-admin .modern-product-list * {
+  box-sizing: border-box;
+}
+
+@media (max-width: 768px) {
+  body.premium-admin.ecom-gift-admin .modern-product-list .product-list-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  body.premium-admin.ecom-gift-admin .modern-product-list .product-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  body.premium-admin.ecom-gift-admin .modern-product-list .product-toolbar > * {
+    min-width: 0;
+  }
+}
+
+/* Modern Order List: override inline <style> fixed filter/column widths + border-box safety */
+body.premium-admin.ecom-gift-admin main .container .options-bar,
+body.premium-admin.ecom-gift-admin main .container .options-bar *,
+body.premium-admin.ecom-gift-admin .modern-order-list,
+body.premium-admin.ecom-gift-admin .modern-order-list .options-bar,
+body.premium-admin.ecom-gift-admin .modern-order-list .options-bar * {
+  box-sizing: border-box !important;
+}
+
+body.premium-admin.ecom-gift-admin main .container .options-bar,
+body.premium-admin.ecom-gift-admin .modern-order-list .options-bar {
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+@media (max-width: 768px) {
+  body.premium-admin.ecom-gift-admin .modern-order-list .options-bar {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    padding: 12px !important;
+  }
+
+  body.premium-admin.ecom-gift-admin .modern-order-list .options-bar .left-box,
+  body.premium-admin.ecom-gift-admin .modern-order-list .options-bar .right-box {
+    width: 100% !important;
+    justify-content: stretch !important;
+  }
+
+  body.premium-admin.ecom-gift-admin .modern-order-list .options-bar .left-box form {
+    flex-direction: column !important;
+    align-items: stretch !important;
+  }
+
+  body.premium-admin.ecom-gift-admin .modern-order-list select#changeStatus,
+  body.premium-admin.ecom-gift-admin .modern-order-list select#changeCompany,
+  body.premium-admin.ecom-gift-admin .modern-order-list select#changeSort,
+  body.premium-admin.ecom-gift-admin .modern-order-list input#changeDateRange,
+  body.premium-admin.ecom-gift-admin .modern-order-list .btn-filter-submit,
+  body.premium-admin.ecom-gift-admin .modern-order-list .export-btn-group,
+  body.premium-admin.ecom-gift-admin .modern-order-list .btn-export {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    justify-content: center !important;
+  }
+
+  body.premium-admin.ecom-gift-admin .modern-order-list #table thead th.th-order {
+    min-width: 180px !important;
+  }
+}
+
+/* Order View fixed action bar + edit modal grid */
+@media (max-width: 1024px) {
+  body.premium-admin.ecom-gift-admin .premium-action-row {
+    left: 0 !important;
+    right: 0 !important;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 10px 12px max(10px, env(safe-area-inset-bottom)) !important;
+  }
+
+  body.premium-admin.ecom-gift-admin .order-info-ui {
+    padding-bottom: 92px;
+  }
+}
+
+@media (max-width: 520px) {
+  body.premium-admin.ecom-gift-admin #productEditMode > div {
+    grid-template-columns: 1fr !important;
+  }
+
+  body.premium-admin.ecom-gift-admin .order-action-modal .modal-content {
+    width: calc(100dvw - 24px) !important;
+    max-width: 100% !important;
+  }
+}
+
+/* Import step actions clamp */
+@media (max-width: 1024px) {
+  body.premium-admin.ecom-gift-admin #orderImportFlow .step-actions {
+    width: min(320px, calc(100dvw - 24px));
+    left: 12px;
+  }
+}
+
+/* Media Image Browser modal responsiveness */
+@media (max-width: 1280px) {
+  body.premium-admin.ecom-gift-admin .inner-imgBrowser {
+    width: calc(100dvw - 24px);
+    height: min(640px, calc(100svh - 24px));
+  }
+
+  body.premium-admin.ecom-gift-admin .inner-imgBrowser .box-main-view {
+    width: calc(100% - 200px);
+  }
+
+  body.premium-admin.ecom-gift-admin .search-box {
+    position: sticky;
+    top: 0;
+    width: 100%;
+    padding: 10px 12px;
+    z-index: 2;
+  }
+
+  body.premium-admin.ecom-gift-admin .inner-imgBrowser .box-main-view .library-box,
+  body.premium-admin.ecom-gift-admin .inner-imgBrowser .box-main-view .uploader-box {
+    padding: 20px;
+  }
+}
+
+@media (max-width: 820px) {
+  body.premium-admin.ecom-gift-admin .inner-imgBrowser {
+    display: flex;
+    flex-direction: column;
+    height: calc(100svh - 16px);
+  }
+
+  body.premium-admin.ecom-gift-admin .inner-imgBrowser .box-side-menu {
+    position: static;
+    width: 100%;
+    height: auto;
+  }
+
+  body.premium-admin.ecom-gift-admin .inner-imgBrowser .box-side-menu ul {
+    display: flex;
+    flex-wrap: wrap;
+    float: none;
+  }
+
+  body.premium-admin.ecom-gift-admin .inner-imgBrowser .box-side-menu ul li {
+    float: none;
+    width: auto;
+    flex: 1 1 110px;
+  }
+
+  body.premium-admin.ecom-gift-admin .inner-imgBrowser .box-main-view {
+    position: static;
+    width: 100%;
+    flex: 1 1 auto;
+    height: auto;
+  }
+
+  body.premium-admin.ecom-gift-admin .search-box input[type="text"] {
+    width: 100%;
+  }
+}
+
+/* Third-party plugin viewport clamps */
+body.premium-admin.ecom-gift-admin .daterangepicker,
+body.premium-admin.ecom-gift-admin .swal2-popup,
+body.premium-admin.ecom-gift-admin .select2-container {
+  max-width: calc(100dvw - 16px) !important;
+}
+
+/* 404 Page Responsive Scaling */
+body.premium-admin.ecom-gift-admin .page-not-found {
+  float: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: clamp(340px, 55svh, 560px);
+  padding: clamp(24px, 6vw, 64px) 16px;
+}
+
+body.premium-admin.ecom-gift-admin .page-not-found h1 {
+  float: none;
+  font-size: clamp(3.5rem, 12vw, 7.5rem);
+  line-height: 1;
+}
+
+body.premium-admin.ecom-gift-admin .page-not-found h1 span {
+  float: none;
+  display: block;
+  margin-top: 8px;
+  font-size: clamp(1.125rem, 3vw, 1.75rem);
+}
+
+body.premium-admin.ecom-gift-admin .not-found-actions a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+}

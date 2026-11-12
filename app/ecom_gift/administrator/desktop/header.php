@@ -1,5 +1,159 @@
 <?php
 $postType = rtrim(ltrim(ADMIN_BASE_URL, '/'), '/');
+$egAdminCssFile = ROOT . ADMIN_STYLESHEET . 'ecom-admin.css';
+$egAdminCssVer = file_exists($egAdminCssFile) ? filemtime($egAdminCssFile) : time();
+
+$egNavSections = array(
+    array(
+        'id' => 'dashboard',
+        'label' => 'Dashboard',
+        'href' => '/dashboard/',
+        'icon' => 'fas fa-tachometer-alt',
+        'active' => (ADMIN_BASE_URL == '/'),
+        'children' => array(),
+    ),
+    array(
+        'id' => 'orders',
+        'label' => 'Orders',
+        'href' => 'order/?type=list&status=all',
+        'icon' => 'fas fa-shopping-bag',
+        'active' => ($postType == 'order'),
+        'children' => array(
+            array('label' => 'All Orders', 'href' => 'order/?type=list&status=all', 'icon' => 'fas fa-list'),
+            array('label' => 'Pending Orders', 'href' => 'order/?type=list&status=0', 'icon' => 'fas fa-clock'),
+            array('label' => 'Delivered', 'href' => 'order/?type=list&status=6', 'icon' => 'fas fa-check-circle'),
+        ),
+    ),
+    array(
+        'id' => 'product',
+        'label' => 'Product',
+        'href' => 'product/?type=list&status=all',
+        'icon' => 'fas fa-box-open',
+        'active' => (ADMIN_BASE_URL == '/product/'),
+        'children' => array(
+            array('label' => 'All Products', 'href' => 'product/?type=list&status=all', 'icon' => 'fas fa-list'),
+            array('label' => 'Add New Product', 'href' => 'product/?type=add&editor=true', 'icon' => 'fas fa-plus'),
+            array('label' => 'Categories', 'href' => 'product/?type=category', 'icon' => 'fas fa-tag'),
+            array('label' => 'Tags', 'href' => 'product/?type=tags', 'icon' => 'fas fa-tags'),
+        ),
+    ),
+    array(
+        'id' => 'subscription',
+        'label' => 'Subscription',
+        'href' => 'subscription/?type=list&status=all',
+        'icon' => 'fas fa-crown',
+        'active' => (ADMIN_BASE_URL == '/subscription/'),
+        'children' => array(
+            array('label' => 'All Subscriptions', 'href' => 'subscription/?type=list&status=all', 'icon' => 'fas fa-list'),
+            array('label' => 'Add New Subscription', 'href' => 'subscription/?type=add&editor=true', 'icon' => 'fas fa-plus'),
+            array('label' => 'Categories', 'href' => 'subscription/?type=category', 'icon' => 'fas fa-tag'),
+        ),
+    ),
+    array(
+        'id' => 'event',
+        'label' => 'Events / Workshop',
+        'href' => 'event/?type=list&status=all',
+        'icon' => 'fas fa-gopuram',
+        'active' => ($postType == 'event'),
+        'children' => array(
+            array('label' => 'All Events', 'href' => 'event/?type=list&status=all', 'icon' => 'fas fa-list'),
+            array('label' => 'Add New Event', 'href' => 'event/?type=add', 'icon' => 'fas fa-plus'),
+            array('label' => 'Categories', 'href' => 'event/?type=category', 'icon' => 'fas fa-tags'),
+        ),
+    ),
+    array(
+        'id' => 'page',
+        'label' => 'Page',
+        'href' => 'page/?type=list&status=all',
+        'icon' => 'fas fa-file',
+        'active' => (ADMIN_BASE_URL == '/page/'),
+        'children' => array(
+            array('label' => 'All Pages', 'href' => 'page/?type=list&status=all', 'icon' => 'fas fa-list'),
+            array('label' => 'Add New Page', 'href' => 'page/?type=add&editor=true', 'icon' => 'fas fa-plus'),
+        ),
+    ),
+    array(
+        'id' => 'post',
+        'label' => 'Blog',
+        'href' => 'post/?type=list&status=all',
+        'icon' => 'fas fa-blog',
+        'active' => ($postType == 'post'),
+        'children' => array(
+            array('label' => 'All Posts', 'href' => 'post/?type=list&status=all', 'icon' => 'fas fa-list'),
+            array('label' => 'Add New Post', 'href' => 'post/?type=add&editor=true', 'icon' => 'fas fa-plus'),
+            array('label' => 'Categories', 'href' => 'post/?type=category', 'icon' => 'fas fa-tags'),
+        ),
+    ),
+    array(
+        'id' => 'media',
+        'label' => 'Media',
+        'href' => 'media/?type=list&status=all',
+        'icon' => 'fas fa-folder-open',
+        'active' => (ADMIN_BASE_URL == '/media/'),
+        'children' => array(
+            array('label' => 'All Media', 'href' => 'media/?type=list&status=all', 'icon' => 'fas fa-list'),
+            array('label' => 'Add New Media', 'href' => 'media/?type=add', 'icon' => 'fas fa-plus'),
+            array('label' => 'Images', 'href' => 'media/?type=list&media=image', 'icon' => 'fas fa-images'),
+            array('label' => 'Videos', 'href' => 'media/?type=list&media=video', 'icon' => 'fas fa-video'),
+            array('label' => 'Documents', 'href' => 'media/?type=list&media=docs', 'icon' => 'fas fa-copy'),
+        ),
+    ),
+    array(
+        'id' => 'social_proof',
+        'label' => 'Social Video Hub',
+        'href' => 'social_proof/?type=list&status=all',
+        'icon' => 'fas fa-play-circle',
+        'active' => ($postType == 'social_proof'),
+        'children' => array(
+            array('label' => 'All Videos', 'href' => 'social_proof/?type=list&status=all', 'icon' => 'fas fa-list'),
+            array('label' => 'Add New Video', 'href' => 'social_proof/?type=add&editor=true', 'icon' => 'fas fa-plus'),
+            array('label' => 'Video Categories', 'href' => 'social_proof/?type=category', 'icon' => 'fas fa-tags'),
+        ),
+    ),
+    array(
+        'id' => 'coupon',
+        'label' => 'Coupon',
+        'href' => 'coupon/?type=list&status=all',
+        'icon' => 'fas fa-tags',
+        'active' => (ADMIN_BASE_URL == '/coupon/'),
+        'children' => array(
+            array('label' => 'All Coupons', 'href' => 'coupon/?type=list&status=all', 'icon' => 'fas fa-list'),
+            array('label' => 'Add New Coupon', 'href' => 'coupon/?type=add', 'icon' => 'fas fa-ticket-alt'),
+        ),
+    ),
+    array(
+        'id' => 'import',
+        'label' => 'Import',
+        'href' => 'import/?type=product',
+        'icon' => 'fas fa-upload',
+        'active' => (ADMIN_BASE_URL == '/import/'),
+        'children' => array(
+            array('label' => 'Products', 'href' => 'import/?type=product', 'icon' => 'fas fa-cubes'),
+        ),
+    ),
+    array(
+        'id' => 'appearance',
+        'label' => 'Appearance',
+        'href' => 'appearance/?type=menu',
+        'icon' => 'fas fa-paint-brush',
+        'active' => (ADMIN_BASE_URL == '/appearance/'),
+        'children' => array(
+            array('label' => 'Menu', 'href' => 'appearance/?type=menu', 'icon' => 'fas fa-ellipsis-v'),
+            array('label' => 'Sliders', 'href' => 'appearance/?type=sliders', 'icon' => 'fas fa-images'),
+        ),
+    ),
+    array(
+        'id' => 'setting',
+        'label' => 'Settings',
+        'href' => 'setting/?type=configuration',
+        'icon' => 'fas fa-cog',
+        'active' => (ADMIN_BASE_URL == '/setting/'),
+        'children' => array(
+            array('label' => 'Configuration', 'href' => 'setting/?type=configuration', 'icon' => 'fas fa-tools'),
+            array('label' => 'Profile', 'href' => 'setting/?type=profile', 'icon' => 'fas fa-user'),
+        ),
+    ),
+);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -8,10 +162,10 @@ $postType = rtrim(ltrim(ADMIN_BASE_URL, '/'), '/');
     <base href="/dashboard/">
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="icon" href="<?php echo SITE_ICON ?>">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <link rel="icon" href="<?php echo htmlspecialchars(SITE_ICON, ENT_QUOTES, 'UTF-8'); ?>">
     <title>
-        <?php echo str_replace('_', ' ', ucwords(((ADMIN_BASE_URL == '/') ? 'Dashboard' : str_replace('/', ' ', ADMIN_BASE_URL . ' ' . @$_GET['type'])) . ' | ' . SITE_NAME)); ?>
+        <?php echo htmlspecialchars(str_replace('_', ' ', ucwords(((ADMIN_BASE_URL == '/') ? 'Dashboard' : str_replace('/', ' ', ADMIN_BASE_URL . ' ' . @$_GET['type'])) . ' | ' . SITE_NAME)), ENT_QUOTES, 'UTF-8'); ?>
     </title>
     <link rel="stylesheet" type="text/css" href="<?php echo ADMIN_CSS_LIBRARY ?>admin_new.min.css">
     <link rel="stylesheet" type="text/css" href="<?php echo CSS_LIBRARY ?>all.min.css">
@@ -24,340 +178,146 @@ $postType = rtrim(ltrim(ADMIN_BASE_URL, '/'), '/');
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap">
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap">
+    <link rel="stylesheet" type="text/css" href="<?php echo ADMIN_STYLESHEET ?>ecom-admin.css?v=<?php echo $egAdminCssVer; ?>">
 </head>
 
-<body class="premium-admin">
+<body class="premium-admin ecom-gift-admin">
+    <a class="eg-skip-link" href="#main-content">Skip to main content</a>
 
-    <header>
+    <header class="eg-topbar">
         <div class="left-side">
-            <ul>
-                <li>
-                    <button type="button" class="nav-toggle" id="nav-toggle" aria-label="Open navigation">
-                        <i class="fas fa-bars"></i>
-                    </button>
-                    <div class="logo"><a href="/dashboard/"><img src="<?php echo SITE_LOGO ?>" alt=""></a></div>
-                </li>
-            </ul>
+            <button
+                type="button"
+                class="nav-toggle"
+                id="nav-toggle"
+                aria-label="Open navigation menu"
+                aria-expanded="false"
+                aria-controls="admin-nav-drawer">
+                <i class="fas fa-bars" aria-hidden="true"></i>
+            </button>
+            <div class="logo">
+                <a href="/dashboard/" aria-label="<?php echo htmlspecialchars(SITE_NAME, ENT_QUOTES, 'UTF-8'); ?> dashboard home">
+                    <img src="<?php echo htmlspecialchars(SITE_LOGO, ENT_QUOTES, 'UTF-8'); ?>" alt="<?php echo htmlspecialchars(SITE_NAME, ENT_QUOTES, 'UTF-8'); ?>">
+                </a>
+            </div>
         </div>
-        <div class="right-side">
-            <ul>
-                <li>
-                    <a href="">Welcome, <strong><?php echo PROFILE_DISPLAY_NAME ?></strong>
-                        <div class="profile-img"><img
-                                src="<?php echo ((PROFILE_IMAGE != '') ? PROFILE_IMAGE : IMG_LIBRARY . 'default-profile.png'); ?>"
-                                alt=""></div>
-                    </a>
-                    <ul>
-                        <li><a href="/logout/"><i class="fas fa-sign-out-alt"></i> Log Out</a></li>
-                    </ul>
+
+        <div class="right-side eg-profile-menu" id="eg-profile-menu">
+            <button
+                type="button"
+                class="eg-profile-trigger"
+                id="profile-menu-trigger"
+                aria-expanded="false"
+                aria-haspopup="menu"
+                aria-controls="profile-menu-list">
+                <span class="eg-profile-welcome">
+                    <span class="eg-profile-greeting">Welcome, </span>
+                    <strong><?php echo htmlspecialchars(PROFILE_DISPLAY_NAME, ENT_QUOTES, 'UTF-8'); ?></strong>
+                </span>
+                <span class="profile-img">
+                    <img
+                        src="<?php echo htmlspecialchars((PROFILE_IMAGE != '') ? PROFILE_IMAGE : IMG_LIBRARY . 'default-profile.png', ENT_QUOTES, 'UTF-8'); ?>"
+                        alt=""
+                        width="30"
+                        height="30">
+                </span>
+                <i class="fas fa-chevron-down eg-profile-caret" aria-hidden="true"></i>
+            </button>
+            <div id="eg-profile-backdrop" class="eg-profile-backdrop" hidden></div>
+            <ul id="profile-menu-list" class="eg-profile-dropdown" role="menu" aria-labelledby="profile-menu-trigger" hidden>
+                <li class="eg-profile-sheet-header" role="presentation">
+                    <span class="eg-sheet-handle" aria-hidden="true"></span>
+                    <strong><?php echo htmlspecialchars(PROFILE_DISPLAY_NAME, ENT_QUOTES, 'UTF-8'); ?></strong>
+                    <small>Administrator</small>
                 </li>
+                <li role="none"><a role="menuitem" href="setting/?type=profile"><i class="fas fa-user" aria-hidden="true"></i> My Profile</a></li>
+                <li role="none"><a role="menuitem" href="setting/?type=configuration"><i class="fas fa-tools" aria-hidden="true"></i> Configuration</a></li>
+                <li role="none"><a role="menuitem" href="/logout/"><i class="fas fa-sign-out-alt" aria-hidden="true"></i> Log Out</a></li>
             </ul>
         </div>
     </header>
 
-    <aside>
-        <div class="nav-search-wrapper">
-            <label for="side-nav-search">Quick Navigation</label>
-            <div class="nav-search-input">
-                <i class="fas fa-search"></i>
-                <input type="text" id="side-nav-search" placeholder="Search dashboard menu">
+    <aside id="admin-nav-drawer" class="Drawer eg-drawer" popover="manual" role="dialog" aria-label="Dashboard navigation">
+        <div class="Drawer-scroller">
+            <div class="Drawer-sheet">
+                <div class="eg-drawer-header">
+                    <span class="eg-drawer-title">Menu</span>
+                    <button
+                        type="button"
+                        id="drawer-close"
+                        class="eg-drawer-close"
+                        aria-label="Close navigation menu"
+                        autofocus>
+                        <i class="fas fa-times" aria-hidden="true"></i>
+                    </button>
+                </div>
+
+                <div class="nav-search-wrapper">
+                    <label for="side-nav-search">Quick Navigation</label>
+                    <div class="nav-search-input">
+                        <i class="fas fa-search" aria-hidden="true"></i>
+                        <input type="search" id="side-nav-search" placeholder="Search menu (/)" autocomplete="off">
+                        <button
+                            type="button"
+                            id="side-nav-search-clear"
+                            class="eg-search-clear"
+                            aria-label="Clear menu filter"
+                            hidden>
+                            <i class="fas fa-times" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                    <div id="nav-search-status" class="visually-hidden" aria-live="polite"></div>
+                </div>
+
+                <nav class="side-nav" aria-label="Primary dashboard sections">
+                    <ul>
+                        <?php foreach ($egNavSections as $egSec):
+                            $egHasChildren = !empty($egSec['children']);
+                            $egSubId = 'eg-sub-' . $egSec['id'];
+                            $egIsActive = !empty($egSec['active']);
+                        ?>
+                            <li<?php echo $egIsActive ? ' class="active"' : ''; ?>>
+                                <?php if ($egHasChildren): ?>
+                                    <div class="eg-nav-row">
+                                        <a class="eg-nav-link" href="<?php echo htmlspecialchars($egSec['href'], ENT_QUOTES, 'UTF-8'); ?>"<?php echo ($egIsActive && empty($_GET['type'])) ? ' aria-current="page"' : ''; ?>>
+                                            <i class="<?php echo htmlspecialchars($egSec['icon'], ENT_QUOTES, 'UTF-8'); ?>" aria-hidden="true"></i>
+                                            <span class="eg-nav-label"><?php echo htmlspecialchars($egSec['label'], ENT_QUOTES, 'UTF-8'); ?></span>
+                                        </a>
+                                        <button
+                                            type="button"
+                                            class="eg-nav-sub-btn"
+                                            aria-expanded="<?php echo $egIsActive ? 'true' : 'false'; ?>"
+                                            aria-controls="<?php echo htmlspecialchars($egSubId, ENT_QUOTES, 'UTF-8'); ?>"
+                                            aria-label="Toggle <?php echo htmlspecialchars($egSec['label'], ENT_QUOTES, 'UTF-8'); ?> submenu">
+                                            <i class="fas fa-chevron-down" aria-hidden="true"></i>
+                                        </button>
+                                    </div>
+                                    <ul id="<?php echo htmlspecialchars($egSubId, ENT_QUOTES, 'UTF-8'); ?>" class="eg-submenu"<?php echo $egIsActive ? '' : ' hidden'; ?>>
+                                        <?php foreach ($egSec['children'] as $egChild): ?>
+                                            <li>
+                                                <a href="<?php echo htmlspecialchars($egChild['href'], ENT_QUOTES, 'UTF-8'); ?>">
+                                                    <i class="<?php echo htmlspecialchars($egChild['icon'], ENT_QUOTES, 'UTF-8'); ?>" aria-hidden="true"></i>
+                                                    <span><?php echo htmlspecialchars($egChild['label'], ENT_QUOTES, 'UTF-8'); ?></span>
+                                                </a>
+                                            </li>
+                                        <?php endforeach; ?>
+                                    </ul>
+                                <?php else: ?>
+                                    <div class="eg-nav-row">
+                                        <a class="eg-nav-link" href="<?php echo htmlspecialchars($egSec['href'], ENT_QUOTES, 'UTF-8'); ?>"<?php echo $egIsActive ? ' aria-current="page"' : ''; ?>>
+                                            <i class="<?php echo htmlspecialchars($egSec['icon'], ENT_QUOTES, 'UTF-8'); ?>" aria-hidden="true"></i>
+                                            <span class="eg-nav-label"><?php echo htmlspecialchars($egSec['label'], ENT_QUOTES, 'UTF-8'); ?></span>
+                                        </a>
+                                    </div>
+                                <?php endif; ?>
+                            </li>
+                        <?php endforeach; ?>
+                    </ul>
+                    <div id="nav-search-empty" class="eg-nav-empty" hidden>No matching menu items.</div>
+                </nav>
             </div>
         </div>
-
-        <nav class="side-nav">
-            <ul>
-                <li <?php echo ((ADMIN_BASE_URL == '/') ? 'class="active"' : '') ?>><a href="/dashboard/"><i
-                            class="fas fa-tachometer-alt"></i> Dashboard</a></li>
-                <li <?php echo ((ADMIN_BASE_URL == '/product/') ? 'class="active"' : '') ?>>
-                    <a href="product/?type=list&status=all"><i class="fas fa-box-open"></i> Product</a>
-                    <div class="side-menu">
-                        <ul>
-                            <li><a href="product/?type=list&status=all"><i class="fas fa-list"></i> All product</a>
-                            </li>
-                            <li><a href="product/?type=add&editor=true"><i class="fas fa-plus"></i>Add new
-                                    product</a></li>
-                            <li><a href="product/?type=category"><i class="fas fa-tag"></i>Categories</a></li>
-                            <li><a href="product/?type=tags"><i class="fas fa-tags"></i>Tags</a></li>
-                        </ul>
-                    </div>
-                    <div class="bottom-menu">
-                        <ul>
-                            <li><a href="product/?type=list&status=all"><i class="fas fa-list"></i> All product</a>
-                            </li>
-                            <li><a href="product/?type=add&editor=true"><i class="fas fa-plus"></i>Add new
-                                    product</a></li>
-                            <li><a href="product/?type=category"><i class="fas fa-tag"></i>Categories</a></li>
-                            <li><a href="product/?type=tags"><i class="fas fa-tags"></i>Tags</a></li>
-                        </ul>
-                    </div>
-                </li>
-                <li <?php echo ((ADMIN_BASE_URL == '/subscription/') ? 'class="active"' : '') ?>>
-                    <a href="subscription/?type=list&status=all"><i class="fas fa-crown"></i> Subscription</a>
-                    <div class="side-menu">
-                        <ul>
-                            <li><a href="subscription/?type=list&status=all"><i class="fas fa-list"></i> All
-                                    Subscriptions</a></li>
-                            <li><a href="subscription/?type=add&editor=true"><i class="fas fa-plus"></i>Add New
-                                    Subscription</a></li>
-                            <li><a href="subscription/?type=category"><i class="fas fa-tag"></i>Categories</a></li>
-                            <!-- <li><a href="subscription/?type=tags"><i class="fas fa-tags"></i>Tags</a></li> -->
-                        </ul>
-                    </div>
-                    <div class="bottom-menu">
-                        <ul>
-                            <li><a href="subscription/?type=list&status=all"><i class="fas fa-list"></i> All
-                                    Subscriptions</a></li>
-                            <li><a href="subscription/?type=add&editor=true"><i class="fas fa-plus"></i>Add New
-                                    Subscription</a></li>
-                            <li><a href="subscription/?type=category"><i class="fas fa-tag"></i>Categories</a></li>
-                            <!-- <li><a href="subscription/?type=tags"><i class="fas fa-tags"></i>Tags</a></li> -->
-                        </ul>
-                    </div>
-                </li>
-                <li <?php echo (($postType == 'event') ? 'class="active"' : '') ?>>
-                    <a href="event/?type=list&status=all"><i class="fas fa-gopuram"></i> Events/Workshop</a>
-                    <div class="side-menu">
-                        <ul>
-                            <li><a href="event/?type=list&status=all"><i class="fas fa-list"></i> All events</a></li>
-                            <li><a href="event/?type=add"><i class="fas fa-plus"></i> Add New event</a></li>
-                            <li><a href="event/?type=category"><i class="fas fa-tags"></i> Categories</a></li>
-                        </ul>
-                    </div>
-                    <div class="bottom-menu">
-                        <ul>
-                            <li><a href="event/?type=list&status=all"><i class="fas fa-list"></i> All events</a></li>
-                            <li><a href="event/?type=add"><i class="fas fa-plus"></i> Add New event</a></li>
-                            <li><a href="event/?type=category"><i class="fas fa-tags"></i> Categories</a></li>
-                        </ul>
-                    </div>
-                </li>
-                <li <?php echo ((ADMIN_BASE_URL == '/page/') ? 'class="active"' : '') ?>>
-                    <a href="page/?type=list"><i class="fas fa-file"></i> Page</a>
-                    <div class="side-menu">
-                        <ul>
-                            <li><a href="page/?type=list&status=all"><i class="fas fa-list"></i> All pages</a></li>
-                            <li><a href="page/?type=add&editor=true"><i class="fas fa-plus"></i>Add new page</a></li>
-                        </ul>
-                    </div>
-                    <div class="bottom-menu">
-                        <ul>
-                            <li><a href="page/?type=list&status=all"><i class="fas fa-list"></i> All pages</a></li>
-                            <li><a href="page/?type=add&editor=true"><i class="fas fa-plus"></i>Add new page</a></li>
-                        </ul>
-                    </div>
-                </li>
-                <li <?php echo (($postType == 'post') ? 'class="active"' : '') ?>>
-                    <a href="post/?type=list&status=all"><i class="fas fa-blog"></i> Blog</a>
-                    <div class="side-menu">
-                        <ul>
-                            <li><a href="post/?type=list&status=all"><i class="fas fa-list"></i> All post</a></li>
-                            <li><a href="post/?type=add&editor=true"><i class="fas fa-plus"></i>Add new post</a></li>
-                            <li><a href="post/?type=category"><i class="fas fa-tags"></i>Categories</a></li>
-                        </ul>
-                    </div>
-                    <div class="bottom-menu">
-                        <ul>
-                            <li><a href="post/?type=list&status=all"><i class="fas fa-list"></i> All post</a></li>
-                            <li><a href="post/?type=add&editor=true"><i class="fas fa-plus"></i>Add new post</a></li>
-                            <li><a href="post/?type=category"><i class="fas fa-tags"></i>Categories</a></li>
-                        </ul>
-                    </div>
-                </li>
-                <li <?php echo ((ADMIN_BASE_URL == '/media/') ? 'class="active"' : '') ?>>
-                    <a href="media/?type=list"><i class="fas fa-folder-open"></i> Media</a>
-                    <div class="side-menu">
-                        <ul>
-                            <li><a href="media/?type=list&status=all"><i class="fas fa-list"></i> All media</a></li>
-                            <li><a href="media/?type=add"><i class="fas fa-plus"></i> Add new media</a></li>
-                            <li><a href="media/?type=list&media=image"><i class="fas fa-images"></i> Images</a></li>
-                            <li><a href="media/?type=list&media=video"><i class="fas fa-video"></i> Videos</a></li>
-                            <li><a href="media/?type=list&media=docs"><i class="fas fa-copy"></i> Documents</a></li>
-                        </ul>
-                    </div>
-                    <div class="bottom-menu">
-                        <ul>
-                            <li><a href="media/?type=list&status=all"><i class="fas fa-list"></i> All media</a></li>
-                            <li><a href="media/?type=add"><i class="fas fa-plus"></i> Add new media</a></li>
-                            <li><a href="media/?type=list&media=image"><i class="fas fa-images"></i> Images</a></li>
-                            <li><a href="media/?type=list&media=video"><i class="fas fa-video"></i> Videos</a></li>
-                            <li><a href="media/?type=list&media=docs"><i class="fas fa-copy"></i> Documents</a></li>
-                        </ul>
-                    </div>
-                </li>
-
-                <li <?php echo (($postType == 'social_proof') ? 'class="active"' : '') ?>>
-                    <a href="social_proof/?type=list&status=all">
-                        <i class="fas fa-play-circle"></i> Social Video Hub
-                    </a>
-
-                    <div class="side-menu">
-                        <ul>
-                            <li>
-                                <a href="social_proof/?type=list&status=all">
-                                    <i class="fas fa-list"></i> All Videos
-                                </a>
-                            </li>
-                            <li>
-                                <a href="social_proof/?type=add&editor=true">
-                                    <i class="fas fa-plus"></i> Add New Video
-                                </a>
-                            </li>
-                            <li>
-                                <a href="social_proof/?type=category">
-                                    <i class="fas fa-tags"></i> Video Categories
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-
-                    <div class="bottom-menu">
-                        <ul>
-                            <li>
-                                <a href="social_proof/?type=list&status=all">
-                                    <i class="fas fa-list"></i> All Videos
-                                </a>
-                            </li>
-                            <li>
-                                <a href="social_proof/?type=add&editor=true">
-                                    <i class="fas fa-plus"></i> Add New Video
-                                </a>
-                            </li>
-                            <li>
-                                <a href="social_proof/?type=category">
-                                    <i class="fas fa-tags"></i> Video Categories
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </li>
-                <li <?php echo ((ADMIN_BASE_URL == '/coupon/') ? 'class="active"' : '') ?>>
-                    <a href="coupon/?type=list&status=all"><i class="fas fa-tags"></i> Coupon</a>
-                    <div class="side-menu">
-                        <ul>
-                            <li><a href="coupon/?type=list&status=all"><i class="fas fa-list"></i> All coupons</a></li>
-                            <li><a href="coupon/?type=add"><i class="fas fa-ticket-alt"></i> Add new coupon</a></li>
-                        </ul>
-                    </div>
-                    <div class="bottom-menu">
-                        <ul>
-                            <li><a href="coupon/?type=list&status=all"><i class="fas fa-list"></i> All coupons</a></li>
-                            <li><a href="coupon/?type=add"><i class="fas fa-ticket-alt"></i> Add new coupon</a></li>
-                        </ul>
-                    </div>
-                </li>
-                <li <?php echo ((ADMIN_BASE_URL == '/import/') ? 'class="active"' : '') ?>>
-                    <a href="import/?type=product"><i class="fas fa-upload"></i> Import</a>
-                    <div class="side-menu">
-                        <ul>
-                            <li><a href="import/?type=product"><i class="fas fa-cubes"></i> Products</a></li>
-                        </ul>
-                    </div>
-                    <div class="bottom-menu">
-                        <ul>
-                            <li><a href="import/?type=product"><i class="fas fa-cubes"></i> Products</a></li>
-                        </ul>
-                    </div>
-                </li>
-                <!-- <li <?php echo ((ADMIN_BASE_URL == '/export/') ? 'class="active"' : '') ?>>
-                    <a href="export/?type=product"><i class="fas fa-download"></i> Export</a>
-                    <div class="side-menu">
-                        <ul>
-                            <li><a href="export/?type=product"><i class="fas fa-cubes"></i> Products</a></li>
-                            <li><a href="export/?type=users"><i class="fas fa-users"></i> Users</a></li>
-                            <li><a href="export/?type=orders"><i class="fas fa-funnel-dollar"></i> Orders</a></li>
-                        </ul>
-                    </div>
-                    <div class="bottom-menu">
-                        <ul>
-                            <li><a href="export/?type=product"><i class="fas fa-cubes"></i> Products</a></li>
-                            <li><a href="export/?type=users"><i class="fas fa-users"></i> Users</a></li>
-                            <li><a href="export/?type=orders"><i class="fas fa-funnel-dollar"></i> Orders</a></li>
-                        </ul>
-                    </div>
-                </li> -->
-                <li <?php echo ((ADMIN_BASE_URL == '/appearance/') ? 'class="active"' : '') ?>>
-                    <a href="appearance/?type=configuration"><i class="fas fa-paint-brush"></i> Appearance</a>
-                    <div class="side-menu">
-                        <ul>
-                            <li><a href="appearance/?type=menu"><i class="fas fa-ellipsis-v"></i> Menu</a></li>
-                            <li><a href="appearance/?type=sliders"><i class="fas fa-images"></i>
-                                    Sliders</a></li>
-                        </ul>
-                    </div>
-                    <div class="bottom-menu">
-                        <ul>
-                            <li><a href="appearance/?type=menu"><i class="fas fa-ellipsis-v"></i> Menu</a></li>
-                            <li><a href="appearance/?type=sliders"><i class="fas fa-images"></i>
-                                    Sliders</a></li>
-                        </ul>
-                    </div>
-                </li>
-                <li <?php echo ((ADMIN_BASE_URL == '/setting/') ? 'class="active"' : '') ?>>
-                    <a href="setting/?type=configuration"><i class="fas fa-cog"></i> Settings</a>
-                    <div class="side-menu">
-                        <ul>
-                            <!-- <li><a href="setting/?type=menu"><i class="fas fa-ellipsis-v"></i> Menu</a></li> -->
-                            <li><a href="setting/?type=configuration"><i class="fas fa-tools"></i> Configuration</a>
-                            </li>
-                            <li><a href="setting/?type=profile"><i class="fas fa-user"></i> Profile</a></li>
-                            <!-- <li><a href="setting/?type=redirection&status=all"><i class="fas fa-external-link-alt"></i> URL redirection</a></li> -->
-                        </ul>
-                    </div>
-                    <div class="bottom-menu">
-                        <ul>
-                            <!-- <li><a href="setting/?type=menu"><i class="fas fa-ellipsis-v"></i> Menu</a></li> -->
-                            <li><a href="setting/?type=configuration"><i class="fas fa-tools"></i> Configuration</a>
-                            </li>
-                            <li><a href="setting/?type=profile"><i class="fas fa-user"></i> Profile</a></li>
-                            <!-- <li><a href="setting/?type=redirection&status=all"><i class="fas fa-external-link-alt"></i> URL redirection</a></li> -->
-                        </ul>
-                    </div>
-                </li>
-            </ul>
-        </nav>
     </aside>
 
-    <div class="mobile-nav-overlay" id="nav-overlay"></div>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            var menuSearch = document.getElementById('side-nav-search');
-            if (!menuSearch) {
-                return;
-            }
-
-            var menuRoot = document.querySelector('nav.side-nav > ul');
-            if (!menuRoot) {
-                return;
-            }
-
-            var menuItems = menuRoot.children;
-
-            menuSearch.addEventListener('input', function() {
-                var searchTerm = menuSearch.value.toLowerCase().trim();
-
-                for (var i = 0; i < menuItems.length; i++) {
-                    var item = menuItems[i];
-                    var topAnchor = item.firstElementChild;
-
-                    if (!topAnchor || topAnchor.tagName !== 'A') {
-                        continue;
-                    }
-
-                    var searchableText = topAnchor.textContent.toLowerCase();
-                    var subLinks = item.querySelectorAll('.side-menu a, .bottom-menu a');
-
-                    for (var j = 0; j < subLinks.length; j++) {
-                        searchableText += ' ' + subLinks[j].textContent.toLowerCase();
-                    }
-
-                    item.style.display = (searchTerm === '' || searchableText.indexOf(searchTerm) !== -1) ?
-                        '' : 'none';
-                }
-            });
-        });
-    </script>
-
-    <main>
-
+    <main id="main-content" tabindex="-1">
         <div class="container">
