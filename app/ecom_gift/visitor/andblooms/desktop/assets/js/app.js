@@ -47,11 +47,12 @@ $(document).ready(function () {
   $("#addToCart").click(function (e) {
     e.preventDefault();
     $("#addToCart").hide();
-    var productInfo = $("#productInfo").attr("value");
-    var qty = productInfo.split("_");
-    var id = qty[0];
-    var price = qty[1];
-    var qty = parseInt(qty[2]) || 1; // Default to 1 if not specified
+    var productInfo = $("#productInfo").attr("value") || $("#productInfo").val() || "";
+    var parts = productInfo.split("_");
+    var id = parts[0];
+    var price = parts[1];
+    var parsedQty = parseInt(parts[2], 10) || 1;
+    var itemType = $("#productInfo").attr("data-item-type") || $("#productInfo").data("item-type") || (window.location.pathname.indexOf("/event") !== -1 ? "event" : "product");
 
     $.ajax({
       type: "POST",
@@ -60,6 +61,7 @@ $(document).ready(function () {
         id: id,
         quantity: 1,
         price: price,
+        itemType: itemType,
         type: "cart",
         action: "add",
       },

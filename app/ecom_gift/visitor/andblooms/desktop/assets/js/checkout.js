@@ -12,6 +12,19 @@ $(document).ready(function () {
   let deliveryTime = "";
   let deliverySlot = "";
 
+  // Synchronize cart badge on page load if checkout has items
+  var initialCartUnits = 0;
+  $(".cart-item").each(function () {
+    initialCartUnits += Math.max(1, parseInt($(this).attr("data-qty") || $(this).data("qty"), 10) || 1);
+  });
+  if (initialCartUnits > 0) {
+    var $cartBadge = $("#cartItems");
+    if ($cartBadge.length) {
+      $cartBadge.text(initialCartUnits);
+      $cartBadge.removeClass("bg-gray-300").addClass("bg-primary text-white");
+    }
+  }
+
   function formatDate(dateObj) {
     const dd = String(dateObj.getDate()).padStart(2, "0");
     const mm = String(dateObj.getMonth() + 1).padStart(2, "0");

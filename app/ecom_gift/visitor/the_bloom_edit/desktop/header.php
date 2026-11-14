@@ -346,19 +346,23 @@ function render_andblooms_nav_tree(array $items, int $depth = 0, string $idPrefi
                 $cartCountQuery = "SELECT COALESCE(SUM(GREATEST(c.cart_qty, 1)), 0) AS total_items
                     FROM " . TABLE_PREFIX . "cart c
                     LEFT JOIN " . TABLE_PREFIX . "product p
-                        ON (c.cart_relation_id = p.product_id AND c.cart_relation_type = 'product')
+                        ON (c.cart_relation_id = p.product_id AND (c.cart_relation_type = 'product' OR c.cart_relation_type = '' OR c.cart_relation_type IS NULL))
                     LEFT JOIN " . TABLE_PREFIX . "event e
                         ON (c.cart_relation_id = e.event_id AND c.cart_relation_type = 'event')
                     WHERE c.cart_session_id = '" . SESSION_ID . "'
                       AND c.cart_site_id = " . SITE_ID . "
                       AND (c.cart_status = 0 OR c.cart_status = 2)
                       AND (
-                          (c.cart_relation_type = 'product' AND p.product_status = 1)
-                          OR (c.cart_relation_type = 'event' AND e.event_status = 1)
+                          ((c.cart_relation_type = 'product' OR c.cart_relation_type = '' OR c.cart_relation_type IS NULL) AND (p.product_status = 1 OR p.product_status IS NULL))
+                          OR (c.cart_relation_type = 'event' AND (e.event_status = 1 OR e.event_status IS NULL))
+                          OR (c.cart_relation_type NOT IN ('product', 'event') AND c.cart_relation_type != '')
                       )";
                 if ($cartNumber = mysqli_query($connection, $cartCountQuery)) {
                     $cartCountRow = mysqli_fetch_assoc($cartNumber);
                     $cartItems = (int) ($cartCountRow['total_items'] ?? 0);
+                }
+                if (isset($totalBagUnits) && (int) $totalBagUnits > 0) {
+                    $cartItems = max($cartItems, (int) $totalBagUnits);
                 }
                 ?>
                 <div class="relative cart-dropdown-trigger group">

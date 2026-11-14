@@ -30,14 +30,15 @@ include_once 'header.php';
         
         c.cart_id, c.cart_relation_id, c.cart_relation_type,
         GROUP_CONCAT(c.cart_qty) AS cart_qty, 
-        c.cart_currency, SUM(c.cart_price) AS cart_price,
+        c.cart_currency, 
+        SUM(COALESCE(NULLIF(CAST(c.cart_price AS DECIMAL(12,2)), 0), NULLIF(i.inventory_price, 0), NULLIF(i.inventory_mrp, 0), 0) * GREATEST(c.cart_qty, 1)) AS cart_price,
         c.cart_status, 
         GROUP_CONCAT(COALESCE(p.product_image, e.event_image, e.event_thumbnail)) AS product_image,
         GROUP_CONCAT(COALESCE(p.product_title, e.event_title)) AS product_title,
         
         i.inventory_currency, 
-        GROUP_CONCAT(COALESCE(i.inventory_price, c.cart_price)) AS productPrices,
-        GROUP_CONCAT(COALESCE(i.inventory_mrp, c.cart_price)) AS productMRPs,
+        GROUP_CONCAT(COALESCE(NULLIF(CAST(c.cart_price AS DECIMAL(12,2)), 0), NULLIF(i.inventory_price, 0), NULLIF(i.inventory_mrp, 0), 0)) AS productPrices,
+        GROUP_CONCAT(COALESCE(NULLIF(i.inventory_mrp, 0), NULLIF(i.inventory_price, 0), NULLIF(CAST(c.cart_price AS DECIMAL(12,2)), 0), 0)) AS productMRPs,
         
         pr.profile_first_name, pr.profile_last_name, pr.profile_display_name, 
         pr.profile_mobile, pr.profile_email, 
@@ -47,7 +48,7 @@ include_once 'header.php';
 
     FROM " . TABLE_PREFIX . "order o
     INNER JOIN " . TABLE_PREFIX . "cart c 
-        ON c.cart_session_id = o.order_cart_session_id AND c.cart_status=2
+        ON c.cart_session_id = o.order_cart_session_id AND (c.cart_status = 0 OR c.cart_status = 2)
     LEFT JOIN " . TABLE_PREFIX . "product p 
         ON (p.product_id = c.cart_relation_id AND c.cart_relation_type = 'product')
     LEFT JOIN " . TABLE_PREFIX . "event e 
@@ -193,12 +194,36 @@ include_once 'header.php';
                     <h2 class="text-xl font-semibold text-gray-800">Cart Summary</h2>
 
                     <?php
-                        $subtotal = (float)($cart_price ?? 0);
+                        $subtotal = 0.0;
+                        $totalMRP = 0.0;
+                        if (isset($productPrices)) {
+                            $priceList = is_array($productPrices) ? $productPrices : explode(',', (string) $productPrices);
+                            $mrpList = isset($productMRPs) ? (is_array($productMRPs) ? $productMRPs : explode(',', (string) $productMRPs)) : $priceList;
+                            $qtyList = isset($cart_qty) ? (is_array($cart_qty) ? $cart_qty : explode(',', (string) $cart_qty)) : [];
+                            for ($idx = 0; $idx < count($priceList); $idx++) {
+                                $lineQty = isset($qtyList[$idx]) ? max(1, (int) $qtyList[$idx]) : 1;
+                                $linePrice = isset($priceList[$idx]) ? (float) $priceList[$idx] : 0.0;
+                                $lineMrp = isset($mrpList[$idx]) ? (float) $mrpList[$idx] : $linePrice;
+                                if ($lineMrp <= 0 || $lineMrp < $linePrice) {
+                                    $lineMrp = $linePrice;
+                                }
+                                $subtotal += $linePrice * $lineQty;
+                                $totalMRP += $lineMrp * $lineQty;
+                            }
+                        }
+                        if ($subtotal <= 0 && !empty($cart_price)) {
+                            $subtotal = (float) $cart_price;
+                        }
+                        if ($subtotal <= 0 && !empty($order_total_price)) {
+                            $subtotal = (float) $order_total_price;
+                        }
+                        if ($totalMRP <= 0 || $totalMRP < $subtotal) {
+                            $totalMRP = $subtotal;
+                        }
                         $deliveryCharges = (float)($order_delivery_charges ?? 0);
                         $grandTotal = $subtotal + $deliveryCharges;
-                        $totalMRP = isset($productMRPs) ? array_sum(array_map('floatval', $productMRPs)) : 0.0;
-                        $discountAmount = $totalMRP - $subtotal;
-                        $showDiscount = $totalMRP > $subtotal && $totalMRP > 0;
+                        $discountAmount = max(0.0, $totalMRP - $subtotal);
+                        $showDiscount = $totalMRP > $subtotal && $discountAmount > 0;
                         ?>
 
                     <div class="space-y-2 text-gray-700 text-sm">

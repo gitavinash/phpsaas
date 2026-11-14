@@ -129,10 +129,10 @@
 <script src="<?php echo PLUGIN_LIBRARY ?>select2/js/select2.min.js" type="text/javascript"></script>
 <!-- Social Proof Plugin -->
 <script src="<?php echo PLUGIN_LIBRARY ?>social_proof/social_proof.js?v=<?php echo time(); ?>"></script>
-<script type="text/javascript" src="<?php echo USER_JS ?>app.min.js?v=<?php echo assetVersion('js/app.min.js'); ?>"></script>
+<script type="text/javascript" src="<?php echo USER_JS ?>app.js?v=<?php echo assetVersion('js/app.js'); ?>"></script>
 <?php
-if (ACTIVE_URL == '/checkout/') {
-    echo '<script type="text/javascript" src="' . USER_JS . 'checkout.min.js?v=' . assetVersion('js/checkout.min.js') . '"></script>';
+if (ACTIVE_URL == '/checkout/' || strpos(ACTIVE_URL, '/checkout') !== false) {
+    echo '<script type="text/javascript" src="' . USER_JS . 'checkout.js?v=' . assetVersion('js/checkout.js') . '"></script>';
 }
 ?>
 </body>

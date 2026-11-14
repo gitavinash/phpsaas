@@ -31,15 +31,16 @@ $orderQuery = "
 
     FROM " . TABLE_PREFIX . "order o
     INNER JOIN " . TABLE_PREFIX . "cart c 
-        ON c.cart_session_id = o.order_cart_session_id AND c.cart_status=2
+        ON c.cart_session_id = o.order_cart_session_id AND (c.cart_status = 0 OR c.cart_status = 2)
     LEFT JOIN " . TABLE_PREFIX . "product p 
-        ON (p.product_id = c.cart_relation_id AND c.cart_relation_type = 'product')
+        ON (p.product_id = c.cart_relation_id AND (c.cart_relation_type = 'product' OR c.cart_relation_type = '' OR c.cart_relation_type IS NULL))
     LEFT JOIN " . TABLE_PREFIX . "event e 
         ON (e.event_id = c.cart_relation_id AND c.cart_relation_type = 'event')
     LEFT JOIN " . TABLE_PREFIX . "inventory i 
         ON (i.inventory_relation_id = c.cart_relation_id 
-            AND i.inventory_site_id = " . SITE_ID . " 
-            AND ((c.cart_relation_type = 'product' AND i.inventory_type = 'product') OR (c.cart_relation_type = 'event' AND i.inventory_type = 'event')))
+            AND (i.inventory_site_id = " . SITE_ID . " OR i.inventory_site_id = 0)
+            AND (((c.cart_relation_type = 'product' OR c.cart_relation_type = '' OR c.cart_relation_type IS NULL) AND i.inventory_type = 'product') 
+                 OR (c.cart_relation_type = 'event' AND i.inventory_type = 'event')))
     INNER JOIN " . TABLE_PREFIX . "user u 
         ON o.order_user_id = u.user_id
     INNER JOIN " . TABLE_PREFIX . "profile pr 
@@ -272,10 +273,16 @@ $hasEventInOrder = in_array('event', $relationTypesList, true);
                         if ($subtotal <= 0 && !empty($cart_price)) {
                             $subtotal = (float) $cart_price;
                         }
+                        if ($subtotal <= 0 && !empty($order_total_price)) {
+                            $subtotal = (float) $order_total_price;
+                        }
+                        if ($totalMRP <= 0 || $totalMRP < $subtotal) {
+                            $totalMRP = $subtotal;
+                        }
                         $deliveryCharges = (float) ($order_delivery_charges ?? 0);
                         $grandTotal = $subtotal + $deliveryCharges;
-                        $discountAmount = $totalMRP - $subtotal;
-                        $showDiscount = $totalMRP > $subtotal && $totalMRP > 0 && $subtotal > 0;
+                        $discountAmount = max(0.0, $totalMRP - $subtotal);
+                        $showDiscount = $totalMRP > $subtotal && $discountAmount > 0 && $subtotal > 0;
                         ?>
 
                         <div class="space-y-2.5 text-sm text-[#1C1A18]">

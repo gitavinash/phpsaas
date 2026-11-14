@@ -64,6 +64,31 @@ $(document).ready(function () {
 
   setCheckoutStep(1);
 
+  // Synchronize cart badge on page load if checkout has items
+  var initialCartUnits = 0;
+  $(".cart-item").each(function () {
+    initialCartUnits += Math.max(1, parseInt($(this).attr("data-qty") || $(this).data("qty"), 10) || 1);
+  });
+  if (initialCartUnits > 0) {
+    var $cartBadge = $("#cartItems");
+    if ($cartBadge.length) {
+      $cartBadge.text(initialCartUnits);
+      $cartBadge.removeClass("bg-[#EFE8DC] text-[#5E5650] border border-[#D4C8BA]").addClass("bg-[#183028] text-white");
+      $cartBadge.siblings('a[href="/checkout/"]').attr("aria-label", "Shopping bag, " + initialCartUnits + (initialCartUnits === 1 ? " item" : " items"));
+    }
+    $(".tbe-cart-count-pill").text(initialCartUnits + (initialCartUnits === 1 ? " item" : " items"));
+    var $statusEl = $("#tbeCartDropdownStatus");
+    if ($statusEl.length) {
+      $statusEl.empty().append(
+        $('<i class="ri-checkbox-circle-line text-[#183028] mr-1" aria-hidden="true"></i>'),
+        $("<span>You have </span>"),
+        $('<strong class="text-[#1C1A18] font-semibold"></strong>').text(initialCartUnits),
+        $("<span> curated " + (initialCartUnits === 1 ? "item" : "items") + " ready for checkout.</span>")
+      );
+      $('[data-cart-checkout-cta]').removeClass('hidden');
+    }
+  }
+
   $(document).on("click", "[data-checkout-trigger]", function (e) {
     e.preventDefault();
     const targetSelector = $(this).attr("data-target-btn") || "#placeOrder";

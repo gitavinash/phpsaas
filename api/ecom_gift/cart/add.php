@@ -38,8 +38,12 @@ function add($connection, $data)
                 $price = $resolvedPrice;
             } elseif ($resolvedMrp > 0) {
                 $price = $resolvedMrp;
-            } else {
+            } elseif ($fallbackClientPrice > 0) {
                 $price = $fallbackClientPrice;
+            } elseif ($relationType === 'event') {
+                $price = 4500.00;
+            } else {
+                $price = 0.00;
             }
         }
 
