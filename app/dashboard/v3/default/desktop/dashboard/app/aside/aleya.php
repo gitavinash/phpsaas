@@ -89,9 +89,27 @@ $isDashboardActive = ($currentUrl === '/dashboard/' || $currentUrl === '/dashboa
         </div>
     </li>
 
-    <li class="aside-menu-disabled">
-        <a href="javascript:void(0)"><i class="fi fi-rr-receipt"></i> Bookings &amp; Vouchers <span class="aside-badge-soon">Soon</span></a>
+<?php if ($site_access_type == 'administrator' || $site_access_type == 'operations') { ?>
+    <li <?php echo (strpos($currentUrl, '/operations') !== false ? 'class="active"' : ''); ?>>
+        <a href="/dashboard/operations/"><i class="fi fi-rr-compass-alt"></i> Operations Hub</a>
+        <div class="side-menu">
+            <ul>
+                <li><a href="/dashboard/operations/#confirmed"><i class="fi-rr-badge-check"></i> Confirmed Leads</a></li>
+                <li><a href="/dashboard/operations/#trips"><i class="fi-rr-plane-departure"></i> Trip Planner</a></li>
+                <li><a href="/dashboard/operations/#unassigned"><i class="fi-rr-user-add"></i> Assign Leads</a></li>
+                <li><a href="/dashboard/operations/#templates"><i class="fi-rr-file-edit"></i> Request Templates</a></li>
+            </ul>
+        </div>
+        <div class="bottom-menu">
+            <ul>
+                <li><a href="/dashboard/operations/#confirmed"><i class="fi-rr-badge-check"></i> Confirmed Leads</a></li>
+                <li><a href="/dashboard/operations/#trips"><i class="fi-rr-plane-departure"></i> Trip Planner</a></li>
+                <li><a href="/dashboard/operations/#unassigned"><i class="fi-rr-user-add"></i> Assign Leads</a></li>
+                <li><a href="/dashboard/operations/#templates"><i class="fi-rr-file-edit"></i> Request Templates</a></li>
+            </ul>
+        </div>
     </li>
+<?php } ?>
 <?php } ?>
 
 <?php

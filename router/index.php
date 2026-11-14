@@ -318,6 +318,29 @@ switch ($urlStructure[0]) {
 		require_once 'itinerary.php';
 		break;
 
+	/** For Public Travel Voucher view and PDF download */
+
+	case 'voucher':
+	case 'view-voucher':
+	case 'download-voucher':
+		require_once 'voucher.php';
+		break;
+
+	/** For Public Proforma and Tax Invoice view and PDF download */
+
+	case 'invoice':
+	case 'view-invoice':
+	case 'download-invoice':
+		require_once 'invoice.php';
+		break;
+
+	/** For Public Traveler Feedback & Review submission */
+
+	case 'review':
+	case 'feedback':
+		require_once 'review.php';
+		break;
+
 	/** For Public Landing Page Web Form embed / view */
 
 	case 'form':

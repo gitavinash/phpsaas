@@ -47,6 +47,31 @@
         <?php } ?>
 
         <!-- =========================
+         OPERATIONS HUB (admin/operations)
+         ========================= -->
+        <?php if ($site_access_type == 'administrator' || $site_access_type == 'operations') { ?>
+            <div class="more-section is-operations">
+                <h4>Operations <small>Travel Logistics &amp; Fulfillments</small></h4>
+                <div class="more-row">
+                    <div class="more-grid">
+                        <a href="operations/" class="more-item more-operations">
+                            <i class="fi fi-rr-compass-alt"></i><span>Operations Hub</span>
+                        </a>
+                        <a href="operations/#confirmed" class="more-item more-operations">
+                            <i class="fi-rr-badge-check"></i><span>Confirmed Leads</span>
+                        </a>
+                        <a href="operations/#trips" class="more-item more-operations">
+                            <i class="fi-rr-plane-departure"></i><span>Trip Planner</span>
+                        </a>
+                        <a href="operations/#unassigned" class="more-item more-operations">
+                            <i class="fi-rr-user-add"></i><span>Assign Leads</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        <?php } ?>
+
+        <!-- =========================
          VENDORS (admin/operations)
          ========================= -->
         <?php if ($site_access_type == 'administrator' || $site_access_type == 'operations') { ?>

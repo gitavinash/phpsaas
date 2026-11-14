@@ -3303,6 +3303,39 @@
                 `
                     : ""
                 }
+                ${
+                  (userRole === "operations" || userRole === "administrator" || userRole === "admin" || userRole === "superadmin")
+                    ? `
+                  <div class="v3-ops-dropdown-wrap">
+                    <button type="button" class="btn-v3-action btn-blue" id="btnOpsLeadActionsToggle" data-tooltip="Operations Management Suite">
+                      <i class="fi fi-rr-settings-sliders"></i> <span>Operations</span> <i class="fi fi-rr-angle-small-down"></i>
+                    </button>
+                    <div class="v3-ops-dropdown-menu" id="opsLeadActionsMenu">
+                      <a href="/dashboard/operations/?tab=requests&lead_id=${lead.id}&action=booking" class="v3-ops-dropdown-item">
+                        <i class="fi fi-rr-paper-plane"></i> <span>Send Booking Request</span>
+                      </a>
+                      <a href="/dashboard/operations/?tab=confirmed&lead_id=${lead.id}&action=voucher" class="v3-ops-dropdown-item">
+                        <i class="fi fi-rr-ticket"></i> <span>Issue Confirmation Voucher</span>
+                      </a>
+                      <a href="/dashboard/operations/?tab=confirmed&lead_id=${lead.id}&action=invoice" class="v3-ops-dropdown-item">
+                        <i class="fi fi-rr-document-signed"></i> <span>Generate Proforma / Invoice</span>
+                      </a>
+                      <div class="v3-ops-dropdown-divider"></div>
+                      <button type="button" class="v3-ops-dropdown-item btn-lead-trigger-feedback" data-lead-id="${lead.id}">
+                        <i class="fi fi-rr-star"></i> <span>Send Feedback Request</span>
+                      </button>
+                      <a href="/dashboard/operations/#trips" class="v3-ops-dropdown-item">
+                        <i class="fi fi-rr-route"></i> <span>Trip Planner &amp; Dispatch</span>
+                      </a>
+                    </div>
+                  </div>
+                `
+                    : `
+                  <button type="button" class="btn-v3-action btn-outline btn-lead-trigger-feedback" data-lead-id="${lead.id}" data-tooltip="Send Post-Trip Review / Feedback Request via WhatsApp">
+                    <i class="fi fi-rr-star"></i> <span>Send Feedback</span>
+                  </button>
+                `
+                }
               `
                   : ""
               }
@@ -5088,6 +5121,41 @@
         if (!$(e.target).closest(".v3-interest-picker-wrap").length) {
           $("#interestDropdownMenu").removeClass("is-open");
         }
+        if (!$(e.target).closest(".v3-ops-dropdown-wrap").length) {
+          $("#opsLeadActionsMenu").removeClass("is-open");
+        }
+      });
+
+      // Operations Actions Dropdown Toggle
+      $(document).on("click", "#btnOpsLeadActionsToggle", function (e) {
+        e.stopPropagation();
+        $("#opsLeadActionsMenu").toggleClass("is-open");
+      });
+
+      // Feedback Request Trigger (for both Sales & Operations)
+      $(document).on("click", ".btn-lead-trigger-feedback", function (e) {
+        e.preventDefault();
+        const leadId = $(this).data("lead-id") || self.leadId;
+        if (!leadId) return;
+
+        const $btn = $(this);
+        const origHtml = $btn.html();
+        $btn.prop("disabled", true).html('<i class="fi fi-rr-spinner fi-spin"></i> Dispatching...');
+
+        $.post("/api/v3/operations/feedback.php", { lead_id: leadId }, function (res) {
+          $btn.prop("disabled", false).html(origHtml);
+          if (res && res.status === "success") {
+            if (res.whatsapp_link) {
+              window.open(res.whatsapp_link, "_blank");
+            }
+            self.notify("Feedback Request Dispatched", "success", "Feedback link generated and logged on lead record.");
+          } else {
+            self.notify("Error", "error", (res && res.message) || "Could not generate feedback request.");
+          }
+        }, "json").fail(function () {
+          $btn.prop("disabled", false).html(origHtml);
+          self.notify("Network Error", "error", "Failed to contact operations feedback service.");
+        });
       });
 
       $(document).on("click", ".v3-interest-opt", function () {
