@@ -10,12 +10,12 @@ include_once 'header.php';
             <ol class="flex items-center gap-2">
                 <li><a href="/" class="text-[#C47C68] hover:text-[#242220] transition-colors">Home</a></li>
                 <li aria-hidden="true">/</li>
-                <li class="text-[#242220] font-medium" aria-current="page">Contact &amp; Ateliers</li>
+                <li class="text-[#242220] font-medium" aria-current="page">Contact &amp; Store Locations</li>
             </ol>
         </nav>
-        <span class="vl-eyebrow">Atelier Concierge</span>
+        <span class="vl-eyebrow">Customer Support</span>
         <h1 class="font-serif text-3xl sm:text-5xl text-[#242220] mt-1 mb-4 font-normal">
-            Connect with Our Floral Concierge
+            Connect with Our Support Team
         </h1>
         <p class="text-base sm:text-lg text-[#6E675F] max-w-xl mx-auto leading-relaxed">
             Whether inquiring about bespoke commissions, same-day delivery coordination, private workshops, or wedding florals, we welcome your conversation.
@@ -23,16 +23,16 @@ include_once 'header.php';
     </div>
 </section>
 
-<!-- Atelier Locations Grid -->
+<!-- Store Locations Grid -->
 <section class="py-16 md:py-20 bg-white border-b border-[#E8DDD5]">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center max-w-2xl mx-auto mb-14">
-            <span class="vl-eyebrow">Flagship Studios</span>
+            <span class="vl-eyebrow">Store Locations</span>
             <h2 class="font-serif text-3xl sm:text-4xl text-[#242220] mt-2 mb-3 font-normal">
-                Visit Our Delhi NCR Ateliers
+                Visit Our Delhi NCR Stores
             </h2>
             <p class="text-sm text-[#6E675F]">
-                Open daily from 9:00 AM to 9:00 PM for private consultations and floral pickups.
+                Open daily from 9:00 AM to 9:00 PM for flower orders, consultations and pickups.
             </p>
         </div>
 
@@ -42,8 +42,8 @@ include_once 'header.php';
                 <div>
                     <div class="flex items-start justify-between gap-4 mb-4">
                         <div>
-                            <span class="vl-badge vl-badge-terracotta mb-2">Main Flagship Atelier</span>
-                            <h3 class="font-serif text-2xl text-[#242220]">Chhatarpur Studio</h3>
+                            <span class="vl-badge vl-badge-terracotta mb-2">Flagship Store</span>
+                            <h3 class="font-serif text-2xl text-[#242220]">Chhatarpur Store</h3>
                         </div>
                         <div class="w-10 h-10 rounded-full bg-white border border-[#E8DDD5] text-[#C47C68] flex items-center justify-center text-lg flex-shrink-0">
                             <i class="ri-map-pin-2-line" aria-hidden="true"></i>
@@ -176,8 +176,8 @@ include_once 'header.php';
                 <div class="w-12 h-12 rounded-full bg-white border border-[#E8DDD5] text-[#25D366] flex items-center justify-center mx-auto mb-4 text-2xl">
                     <i class="ri-whatsapp-line" aria-hidden="true"></i>
                 </div>
-                <h3 class="font-serif text-lg text-[#242220] mb-2">WhatsApp Concierge</h3>
-                <p class="text-xs text-[#6E675F] mb-4">Instant floral consultations &amp; live bouquet previews.</p>
+                <h3 class="font-serif text-lg text-[#242220] mb-2">WhatsApp Support</h3>
+                <p class="text-xs text-[#6E675F] mb-4">Instant floral queries &amp; bouquet assistance.</p>
                 <a href="https://wa.me/919910744119" target="_blank" rel="noopener noreferrer"
                     class="text-xs uppercase tracking-wider font-semibold text-[#242220] hover:text-[#C47C68] transition-colors inline-flex items-center gap-1">
                     <span>Chat on WhatsApp</span>
@@ -189,8 +189,8 @@ include_once 'header.php';
                 <div class="w-12 h-12 rounded-full bg-white border border-[#E8DDD5] text-[#C47C68] flex items-center justify-center mx-auto mb-4 text-2xl">
                     <i class="ri-phone-line" aria-hidden="true"></i>
                 </div>
-                <h3 class="font-serif text-lg text-[#242220] mb-2">Telephone Concierge</h3>
-                <p class="text-xs text-[#6E675F] mb-4">Speak directly with our senior florists daily.</p>
+                <h3 class="font-serif text-lg text-[#242220] mb-2">Customer Care Phone</h3>
+                <p class="text-xs text-[#6E675F] mb-4">Speak directly with our friendly floral team daily.</p>
                 <a href="tel:+919910744119"
                     class="text-xs uppercase tracking-wider font-semibold text-[#242220] hover:text-[#C47C68] transition-colors inline-flex items-center gap-1">
                     <span>+91 99107 44119</span>

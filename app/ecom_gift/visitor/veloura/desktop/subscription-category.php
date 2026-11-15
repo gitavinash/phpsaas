@@ -87,7 +87,7 @@ $catDesc = !empty($category_description) ? htmlspecialchars($category_descriptio
                 </div>
                 <h3 class="font-serif text-xl text-[#242220] mb-2">Flexible Frequency</h3>
                 <p class="text-sm text-[#6E675F] leading-relaxed">
-                    Choose weekly, fortnightly, or monthly deliveries. Pause, skip dates, or redirect your delivery to another address anytime with our concierge.
+                    Choose weekly, fortnightly, or monthly deliveries. Pause, skip dates, or redirect your delivery to another address anytime with our customer support.
                 </p>
             </div>
 

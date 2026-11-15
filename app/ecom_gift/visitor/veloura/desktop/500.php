@@ -7,10 +7,10 @@ include_once 'header.php';
         <div class="w-16 h-16 mx-auto mb-5 rounded-full bg-[#FAF7F5] border border-[#E8DDD5] flex items-center justify-center text-[#C47C68]">
             <i class="ri-error-warning-line text-2xl" aria-hidden="true"></i>
         </div>
-        <span class="vl-eyebrow">500 &bull; Atelier System Notice</span>
-        <h1 class="font-serif text-3xl sm:text-4xl text-[#242220] mt-1 mb-3">Arrangement Under Crafting</h1>
+        <span class="vl-eyebrow">500 &bull; System Notice</span>
+        <h1 class="font-serif text-3xl sm:text-4xl text-[#242220] mt-1 mb-3">Temporary System Refresh</h1>
         <p class="text-sm text-[#6E675F] leading-relaxed mb-8">
-            Our atelier system is temporarily refreshing. Our technical florists are tending to this immediately.
+            We are currently updating our system. Our technical team is resolving this immediately.
         </p>
 
         <div class="flex flex-col sm:flex-row gap-3 justify-center mb-8">
@@ -19,7 +19,7 @@ include_once 'header.php';
                 <i class="ri-arrow-right-line" aria-hidden="true"></i>
             </a>
             <a href="/contact-us/" class="vl-btn-outline">
-                <span>Contact Concierge</span>
+                <span>Contact Customer Support</span>
             </a>
         </div>
 

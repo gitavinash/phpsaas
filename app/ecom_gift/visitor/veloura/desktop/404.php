@@ -25,12 +25,12 @@ include_once 'header.php';
         </form>
 
         <div class="pt-6 border-t border-[#E8DDD5]">
-            <span class="block text-xs uppercase tracking-wider text-[#6E675F] font-semibold mb-3">Popular Atelier Destinations</span>
+            <span class="block text-xs uppercase tracking-wider text-[#6E675F] font-semibold mb-3">Popular Categories</span>
             <div class="flex flex-wrap justify-center gap-2">
                 <a href="/shop/" class="vl-filter-tab">All Creations</a>
                 <a href="/category/flower/" class="vl-filter-tab">Fresh Flowers</a>
                 <a href="/events/" class="vl-filter-tab">Workshops</a>
-                <a href="/contact-us/" class="vl-filter-tab">Concierge</a>
+                <a href="/contact-us/" class="vl-filter-tab">Customer Support</a>
             </div>
         </div>
     </div>

@@ -2,6 +2,156 @@
 
 require_once 'header.php';
 
+// Fetch latest active slider from database for current site
+$heroSlide = null;
+$slideQuery = "SELECT * FROM " . TABLE_PREFIX . "slide WHERE slide_site_id = " . (int) SITE_ID . " AND slide_status = 1 ORDER BY slide_id DESC LIMIT 1";
+if ($slideRes = mysqli_query($connection, $slideQuery)) {
+    if (mysqli_num_rows($slideRes) > 0) {
+        $heroSlide = mysqli_fetch_assoc($slideRes);
+    }
+}
+
+// Hero defaults suited for Indian audience
+$heroBadge = !empty($heroSlide['slide_subtitle']) 
+    ? $heroSlide['slide_subtitle'] 
+    : 'Fresh Flowers & Gifts • Delhi NCR';
+
+$heroTitle = !empty($heroSlide['slide_title']) 
+    ? $heroSlide['slide_title'] 
+    : '<em>Bespoke Blooms &amp;</em> Floral Artistry';
+
+$heroDesc = !empty($heroSlide['slide_description']) 
+    ? $heroSlide['slide_description'] 
+    : 'Hand-tied morning harvest stems, exotic garden florals, and curated luxury gift boxes designed for your special celebrations.';
+
+$heroImage = !empty($heroSlide['slide_image']) 
+    ? $heroSlide['slide_image'] 
+    : USER_IMAGES . 'about-us-banner.jpg';
+
+// Normalize absolute domain URLs to root-relative paths if pointing to current site
+$heroCtaLink = !empty($heroSlide['slide_link']) ? $heroSlide['slide_link'] : '/shop/';
+if (strpos($heroCtaLink, 'http://') === 0 || strpos($heroCtaLink, 'https://') === 0) {
+    $parsedLink = parse_url($heroCtaLink);
+    if (!empty($parsedLink['path'])) {
+        $heroCtaLink = $parsedLink['path'] . (!empty($parsedLink['query']) ? '?' . $parsedLink['query'] : '');
+    }
+}
+
+$heroCtaText = !empty($heroSlide['slider_cta']) ? $heroSlide['slider_cta'] : 'Explore Collection';
+
+$heroCtaLink2 = !empty($heroSlide['slide_link2']) ? $heroSlide['slide_link2'] : '/events/';
+if (strpos($heroCtaLink2, 'http://') === 0 || strpos($heroCtaLink2, 'https://') === 0) {
+    $parsedLink2 = parse_url($heroCtaLink2);
+    if (!empty($parsedLink2['path'])) {
+        $heroCtaLink2 = $parsedLink2['path'] . (!empty($parsedLink2['query']) ? '?' . $parsedLink2['query'] : '');
+    }
+}
+
+$heroCtaText2 = !empty($heroSlide['slider_cta2']) ? $heroSlide['slider_cta2'] : 'Floral Workshops';
+
+// Fetch workshop event: check for upcoming event first; if none found, fallback to recent past event
+$featuredEvent = null;
+$isUpcomingEvent = false;
+
+$upcomingEventQuery = "
+    SELECT 
+        e.*, 
+        l.link_url, 
+        i.inventory_price, 
+        i.inventory_mrp, 
+        i.inventory_currency_symbol 
+    FROM " . TABLE_PREFIX . "event e 
+    LEFT JOIN " . TABLE_PREFIX . "link l 
+        ON l.link_relation_id = e.event_id 
+        AND l.link_type = 'event' 
+        AND l.link_status = 200 
+        AND l.link_site_id = " . (int) SITE_ID . " 
+    LEFT JOIN " . TABLE_PREFIX . "inventory i 
+        ON i.inventory_relation_id = e.event_id 
+        AND i.inventory_type = 'event' 
+        AND i.inventory_site_id = " . (int) SITE_ID . " 
+    WHERE e.event_site_id = " . (int) SITE_ID . " 
+      AND e.event_status = 1 
+      AND e.event_start_date >= CURDATE() 
+    ORDER BY e.event_start_date ASC, e.event_start_time ASC 
+    LIMIT 1
+";
+
+if ($eventRes = mysqli_query($connection, $upcomingEventQuery)) {
+    if (mysqli_num_rows($eventRes) > 0) {
+        $featuredEvent = mysqli_fetch_assoc($eventRes);
+        $isUpcomingEvent = true;
+    }
+}
+
+if (!$featuredEvent) {
+    $recentEventQuery = "
+        SELECT 
+            e.*, 
+            l.link_url, 
+            i.inventory_price, 
+            i.inventory_mrp, 
+            i.inventory_currency_symbol 
+        FROM " . TABLE_PREFIX . "event e 
+        LEFT JOIN " . TABLE_PREFIX . "link l 
+            ON l.link_relation_id = e.event_id 
+            AND l.link_type = 'event' 
+            AND l.link_status = 200 
+            AND l.link_site_id = " . (int) SITE_ID . " 
+        LEFT JOIN " . TABLE_PREFIX . "inventory i 
+            ON i.inventory_relation_id = e.event_id 
+            AND i.inventory_type = 'event' 
+            AND i.inventory_site_id = " . (int) SITE_ID . " 
+        WHERE e.event_site_id = " . (int) SITE_ID . " 
+          AND e.event_status = 1 
+        ORDER BY e.event_start_date DESC, e.event_start_time DESC 
+        LIMIT 1
+    ";
+    if ($recentRes = mysqli_query($connection, $recentEventQuery)) {
+        if (mysqli_num_rows($recentRes) > 0) {
+            $featuredEvent = mysqli_fetch_assoc($recentRes);
+            $isUpcomingEvent = false;
+        }
+    }
+}
+
+$eventTitle = !empty($featuredEvent['event_title']) ? $featuredEvent['event_title'] : 'The Art of Floral Design & Styling';
+$eventBadge = $isUpcomingEvent ? 'Upcoming Floral Masterclass' : 'Floral Masterclass • Recent Edition';
+
+$eventDescClean = '';
+if (!empty($featuredEvent['event_description'])) {
+    $eventDescRaw = strip_tags(html_entity_decode($featuredEvent['event_description'], ENT_QUOTES, 'UTF-8'));
+    $eventDescClean = trim(preg_replace('/\s+/', ' ', $eventDescRaw));
+}
+if (empty($eventDescClean)) {
+    $eventDesc = 'Join our Senior Floral Designers at our Chhatarpur studio for an interactive masterclass. Learn stem conditioning, color harmonies, and craft your own luxury fresh floral arrangement to take home.';
+} else {
+    $eventDesc = mb_substr($eventDescClean, 0, 190) . (mb_strlen($eventDescClean) > 190 ? '...' : '');
+}
+
+$eventDateText = '';
+if (!empty($featuredEvent['event_start_date'])) {
+    $eventTimestamp = strtotime($featuredEvent['event_start_date']);
+    $eventDateText = date('l, d F Y', $eventTimestamp);
+    if (!empty($featuredEvent['event_start_time'])) {
+        $startTime = date('g:i A', strtotime($featuredEvent['event_start_time']));
+        $endTime = !empty($featuredEvent['event_end_time']) ? date('g:i A', strtotime($featuredEvent['event_end_time'])) : '';
+        $eventDateText .= ' • ' . $startTime . ($endTime ? ' – ' . $endTime : '');
+    }
+}
+
+$eventLocation = !empty($featuredEvent['event_location']) ? $featuredEvent['event_location'] : '& BLOOMS, Chhatarpur, New Delhi';
+
+$currencySymbol = !empty($featuredEvent['inventory_currency_symbol']) ? $featuredEvent['inventory_currency_symbol'] : '₹';
+$eventPrice = !empty($featuredEvent['inventory_price']) && (float)$featuredEvent['inventory_price'] > 0 
+    ? $currencySymbol . number_format((float)$featuredEvent['inventory_price']) 
+    : '₹4,500';
+
+$eventLink = !empty($featuredEvent['link_url']) ? $featuredEvent['link_url'] : '/workshop-events/';
+$eventCtaText = $isUpcomingEvent ? 'Reserve Your Seat' : 'View Workshop Details';
+
+$eventImage = !empty($featuredEvent['event_image']) ? $featuredEvent['event_image'] : (!empty($featuredEvent['event_thumbnail']) ? $featuredEvent['event_thumbnail'] : USER_IMAGES . 'about-us-banner.jpg');
+
 ?>
 
 <!-- Fiore-Inspired Editorial Asymmetrical Hero -->
@@ -12,24 +162,24 @@ require_once 'header.php';
             <div class="lg:col-span-6 space-y-6 text-center lg:text-left">
                 <span class="vl-badge vl-badge-terracotta">
                     <i class="ri-sparkling-line" aria-hidden="true"></i>
-                    Haute Botanical Studio • Delhi NCR
+                    <?php echo safe_html($heroBadge); ?>
                 </span>
                 
                 <h1 class="font-serif text-4xl sm:text-5xl lg:text-6xl text-[#242220] leading-[1.12] tracking-tight">
-                    <em>Bespoke Blooms &amp;</em> Botanical Artistry
+                    <?php echo $heroTitle; ?>
                 </h1>
                 
                 <p class="text-base sm:text-lg text-[#635E59] max-w-xl mx-auto lg:mx-0 leading-relaxed font-sans font-light">
-                    Hand-tied morning harvest stems, European garden florals, and curated luxury gift boxes designed by master florists for memorable celebrations.
+                    <?php echo safe_html($heroDesc); ?>
                 </p>
 
                 <div class="flex flex-wrap items-center justify-center lg:justify-start gap-3 sm:gap-4 pt-2">
-                    <a href="/shop/" class="vl-btn-primary">
-                        <span>Explore Creations</span>
+                    <a href="<?php echo htmlspecialchars($heroCtaLink); ?>" class="vl-btn-primary">
+                        <span><?php echo safe_html($heroCtaText); ?></span>
                         <i class="ri-arrow-right-line" aria-hidden="true"></i>
                     </a>
-                    <a href="/events/" class="vl-btn-outline">
-                        <span>Floral Workshops</span>
+                    <a href="<?php echo htmlspecialchars($heroCtaLink2); ?>" class="vl-btn-outline">
+                        <span><?php echo safe_html($heroCtaText2); ?></span>
                     </a>
                 </div>
 
@@ -45,7 +195,7 @@ require_once 'header.php';
                     </div>
                     <div class="flex items-center gap-1.5">
                         <i class="ri-checkbox-circle-fill text-[#3D5447]" aria-hidden="true"></i>
-                        <span>Complimentary Calligraphy</span>
+                        <span>Complimentary Greeting Card</span>
                     </div>
                 </div>
             </div>
@@ -53,8 +203,8 @@ require_once 'header.php';
             <!-- Right Visual Composition (Fiore Style) -->
             <div class="lg:col-span-6 relative">
                 <div class="vl-hero-frame relative">
-                    <img src="<?php echo USER_IMAGES; ?>about-us-banner.jpg"
-                        alt="Veloura Haute Botanical Arrangement"
+                    <img src="<?php echo htmlspecialchars($heroImage); ?>"
+                        alt="<?php echo strip_tags($heroTitle); ?>"
                         class="w-full h-full object-cover"
                         fetchpriority="high"
                         loading="eager"
@@ -63,9 +213,9 @@ require_once 'header.php';
                     
                     <!-- Floating Badge -->
                     <div class="absolute bottom-5 left-5 right-5 sm:right-auto bg-white/95 backdrop-blur-md p-4 rounded-xl border border-[#E8DDD5] shadow-lg max-w-xs">
-                        <p class="text-[10px] uppercase tracking-[0.2em] font-semibold text-[#C47C68] mb-0.5">Atelier Craftsmanship</p>
+                        <p class="text-[10px] uppercase tracking-[0.2em] font-semibold text-[#C47C68] mb-0.5">Handcrafted with Care</p>
                         <p class="font-serif text-sm text-[#242220] font-medium leading-snug">
-                            Over 75,000 artisanal arrangements delivered with white-glove precision.
+                            Over 75,000 fresh floral arrangements delivered across Delhi NCR.
                         </p>
                     </div>
                 </div>
@@ -79,10 +229,10 @@ require_once 'header.php';
     <div class="max-w-7xl mx-auto">
         <!-- Section Header -->
         <div class="text-center max-w-2xl mx-auto mb-8 sm:mb-12">
-            <span class="vl-eyebrow">The Atelier Catalog</span>
+            <span class="vl-eyebrow">Our Flower Collections</span>
             <h2 class="font-serif text-3xl sm:text-4xl text-[#242220] mb-3">Curated Botanical Creations</h2>
             <p class="text-sm sm:text-base text-[#635E59]">
-                Select an atelier discipline to discover hand-tied bouquets, botanical greenery, and celebration hampers.
+                Choose from fresh hand-tied bouquets, celebration gift hampers, and lush indoor planters.
             </p>
         </div>
 
@@ -92,7 +242,7 @@ require_once 'header.php';
             <a href="/category/flower/" class="vl-filter-tab">Fresh Bouquets</a>
             <a href="/category/cake/" class="vl-filter-tab">Luxe Hampers</a>
             <a href="/category/planters/" class="vl-filter-tab">Ceramic Planters</a>
-            <a href="/events/" class="vl-filter-tab">Atelier Workshops</a>
+            <a href="/events/" class="vl-filter-tab">Floral Workshops</a>
         </nav>
 
         <!-- 4-Column Product Grid -->
@@ -143,7 +293,7 @@ require_once 'header.php';
 
         <div class="mt-10 sm:mt-14 text-center">
             <a href="/shop/" class="vl-btn-outline">
-                <span>View Full Atelier Collection</span>
+                <span>View All Flowers &amp; Gifts</span>
                 <i class="ri-arrow-right-line" aria-hidden="true"></i>
             </a>
         </div>
@@ -229,7 +379,7 @@ require_once 'header.php';
             <div class="lg:col-span-6 relative">
                 <div class="rounded-2xl overflow-hidden border border-[#E8DDD5] shadow-lg aspect-[4/3]">
                     <img src="<?php echo USER_IMAGES; ?>about-us-banner.jpg"
-                        alt="Inside the Veloura Floral Atelier"
+                        alt="Inside our Floral Studio"
                         class="w-full h-full object-cover"
                         loading="lazy" decoding="async">
                 </div>
@@ -240,12 +390,12 @@ require_once 'header.php';
             </div>
 
             <div class="lg:col-span-6 space-y-6">
-                <span class="vl-eyebrow">Our Botanical Philosophy</span>
+                <span class="vl-eyebrow">Our Floral Philosophy</span>
                 <h2 class="font-serif text-3xl sm:text-4xl text-[#242220] leading-tight">
                     Every Stem is Selected to Convey Love, Poetry, and Timeless Elegance
                 </h2>
                 <p class="text-sm sm:text-base text-[#635E59] leading-relaxed">
-                    Founded with a passion for European garden aesthetics, Veloura blends the delicate romance of Paris ateliers with contemporary bespoke design. We harvest stems at early dawn, condition them in nutrient-enriched water, and compose each creation by hand.
+                    Founded with a passion for exquisite blooms, <?php echo safe_html($siteNameDisplay); ?> blends modern floral artistry with nature's finest seasonal flowers. We source fresh morning stems, condition them in pure nutrient water, and handcraft each bouquet with meticulous care.
                 </p>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
@@ -279,32 +429,38 @@ require_once 'header.php';
             <div class="lg:col-span-7 space-y-5">
                 <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider bg-[#3D5447] text-[#EDF3F0]">
                     <i class="ri-calendar-event-line" aria-hidden="true"></i>
-                    Weekend Botanical Masterclass
+                    <?php echo safe_html($eventBadge); ?>
                 </span>
                 
                 <h2 class="font-serif text-3xl sm:text-4xl lg:text-5xl text-white font-medium leading-tight">
-                    The Art of Floral Design &amp; Tablescape Styling
+                    <?php echo safe_html($eventTitle); ?>
                 </h2>
                 
                 <p class="text-sm sm:text-base text-[#D5C4B7] leading-relaxed max-w-2xl font-light">
-                    Join our Senior Floral Designers at the Chhatarpur Atelier for an intimate 3-hour masterclass. Learn color theory, stem conditioning, and build your own luxury arrangement to take home.
+                    <?php echo safe_html($eventDesc); ?>
                 </p>
 
                 <div class="flex flex-wrap items-center gap-6 pt-2 text-sm text-[#F7EFEA]">
+                    <?php if (!empty($eventDateText)): ?>
+                    <div class="flex items-center gap-2">
+                        <i class="ri-time-line text-[#C47C68]" aria-hidden="true"></i>
+                        <span><?php echo safe_html($eventDateText); ?></span>
+                    </div>
+                    <?php endif; ?>
                     <div class="flex items-center gap-2">
                         <i class="ri-map-pin-2-line text-[#C47C68]" aria-hidden="true"></i>
-                        <span>Chhatarpur &amp; Gurugram Ateliers</span>
+                        <span><?php echo safe_html($eventLocation); ?></span>
                     </div>
                     <div class="flex items-center gap-2">
                         <i class="ri-money-rupee-circle-line text-[#C47C68]" aria-hidden="true"></i>
-                        <span class="font-semibold text-lg text-white">₹4,500</span>
-                        <span class="text-xs text-[#D5C4B7]">(All materials &amp; brunch included)</span>
+                        <span class="font-semibold text-lg text-white"><?php echo safe_html($eventPrice); ?></span>
+                        <span class="text-xs text-[#D5C4B7]">(All materials &amp; guidance included)</span>
                     </div>
                 </div>
 
                 <div class="pt-3">
-                    <a href="/workshop-events/floral-design-workshop-/" class="vl-btn-primary">
-                        <span>Reserve Your Seat</span>
+                    <a href="<?php echo htmlspecialchars($eventLink); ?>" class="vl-btn-primary">
+                        <span><?php echo safe_html($eventCtaText); ?></span>
                         <i class="ri-arrow-right-line" aria-hidden="true"></i>
                     </a>
                 </div>
@@ -312,8 +468,8 @@ require_once 'header.php';
 
             <div class="lg:col-span-5">
                 <div class="rounded-xl overflow-hidden border border-white/20 shadow-2xl aspect-[4/3]">
-                    <img src="<?php echo USER_IMAGES; ?>about-us-banner.jpg"
-                        alt="Floral Workshop Experience"
+                    <img src="<?php echo htmlspecialchars($eventImage); ?>"
+                        alt="<?php echo safe_html($eventTitle); ?>"
                         class="w-full h-full object-cover"
                         loading="lazy" decoding="async">
                 </div>

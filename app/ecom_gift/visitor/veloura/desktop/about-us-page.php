@@ -107,7 +107,7 @@ include_once 'header.php';
                 </div>
                 <h3 class="font-serif text-xl text-[#242220] mb-3">White-Glove Delivery</h3>
                 <p class="text-sm text-[#6E675F] leading-relaxed">
-                    Climate-controlled concierge transport safeguards delicate petals across Delhi NCR, ensuring arrangements arrive in flawless bloom with handwritten cards.
+                    Climate-controlled direct transport safeguards delicate petals across Delhi NCR, ensuring arrangements arrive in flawless bloom with handwritten cards.
                 </p>
             </div>
         </div>

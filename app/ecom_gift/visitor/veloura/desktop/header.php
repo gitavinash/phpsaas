@@ -79,22 +79,22 @@ function render_veloura_nav_tree(array $items, int $depth = 0, string $idPrefix 
                 || veloura_menu_branch_has_active($children);
 
             if ($depth === 0) {
-                $colsClass = count($children) > 7 ? ' site-dropdown-list--columns' : '';
+                $colsClass = count($children) > 6 ? ' site-dropdown-list--columns' : '';
                 echo '<li class="site-nav-dropdown">';
-                echo '<button type="button" class="site-nav-link site-dropdown-trigger" aria-expanded="false" aria-controls="' . $subId . '"' . ($isBranchActive ? ' data-active-branch="true"' : '') . '>';
+                echo '<a href="' . $url . '" class="site-nav-link site-dropdown-trigger" aria-haspopup="true" aria-expanded="false" aria-controls="' . $subId . '"' . ($isBranchActive ? ' data-active-branch="true"' : '') . '>';
                 echo '<span>' . $label . '</span>';
                 echo '<i class="ri-arrow-down-s-line site-nav-chevron text-xs opacity-60 ml-1" aria-hidden="true"></i>';
-                echo '</button>';
+                echo '</a>';
                 echo '<ul id="' . $subId . '" class="site-dropdown-list' . $colsClass . '">';
                 render_veloura_nav_tree($children, $depth + 1, $subId);
                 echo '</ul>';
                 echo '</li>';
             } else {
                 echo '<li class="site-subdropdown">';
-                echo '<button type="button" class="site-dropdown-link site-subdropdown-trigger" aria-expanded="false" aria-controls="' . $subId . '"' . ($isBranchActive ? ' data-active-branch="true"' : '') . '>';
+                echo '<a href="' . $url . '" class="site-dropdown-link site-subdropdown-trigger" aria-haspopup="true" aria-expanded="false" aria-controls="' . $subId . '"' . ($isBranchActive ? ' data-active-branch="true"' : '') . '>';
                 echo '<span>' . $label . '</span>';
-                echo '<i class="ri-arrow-down-s-line site-nav-chevron text-xs opacity-60 ml-1" aria-hidden="true"></i>';
-                echo '</button>';
+                echo '<i class="ri-arrow-right-s-line site-nav-chevron text-xs opacity-60 ml-1" aria-hidden="true"></i>';
+                echo '</a>';
                 echo '<ul id="' . $subId . '" class="site-subdropdown-list">';
                 render_veloura_nav_tree($children, $depth + 1, $subId);
                 echo '</ul>';
@@ -165,15 +165,15 @@ function render_veloura_nav_tree(array $items, int $depth = 0, string $idPrefix 
 <body class="bg-[#FAF7F5] text-[#242220] antialiased">
     <a href="#main-content" class="vl-skip-link">Skip to content</a>
 
-    <!-- Top Announcement Bar (Fiorello Style) -->
-    <div class="vl-announcement-bar" role="region" aria-label="Atelier services">
+    <!-- Top Announcement Bar -->
+    <div class="vl-announcement-bar" role="region" aria-label="Customer service notice">
         <div class="vl-announcement-inner">
             <span>✦ Same-Day Handcrafted Delivery Across Delhi NCR</span>
             <span class="vl-announcement-sep hidden sm:inline" aria-hidden="true">✦</span>
-            <span class="hidden sm:inline">Complimentary Calligraphy Card with Every Bouquet</span>
+            <span class="hidden sm:inline">Complimentary Greeting Card with Every Bouquet</span>
             <span class="vl-announcement-sep hidden md:inline" aria-hidden="true">✦</span>
             <a href="tel:+919910744119" class="hover:text-[#D9BA8F] transition-colors underline underline-offset-4">
-                Atelier Concierge: +91-9910744119
+                Customer Support: +91-9910744119
             </a>
         </div>
     </div>
@@ -181,19 +181,27 @@ function render_veloura_nav_tree(array $items, int $depth = 0, string $idPrefix 
     <!-- Header -->
     <header id="site-header" class="site-header sticky top-0 z-[55] header-transparent bg-white/95 border-b border-[#E8DDD5] shadow-sm">
         <div id="site-header-inner" class="site-header-inner">
-            <!-- Brand Logo -->
-            <a href="/" class="site-logo group flex items-center gap-2">
-                <span class="font-serif text-2xl md:text-3xl font-medium tracking-[0.08em] text-[#242220] group-hover:text-[#C47C68] transition-colors">
-                    VELOURA
-                </span>
-                <span class="hidden lg:inline-block text-[9px] uppercase tracking-[0.25em] text-[#8E8780] border-l border-[#D5C4B7] pl-2 font-sans font-medium">
-                    Haute Botanicals
-                </span>
+            <!-- Brand Logo / Site Title -->
+            <?php
+            $siteNameRaw = defined('SITE_NAME') && SITE_NAME !== '' ? SITE_NAME : 'Floral Studio';
+            $siteNameDisplay = htmlspecialchars_decode($siteNameRaw, ENT_QUOTES);
+            $siteLogoUrl = defined('SITE_LOGO') && SITE_LOGO !== '' ? SITE_LOGO : '';
+            ?>
+            <a href="/" class="site-logo group flex items-center gap-2.5">
+                <?php if ($siteLogoUrl !== ''): ?>
+                    <img src="<?php echo safe_html($siteLogoUrl); ?>"
+                         alt="<?php echo safe_html($siteNameDisplay); ?>"
+                         class="h-9 sm:h-10 w-auto max-w-[170px] sm:max-w-[210px] object-contain transition-transform group-hover:scale-[1.02]">
+                <?php else: ?>
+                    <span class="font-serif text-2xl md:text-3xl font-medium tracking-[0.04em] text-[#242220] group-hover:text-[#C47C68] transition-colors">
+                        <?php echo safe_html($siteNameDisplay); ?>
+                    </span>
+                <?php endif; ?>
             </a>
 
             <!-- Navigation Tree -->
             <nav class="site-nav" aria-label="Primary">
-                <ul id="site-menu" class="site-menu" popover="auto">
+                <ul id="site-menu" class="site-menu">
                     <?php
                     $menuItems = get_object_from_constant('SITE_NAV_MAIN_HEADER');
                     if (!empty($menuItems)) {
@@ -210,13 +218,12 @@ function render_veloura_nav_tree(array $items, int $depth = 0, string $idPrefix 
             <div class="site-actions">
                 <!-- Search Button -->
                 <button type="button" id="header-search-button" class="site-action-btn"
-                    popovertarget="header-search-popover" popovertargetaction="toggle"
-                    aria-controls="header-search-popover" aria-expanded="false" aria-label="Search creations">
+                    aria-controls="header-search-popover" aria-expanded="false" aria-label="Search flowers and gifts">
                     <i class="ri-search-line text-xl" aria-hidden="true"></i>
                 </button>
 
-                <!-- Concierge / Contact Link -->
-                <a href="/contact-us/" class="site-action-btn hidden sm:inline-flex" aria-label="Contact atelier">
+                <!-- Customer Support Link -->
+                <a href="/contact-us/" class="site-action-btn hidden sm:inline-flex" aria-label="Customer Support">
                     <i class="ri-customer-service-2-line text-xl" aria-hidden="true"></i>
                 </a>
 
@@ -247,7 +254,7 @@ function render_veloura_nav_tree(array $items, int $depth = 0, string $idPrefix 
                 }
                 ?>
                 <div class="relative cart-dropdown-trigger group">
-                    <a href="/checkout/" aria-label="Floral bag, <?php echo $cartItems; ?> items"
+                    <a href="/checkout/" aria-label="Shopping bag, <?php echo $cartItems; ?> items"
                         class="site-action-btn relative">
                         <i class="ri-shopping-bag-3-line text-xl text-[#242220]" aria-hidden="true"></i>
                         <span id="cartItems"
@@ -259,27 +266,27 @@ function render_veloura_nav_tree(array $items, int $depth = 0, string $idPrefix 
                     <!-- Cart Dropdown Menu -->
                     <div class="cart-dropdown-menu">
                         <div class="p-4 border-b border-[#E8DDD5] bg-[#FAF7F5] flex items-center justify-between">
-                            <span class="font-serif font-medium text-base text-[#242220]">Your Floral Bag</span>
+                            <span class="font-serif font-medium text-base text-[#242220]">Your Shopping Bag</span>
                             <span class="vl-badge vl-badge-terracotta"><?php echo $cartItems; ?> Item<?php echo $cartItems === 1 ? '' : 's'; ?></span>
                         </div>
                         <div class="p-5 text-center bg-white">
                             <?php if ($cartItems > 0): ?>
                                 <p id="vlCartDropdownStatus" class="text-sm text-[#635E59] mb-4">
                                     <i class="ri-checkbox-circle-line text-[#3D5447] mr-1" aria-hidden="true"></i>
-                                    You have <strong><?php echo $cartItems; ?></strong> curated items ready for atelier delivery.
+                                    You have <strong><?php echo $cartItems; ?></strong> curated items ready for delivery.
                                 </p>
                                 <a href="/checkout/" class="vl-btn-primary w-full text-center mb-2">
                                     <span>Proceed to Checkout</span>
                                 </a>
                                 <a href="/shop/" class="vl-btn-outline w-full text-center text-xs py-2">
-                                    <span>Continue Exploring</span>
+                                    <span>Continue Shopping</span>
                                 </a>
                             <?php else: ?>
                                 <p id="vlCartDropdownStatus" class="text-sm text-[#635E59] mb-4">
-                                    Your bespoke floral bag is currently empty.
+                                    Your shopping bag is currently empty.
                                 </p>
                                 <a href="/shop/" class="vl-btn-primary w-full text-center">
-                                    <span>Explore Creations</span>
+                                    <span>Explore Flowers &amp; Gifts</span>
                                 </a>
                             <?php endif; ?>
                         </div>
@@ -288,7 +295,6 @@ function render_veloura_nav_tree(array $items, int $depth = 0, string $idPrefix 
 
                 <!-- Mobile Menu Button -->
                 <button type="button" id="mobile-menu-button" class="site-action-btn lg:hidden"
-                    popovertarget="site-menu" popovertargetaction="toggle"
                     aria-controls="site-menu" aria-expanded="false" aria-label="Toggle navigation">
                     <i class="ri-menu-line text-2xl text-[#242220]" aria-hidden="true"></i>
                 </button>
@@ -298,7 +304,7 @@ function render_veloura_nav_tree(array $items, int $depth = 0, string $idPrefix 
         <!-- Search Popover -->
         <div id="header-search-popover" class="header-search-popover max-w-xl mx-auto p-4 bg-white border border-[#E8DDD5] rounded-xl shadow-lg mt-2" popover="auto">
             <form action="/search/" method="get" role="search" class="flex gap-2">
-                <input type="search" name="q" placeholder="Search roses, orchids, hampers, planters..."
+                <input type="search" name="q" placeholder="Search roses, lilies, hampers, cakes, planters..."
                     class="vl-input flex-1" aria-label="Search catalog">
                 <button type="submit" class="vl-btn-primary">Search</button>
             </form>

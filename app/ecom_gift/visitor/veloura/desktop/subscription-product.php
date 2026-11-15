@@ -161,7 +161,7 @@ require_once __DIR__ . '/partials/product-card.php';
             <div class="pt-6 border-t border-[#E8DDD5] space-y-3 text-xs text-[#6E675F]">
                 <div class="flex items-center gap-2.5">
                     <i class="ri-calendar-check-line text-base text-[#C47C68]" aria-hidden="true"></i>
-                    <span>Pause, reschedule, or cancel deliveries anytime via concierge</span>
+                    <span>Pause, reschedule, or cancel deliveries anytime via customer support</span>
                 </div>
                 <div class="flex items-center gap-2.5">
                     <i class="ri-truck-line text-base text-[#3D5447]" aria-hidden="true"></i>

@@ -9,7 +9,8 @@ if (empty($product_id)) {
     return;
 }
 
-$whatsappUrl = 'https://wa.me/919910744119?text=' . ((isset($link_type)) ? (($link_type == 'product') ? urlencode('Hello Veloura Atelier, I would like to enquire about ' . $product_title . ' ' . SITE_URL . ACTIVE_URL) : 'Hello') : 'Hello');
+$siteBrandName = defined('SITE_NAME') && !empty(SITE_NAME) ? html_entity_decode(SITE_NAME, ENT_QUOTES, 'UTF-8') : 'AndBlooms';
+$whatsappUrl = 'https://wa.me/919910744119?text=' . ((isset($link_type)) ? (($link_type == 'product') ? urlencode('Hello ' . $siteBrandName . ' Team, I would like to enquire about ' . $product_title . ' ' . SITE_URL . ACTIVE_URL) : 'Hello') : 'Hello');
 
 if ($checkProductMeta = mysqli_query($connection, "SELECT product_meta_key, product_meta_value FROM " . TABLE_PREFIX . "product_meta WHERE product_meta_relation_id='{$product_id}' AND product_meta_site_id=" . SITE_ID)) {
     if (mysqli_num_rows($checkProductMeta) != 0) {
@@ -277,11 +278,11 @@ $galleryJson = safe_html(json_encode($thumbnails, JSON_UNESCAPED_SLASHES | JSON_
                     </button>
                 </div>
 
-                <!-- WhatsApp Concierge Support -->
+                <!-- WhatsApp Customer Support -->
                 <a href="<?php echo safe_html($whatsappUrl); ?>" target="_blank" rel="noopener noreferrer"
                     class="w-full vl-btn-outline justify-center py-3 text-xs gap-2">
                     <i class="ri-whatsapp-line text-base text-[#25D366]" aria-hidden="true"></i>
-                    <span>Order via Atelier Concierge on WhatsApp</span>
+                    <span>Order via WhatsApp Support</span>
                 </a>
             </div>
 

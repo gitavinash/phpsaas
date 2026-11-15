@@ -17,7 +17,7 @@ $retryUrl = $sanitizedRetryId !== '' ? '/shipping/?id=' . htmlspecialchars($sani
         <span class="vl-eyebrow">Payment Status</span>
         <h1 class="font-serif text-2xl sm:text-3xl md:text-4xl text-[#242220] mt-1 mb-3">Payment Could Not Be Completed</h1>
         <p class="text-[#6E675F] text-sm sm:text-base leading-relaxed mb-8">
-            Your card or UPI authorization was not completed. No charges have been finalized—you can safely retry your payment or reach out to our concierge team.
+            Your card or UPI authorization was not completed. No charges have been finalized—you can safely retry your payment or reach out to our customer support team.
         </p>
 
         <div class="flex flex-col sm:flex-row justify-center gap-3 mb-8">
@@ -37,7 +37,7 @@ $retryUrl = $sanitizedRetryId !== '' ? '/shipping/?id=' . htmlspecialchars($sani
             </a>
             <span aria-hidden="true">&middot;</span>
             <a href="/contact-us/" class="text-[#C47C68] font-medium underline underline-offset-4 hover:text-[#242220] transition-colors">
-                Contact Concierge
+                Contact Customer Support
             </a>
         </div>
     </div>

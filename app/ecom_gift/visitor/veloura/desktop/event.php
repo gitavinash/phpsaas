@@ -9,7 +9,8 @@ if (empty($event_id)) {
     return;
 }
 
-$whatsappUrl = 'https://wa.me/919910744119?text=' . ((isset($link_type)) ? (($link_type == 'event') ? urlencode('Hello Veloura Atelier, I would like to enquire about the workshop: ' . $event_title . ' ' . SITE_URL . ACTIVE_URL) : 'Hello') : 'Hello');
+$siteBrandName = defined('SITE_NAME') && !empty(SITE_NAME) ? html_entity_decode(SITE_NAME, ENT_QUOTES, 'UTF-8') : 'AndBlooms';
+$whatsappUrl = 'https://wa.me/919910744119?text=' . ((isset($link_type)) ? (($link_type == 'event') ? urlencode('Hello ' . $siteBrandName . ' Team, I would like to enquire about the workshop: ' . $event_title . ' ' . SITE_URL . ACTIVE_URL) : 'Hello') : 'Hello');
 
 $tagTitle = '';
 if ($tagResult = mysqli_query($connection, "SELECT tag_title FROM " . TABLE_PREFIX . "tag WHERE tag_relation_id = {$event_id} AND tag_site_id = " . SITE_ID . " AND tag_type = 'event' LIMIT 1")) {
@@ -143,7 +144,7 @@ $galleryJson = safe_html(json_encode($thumbnails, JSON_UNESCAPED_SLASHES | JSON_
                     <i class="ri-map-pin-2-line text-lg text-[#C47C68]" aria-hidden="true"></i>
                     <div>
                         <p class="font-semibold text-[11px] uppercase tracking-wider text-[#635E59]">Venue</p>
-                        <p class="font-medium text-sm">Chhatarpur Floral Atelier, Main Mandir Road, New Delhi</p>
+                        <p class="font-medium text-sm"><?php echo !empty($event_location) ? safe_html($event_location) : '&amp; BLOOMS, Chhatarpur, New Delhi'; ?></p>
                     </div>
                 </div>
             </div>
@@ -181,7 +182,7 @@ $galleryJson = safe_html(json_encode($thumbnails, JSON_UNESCAPED_SLASHES | JSON_
                     </button>
                 </div>
 
-                <!-- WhatsApp Concierge Support -->
+                <!-- WhatsApp Customer Support -->
                 <a href="<?php echo safe_html($whatsappUrl); ?>" target="_blank" rel="noopener noreferrer"
                     class="w-full vl-btn-outline justify-center py-3 text-xs gap-2">
                     <i class="ri-whatsapp-line text-base text-[#25D366]" aria-hidden="true"></i>

@@ -46,7 +46,7 @@ if (isset($id)) {
                             <span class="vl-eyebrow">Order Status Notice</span>
                             <h1 class="font-serif text-2xl sm:text-3xl md:text-4xl text-[#242220] mt-1 mb-3">Order Synchronization Issue</h1>
                             <p class="text-[#6E675F] text-sm sm:text-base leading-relaxed mb-6">
-                                We encountered a technical issue updating your order status. Our concierge team is investigating immediately.
+                                We encountered a technical issue updating your order status. Our support team is investigating immediately.
                             </p>
 
                             <?php if (isset($order_id) && !empty($order_id)): ?>
@@ -55,13 +55,13 @@ if (isset($id)) {
                                 </div>
                             <?php else: ?>
                                 <div class="bg-[#FEF2F2] border border-[#FECACA] rounded-lg p-4 text-[#B91C1C] text-sm mb-6">
-                                    <strong>Order Not Found:</strong> We are unable to retrieve your reference automatically. Please reach out to concierge.
+                                    <strong>Order Not Found:</strong> We are unable to retrieve your reference automatically. Please reach out to customer support.
                                 </div>
                             <?php endif; ?>
 
                             <div class="flex flex-col sm:flex-row justify-center gap-3 mb-6">
                                 <a href="/" class="vl-btn-primary justify-center">Return to Homepage</a>
-                                <a href="/contact-us/" class="vl-btn-outline justify-center">Concierge Support</a>
+                                <a href="/contact-us/" class="vl-btn-outline justify-center">Customer Support</a>
                             </div>
                         </div>
                     </section>
@@ -78,7 +78,7 @@ if (isset($id)) {
                             <span class="vl-eyebrow">Commission Confirmed</span>
                             <h1 class="font-serif text-2xl sm:text-3xl md:text-4xl text-[#242220] mt-1 mb-3">Thank You for Your Order</h1>
                             <p class="text-[#6E675F] text-sm sm:text-base leading-relaxed mb-6">
-                                Your floral arrangement is queued with our master florists. Our concierge team will confirm dispatch timing with you shortly.
+                                Your floral arrangement is queued with our floral artists. Our support team will confirm dispatch timing with you shortly.
                             </p>
 
                             <?php if (isset($order_id)): ?>
@@ -89,7 +89,7 @@ if (isset($id)) {
 
                             <div class="flex flex-col sm:flex-row justify-center gap-3">
                                 <a href="/" class="vl-btn-primary justify-center">Continue Browsing</a>
-                                <a href="/contact-us/" class="vl-btn-outline justify-center">Concierge Support</a>
+                                <a href="/contact-us/" class="vl-btn-outline justify-center">Customer Support</a>
                             </div>
                         </div>
                     </section>
@@ -118,7 +118,7 @@ if (isset($id)) {
                     <?php endif; ?>
 
                     <div class="flex flex-col sm:flex-row justify-center gap-3 mb-6">
-                        <a href="/" class="vl-btn-primary justify-center">Return to Atelier</a>
+                        <a href="/" class="vl-btn-primary justify-center">Return to Homepage</a>
                         <a href="/contact-us/" class="vl-btn-outline justify-center">Contact Support</a>
                     </div>
                 </div>
@@ -135,10 +135,10 @@ if (isset($form_type)) { ?>
             <div class="w-16 h-16 mx-auto mb-6 rounded-full bg-[#EBF5EE] text-[#3D5447] flex items-center justify-center">
                 <i class="ri-mail-check-line text-3xl" aria-hidden="true"></i>
             </div>
-            <span class="vl-eyebrow">Concierge Confirmation</span>
+            <span class="vl-eyebrow">Inquiry Received</span>
             <h1 class="font-serif text-2xl sm:text-3xl md:text-4xl text-[#242220] mt-1 mb-3">Thank You for Reaching Out</h1>
             <p class="text-[#6E675F] text-sm sm:text-base leading-relaxed mb-8">
-                We have received your message and our floral concierge team will get back to you shortly.
+                We have received your message and our support team will get back to you shortly.
             </p>
             <div class="flex flex-col sm:flex-row justify-center gap-3">
                 <a href="/" class="vl-btn-primary justify-center">Continue Exploring</a>
