@@ -376,12 +376,16 @@ body.premium-admin .options-bar .left-box form {
   .crm-orders-table tr,
   .crm-orders-table th,
   .crm-orders-table td {
-    display: block;
-    width: 100%;
+    display: block !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    box-sizing: border-box !important;
   }
 
   .crm-orders-table thead {
-    display: none;
+    display: none !important;
   }
 
   .crm-orders-table tbody tr.crm-order-row {
@@ -390,6 +394,10 @@ body.premium-admin .options-bar .left-box form {
     border-radius: 10px;
     background: var(--crm-bg);
     padding: 8px;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    overflow: visible !important;
   }
 
   .crm-orders-table tbody tr.crm-order-row.is-expanded {
@@ -414,14 +422,20 @@ body.premium-admin .options-bar .left-box form {
 
   .crm-orders-table tbody tr.crm-detail-row td.crm-detail-cell {
     border-block-end: 0;
-    padding: 0;
+    padding: 0 !important;
   }
 
   .crm-orders-table tbody th,
   .crm-orders-table tbody td {
     border-block-end: 1px solid #f1f5f9;
-    padding: 8px 6px;
+    padding: 8px 6px !important;
     text-align: start !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    box-sizing: border-box !important;
+    overflow: visible !important;
+    line-height: 1.4 !important;
   }
 
   .crm-orders-table tbody th[scope="row"] {
@@ -431,7 +445,7 @@ body.premium-admin .options-bar .left-box form {
 
   .crm-orders-table tbody td.crm-action-cell {
     border-block-end: 0;
-    padding-inline-end: 6px;
+    padding-inline-end: 6px !important;
   }
 
   .crm-action-group {
@@ -450,6 +464,115 @@ body.premium-admin .options-bar .left-box form {
     letter-spacing: 0.04em;
     color: var(--crm-muted);
     margin-block-end: 4px;
+    line-height: 1.2;
+  }
+
+  .crm-orders-table tbody th[scope="row"]::before { content: var(--crm-col-1) ": "; }
+  .crm-orders-table tbody td:nth-child(2):not(.crm-empty-cell):not(.crm-detail-cell)::before { content: var(--crm-col-2) ": "; }
+  .crm-orders-table tbody td:nth-child(3):not(.crm-empty-cell):not(.crm-detail-cell)::before { content: var(--crm-col-3) ": "; }
+  .crm-orders-table tbody td:nth-child(4):not(.crm-empty-cell):not(.crm-detail-cell)::before { content: var(--crm-col-4) ": "; }
+  .crm-orders-table tbody td:nth-child(5):not(.crm-empty-cell):not(.crm-detail-cell)::before { content: var(--crm-col-5) ": "; }
+  .crm-orders-table tbody td:nth-child(6):not(.crm-empty-cell):not(.crm-detail-cell)::before { content: var(--crm-col-6) ": "; }
+  .crm-orders-table tbody td:nth-child(7):not(.crm-empty-cell):not(.crm-detail-cell)::before { content: var(--crm-col-7) ": "; }
+}
+
+@media (max-width: 820px) {
+  .crm-orders-table,
+  .crm-orders-table caption,
+  .crm-orders-table thead,
+  .crm-orders-table tbody,
+  .crm-orders-table tr,
+  .crm-orders-table th,
+  .crm-orders-table td {
+    display: block !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    box-sizing: border-box !important;
+  }
+
+  .crm-orders-table thead {
+    display: none !important;
+  }
+
+  .crm-orders-table tbody tr.crm-order-row {
+    margin-block-end: 12px;
+    border: 1px solid var(--crm-border);
+    border-radius: 10px;
+    background: var(--crm-bg);
+    padding: 8px;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    overflow: visible !important;
+  }
+
+  .crm-orders-table tbody tr.crm-order-row.is-expanded {
+    margin-block-end: 0;
+    border-end-start-radius: 0;
+    border-end-end-radius: 0;
+    border-color: #bfdbfe;
+    border-block-end: 0;
+  }
+
+  .crm-orders-table tbody tr.crm-detail-row {
+    margin-block-end: 12px;
+    border: 1px solid #bfdbfe;
+    border-block-start: 0;
+    border-start-start-radius: 0;
+    border-start-end-radius: 0;
+    border-end-start-radius: 10px;
+    border-end-end-radius: 10px;
+    background: var(--crm-surface-soft);
+    overflow: hidden;
+  }
+
+  .crm-orders-table tbody tr.crm-detail-row td.crm-detail-cell {
+    border-block-end: 0;
+    padding: 0 !important;
+  }
+
+  .crm-orders-table tbody th,
+  .crm-orders-table tbody td {
+    border-block-end: 1px solid #f1f5f9;
+    padding: 8px 6px !important;
+    text-align: start !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    box-sizing: border-box !important;
+    overflow: visible !important;
+    line-height: 1.4 !important;
+  }
+
+  .crm-orders-table tbody th[scope="row"] {
+    background: var(--crm-surface-soft);
+    border-radius: 6px;
+  }
+
+  .crm-orders-table tbody td.crm-action-cell {
+    border-block-end: 0;
+    padding-inline-end: 6px !important;
+  }
+
+  .crm-action-group {
+    display: flex;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .crm-orders-table tbody th[scope="row"]::before,
+  .crm-orders-table tbody td:not(.crm-empty-cell):not(.crm-detail-cell)::before {
+    display: block;
+    font-size: 0.7rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--crm-muted);
+    margin-block-end: 4px;
+    line-height: 1.2;
   }
 
   .crm-orders-table tbody th[scope="row"]::before { content: var(--crm-col-1) ": "; }

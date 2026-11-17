@@ -8,7 +8,9 @@
 
 header("Content-Type: application/json; charset=utf-8");
 
-require_once LOGIN_CHECK;
+if (defined('LOGIN_CHECK') && file_exists(LOGIN_CHECK)) {
+    require_once LOGIN_CHECK;
+}
 
 if (!isset($connection)) {
     $docRoot = !empty($_SERVER['DOCUMENT_ROOT']) ? $_SERVER['DOCUMENT_ROOT'] : dirname(__DIR__, 3);
@@ -35,7 +37,7 @@ if (!empty($site_access_type)) {
     $userRole = strtolower(trim(base64_decode($_COOKIE['user_type'])));
 }
 
-if (!in_array($userRole, ['administrator', 'operations', 'super_administrator'])) {
+if (!in_array($userRole, ['administrator', 'operations', 'super_administrator', 'admin', 'superadmin'])) {
     echo json_encode([
         'status' => 'error',
         'code'   => 403,

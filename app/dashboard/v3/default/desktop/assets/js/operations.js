@@ -29,11 +29,68 @@ $(document).ready(function () {
 
     init: function () {
       this.bindEvents();
-      this.handleHashRouting();
-      this.loadMetrics();
-      this.loadAgents();
-      this.loadConfirmedLeads();
-      this.handleDirectQueryActions();
+
+      const page = $("#operationsApp").data("page") || "all";
+      const leadId = $("#operationsApp").data("lead-id") || new URLSearchParams(window.location.search).get("lead_id");
+      const templateId = $("#operationsApp").data("template-id") || new URLSearchParams(window.location.search).get("id");
+
+      if (page === "list" || page === "confirmed") {
+        this.loadMetrics();
+        this.loadAgents();
+        this.loadConfirmedLeads();
+      } else if (page === "trips") {
+        this.loadMetrics();
+        this.loadTripsBoard();
+      } else if (page === "requests") {
+        this.loadMetrics();
+        this.loadBookingRequests();
+      } else if (page === "unassigned") {
+        this.loadMetrics();
+        this.loadAgents();
+        this.loadUnassignedLeads();
+      } else if (page === "templates") {
+        this.loadTemplates();
+      } else if (page === "booking-request") {
+        this.loadAgents();
+        if (leadId) {
+          this.openBookingRequestModal(leadId);
+        } else {
+          this.loadDefaultBookingDependencies();
+        }
+      } else if (page === "voucher") {
+        if (leadId) {
+          this.openVoucherModal(leadId);
+        }
+      } else if (page === "invoice") {
+        if (leadId) {
+          this.openInvoiceModal(leadId);
+        }
+      } else if (page === "dispatch") {
+        if (leadId) {
+          $("#dispatchLeadId").val(leadId);
+          $("#dispatchLeadIdManualInput").val(leadId);
+        }
+      } else if (page === "assign") {
+        this.loadAgents();
+      } else if (page === "template-add") {
+        if (templateId && parseInt(templateId, 10) > 0) {
+          this.loadSingleTemplate(parseInt(templateId, 10));
+        }
+      } else if (page === "hub") {
+        this.loadMetrics();
+      } else if (page === "dashboard") {
+        this.loadMetrics();
+        this.loadAgents();
+        this.loadTripsBoard();
+        this.loadConfirmedLeads();
+        this.loadBookingRequests();
+      } else {
+        this.handleHashRouting();
+        this.loadMetrics();
+        this.loadAgents();
+        this.loadConfirmedLeads();
+        this.handleDirectQueryActions();
+      }
     },
 
     handleDirectQueryActions: function () {
@@ -71,21 +128,51 @@ $(document).ready(function () {
 
       // 3. Refresh Button
       $("#btnRefreshOps").on("click", function () {
+        const page = $("#operationsApp").data("page") || "all";
         self.loadMetrics();
-        if (self.currentTab === "confirmed") self.loadConfirmedLeads();
-        else if (self.currentTab === "trips") self.loadTripsBoard();
-        else if (self.currentTab === "requests") self.loadBookingRequests();
-        else if (self.currentTab === "unassigned") self.loadUnassignedLeads();
-        else if (self.currentTab === "templates") self.loadTemplates();
+        if (page === "dashboard") {
+          self.loadTripsBoard();
+          self.loadConfirmedLeads();
+          self.loadBookingRequests();
+        } else if (self.currentTab === "confirmed" || page === "list") self.loadConfirmedLeads();
+        else if (self.currentTab === "trips" || page === "trips") self.loadTripsBoard();
+        else if (self.currentTab === "requests" || page === "requests") self.loadBookingRequests();
+        else if (self.currentTab === "unassigned" || page === "unassigned") self.loadUnassignedLeads();
+        else if (self.currentTab === "templates" || page === "templates") self.loadTemplates();
       });
 
       // 4. Confirmed Leads Status Filter
       $("#confirmedStatusFilter").on("click", ".btn-ops-pill", function () {
         $("#confirmedStatusFilter .btn-ops-pill").removeClass("active");
         $(this).addClass("active");
-        self.confirmedStatus = $(this).data("status");
+        const status = $(this).data("status");
+        const filterVal = status === "" ? "all" : String(status);
+        $(".ops-kpi-row .pkg-mini-kpi").removeClass("active");
+        $(".ops-kpi-row .pkg-mini-kpi[data-filter-status='" + filterVal + "']").addClass("active");
+        self.confirmedStatus = status;
         self.confirmedPage = 1;
         self.loadConfirmedLeads();
+      });
+
+      // 4b. KPI Card Click Filtering
+      $(".ops-kpi-row .pkg-mini-kpi[data-filter-status]").on("click", function () {
+        const status = $(this).data("filter-status");
+        const targetVal = status === "all" ? "" : String(status);
+        $(".ops-kpi-row .pkg-mini-kpi").removeClass("active");
+        $(this).addClass("active");
+        $("#confirmedStatusFilter .btn-ops-pill").removeClass("active");
+        const $pill = $("#confirmedStatusFilter .btn-ops-pill[data-status='" + targetVal + "']");
+        if ($pill.length) {
+          $pill.addClass("active");
+        }
+        self.confirmedStatus = targetVal;
+        self.confirmedPage = 1;
+        self.loadConfirmedLeads();
+      });
+
+      $(".ops-kpi-row .pkg-mini-kpi[data-href]").on("click", function () {
+        const href = $(this).data("href");
+        if (href) window.location.href = href;
       });
 
       // 5. Confirmed Leads Search (Debounced)
@@ -93,11 +180,21 @@ $(document).ready(function () {
       $("#opsLeadSearchInput").on("input", function () {
         clearTimeout(searchTimer);
         const val = $(this).val().trim();
+        if (val.length > 0) {
+          $("#opsClearLeadSearchBtn").show();
+        } else {
+          $("#opsClearLeadSearchBtn").hide();
+        }
         searchTimer = setTimeout(function () {
           self.confirmedSearch = val;
           self.confirmedPage = 1;
           self.loadConfirmedLeads();
         }, 350);
+      });
+
+      $("#opsClearLeadSearchBtn").on("click", function () {
+        $("#opsLeadSearchInput").val("").trigger("input");
+        $(this).hide();
       });
 
       // 6. Confirmed Pagination Click
@@ -276,13 +373,27 @@ $(document).ready(function () {
       });
 
       $(document).on("click", ".btn-edit-template", function () {
-        const tId = $(this).data("id");
-        const tpl = self.cachedTemplates.find(function (t) { return t.id === tId; });
-        if (tpl) self.openTemplateEditorModal(tpl);
+        const tId = $(this).data("id") || $(this).attr("data-id");
+        let tpl = self.cachedTemplates.find(function (t) { return Number(t.id) === Number(tId); });
+        if (tpl) {
+          self.openTemplateEditorModal(tpl);
+        } else {
+          $.getJSON("/api/v3/operations/templates.php", function (res) {
+            if (res && res.status === "success" && res.templates) {
+              self.cachedTemplates = res.templates;
+              tpl = res.templates.find(function (t) { return Number(t.id) === Number(tId); });
+              if (tpl) {
+                self.openTemplateEditorModal(tpl);
+              } else {
+                alert("Template could not be found.");
+              }
+            }
+          });
+        }
       });
 
       $(document).on("click", ".btn-delete-template", function () {
-        const tId = $(this).data("id");
+        const tId = $(this).data("id") || $(this).attr("data-id");
         if (confirm("Are you sure you want to delete this template?")) {
           self.deleteTemplate(tId);
         }
@@ -365,7 +476,50 @@ $(document).ready(function () {
 
       // 25. Modal Close Triggers
       $(document).on("click", ".v3-modal-close-trigger", function () {
-        $(this).closest(".v3-modal-overlay").removeClass("active");
+        $(this).closest(".v3-modal-overlay").removeClass("active is-active");
+      });
+
+      $(document).on("click", ".v3-modal-overlay", function (e) {
+        if (e.target === this) {
+          $(this).removeClass("active is-active");
+        }
+      });
+
+      // 26. Dedicated CTA Page Event Handlers
+      $("#btnLoadBookingLead").on("click", function () {
+        const id = $("#bkgLeadIdManualInput").val().trim();
+        if (id) {
+          self.openBookingRequestModal(id);
+        }
+      });
+
+      $("#btnLoadVoucherLead").on("click", function () {
+        const id = $("#voucherLeadIdManualInput").val().trim();
+        if (id) {
+          self.openVoucherModal(id);
+        }
+      });
+
+      $("#btnLoadInvoiceLead").on("click", function () {
+        const id = $("#invLeadIdManualInput").val().trim();
+        if (id) {
+          self.openInvoiceModal(id);
+        }
+      });
+
+      $("#btnLoadDispatchLead").on("click", function () {
+        const id = $("#dispatchLeadIdManualInput").val().trim();
+        if (id) {
+          $("#dispatchLeadId").val(id);
+        }
+      });
+
+      $("#assignTargetLeadManual").on("input", function () {
+        $("#assignTargetLeadIds").val($(this).val().trim());
+      });
+
+      $("#btnOpenNewTemplateModalAlt").on("click", function () {
+        self.openTemplateEditorModal(null);
       });
     },
 
@@ -474,37 +628,51 @@ $(document).ready(function () {
         const totalVal = "₹ " + Number(ld.quotation_price).toLocaleString();
         const paidVal = "₹ " + Number(ld.total_paid).toLocaleString();
         const balVal = "₹ " + Number(ld.balance_due).toLocaleString();
+        const hasBalance = Number(ld.balance_due) > 0;
+        const cleanPhone = (ld.mobile || "").replace(/[^0-9]/g, "");
+        const waLink = cleanPhone ? "https://wa.me/" + cleanPhone : "";
 
         html += '<tr>' +
-          '<td>' +
+          '<td class="td-lead">' +
             '<div class="ops-lead-meta">' +
-              '<a href="' + leadLink + '" class="ops-lead-title">' + ld.customer_name + '</a>' +
+              '<div class="ops-lead-header-row">' +
+                '<a href="' + leadLink + '" class="ops-lead-title" title="View Lead Details">' + (ld.customer_name || "Traveler") + '</a>' +
+                '<span class="ops-lead-id-pill">#' + ld.id + '</span>' +
+              '</div>' +
               '<div class="ops-lead-sub">' +
                 '<span><i class="fi fi-rr-phone-call"></i> ' + (ld.mobile || "N/A") + '</span>' +
-                '<span>ID: #' + ld.id + '</span>' +
+                (waLink ? '<a href="' + waLink + '" target="_blank" class="ops-lead-wa-pill" title="Chat on WhatsApp"><i class="fi fi-brands-whatsapp"></i></a>' : '') +
               '</div>' +
             '</div>' +
           '</td>' +
-          '<td><strong>' + (ld.destination || "Holiday Tour") + '</strong></td>' +
-          '<td>' +
-            '<div>' + (ld.travel_date || "Dates Pending") + '</div>' +
+          '<td class="td-dest">' +
+            '<div class="ops-dest-cell"><i class="fi fi-rr-marker text-muted"></i> <strong>' + (ld.destination || "Holiday Tour") + '</strong></div>' +
           '</td>' +
-          '<td>' + ld.adults + ' Adults' + (ld.children > 0 ? ', ' + ld.children + ' Kids' : '') + '</td>' +
-          '<td>' +
+          '<td class="td-dates">' +
+            '<div class="ops-date-cell"><i class="fi fi-rr-calendar text-muted"></i> <span>' + (ld.travel_date || "Dates Pending") + '</span></div>' +
+          '</td>' +
+          '<td class="td-pax">' +
+            '<span class="ops-pax-badge"><i class="fi fi-rr-users"></i> ' + ld.adults + 'A' + (ld.children > 0 ? ', ' + ld.children + 'C' : '') + '</span>' +
+          '</td>' +
+          '<td class="td-financials">' +
             '<div class="ops-price-meta">' +
               '<span class="ops-price-total">' + totalVal + '</span>' +
-              '<span class="ops-price-paid">Paid: ' + paidVal + '</span>' +
-              '<span class="ops-price-bal">Bal: ' + balVal + '</span>' +
+              '<span class="ops-price-paid"><i class="fi fi-rr-check font-10"></i> ' + paidVal + '</span>' +
+              '<span class="ops-price-bal ' + (hasBalance ? 'due' : 'settled') + '">' + (hasBalance ? 'Due: ' + balVal : 'Settled') + '</span>' +
             '</div>' +
           '</td>' +
-          '<td><span class="text-muted">' + ld.agent_name + '</span></td>' +
-          '<td><span class="ops-status-badge ' + ld.status_badge + '">' + ld.status_label + '</span></td>' +
-          '<td class="text-right">' +
+          '<td class="td-agent">' +
+            '<div class="ops-agent-cell"><i class="fi fi-rr-user font-11 text-muted"></i> <span>' + (ld.agent_name || "Unassigned") + '</span></div>' +
+          '</td>' +
+          '<td class="td-status">' +
+            '<span class="ops-status-badge ' + ld.status_badge + '"><span class="badge-dot"></span> ' + ld.status_label + '</span>' +
+          '</td>' +
+          '<td class="td-actions text-right">' +
             '<div class="ops-action-btn-group">' +
               '<button type="button" class="btn-ops-action primary btn-open-booking-modal" data-id="' + ld.encoded_id + '" title="Send Vendor Booking Request"><i class="fi fi-rr-paper-plane"></i> Request</button>' +
               '<button type="button" class="btn-ops-action emerald btn-open-voucher-modal" data-id="' + ld.encoded_id + '" title="Issue Confirmation Vouchers"><i class="fi fi-rr-ticket"></i> Voucher</button>' +
               '<button type="button" class="btn-ops-action amber btn-open-invoice-modal" data-id="' + ld.encoded_id + '" title="Generate Proforma / Invoice"><i class="fi fi-rr-document"></i> Invoice</button>' +
-              '<a href="' + leadLink + '" class="btn-ops-action" title="View Full Lead Details"><i class="fi fi-rr-eye"></i></a>' +
+              '<a href="' + leadLink + '" class="btn-ops-action neutral" title="View Full Lead Details"><i class="fi fi-rr-eye"></i></a>' +
             '</div>' +
           '</td>' +
         '</tr>';
@@ -534,23 +702,25 @@ $(document).ready(function () {
     // -----------------------------------------------------------------------
     loadTripsBoard: function () {
       const self = this;
-      $("#cardsDepartingToday, #cardsActiveOnTour, #cardsReturningToday, #cardsCompletedTrips").html(
+      $("#cardsTomorrowTrips, #cardsDepartingToday, #cardsActiveOnTour, #cardsReturningToday, #cardsCompletedTrips").html(
         '<div class="ops-empty-col"><i class="fi fi-rr-spinner fi-spin"></i> Loading...</div>'
       );
 
       $.getJSON("/api/v3/operations/trip-planner.php?date=" + this.tripDate, function (res) {
         if (res && res.status === "success") {
+          self.renderTripColumn("#cardsTomorrowTrips", res.tomorrow_trips || [], "tomorrow");
           self.renderTripColumn("#cardsDepartingToday", res.departing_today || [], "departing");
           self.renderTripColumn("#cardsActiveOnTour", res.active_on_tour || [], "on_tour");
           self.renderTripColumn("#cardsReturningToday", res.returning_today || [], "returning");
           self.renderTripColumn("#cardsCompletedTrips", res.completed_trips || [], "completed");
 
+          $("#badgeTomorrowTrips").text((res.tomorrow_trips || []).length);
           $("#badgeDepartingToday").text((res.departing_today || []).length);
           $("#badgeActiveOnTour").text((res.active_on_tour || []).length);
           $("#badgeReturningToday").text((res.returning_today || []).length);
           $("#badgeCompletedTrips").text((res.completed_trips || []).length);
 
-          const totalActive = (res.departing_today || []).length + (res.active_on_tour || []).length + (res.returning_today || []).length;
+          const totalActive = (res.tomorrow_trips || []).length + (res.departing_today || []).length + (res.active_on_tour || []).length + (res.returning_today || []).length;
           $("#opsTotalActiveTours").text(totalActive);
         }
       });
@@ -583,7 +753,10 @@ $(document).ready(function () {
           (item.driver_name ? '<div class="text-emerald font-11 mb-8"><strong><i class="fi fi-rr-car"></i> Driver:</strong> ' + item.driver_name + ' &bull; ' + item.vehicle_no + '</div>' : '<div class="text-amber font-11 mb-8"><i class="fi fi-rr-exclamation"></i> Driver unassigned</div>') +
           '<div class="ops-trip-card-actions">';
 
-        if (type === "departing") {
+        if (type === "tomorrow") {
+          html += '<button type="button" class="btn-ops-action btn-open-driver-dispatch" data-id="' + item.encoded_id + '" data-driver="' + (item.driver_name || "") + '" data-phone="' + (item.driver_phone || "") + '" data-veh="' + (item.vehicle_no || "") + '" title="Dispatch Driver 24hr Pre-trip Info"><i class="fi fi-rr-car"></i> Driver</button>' +
+                  '<button type="button" class="btn-ops-action primary btn-trip-milestone" data-id="' + item.encoded_id + '" data-milestone="start_trip" title="Start Early"><i class="fi fi-rr-play"></i> Start</button>';
+        } else if (type === "departing") {
           html += '<button type="button" class="btn-ops-action primary btn-trip-milestone" data-id="' + item.encoded_id + '" data-milestone="start_trip"><i class="fi fi-rr-play"></i> Start Tour</button>' +
                   '<button type="button" class="btn-ops-action btn-open-driver-dispatch" data-id="' + item.encoded_id + '" data-driver="' + (item.driver_name || "") + '" data-phone="' + (item.driver_phone || "") + '" data-veh="' + (item.vehicle_no || "") + '" title="Dispatch Driver Info"><i class="fi fi-rr-car"></i> Driver</button>';
         } else if (type === "returning" || type === "on_tour") {
@@ -641,6 +814,9 @@ $(document).ready(function () {
           $("#modalOpsDriverDispatch").removeClass("active");
           if (res.whatsapp_link) {
             window.open(res.whatsapp_link, "_blank");
+          }
+          if ($("#operationsApp").data("page") === "dispatch") {
+            window.location.href = "/dashboard/operations/trips/";
           }
           self.loadTripsBoard();
         } else {
@@ -744,6 +920,9 @@ $(document).ready(function () {
           if (res && res.status === "success") {
             alert(res.message);
             $("#modalOpsAssign").removeClass("active");
+            if ($("#operationsApp").data("page") === "assign") {
+              window.location.href = "/dashboard/operations/unassigned/";
+            }
             self.loadUnassignedLeads();
             self.loadMetrics();
           } else {
@@ -932,6 +1111,9 @@ $(document).ready(function () {
             if (res.whatsapp_link) {
               window.open(res.whatsapp_link, "_blank");
             }
+            if ($("#operationsApp").data("page") === "booking-request") {
+              window.location.href = "/dashboard/operations/requests/";
+            }
           } else {
             alert(res.message || "Failed to dispatch booking request.");
           }
@@ -1025,6 +1207,9 @@ $(document).ready(function () {
             if (res.view_url) {
               window.open(res.view_url, "_blank");
             }
+            if ($("#operationsApp").data("page") === "voucher") {
+              window.location.href = "/dashboard/operations/list/";
+            }
             self.loadConfirmedLeads();
             self.loadMetrics();
           } else {
@@ -1081,6 +1266,9 @@ $(document).ready(function () {
             $("#modalOpsInvoice").removeClass("active");
             if (res.whatsapp_link) {
               window.open(res.whatsapp_link, "_blank");
+            }
+            if ($("#operationsApp").data("page") === "invoice") {
+              window.location.href = "/dashboard/operations/list/";
             }
           } else {
             alert(res.message || "Failed to dispatch invoice.");
@@ -1170,7 +1358,7 @@ $(document).ready(function () {
         $("#tplEditorBody").val("");
         $("#tplEditorIsDefault").prop("checked", false);
       }
-      $("#modalOpsTemplateEditor").addClass("active");
+      $("#modalOpsTemplateEditor").addClass("active is-active");
     },
 
     saveTemplate: function () {
@@ -1199,7 +1387,10 @@ $(document).ready(function () {
         success: function (res) {
           if (res && res.status === "success") {
             alert(res.message);
-            $("#modalOpsTemplateEditor").removeClass("active");
+            $("#modalOpsTemplateEditor").removeClass("active is-active");
+            if ($("#operationsApp").data("page") === "template-add") {
+              window.location.href = "/dashboard/operations/templates/";
+            }
             self.loadTemplates();
           } else {
             alert(res.message || "Failed to save template.");
@@ -1214,11 +1405,17 @@ $(document).ready(function () {
         url: "/api/v3/operations/templates.php",
         type: "POST",
         contentType: "application/json",
-        data: JSON.stringify({ action: "delete", id: templateId }),
+        data: JSON.stringify({ action: "delete", id: Number(templateId) }),
         success: function (res) {
           if (res && res.status === "success") {
+            alert(res.message || "Template removed successfully.");
             self.loadTemplates();
+          } else {
+            alert(res.message || "Failed to delete template.");
           }
+        },
+        error: function () {
+          alert("Error communicating with server while deleting template.");
         }
       });
     },
@@ -1233,6 +1430,32 @@ $(document).ready(function () {
         success: function (res) {
           if (res && res.status === "success") {
             self.loadTemplates();
+          }
+        }
+      });
+    },
+
+    loadDefaultBookingDependencies: function () {
+      const self = this;
+      $.getJSON("/api/v3/operations/booking-request.php", function (res) {
+        if (res && res.status === "success") {
+          self.cachedProperties = res.properties || [];
+          self.cachedTransporters = res.transporters || [];
+          self.cachedTemplates = res.templates || [];
+          self.populateVendorDropdown("hotel");
+          self.populateTemplateDropdown("hotel");
+        }
+      });
+    },
+
+    loadSingleTemplate: function (templateId) {
+      const self = this;
+      $.getJSON("/api/v3/operations/templates.php", function (res) {
+        if (res && res.status === "success" && res.templates) {
+          self.cachedTemplates = res.templates;
+          const tpl = res.templates.find(function (t) { return Number(t.id) === Number(templateId); });
+          if (tpl) {
+            self.openTemplateEditorModal(tpl);
           }
         }
       });

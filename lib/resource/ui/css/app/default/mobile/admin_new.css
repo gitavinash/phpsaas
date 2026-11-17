@@ -347,7 +347,8 @@ main .container {
   vertical-align: top;
   text-align: left;
   padding: 8px 10px 35px 10px;
-  height: 35px;
+  min-height: 35px;
+  height: auto;
   font-weight: 400;
   font-size: 13px;
   line-height: 18px;
@@ -3753,6 +3754,9 @@ body.premium-admin .container .dataTables_wrapper .dataTables_processing {
   margin: 0 0 14px;
   padding: 0;
   list-style: none;
+  position: relative;
+  z-index: 2;
+  pointer-events: auto !important;
 }
 
 .product-add-ui .tabs li {
@@ -3761,10 +3765,13 @@ body.premium-admin .container .dataTables_wrapper .dataTables_processing {
   border-radius: 999px;
   background: #ffffff;
   color: #334155;
-  padding: 7px 12px;
+  padding: 7px 14px;
   font-size: 12px;
   font-weight: 600;
   cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  pointer-events: auto !important;
   transition: all 0.2s ease;
 }
 
@@ -3773,6 +3780,31 @@ body.premium-admin .container .dataTables_wrapper .dataTables_processing {
   border-color: #0f766e;
   background: #0f766e;
   color: #ffffff;
+}
+
+.product-add-ui .checkbox-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  color: #334155;
+  user-select: none;
+  -webkit-user-select: none;
+  margin: 8px 0;
+  pointer-events: auto !important;
+}
+
+.product-add-ui input[type="checkbox"],
+body.premium-admin .product-add-ui input[type="checkbox"] {
+  cursor: pointer;
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  accent-color: #0f766e;
+  pointer-events: auto !important;
+  vertical-align: middle;
 }
 
 .product-add-ui .generalTab {

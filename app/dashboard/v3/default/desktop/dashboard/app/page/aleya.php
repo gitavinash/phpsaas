@@ -1,4 +1,9 @@
 <?php
+if (isset($site_access_type) && in_array(strtolower(trim($site_access_type)), ['operations', 'operation'])) {
+    require_once __DIR__ . '/aleya_operations.php';
+    return;
+}
+
 $displayDateRange = 'Last 30 Days';
 $displayDuration = '30 Days';
 

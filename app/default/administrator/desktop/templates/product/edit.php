@@ -91,23 +91,28 @@ if ($productDetails = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX 
                                 value="<?php echo ((isset($sub_heading)) ? $sub_heading : '') ?>">
                         </div>
                         <div class="box-1">
-                            <input type="checkbox" name="sell_online" value=0
-                                <?php echo (($inventory_sell_online == 0) ? 'checked' : '') ?>>
-                            Product is
-                            only for
-                            display purposes.
+                            <label for="sell_online" class="checkbox-label" style="cursor: pointer; display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 500; color: #334155; user-select: none; margin: 8px 0;">
+                                <input type="checkbox" name="sell_online" id="sell_online" value=0 <?php echo (($inventory_sell_online == 0) ? 'checked' : ''); ?> style="cursor: pointer; width: 18px; height: 18px; margin: 0; accent-color: #0f766e;">
+                                <span>Product is only for display purposes.</span>
+                            </label>
                         </div>
+                    </div>
+                    <div class="productSpecifications generalTab" style="display: none;">
+
                     </div>
                     <div class="productInventory generalTab" style="display: none;">
 
                         <div class="box-2">
-                            <input type="checkbox" name="in_stock" value=1
-                                <?php echo (($inventory_in_stock == 1) ? 'checked' : '') ?>> In Stock
+                            <label for="in_stock" class="checkbox-label" style="cursor: pointer; display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 500; color: #334155; user-select: none; margin: 8px 0;">
+                                <input type="checkbox" name="in_stock" id="in_stock" value=1 <?php echo (($inventory_in_stock == 1) ? 'checked' : ''); ?> style="cursor: pointer; width: 18px; height: 18px; margin: 0; accent-color: #0f766e;">
+                                <span>In Stock</span>
+                            </label>
                         </div>
                         <div class="box-2">
-                            <input type="checkbox" name="backorder" value=1
-                                <?php echo (($inventory_backorder == 1) ? 'checked' : '') ?>> Allowed Backorders (if product
-                            is out of stock )
+                            <label for="backorder" class="checkbox-label" style="cursor: pointer; display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 500; color: #334155; user-select: none; margin: 8px 0;">
+                                <input type="checkbox" name="backorder" id="backorder" value=1 <?php echo (($inventory_backorder == 1) ? 'checked' : ''); ?> style="cursor: pointer; width: 18px; height: 18px; margin: 0; accent-color: #0f766e;">
+                                <span>Allowed Backorders (if product is out of stock)</span>
+                            </label>
                         </div>
                         <div class="box-2">
                             <div class="form-group">
@@ -368,7 +373,7 @@ if ($productDetails = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX 
                         <li id="fb">Facebook</li>
                         <li id="tw">Twitter</li>
                     </ul>
-                    <div class="seo">
+                    <div class="seo generalTab">
                         <div class="form-group">
                             <label>Meta Title</label>
                             <input type="text" name="meta_title" value="<?php echo $meta_title; ?>" id="meta_title"
@@ -400,7 +405,7 @@ if ($productDetails = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX 
                             </select>
                         </div>
                     </div>
-                    <div class="fb" style="display: none;">
+                    <div class="fb generalTab" style="display: none;">
                         <div class="facebookPreviewBox"
                             style="display: <?php echo (($fb_img == '') ? 'none' : 'block') ?>;">
                             <input type="hidden" name="oldFacebookImage" value="<?php echo $fb_img ?>">
@@ -422,7 +427,7 @@ if ($productDetails = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX 
                                 placeholder="Facebook Description"><?php echo $fb_desc ?></textarea>
                         </div>
                     </div>
-                    <div class="tw" style="display: none;">
+                    <div class="tw generalTab" style="display: none;">
                         <div class="twitterPreviewBox" style="display: <?php echo (($fb_img == '') ? 'none' : 'block') ?>;">
                             <input type="hidden" name="oldTwitterImage" value="<?php echo $tw_img ?>">
                             <div class="img"><img src="<?php echo $tw_img ?>" id="twitterPath" alt=""></div>
@@ -459,9 +464,12 @@ if ($productDetails = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX 
                 </div>
                 <div class="form-group">
                     <h2>feature product</h2>
-                    <div class="action-box inside-shadow">
-                        <input type="checkbox" value="1" name='featurePost'
-                            <?php echo (($link_is_featured == '1') ? 'checked' : '') ?>> Mark as feature
+                    <div class="action-box inside-shadow" style="padding: 10px">
+                        <label for="featurePost" class="checkbox-label" style="cursor: pointer; display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 500; color: #334155; user-select: none; margin: 0;">
+                            <input type="checkbox" value="1" name='featurePost' id="featurePost"
+                                <?php echo (($link_is_featured == '1') ? 'checked' : '') ?> style="cursor: pointer; width: 18px; height: 18px; margin: 0; accent-color: #0f766e;">
+                            <span>Mark as feature</span>
+                        </label>
                     </div>
                 </div>
                 <?php
@@ -550,3 +558,45 @@ if ($productDetails = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX 
         </form>
     </div>
 </div>
+
+<script type="text/javascript">
+(function ($) {
+    if (!$) return;
+    function initProductTabs() {
+        $(document).off('click.productEditTabs', '.tabs li');
+        $(document).on('click.productEditTabs', '.tabs li', function (e) {
+            e.preventDefault();
+            var $tab = $(this);
+            var targetId = $tab.attr('id');
+            if (!targetId) return;
+
+            var $tabsUl = $tab.closest('ul.tabs');
+            var $section = $tab.closest('section');
+            if (!$section.length) {
+                $section = $tab.closest('.form-box, .product-add-ui');
+            }
+
+            $tabsUl.find('> li').removeClass('active');
+            $tab.addClass('active');
+
+            $section.find('> .generalTab, > .seo, > .fb, > .tw').hide();
+            var $target = $section.find('> .' + targetId);
+            if ($target.length) {
+                $target.show();
+            } else {
+                $section.find('.' + targetId).show();
+            }
+
+            if (typeof window.dispatchEvent === 'function') {
+                window.dispatchEvent(new Event('resize'));
+            }
+        });
+    }
+
+    if (document.readyState === 'loading') {
+        $(document).ready(initProductTabs);
+    } else {
+        initProductTabs();
+    }
+})(window.jQuery);
+</script>

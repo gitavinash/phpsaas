@@ -671,7 +671,8 @@ nav.side-nav .side-menu i.fi-rr-user { color: #0ea5e9 !important; }
 nav.side-nav .side-menu i.fi-rr-toggle-on { color: #10b981 !important; }
 nav.side-nav .side-menu i.fi-rr-employee-man-alt { color: #6366f1 !important; }
 
-nav.side-nav ul li .bottom-menu {
+nav.side-nav ul li:not(.ops-aside-item) .bottom-menu,
+nav.side-nav ul li:not(.active) .bottom-menu {
   display: none !important;
 }
 

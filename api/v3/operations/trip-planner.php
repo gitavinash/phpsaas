@@ -53,6 +53,7 @@ $siteClause = ($siteId > 0) ? " AND e.enquiry_site_id = {$siteId}" : "";
 if ($method === 'GET') {
     $targetDate = isset($_GET['date']) ? trim($_GET['date']) : date('Y-m-d');
     $todayStr = date('Y-m-d', strtotime($targetDate));
+    $tomorrowStr = date('Y-m-d', strtotime($todayStr . ' + 1 day'));
 
     // Fetch all confirmed/in-progress/completed leads
     $sql = "SELECT 
@@ -68,6 +69,7 @@ if ($method === 'GET') {
         WHERE e.enquiry_status IN (10, 6, 8, 12, 1, 11, 13, 14) {$siteClause}
         ORDER BY e.enquiry_id DESC LIMIT 300";
 
+    $tomorrowTrips  = [];
     $departingToday = [];
     $activeOnTour   = [];
     $returningToday = [];
@@ -143,6 +145,8 @@ if ($method === 'GET') {
 
             if ($st === 14) {
                 $completedTrips[] = $item;
+            } elseif ($startDate === $tomorrowStr) {
+                $tomorrowTrips[] = $item;
             } elseif ($startDate === $todayStr) {
                 $departingToday[] = $item;
             } elseif ($endDate === $todayStr) {
@@ -153,8 +157,8 @@ if ($method === 'GET') {
                 // Marked as trip in progress
                 $activeOnTour[] = $item;
             } elseif ($startDate > $todayStr && ($st === 11 || $st === 12 || $st === 10)) {
-                // Upcoming departure
-                $departingToday[] = $item;
+                // Tomorrow or upcoming departures
+                $tomorrowTrips[] = $item;
             } else {
                 $activeOnTour[] = $item;
             }
@@ -164,6 +168,8 @@ if ($method === 'GET') {
     echo json_encode([
         'status'          => 'success',
         'target_date'     => $todayStr,
+        'tomorrow_date'   => $tomorrowStr,
+        'tomorrow_trips'  => array_values($tomorrowTrips),
         'departing_today' => array_values($departingToday),
         'active_on_tour'  => array_values($activeOnTour),
         'returning_today' => array_values($returningToday),

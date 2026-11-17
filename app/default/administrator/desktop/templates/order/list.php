@@ -414,6 +414,96 @@ if (!empty($startDate) && !empty($endDate)) {
     .modern-order-list #table tbody td.td-actions .order-view-btn {
         margin: 2px !important;
     }
+
+    /* Mobile Responsive Optimizations */
+    .modern-order-list .order-table-responsive {
+        width: 100% !important;
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+        margin-top: 10px !important;
+        border: 1px solid #e2e8f0 !important;
+        border-radius: 10px !important;
+        background: #ffffff !important;
+    }
+
+    .modern-order-list .order-table-responsive #table {
+        margin-top: 0 !important;
+        border: none !important;
+        border-radius: 0 !important;
+    }
+
+    @media (max-width: 768px) {
+        .modern-order-list h2 {
+            font-size: 1.25rem !important;
+            margin-bottom: 12px !important;
+        }
+
+        .modern-order-list .options-bar {
+            flex-direction: column !important;
+            align-items: stretch !important;
+            padding: 12px !important;
+            gap: 12px !important;
+        }
+
+        .modern-order-list .options-bar .left-box,
+        .modern-order-list .options-bar .right-box {
+            width: 100% !important;
+            flex: 1 1 100% !important;
+        }
+
+        .modern-order-list .options-bar .left-box form {
+            flex-direction: column !important;
+            align-items: stretch !important;
+            gap: 10px !important;
+            width: 100% !important;
+        }
+
+        .modern-order-list select#changeStatus,
+        .modern-order-list select#changeCompany,
+        .modern-order-list input#changeDateRange,
+        .modern-order-list select#changeSort,
+        .modern-order-list .btn-filter-submit {
+            width: 100% !important;
+            min-width: 0 !important;
+            max-width: 100% !important;
+            height: 42px !important;
+            font-size: 14px !important;
+        }
+
+        .export-btn-group,
+        .btn-export {
+            width: 100% !important;
+            justify-content: center !important;
+            height: 40px !important;
+            font-size: 13.5px !important;
+        }
+
+        .modern-order-list #table {
+            min-width: 720px !important;
+        }
+
+        .modern-order-list #table tbody td {
+            height: auto !important;
+            min-height: 0 !important;
+            max-height: none !important;
+            padding: 10px 12px !important;
+            box-sizing: border-box !important;
+        }
+
+        .modern-order-list #table thead th {
+            padding: 10px 12px !important;
+        }
+
+        .modern-order-list #table tbody td.td-actions .order-view-btn {
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            min-height: 36px !important;
+            padding: 6px 12px !important;
+            font-size: 13px !important;
+            margin: 4px 2px !important;
+        }
+    }
 </style>
 
 <div class="modern-order-list">
@@ -470,7 +560,8 @@ if (!empty($startDate) && !empty($endDate)) {
                 </div>
             </div>
         </div>
-        <table id="table" data-default-order-column="3" data-default-order-dir="desc">
+        <div class="order-table-responsive">
+            <table id="table" data-default-order-column="3" data-default-order-dir="desc">
             <thead>
                 <tr>
                     <th class="th-order">Order</th>
@@ -620,6 +711,7 @@ if (!empty($startDate) && !empty($endDate)) {
                 ?>
             </tbody>
         </table>
+        </div>
     </div>
 </div>
 

@@ -145,21 +145,28 @@ $dupThumbImg = (string)($dupRow['product_thumbnail'] ?? '');
                                 value="<?php echo iswEscHtml($dupSubHeading); ?>" placeholder="Product sub heading">
                         </div>
                         <div class="box-1">
-                            <input type="checkbox" name="sell_online" value=0 <?php echo $dupSellDisplayOnly ? 'checked' : ''; ?>> Product is only for display purposes.
+                            <label for="sell_online" class="checkbox-label" style="cursor: pointer; display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 500; color: #334155; user-select: none; margin: 8px 0;">
+                                <input type="checkbox" name="sell_online" id="sell_online" value=0 <?php echo $dupSellDisplayOnly ? 'checked' : ''; ?> style="cursor: pointer; width: 18px; height: 18px; margin: 0; accent-color: #0f766e;">
+                                <span>Product is only for display purposes.</span>
+                            </label>
                         </div>
                     </div>
-                    <div class="productSpecifications generalTab">
+                    <div class="productSpecifications generalTab" style="display: none;">
 
                     </div>
                     <div class="productInventory generalTab" style="display: none;">
 
                         <div class="box-2">
-                            <input type="checkbox" name="in_stock" value=1 <?php echo $dupInStock ? 'checked' : ''; ?>> In Stock
+                            <label for="in_stock" class="checkbox-label" style="cursor: pointer; display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 500; color: #334155; user-select: none; margin: 8px 0;">
+                                <input type="checkbox" name="in_stock" id="in_stock" value=1 <?php echo $dupInStock ? 'checked' : ''; ?> style="cursor: pointer; width: 18px; height: 18px; margin: 0; accent-color: #0f766e;">
+                                <span>In Stock</span>
+                            </label>
                         </div>
                         <div class="box-2">
-                            <input type="checkbox" name="backorder" value=1 <?php echo $dupBackorder ? 'checked' : ''; ?>> Allowed Backorders (if product is
-                            out
-                            of stock )
+                            <label for="backorder" class="checkbox-label" style="cursor: pointer; display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 500; color: #334155; user-select: none; margin: 8px 0;">
+                                <input type="checkbox" name="backorder" id="backorder" value=1 <?php echo $dupBackorder ? 'checked' : ''; ?> style="cursor: pointer; width: 18px; height: 18px; margin: 0; accent-color: #0f766e;">
+                                <span>Allowed Backorders (if product is out of stock)</span>
+                            </label>
                         </div>
                         <div class="box-2">
                             <div class="form-group">
@@ -382,7 +389,10 @@ $dupThumbImg = (string)($dupRow['product_thumbnail'] ?? '');
                 <div class="form-group">
                     <h2>Featured</h2>
                     <div class="action-box inside-shadow" style="padding: 10px">
-                        <input type="checkbox" value="1" name='featurePost' <?php echo $dupIsFeatured ? 'checked' : ''; ?>> Mark as feature
+                        <label for="featurePost" class="checkbox-label" style="cursor: pointer; display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 500; color: #334155; user-select: none; margin: 0;">
+                            <input type="checkbox" value="1" name='featurePost' id="featurePost" <?php echo $dupIsFeatured ? 'checked' : ''; ?> style="cursor: pointer; width: 18px; height: 18px; margin: 0; accent-color: #0f766e;">
+                            <span>Mark as feature</span>
+                        </label>
                     </div>
                 </div>
                 <?php
@@ -452,3 +462,45 @@ $dupThumbImg = (string)($dupRow['product_thumbnail'] ?? '');
         </form>
     </div>
 </div>
+
+<script type="text/javascript">
+(function ($) {
+    if (!$) return;
+    function initProductTabs() {
+        $(document).off('click.productAddTabs', '.tabs li');
+        $(document).on('click.productAddTabs', '.tabs li', function (e) {
+            e.preventDefault();
+            var $tab = $(this);
+            var targetId = $tab.attr('id');
+            if (!targetId) return;
+
+            var $tabsUl = $tab.closest('ul.tabs');
+            var $section = $tab.closest('section');
+            if (!$section.length) {
+                $section = $tab.closest('.form-box, .product-add-ui');
+            }
+
+            $tabsUl.find('> li').removeClass('active');
+            $tab.addClass('active');
+
+            $section.find('> .generalTab, > .seo, > .fb, > .tw').hide();
+            var $target = $section.find('> .' + targetId);
+            if ($target.length) {
+                $target.show();
+            } else {
+                $section.find('.' + targetId).show();
+            }
+
+            if (typeof window.dispatchEvent === 'function') {
+                window.dispatchEvent(new Event('resize'));
+            }
+        });
+    }
+
+    if (document.readyState === 'loading') {
+        $(document).ready(initProductTabs);
+    } else {
+        initProductTabs();
+    }
+})(window.jQuery);
+</script>

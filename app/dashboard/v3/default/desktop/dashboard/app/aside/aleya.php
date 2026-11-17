@@ -89,23 +89,25 @@ $isDashboardActive = ($currentUrl === '/dashboard/' || $currentUrl === '/dashboa
         </div>
     </li>
 
-<?php if ($site_access_type == 'administrator' || $site_access_type == 'operations') { ?>
-    <li <?php echo (strpos($currentUrl, '/operations') !== false ? 'class="active"' : ''); ?>>
+<?php if ($site_access_type == 'administrator' || $site_access_type == 'operations' || $site_access_type == 'admin' || $site_access_type == 'superadmin' || $site_access_type == 'super_administrator') { ?>
+    <li class="ops-aside-item <?php echo (strpos($currentUrl, '/operations') !== false ? 'active' : ''); ?>" data-aside-nav="operations">
         <a href="/dashboard/operations/"><i class="fi fi-rr-compass-alt"></i> Operations Hub</a>
         <div class="side-menu">
             <ul>
-                <li><a href="/dashboard/operations/#confirmed"><i class="fi-rr-badge-check"></i> Confirmed Leads</a></li>
-                <li><a href="/dashboard/operations/#trips"><i class="fi-rr-plane-departure"></i> Trip Planner</a></li>
-                <li><a href="/dashboard/operations/#unassigned"><i class="fi-rr-user-add"></i> Assign Leads</a></li>
-                <li><a href="/dashboard/operations/#templates"><i class="fi-rr-file-edit"></i> Request Templates</a></li>
+                <li <?php echo (strpos($currentUrl, '/operations/list') !== false ? 'class="active"' : ''); ?>><a href="/dashboard/operations/list/" <?php echo (strpos($currentUrl, '/operations/list') !== false ? 'class="active"' : ''); ?>><i class="fi-rr-badge-check"></i> Confirmed Leads</a></li>
+                <li <?php echo (strpos($currentUrl, '/operations/trips') !== false ? 'class="active"' : ''); ?>><a href="/dashboard/operations/trips/" <?php echo (strpos($currentUrl, '/operations/trips') !== false ? 'class="active"' : ''); ?>><i class="fi-rr-plane-departure"></i> Trip Planner</a></li>
+                <li <?php echo (strpos($currentUrl, '/operations/requests') !== false ? 'class="active"' : ''); ?>><a href="/dashboard/operations/requests/" <?php echo (strpos($currentUrl, '/operations/requests') !== false ? 'class="active"' : ''); ?>><i class="fi-rr-paper-plane"></i> Booking Requests</a></li>
+                <li <?php echo (strpos($currentUrl, '/operations/unassigned') !== false ? 'class="active"' : ''); ?>><a href="/dashboard/operations/unassigned/" <?php echo (strpos($currentUrl, '/operations/unassigned') !== false ? 'class="active"' : ''); ?>><i class="fi-rr-user-add"></i> Assign Leads</a></li>
+                <li <?php echo (strpos($currentUrl, '/operations/templates') !== false ? 'class="active"' : ''); ?>><a href="/dashboard/operations/templates/" <?php echo (strpos($currentUrl, '/operations/templates') !== false ? 'class="active"' : ''); ?>><i class="fi-rr-file-edit"></i> Request Templates</a></li>
             </ul>
         </div>
         <div class="bottom-menu">
             <ul>
-                <li><a href="/dashboard/operations/#confirmed"><i class="fi-rr-badge-check"></i> Confirmed Leads</a></li>
-                <li><a href="/dashboard/operations/#trips"><i class="fi-rr-plane-departure"></i> Trip Planner</a></li>
-                <li><a href="/dashboard/operations/#unassigned"><i class="fi-rr-user-add"></i> Assign Leads</a></li>
-                <li><a href="/dashboard/operations/#templates"><i class="fi-rr-file-edit"></i> Request Templates</a></li>
+                <li <?php echo (strpos($currentUrl, '/operations/list') !== false ? 'class="active"' : ''); ?>><a href="/dashboard/operations/list/" <?php echo (strpos($currentUrl, '/operations/list') !== false ? 'class="active"' : ''); ?>><i class="fi-rr-badge-check"></i> Confirmed Leads</a></li>
+                <li <?php echo (strpos($currentUrl, '/operations/trips') !== false ? 'class="active"' : ''); ?>><a href="/dashboard/operations/trips/" <?php echo (strpos($currentUrl, '/operations/trips') !== false ? 'class="active"' : ''); ?>><i class="fi-rr-plane-departure"></i> Trip Planner</a></li>
+                <li <?php echo (strpos($currentUrl, '/operations/requests') !== false ? 'class="active"' : ''); ?>><a href="/dashboard/operations/requests/" <?php echo (strpos($currentUrl, '/operations/requests') !== false ? 'class="active"' : ''); ?>><i class="fi-rr-paper-plane"></i> Booking Requests</a></li>
+                <li <?php echo (strpos($currentUrl, '/operations/unassigned') !== false ? 'class="active"' : ''); ?>><a href="/dashboard/operations/unassigned/" <?php echo (strpos($currentUrl, '/operations/unassigned') !== false ? 'class="active"' : ''); ?>><i class="fi-rr-user-add"></i> Assign Leads</a></li>
+                <li <?php echo (strpos($currentUrl, '/operations/templates') !== false ? 'class="active"' : ''); ?>><a href="/dashboard/operations/templates/" <?php echo (strpos($currentUrl, '/operations/templates') !== false ? 'class="active"' : ''); ?>><i class="fi-rr-file-edit"></i> Request Templates</a></li>
             </ul>
         </div>
     </li>
