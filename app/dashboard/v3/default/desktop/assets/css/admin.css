@@ -671,9 +671,80 @@ nav.side-nav .side-menu i.fi-rr-user { color: #0ea5e9 !important; }
 nav.side-nav .side-menu i.fi-rr-toggle-on { color: #10b981 !important; }
 nav.side-nav .side-menu i.fi-rr-employee-man-alt { color: #6366f1 !important; }
 
-nav.side-nav ul li:not(.ops-aside-item) .bottom-menu,
 nav.side-nav ul li:not(.active) .bottom-menu {
   display: none !important;
+}
+
+nav.side-nav ul li.active .bottom-menu {
+  display: block !important;
+  margin: 3px 0 6px 14px !important;
+  padding: 3px 0 3px 8px !important;
+  border-left: 2px solid var(--slate-200, #e2e8f0) !important;
+}
+
+nav.side-nav ul li.active .side-menu:not(.aside-menu-plugins) {
+  display: none !important;
+}
+
+nav.side-nav ul li.active .bottom-menu ul {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 2px !important;
+  list-style: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+nav.side-nav ul li.active .bottom-menu ul li {
+  position: relative !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+nav.side-nav ul li.active .bottom-menu ul li a {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  padding: 5px 8px !important;
+  color: var(--slate-600, #475569) !important;
+  font-size: 11.5px !important;
+  font-weight: 500 !important;
+  border-radius: var(--radius-sm, 6px) !important;
+  text-decoration: none !important;
+  transition: all 0.12s ease !important;
+}
+
+nav.side-nav ul li.active .bottom-menu ul li a i {
+  font-size: 13px !important;
+  width: 16px !important;
+  min-width: 16px !important;
+  text-align: center !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: transform 0.12s ease !important;
+}
+
+nav.side-nav ul li.active .bottom-menu ul li a:hover {
+  background: var(--slate-100, #f1f5f9) !important;
+  color: var(--slate-900, #0f172a) !important;
+}
+
+nav.side-nav ul li.active .bottom-menu ul li a:hover i {
+  transform: scale(1.15) !important;
+}
+
+nav.side-nav ul li.active .bottom-menu ul li.active a,
+nav.side-nav ul li.active .bottom-menu ul li a.active {
+  background: var(--brand-50, #eef2ff) !important;
+  color: var(--brand-700, #4f46e5) !important;
+  font-weight: 700 !important;
+}
+
+nav.side-nav ul li.active .bottom-menu ul li.active a i,
+nav.side-nav ul li.active .bottom-menu ul li a.active i {
+  color: var(--brand-700, #4f46e5) !important;
+  transform: scale(1.12) !important;
 }
 
 nav.side-nav li.appVersion {

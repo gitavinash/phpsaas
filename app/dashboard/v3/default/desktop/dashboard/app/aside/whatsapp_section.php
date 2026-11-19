@@ -49,7 +49,7 @@ if (!$isWaWebActive && isset($connection) && $connection && $siteId > 0) {
     }
 }
 
-// 4. Condition B: At least 1 device is connected
+// 4. Condition B: At least 1 device is connected / active
 $hasConnectedDevice = false;
 if ($isWaWebActive && isset($connection) && $connection && $siteId > 0) {
     $appSiteId = defined('APP_SITE_ID') ? (int)APP_SITE_ID : 0;
@@ -57,80 +57,108 @@ if ($isWaWebActive && isset($connection) && $connection && $siteId > 0) {
     if ($appSiteId > 0 && $appSiteId !== $siteId) {
         $siteDevCond = "(device_site_id = {$siteId} OR device_site_id = {$appSiteId})";
     }
-    $devConnQ = @mysqli_query($connection, "SELECT device_id FROM {$prefix}whatsapp_device WHERE {$siteDevCond} AND device_status = 'connected' LIMIT 1");
+    $devConnQ = @mysqli_query($connection, "SELECT device_id FROM {$prefix}whatsapp_device WHERE {$siteDevCond} AND (device_status = 'connected' OR device_status = 'active') LIMIT 1");
     if ($devConnQ && mysqli_num_rows($devConnQ) > 0) {
         $hasConnectedDevice = true;
     }
 }
 
-// 5. WhatsApp CRM is visible when plugin is enabled OR for administrators to link/sync devices
-$isUserAdmin = (isset($site_access_type) && ($site_access_type === 'administrator' || $site_access_type === 'admin')) || (defined('USER_TYPE') && USER_TYPE === 'administrator');
-$isWhatsAppCrmActive = ($isWaWebActive || $isUserAdmin || $hasConnectedDevice);
-$waVisibilityClass = $isWhatsAppCrmActive ? '' : ' is-hidden';
+// 5. Show WhatsApp CRM menu ONLY when at least 1 device is active AND WhatsApp Web is enabled
+$isWhatsAppCrmActive = ($isWaWebActive && $hasConnectedDevice);
+if (!$isWhatsAppCrmActive) {
+    return;
+}
+$waVisibilityClass = '';
 
-$waStatusBadge = $hasConnectedDevice 
-    ? '<span class="aside-menu-pill badge-live">Live</span>' 
+$waStatusBadge = $hasConnectedDevice
+    ? '<span class="aside-menu-pill badge-live">Live</span>'
     : '<span class="aside-menu-pill badge-sync">Sync</span>';
 
-$currentAsideUrl = defined('ADMIN_BASE_URL') ? ADMIN_BASE_URL : (defined('ACTIVE_URL') ? ACTIVE_URL : '');
-$isWaTemplatesPage = (strpos($currentAsideUrl, '/whatsapp/templates') !== false || strpos($currentAsideUrl, '/whatsapp-templates') !== false);
-$isWaInboxPage = (strpos($currentAsideUrl, '/whatsapp/') !== false && !$isWaTemplatesPage && strpos($currentAsideUrl, '/integration/') === false);
-$isWaDevicePage = (strpos($currentAsideUrl, '/integration/whatsapp_web') !== false);
+$requestPath = $_SERVER['REQUEST_URI'] ?? '';
+$currentAsideUrl = defined('ADMIN_BASE_URL') ? ADMIN_BASE_URL : (defined('ACTIVE_URL') ? ACTIVE_URL : $requestPath);
+$waFilter = isset($_GET['filter']) ? (string)$_GET['filter'] : '';
+$waAction = isset($_GET['action']) ? (string)$_GET['action'] : '';
+$waTab = isset($_GET['tab']) ? (string)$_GET['tab'] : '';
+
+$isWaDevicePage = (
+    strpos($currentAsideUrl, '/integration/whatsapp_web') !== false ||
+    strpos($requestPath, '/integration/whatsapp_web') !== false ||
+    (isset($currentUrl) && strpos($currentUrl, '/integration/whatsapp_web') !== false)
+);
+
+$isWaTemplatesPage = !$isWaDevicePage && (
+    strpos($currentAsideUrl, '/whatsapp/templates') !== false ||
+    strpos($currentAsideUrl, '/whatsapp-templates') !== false ||
+    strpos($requestPath, '/whatsapp/templates') !== false ||
+    (isset($currentUrl) && strpos($currentUrl, '/whatsapp/templates') !== false)
+);
+
+$isWaInboxPage = !$isWaDevicePage && !$isWaTemplatesPage && (
+    strpos($currentAsideUrl, '/whatsapp/') !== false ||
+    strpos($requestPath, '/whatsapp/') !== false ||
+    (isset($currentUrl) && strpos($currentUrl, '/whatsapp/') !== false)
+) && strpos($currentAsideUrl, '/integration/') === false && strpos($requestPath, '/integration/') === false;
+
+$isWaInboxAll = $isWaInboxPage && $waFilter === '';
+$isWaInboxUnread = $isWaInboxPage && $waFilter === 'unread';
+$isWaInboxLeads = $isWaInboxPage && $waFilter === 'leads';
+
+$isWaTplAll = $isWaTemplatesPage && $waAction === '' && $waTab === '';
+$isWaTplCreate = $isWaTemplatesPage && $waAction === 'create';
+$isWaTplActions = $isWaTemplatesPage && $waTab === 'actions';
 ?>
 
 <li class="header-section-name<?php echo $waVisibilityClass; ?>" data-aside-plugin="whatsapp_web">
     <p>WhatsApp CRM<span>Live chats &amp; sync</span></p>
 </li>
 
-<li data-aside-plugin="whatsapp_web" class="<?php echo ($isWaInboxPage ? 'active' : '') . $waVisibilityClass; ?>">
+<li data-aside-plugin="whatsapp_web" data-aside-nav="whatsapp" class="<?php echo ($isWaInboxPage ? 'active' : '') . $waVisibilityClass; ?>">
     <a href="/dashboard/whatsapp/"><i class="ri-whatsapp-line"></i> WhatsApp Inbox <?php echo $waStatusBadge; ?></a>
     <div class="side-menu">
         <ul>
-            <li><a href="/dashboard/whatsapp/"><i class="fi fi-rr-inbox-in"></i> All Conversations</a></li>
-            <li><a href="/dashboard/whatsapp/?filter=unread"><i class="fi fi-rr-envelope-dot"></i> Unread Chats</a></li>
-            <li><a href="/dashboard/whatsapp/?filter=leads"><i class="fi fi-rr-bullseye-arrow"></i> CRM Leads</a></li>
-            <li><a href="/dashboard/integration/whatsapp_web/"><i class="fi fi-rr-qr-scan"></i> Linked Device (QR)</a></li>
+            <li <?php echo ($isWaInboxAll ? 'class="active"' : ''); ?>><a href="/dashboard/whatsapp/" <?php echo ($isWaInboxAll ? 'class="active"' : ''); ?>><i class="fi fi-rr-inbox-in"></i> All Conversations</a></li>
+            <li <?php echo ($isWaInboxUnread ? 'class="active"' : ''); ?>><a href="/dashboard/whatsapp/?filter=unread" <?php echo ($isWaInboxUnread ? 'class="active"' : ''); ?>><i class="fi fi-rr-envelope-dot"></i> Unread Chats</a></li>
+            <li <?php echo ($isWaInboxLeads ? 'class="active"' : ''); ?>><a href="/dashboard/whatsapp/?filter=leads" <?php echo ($isWaInboxLeads ? 'class="active"' : ''); ?>><i class="fi fi-rr-bullseye-arrow"></i> CRM Leads</a></li>
         </ul>
     </div>
     <div class="bottom-menu">
         <ul>
-            <li><a href="/dashboard/whatsapp/"><i class="fi fi-rr-inbox-in"></i> All Conversations</a></li>
-            <li><a href="/dashboard/whatsapp/?filter=unread"><i class="fi fi-rr-envelope-dot"></i> Unread Chats</a></li>
-            <li><a href="/dashboard/whatsapp/?filter=leads"><i class="fi fi-rr-bullseye-arrow"></i> CRM Leads</a></li>
-            <li><a href="/dashboard/integration/whatsapp_web/"><i class="fi fi-rr-qr-scan"></i> Linked Device (QR)</a></li>
+            <li <?php echo ($isWaInboxAll ? 'class="active"' : ''); ?>><a href="/dashboard/whatsapp/" <?php echo ($isWaInboxAll ? 'class="active"' : ''); ?>><i class="fi fi-rr-inbox-in"></i> All Conversations</a></li>
+            <li <?php echo ($isWaInboxUnread ? 'class="active"' : ''); ?>><a href="/dashboard/whatsapp/?filter=unread" <?php echo ($isWaInboxUnread ? 'class="active"' : ''); ?>><i class="fi fi-rr-envelope-dot"></i> Unread Chats</a></li>
+            <li <?php echo ($isWaInboxLeads ? 'class="active"' : ''); ?>><a href="/dashboard/whatsapp/?filter=leads" <?php echo ($isWaInboxLeads ? 'class="active"' : ''); ?>><i class="fi fi-rr-bullseye-arrow"></i> CRM Leads</a></li>
         </ul>
     </div>
 </li>
 
-<li data-aside-plugin="whatsapp_web" class="<?php echo ($isWaTemplatesPage ? 'active' : '') . $waVisibilityClass; ?>">
+<li data-aside-plugin="whatsapp_web" data-aside-nav="whatsapp-templates" class="<?php echo ($isWaTemplatesPage ? 'active' : '') . $waVisibilityClass; ?>">
     <a href="/dashboard/whatsapp/templates/"><i class="fi fi-rr-document-signed"></i> WhatsApp Templates</a>
     <div class="side-menu">
         <ul>
-            <li><a href="/dashboard/whatsapp/templates/"><i class="fi fi-rr-apps-sort"></i> All Templates</a></li>
-            <li><a href="/dashboard/whatsapp/templates/?action=create"><i class="fi fi-rr-add"></i> Create Template</a></li>
-            <li><a href="/dashboard/whatsapp/templates/?tab=actions"><i class="fi fi-rr-settings-sliders"></i> Action Defaults</a></li>
+            <li <?php echo ($isWaTplAll ? 'class="active"' : ''); ?>><a href="/dashboard/whatsapp/templates/" <?php echo ($isWaTplAll ? 'class="active"' : ''); ?>><i class="fi fi-rr-apps-sort"></i> All Templates</a></li>
+            <li <?php echo ($isWaTplCreate ? 'class="active"' : ''); ?>><a href="/dashboard/whatsapp/templates/?action=create" <?php echo ($isWaTplCreate ? 'class="active"' : ''); ?>><i class="fi fi-rr-add"></i> Create Template</a></li>
+            <li <?php echo ($isWaTplActions ? 'class="active"' : ''); ?>><a href="/dashboard/whatsapp/templates/?tab=actions" <?php echo ($isWaTplActions ? 'class="active"' : ''); ?>><i class="fi fi-rr-settings-sliders"></i> Action Defaults</a></li>
         </ul>
     </div>
     <div class="bottom-menu">
         <ul>
-            <li><a href="/dashboard/whatsapp/templates/"><i class="fi fi-rr-apps-sort"></i> All Templates</a></li>
-            <li><a href="/dashboard/whatsapp/templates/?action=create"><i class="fi fi-rr-add"></i> Create Template</a></li>
-            <li><a href="/dashboard/whatsapp/templates/?tab=actions"><i class="fi fi-rr-settings-sliders"></i> Action Defaults</a></li>
+            <li <?php echo ($isWaTplAll ? 'class="active"' : ''); ?>><a href="/dashboard/whatsapp/templates/" <?php echo ($isWaTplAll ? 'class="active"' : ''); ?>><i class="fi fi-rr-apps-sort"></i> All Templates</a></li>
+            <li <?php echo ($isWaTplCreate ? 'class="active"' : ''); ?>><a href="/dashboard/whatsapp/templates/?action=create" <?php echo ($isWaTplCreate ? 'class="active"' : ''); ?>><i class="fi fi-rr-add"></i> Create Template</a></li>
+            <li <?php echo ($isWaTplActions ? 'class="active"' : ''); ?>><a href="/dashboard/whatsapp/templates/?tab=actions" <?php echo ($isWaTplActions ? 'class="active"' : ''); ?>><i class="fi fi-rr-settings-sliders"></i> Action Defaults</a></li>
         </ul>
     </div>
 </li>
 
-<li data-aside-plugin="whatsapp_web" class="<?php echo ($isWaDevicePage ? 'active' : '') . $waVisibilityClass; ?>">
+<li data-aside-plugin="whatsapp_web" data-aside-nav="integration/whatsapp_web" class="<?php echo ($isWaDevicePage ? 'active' : '') . $waVisibilityClass; ?>">
     <a href="/dashboard/integration/whatsapp_web/"><i class="fi fi-rr-qr-scan"></i> WhatsApp Device</a>
     <div class="side-menu">
         <ul>
-            <li><a href="/dashboard/integration/whatsapp_web/"><i class="fi fi-rr-mobile-notch"></i> Pair Device (QR)</a></li>
+            <li <?php echo ($isWaDevicePage ? 'class="active"' : ''); ?>><a href="/dashboard/integration/whatsapp_web/" <?php echo ($isWaDevicePage ? 'class="active"' : ''); ?>><i class="fi fi-rr-mobile-notch"></i> Pair Device (QR)</a></li>
             <li><a href="/dashboard/whatsapp/"><i class="ri-whatsapp-line"></i> Live Chat Inbox</a></li>
         </ul>
     </div>
     <div class="bottom-menu">
         <ul>
-            <li><a href="/dashboard/integration/whatsapp_web/"><i class="fi fi-rr-mobile-notch"></i> Pair Device (QR)</a></li>
+            <li <?php echo ($isWaDevicePage ? 'class="active"' : ''); ?>><a href="/dashboard/integration/whatsapp_web/" <?php echo ($isWaDevicePage ? 'class="active"' : ''); ?>><i class="fi fi-rr-mobile-notch"></i> Pair Device (QR)</a></li>
             <li><a href="/dashboard/whatsapp/"><i class="ri-whatsapp-line"></i> Live Chat Inbox</a></li>
         </ul>
     </div>

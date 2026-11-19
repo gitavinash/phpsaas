@@ -31,6 +31,7 @@
     init: function () {
       if (!$("#operationsApp").length) return;
 
+      this.syncAsideNav();
       this.bindEvents();
 
       // Reset filters to clean default state on navigation
@@ -87,6 +88,9 @@
       } else if (page === "template-add") {
         if (templateId && parseInt(templateId, 10) > 0) {
           this.loadSingleTemplate(parseInt(templateId, 10));
+        } else {
+          this.syncTemplateEditorUI();
+          this.updateTemplateLivePreview();
         }
       } else if (page === "hub") {
         this.loadMetrics();
@@ -103,6 +107,42 @@
         this.loadConfirmedLeads();
         this.handleDirectQueryActions();
       }
+    },
+
+    syncAsideNav: function () {
+      try {
+        const path = window.location.pathname;
+        const $opsItem = $("nav.side-nav li.ops-aside-item, nav.side-nav li[data-aside-nav='operations']");
+        if (!$opsItem.length) return;
+
+        // If not on an operations page (e.g. on /dashboard/), ensure Operations Hub is NOT active!
+        if (!path.includes("/operations")) {
+          $opsItem.removeClass("active");
+          $opsItem.find(".side-menu li, .bottom-menu li").removeClass("active");
+          $opsItem.find(".side-menu a, .bottom-menu a").removeClass("active");
+          return;
+        }
+
+        $opsItem.addClass("active");
+        $opsItem.find(".side-menu li, .bottom-menu li").removeClass("active");
+        $opsItem.find(".side-menu a, .bottom-menu a").removeClass("active");
+
+        let matched = false;
+        $opsItem.find(".side-menu a, .bottom-menu a").each(function () {
+          const href = $(this).attr("href");
+          if (href && (path === href || path.indexOf(href) === 0 || (href.length > 15 && path.includes(href)))) {
+            $(this).addClass("active");
+            $(this).closest("li").addClass("active");
+            matched = true;
+          }
+        });
+
+        // If no specific child matched and on list or main ops
+        if (!matched && (path.includes("/operations/list") || path.endsWith("/operations/") || path.endsWith("/operations"))) {
+          const $firstLink = $opsItem.find(".bottom-menu li:first-child a, .side-menu li:first-child a");
+          $firstLink.addClass("active").closest("li").addClass("active");
+        }
+      } catch (e) {}
     },
 
     closeAllModals: function () {
@@ -595,6 +635,149 @@
         textarea.value = text.substring(0, start) + tag + text.substring(end);
         textarea.focus();
         textarea.selectionStart = textarea.selectionEnd = start + tag.length;
+        $("#tplEditorBody").trigger("input");
+      });
+
+      // Template variable live search filter
+      $(document).on("input", "#tplSearchMergeTags", function () {
+        const q = ($(this).val() || "").toLowerCase().trim();
+        if (!q) {
+          $("#tplMergeTagsWrap .ops-tag-pill").show();
+          $("#tplMergeTagsWrap .ops-var-cat-section").show();
+          return;
+        }
+        $("#tplMergeTagsWrap .ops-tag-pill").each(function () {
+          const tag = ($(this).data("tag") || "").toLowerCase();
+          const name = ($(this).data("name") || "").toLowerCase();
+          const match = tag.indexOf(q) !== -1 || name.indexOf(q) !== -1;
+          $(this).toggle(match);
+        });
+        $("#tplMergeTagsWrap .ops-var-cat-section").each(function () {
+          const count = $(this).find(".ops-tag-pill:visible").length;
+          $(this).toggle(count > 0);
+        });
+      });
+
+      // Visual Channel Selector
+      $(document).on("click", "#tplChannelSegmented .ops-seg-btn", function () {
+        const channel = $(this).data("channel");
+        $("#tplChannelSegmented .ops-seg-btn").removeClass("active");
+        $(this).addClass("active");
+        $("#tplEditorChannel").val(channel);
+        self.syncTemplateEditorUI();
+        self.updateTemplateLivePreview();
+      });
+
+      // Visual Vendor Type Selector
+      $(document).on("click", "#tplVendorSegmented .ops-seg-btn", function () {
+        const vendor = $(this).data("vendor");
+        $("#tplVendorSegmented .ops-seg-btn").removeClass("active");
+        $(this).addClass("active");
+        $("#tplEditorVendorType").val(vendor);
+        self.syncTemplateEditorUI();
+        self.updateTemplateLivePreview();
+      });
+
+      // Live update on typing template body or subject
+      $(document).on("input", "#tplEditorBody", function () {
+        self.updateTemplateLivePreview();
+      });
+
+      $(document).on("input", "#tplEditorSubject", function () {
+        self.updateTemplateLivePreview();
+      });
+
+      // Preview Mode switcher: Sample Data vs Raw Tags
+      $(document).on("click", ".ops-prev-mode-btn", function () {
+        $(".ops-prev-mode-btn").removeClass("active");
+        $(this).addClass("active");
+        self.templatePreviewMode = $(this).data("mode") || "sample";
+        self.updateTemplateLivePreview();
+      });
+
+      // Copy Preview Text button
+      $(document).on("click", "#btnCopyTplPreview", function () {
+        const channel = $("#tplEditorChannel").val();
+        let textToCopy = "";
+        if (channel === "email") {
+          textToCopy = $("#tplEmailBodyContent").text() || $("#tplEditorBody").val();
+        } else {
+          textToCopy = $("#tplWaBubbleContent").text() || $("#tplEditorBody").val();
+        }
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(textToCopy).then(function () {
+            const $btn = $("#btnCopyTplPreview");
+            const orig = $btn.html();
+            $btn.html('<i class="fi fi-rr-check text-emerald"></i> Copied!');
+            setTimeout(function () { $btn.html(orig); }, 2000);
+          });
+        }
+      });
+
+      // Formatting Toolbar Buttons
+      function wrapTextareaSelection(prefix, suffix, defaultPlaceholder) {
+        const textarea = document.getElementById("tplEditorBody");
+        if (!textarea) return;
+        const start = textarea.selectionStart;
+        const end = textarea.selectionEnd;
+        const selText = textarea.value.substring(start, end) || defaultPlaceholder;
+        const replacement = prefix + selText + suffix;
+        textarea.value = textarea.value.substring(0, start) + replacement + textarea.value.substring(end);
+        textarea.focus();
+        textarea.selectionStart = start + prefix.length;
+        textarea.selectionEnd = start + prefix.length + selText.length;
+        $("#tplEditorBody").trigger("input");
+      }
+
+      $(document).on("click", "#btnTplFormatBold", function () {
+        wrapTextareaSelection("*", "*", "bold text");
+      });
+
+      $(document).on("click", "#btnTplFormatItalic", function () {
+        wrapTextareaSelection("_", "_", "italic text");
+      });
+
+      $(document).on("click", "#btnTplFormatStrike", function () {
+        wrapTextareaSelection("~", "~", "strike text");
+      });
+
+      $(document).on("click", "#btnTplFormatCode", function () {
+        wrapTextareaSelection("```", "```", "code");
+      });
+
+      $(document).on("click", "#btnTplFormatBullet", function () {
+        const textarea = document.getElementById("tplEditorBody");
+        if (!textarea) return;
+        const start = textarea.selectionStart;
+        const end = textarea.selectionEnd;
+        const text = textarea.value;
+        const bullet = "\n• ";
+        textarea.value = text.substring(0, start) + bullet + text.substring(end);
+        textarea.focus();
+        textarea.selectionStart = textarea.selectionEnd = start + bullet.length;
+        $("#tplEditorBody").trigger("input");
+      });
+
+      $(document).on("click", ".ops-emoji-btn", function () {
+        const emoji = $(this).data("emoji");
+        const textarea = document.getElementById("tplEditorBody");
+        if (!textarea) return;
+        const start = textarea.selectionStart;
+        const end = textarea.selectionEnd;
+        const text = textarea.value;
+        textarea.value = text.substring(0, start) + emoji + text.substring(end);
+        textarea.focus();
+        textarea.selectionStart = textarea.selectionEnd = start + emoji.length;
+        $("#tplEditorBody").trigger("input");
+      });
+
+      // Reset to Standard Preset button
+      $(document).on("click", "#btnTplRestorePreset", function () {
+        const vendor = $("#tplEditorVendorType").val() || "hotel";
+        const channel = $("#tplEditorChannel").val() || "whatsapp";
+        if (confirm("Restore the standard recommended preset for " + vendor.toUpperCase() + " (" + channel.toUpperCase() + ")? Any custom edits in the body will be replaced.")) {
+          self.restoreTemplatePreset(channel, vendor);
+        }
       });
 
       // 24. Booking Requests Ledger Filter & Pagination
@@ -1730,23 +1913,31 @@
 
       let html = "";
       templates.forEach(function (t) {
+        let vendorIcon = "fi-rr-bed";
+        if (t.vendor_type === "transport") vendorIcon = "fi-rr-car";
+        if (t.vendor_type === "activity") vendorIcon = "fi-rr-flag";
+
+        const tagMatches = (t.body || "").match(/\{[a-zA-Z0-9_]+\}/g) || [];
+        const tagCount = Array.from(new Set(tagMatches)).length;
+
         html += '<div class="ops-template-card" data-channel="' + t.channel + '" data-vendor="' + t.vendor_type + '">' +
           '<div class="ops-tpl-card-header">' +
             '<div>' +
               '<div class="ops-tpl-title">' + t.title + '</div>' +
               '<div class="ops-lead-sub mt-4">' +
-                '<span><i class="' + (t.channel === "whatsapp" ? "fi fi-brands-whatsapp text-emerald" : "fi fi-rr-envelope text-blue") + '"></i> ' + t.channel.toUpperCase() + '</span>' +
-                '<span>Service: ' + t.vendor_type.toUpperCase() + '</span>' +
+                '<span class="' + (t.channel === "whatsapp" ? "text-emerald font-weight-bold" : "text-blue font-weight-bold") + '"><i class="' + (t.channel === "whatsapp" ? "fi fi-brands-whatsapp" : "fi fi-rr-envelope") + '"></i> ' + t.channel.toUpperCase() + '</span>' +
+                '<span><i class="fi ' + vendorIcon + '"></i> ' + t.vendor_type.toUpperCase() + '</span>' +
+                '<span class="text-muted"><i class="fi fi-rr-magic-wand"></i> ' + tagCount + ' vars</span>' +
               '</div>' +
             '</div>' +
-            (t.is_default ? '<span class="ops-status-badge badge-approved">Default</span>' : '<button type="button" class="btn-ops-action btn-set-default-template" data-id="' + t.id + '">Set Default</button>') +
+            (t.is_default ? '<span class="ops-status-badge badge-approved"><i class="fi fi-rr-star"></i> Default</span>' : '<button type="button" class="btn-ops-action btn-set-default-template" data-id="' + t.id + '" title="Make default for this channel and vendor">Set Default</button>') +
           '</div>' +
           '<div class="ops-tpl-body-preview">' + (t.body || "") + '</div>' +
           '<div class="ops-tpl-footer">' +
-            '<span class="text-muted font-11">Updated: ' + t.updated_at + '</span>' +
+            '<span class="text-muted font-11"><i class="fi fi-rr-clock"></i> ' + (t.updated_at || "Recent") + '</span>' +
             '<div class="ops-action-btn-group">' +
               '<button type="button" class="btn-ops-action btn-edit-template" data-id="' + t.id + '"><i class="fi fi-rr-edit"></i> Edit</button>' +
-              '<button type="button" class="btn-ops-action text-rose btn-delete-template" data-id="' + t.id + '"><i class="fi fi-rr-trash"></i></button>' +
+              '<button type="button" class="btn-ops-action text-rose btn-delete-template" data-id="' + t.id + '" title="Delete template"><i class="fi fi-rr-trash"></i></button>' +
             '</div>' +
           '</div>' +
         '</div>';
@@ -1768,24 +1959,311 @@
 
     openTemplateEditorModal: function (tpl) {
       this.closeAllModals();
+      this.templatePreviewMode = "sample";
+      $("#btnTplModeSample").addClass("active");
+      $("#btnTplModeRaw").removeClass("active");
+
       if (tpl) {
         $("#tplEditorModalTitle").text("Edit Template: " + tpl.title);
         $("#tplEditorId").val(tpl.id);
-        $("#tplEditorChannel").val(tpl.channel);
-        $("#tplEditorVendorType").val(tpl.vendor_type);
-        $("#tplEditorTitle").val(tpl.title);
+        $("#tplEditorChannel").val(tpl.channel || "whatsapp");
+        $("#tplEditorVendorType").val(tpl.vendor_type || "hotel");
+        $("#tplEditorTitle").val(tpl.title || "");
         $("#tplEditorSubject").val(tpl.subject || "");
         $("#tplEditorBody").val(tpl.body || "");
         $("#tplEditorIsDefault").prop("checked", tpl.is_default);
       } else {
         $("#tplEditorModalTitle").text("Create Request Template");
         $("#tplEditorId").val(0);
+        $("#tplEditorChannel").val("whatsapp");
+        $("#tplEditorVendorType").val("hotel");
         $("#tplEditorTitle").val("");
         $("#tplEditorSubject").val("");
         $("#tplEditorBody").val("");
         $("#tplEditorIsDefault").prop("checked", false);
       }
+
+      this.syncTemplateEditorUI();
+      this.updateTemplateLivePreview();
+
       $("#modalOpsTemplateEditor").addClass("active is-active");
+    },
+
+    syncTemplateEditorUI: function () {
+      const channel = $("#tplEditorChannel").val() || "whatsapp";
+      const vendor = $("#tplEditorVendorType").val() || "hotel";
+
+      // 1. Sync segmented buttons
+      $("#tplChannelSegmented .ops-seg-btn").removeClass("active");
+      $("#tplChannelSegmented .ops-seg-btn[data-channel='" + channel + "']").addClass("active");
+
+      $("#tplVendorSegmented .ops-seg-btn").removeClass("active");
+      $("#tplVendorSegmented .ops-seg-btn[data-vendor='" + vendor + "']").addClass("active");
+
+      // 2. Channel Badges & Subject Field
+      if (channel === "email") {
+        $("#tplEditorHeaderIconBox").removeClass("icon-emerald").addClass("icon-blue");
+        $("#tplEditorHeaderIcon").attr("class", "fi fi-rr-envelope");
+        $("#tplEditorChannelBadge").attr("class", "ops-tpl-channel-badge email-badge").html('<i class="fi fi-rr-envelope"></i> <span>Email Mode</span>');
+        $("#tplEditorSubjectWrap").removeClass("d-none");
+        $("#tplWaPreviewFrame").addClass("d-none");
+        $("#tplEmailPreviewFrame").removeClass("d-none");
+        $("#tplFormattingTip").html('<i class="fi fi-rr-info"></i> HTML and table tags supported for email templates.');
+      } else {
+        $("#tplEditorHeaderIconBox").removeClass("icon-blue").addClass("icon-emerald");
+        $("#tplEditorHeaderIcon").attr("class", "fi fi-brands-whatsapp");
+        $("#tplEditorChannelBadge").attr("class", "ops-tpl-channel-badge wa-badge").html('<i class="fi fi-brands-whatsapp"></i> <span>WhatsApp Mode</span>');
+        $("#tplEditorSubjectWrap").addClass("d-none");
+        $("#tplWaPreviewFrame").removeClass("d-none");
+        $("#tplEmailPreviewFrame").addClass("d-none");
+        $("#tplFormattingTip").html('<i class="fi fi-rr-info"></i> WhatsApp formatting: <strong>*bold*</strong>, <em>_italic_</em>, <s>~strike~</s>');
+      }
+
+      // 3. Vendor Subtitle & Contact Avatar
+      let vendorLabel = "Hotel / Property Reservation";
+      let avatarIcon = "🏨";
+      let sampleContact = "The Grand Palace Srinagar";
+      let sampleStatus = "online • Hotel Reservation Desk";
+
+      if (vendor === "transport") {
+        vendorLabel = "Cab / Transporter Logistics";
+        avatarIcon = "🚗";
+        sampleContact = "Kashmir Wheels Taxi Logistics";
+        sampleStatus = "online • Transport Fleet Manager";
+      } else if (vendor === "activity") {
+        vendorLabel = "Activity & Excursion Booking";
+        avatarIcon = "⛵";
+        sampleContact = "Gulmarg Adventure Excursions";
+        sampleStatus = "online • Excursion Desk";
+      }
+
+      $("#tplEditorModalSubtitle").text(vendorLabel);
+      $("#tplWaAvatar").text(avatarIcon);
+      $("#tplWaContactName").text(sampleContact);
+      $("#tplWaContactStatus").text(sampleStatus);
+      $("#tplEmailRecipientPreview").text(sampleContact + " <reservations@" + vendor + ".com>");
+    },
+
+    getSampleDataMap: function (vendorType) {
+      if (vendorType === "transport") {
+        return {
+          "{vendor_name}": "Kashmir Wheels Taxi Logistics",
+          "{vendor_contact}": "+91 94190 12345",
+          "{guest_name}": "Rajesh & Priya Sharma",
+          "{guest_phone}": "+91 98765 43210",
+          "{pax_adults}": "2",
+          "{pax_children}": "1",
+          "{vehicle_type}": "Innova Crysta (7-Seater AC)",
+          "{pickup_location}": "Srinagar International Airport (SXR)",
+          "{drop_location}": "The Grand Palace Srinagar",
+          "{pickup_date_time}": "24 Dec 2026, 11:30 AM",
+          "{check_in}": "24 Dec 2026",
+          "{check_out}": "27 Dec 2026",
+          "{nights}": "3",
+          "{room_category}": "Airport Transfer & Sightseeing",
+          "{room_count}": "1",
+          "{meal_plan}": "N/A",
+          "{special_instructions}": "Luggage: 3 large trolley bags. Hindi/English speaking driver preferred.",
+          "{agency_name}": "Aleya Travels",
+          "{ops_manager_name}": "Amit Verma",
+          "{ops_manager_phone}": "+91 98111 22334"
+        };
+      }
+      if (vendorType === "activity") {
+        return {
+          "{vendor_name}": "Gulmarg Adventure Excursions",
+          "{vendor_contact}": "+91 94191 56789",
+          "{guest_name}": "Rajesh & Priya Sharma",
+          "{guest_phone}": "+91 98765 43210",
+          "{pax_adults}": "2",
+          "{pax_children}": "1",
+          "{vehicle_type}": "Gondola Phase 1 & 2 + Snowmobile",
+          "{pickup_location}": "Gulmarg Base Station",
+          "{drop_location}": "Kongdoori Mountain Point",
+          "{pickup_date_time}": "25 Dec 2026, 10:00 AM",
+          "{check_in}": "25 Dec 2026",
+          "{check_out}": "25 Dec 2026",
+          "{nights}": "1 Day",
+          "{room_category}": "VIP Gondola Phase 1 & 2 Passes",
+          "{room_count}": "3 Passes",
+          "{meal_plan}": "Hot Kashmiri Kahwa & Snacks Included",
+          "{special_instructions}": "Please assign experienced certified guide for snowmobile ride.",
+          "{agency_name}": "Aleya Travels",
+          "{ops_manager_name}": "Amit Verma",
+          "{ops_manager_phone}": "+91 98111 22334"
+        };
+      }
+      // Default: Hotel
+      return {
+        "{vendor_name}": "The Grand Palace Srinagar",
+        "{vendor_contact}": "+91 194 250 1234",
+        "{guest_name}": "Rajesh & Priya Sharma",
+        "{guest_phone}": "+91 98765 43210",
+        "{pax_adults}": "2",
+        "{pax_children}": "1",
+        "{check_in}": "24 Dec 2026",
+        "{check_out}": "27 Dec 2026",
+        "{nights}": "3",
+        "{room_category}": "Deluxe Valley View Room",
+        "{room_count}": "2",
+        "{meal_plan}": "MAP (Breakfast + Dinner)",
+        "{vehicle_type}": "Innova Crysta",
+        "{pickup_location}": "Srinagar Airport (SXR)",
+        "{drop_location}": "The Grand Palace Srinagar",
+        "{pickup_date_time}": "24 Dec 2026, 11:30 AM",
+        "{special_instructions}": "Quiet room on higher floor with valley view. Honeymoon couple.",
+        "{agency_name}": "Aleya Travels",
+        "{ops_manager_name}": "Amit Verma",
+        "{ops_manager_phone}": "+91 98111 22334"
+      };
+    },
+
+    formatWhatsAppPreview: function (rawText, isSampleMode, sampleMap) {
+      if (!rawText) return '<em class="text-muted">Empty message body. Type or click variables on the left to compose.</em>';
+
+      let text = rawText;
+
+      const recognizedTags = [
+        "{vendor_name}", "{vendor_contact}", "{guest_name}", "{guest_phone}",
+        "{pax_adults}", "{pax_children}", "{check_in}", "{check_out}",
+        "{nights}", "{room_category}", "{room_count}", "{meal_plan}",
+        "{vehicle_type}", "{pickup_location}", "{drop_location}",
+        "{pickup_date_time}", "{special_instructions}", "{agency_name}",
+        "{ops_manager_name}", "{ops_manager_phone}"
+      ];
+
+      // Escape HTML
+      text = text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
+      if (isSampleMode) {
+        Object.keys(sampleMap).forEach(function (tag) {
+          const regex = new RegExp(tag.replace(/([{}])/g, "\\$1"), "g");
+          text = text.replace(regex, '<span class="ops-val-highlight">' + sampleMap[tag] + '</span>');
+        });
+      } else {
+        recognizedTags.forEach(function (tag) {
+          const regex = new RegExp(tag.replace(/([{}])/g, "\\$1"), "g");
+          text = text.replace(regex, '<span class="ops-tag-raw-highlight">' + tag + '</span>');
+        });
+      }
+
+      // Highlight any unrecognized tags
+      text = text.replace(/\{([a-zA-Z0-9_]+)\}/g, function (match) {
+        if (match.indexOf('class="') !== -1) return match;
+        return '<span class="text-rose font-weight-bold" title="Unrecognized tag">' + match + '</span>';
+      });
+
+      // Parse WhatsApp formatting:
+      text = text.replace(/```([^`]+)```/g, '<code>$1</code>');
+      text = text.replace(/\*([^\*\n]+)\*/g, '<strong>$1</strong>');
+      text = text.replace(/(^|\s)_([^_]+)_(?=\s|$|[.,!?])/g, '$1<em>$2</em>');
+      text = text.replace(/~([^~\n]+)~/g, '<del>$1</del>');
+
+      text = text.replace(/\n/g, '<br>');
+
+      return text;
+    },
+
+    formatEmailPreview: function (rawBody, rawSubject, isSampleMode, sampleMap) {
+      let bodyText = rawBody || "";
+      let subjText = rawSubject || "";
+
+      if (isSampleMode) {
+        Object.keys(sampleMap).forEach(function (tag) {
+          const regex = new RegExp(tag.replace(/([{}])/g, "\\$1"), "g");
+          bodyText = bodyText.replace(regex, sampleMap[tag]);
+          subjText = subjText.replace(regex, sampleMap[tag]);
+        });
+      }
+
+      $("#tplEmailSubjectPreview").text(subjText || "No Subject Specified");
+
+      if (!bodyText) {
+        return '<p class="text-muted"><em>Template body is empty.</em></p>';
+      }
+
+      if (/<[a-z][\s\S]*>/i.test(bodyText)) {
+        return bodyText;
+      }
+      return bodyText.split("\n\n").map(function (para) {
+        return '<p>' + para.replace(/\n/g, "<br>") + '</p>';
+      }).join("");
+    },
+
+    updateTemplateStatsAndDiagnostics: function (rawBody) {
+      const chars = (rawBody || "").length;
+      const words = (rawBody || "").trim() ? (rawBody || "").trim().split(/\s+/).length : 0;
+      
+      const tagMatches = (rawBody || "").match(/\{[a-zA-Z0-9_]+\}/g) || [];
+      const uniqueVars = Array.from(new Set(tagMatches));
+
+      $("#tplStatChars").text(chars);
+      $("#tplStatWords").text(words);
+      $("#tplStatVars").text(uniqueVars.length);
+
+      const recognizedTags = [
+        "{vendor_name}", "{vendor_contact}", "{guest_name}", "{guest_phone}",
+        "{pax_adults}", "{pax_children}", "{check_in}", "{check_out}",
+        "{nights}", "{room_category}", "{room_count}", "{meal_plan}",
+        "{vehicle_type}", "{pickup_location}", "{drop_location}",
+        "{pickup_date_time}", "{special_instructions}", "{agency_name}",
+        "{ops_manager_name}", "{ops_manager_phone}"
+      ];
+
+      const invalidTags = uniqueVars.filter(function (t) {
+        return recognizedTags.indexOf(t) === -1;
+      });
+
+      if (invalidTags.length > 0) {
+        $("#tplDiagStatus").removeClass("valid").addClass("warning");
+        $("#tplDiagStatus i").attr("class", "fi fi-rr-exclamation");
+        $("#tplDiagText").html('<strong>Notice:</strong> Unknown variable ' + invalidTags.join(", "));
+        $("#tplDiagCount").text(uniqueVars.length + ' tags detected (' + invalidTags.length + ' unrecognized)');
+      } else {
+        $("#tplDiagStatus").removeClass("warning").addClass("valid");
+        $("#tplDiagStatus i").attr("class", "fi fi-rr-shield-check");
+        $("#tplDiagText").text("All " + uniqueVars.length + " dynamic variables verified & ready for dispatch");
+        $("#tplDiagCount").text(uniqueVars.length > 0 ? "✓ Ready" : "No variables used");
+      }
+    },
+
+    updateTemplateLivePreview: function () {
+      const channel = $("#tplEditorChannel").val() || "whatsapp";
+      const vendor = $("#tplEditorVendorType").val() || "hotel";
+      const body = $("#tplEditorBody").val() || "";
+      const subject = $("#tplEditorSubject").val() || "";
+      const isSample = (this.templatePreviewMode || "sample") === "sample";
+
+      const sampleMap = this.getSampleDataMap(vendor);
+
+      if (channel === "email") {
+        const renderedEmail = this.formatEmailPreview(body, subject, isSample, sampleMap);
+        $("#tplEmailBodyContent").html(renderedEmail);
+      } else {
+        const renderedWa = this.formatWhatsAppPreview(body, isSample, sampleMap);
+        $("#tplWaBubbleContent").html(renderedWa);
+      }
+
+      this.updateTemplateStatsAndDiagnostics(body);
+    },
+
+    restoreTemplatePreset: function (channel, vendor) {
+      if (channel === "whatsapp" && vendor === "hotel") {
+        $("#tplEditorTitle").val("Hotel Booking Request (Standard)");
+        $("#tplEditorBody").val("Dear *{vendor_name}*,\n\nGreetings from *{agency_name}*!\n\nKindly confirm availability and reserve room(s) as per following booking request:\n\n🏨 *Property:* {vendor_name}\n👤 *Guest Name:* {guest_name} ({pax_adults} Adults, {pax_children} Children)\n📅 *Check-In:* {check_in}\n📅 *Check-Out:* {check_out} ({nights} Nights)\n🛏️ *Room Type:* {room_category} ({room_count} Rooms)\n🍽️ *Meal Plan:* {meal_plan}\n\n📌 *Special Remarks:* {special_instructions}\n\nPlease share the Confirmation / Booking Reference ID at your earliest.\n\nThank you,\n*{ops_manager_name}* | Operations Desk\n📱 {ops_manager_phone}");
+      } else if (channel === "email" && vendor === "hotel") {
+        $("#tplEditorTitle").val("Formal Hotel Reservation Email");
+        $("#tplEditorSubject").val("Booking Request: {guest_name} - {nights}N - Check-in {check_in} - {agency_name}");
+        $("#tplEditorBody").val('<p>Dear Reservations Team (<strong>{vendor_name}</strong>),</p><p>Warm greetings from <strong>{agency_name}</strong>.</p><p>Please find our booking request below and confirm with your reservation reference number:</p><table style="width:100%; border-collapse:collapse; margin:16px 0; font-size:13px;"><tr><td style="padding:8px; border:1px solid #e2e8f0; font-weight:bold; background:#f8fafc;">Primary Guest</td><td style="padding:8px; border:1px solid #e2e8f0;">{guest_name} ({pax_adults} Adults, {pax_children} Kids)</td></tr><tr><td style="padding:8px; border:1px solid #e2e8f0; font-weight:bold; background:#f8fafc;">Check-In / Out</td><td style="padding:8px; border:1px solid #e2e8f0;">{check_in} to {check_out} ({nights} Nights)</td></tr><tr><td style="padding:8px; border:1px solid #e2e8f0; font-weight:bold; background:#f8fafc;">Rooms & Category</td><td style="padding:8px; border:1px solid #e2e8f0;">{room_count} x {room_category}</td></tr><tr><td style="padding:8px; border:1px solid #e2e8f0; font-weight:bold; background:#f8fafc;">Meal Plan</td><td style="padding:8px; border:1px solid #e2e8f0;">{meal_plan}</td></tr><tr><td style="padding:8px; border:1px solid #e2e8f0; font-weight:bold; background:#f8fafc;">Special Notes</td><td style="padding:8px; border:1px solid #e2e8f0;">{special_instructions}</td></tr></table><p>Kindly acknowledge receipt and confirm by replying to this email.</p><p>Best regards,<br><strong>{ops_manager_name}</strong><br>Operations Desk | {agency_name}<br>Contact: {ops_manager_phone}</p>');
+      } else if (channel === "whatsapp" && vendor === "transport") {
+        $("#tplEditorTitle").val("Cab / Vehicle Booking Request");
+        $("#tplEditorBody").val("Hello *{vendor_name}*,\n\nNew cab booking request from *{agency_name}*:\n\n🚗 *Vehicle Required:* {vehicle_type}\n👤 *Guest Name:* {guest_name}\n📱 *Guest Contact:* {guest_phone}\n👥 *Total Pax:* {pax_adults} Adults, {pax_children} Kids\n📍 *Pickup Location:* {pickup_location}\n📍 *Drop Location:* {drop_location}\n⏰ *Pickup Date & Time:* {pickup_date_time}\n\n📌 *Notes:* {special_instructions}\n\nPlease allocate driver and share vehicle number & driver contact.\n\nRegards,\n*{ops_manager_name}* | {ops_manager_phone}");
+      } else if (channel === "whatsapp" && vendor === "activity") {
+        $("#tplEditorTitle").val("Activity & Guide Slot Booking");
+        $("#tplEditorBody").val("Dear *{vendor_name}*,\n\nPlease block the following excursion slot for our guests:\n\n🎯 *Activity/Tour:* {room_category}\n👤 *Guest:* {guest_name} ({pax_adults} Adults, {pax_children} Kids)\n📅 *Date:* {check_in}\n⏰ *Slot Time:* {pickup_date_time}\n\nKindly confirm slot availability.\n\n*{agency_name}* Operations Desk");
+      }
+      this.syncTemplateEditorUI();
+      this.updateTemplateLivePreview();
     },
 
     saveTemplate: function () {

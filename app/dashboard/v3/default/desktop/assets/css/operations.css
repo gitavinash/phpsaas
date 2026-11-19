@@ -2472,20 +2472,1037 @@
 }
 
 .ops-tag-pill {
-  padding: 3px 8px;
+  padding: 4px 10px;
   background: #ffffff;
   border: 1px solid #c7d2fe;
-  border-radius: 12px;
+  border-radius: 8px;
   font-size: 11px;
-  font-family: monospace;
+  font-family: var(--font-mono, "SFMono-Regular", Consolas, monospace);
   color: var(--ops-brand);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  user-select: none;
+}
+
+.ops-tag-pill:hover {
+  background: #4f46e5;
+  border-color: #4338ca;
+  color: #ffffff;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(79, 70, 229, 0.2);
+}
+
+.ops-tag-pill .tag-label {
+  font-size: 10px;
+  color: #64748b;
+  font-weight: 500;
+  border-left: 1px solid rgba(0, 0, 0, 0.1);
+  padding-left: 6px;
+}
+
+.ops-tag-pill:hover .tag-label {
+  color: rgba(255, 255, 255, 0.9);
+  border-left-color: rgba(255, 255, 255, 0.3);
+}
+
+/* =========================================================================
+   TEMPLATE EDITOR MODAL & WORKSTATION (ENHANCED VISUAL EXPERIENCE)
+   ========================================================================= */
+.v3-modal-overlay#modalOpsTemplateEditor .v3-modal-dialog,
+#modalOpsTemplateEditor .v3-modal-dialog.ops-template-editor-dialog,
+#modalOpsTemplateEditor .v3-modal-dialog-xl,
+#modalOpsTemplateEditor .v3-modal-dialog,
+.v3-modal-dialog.ops-template-editor-dialog {
+  max-width: 1260px !important;
+  width: 95vw !important;
+  max-height: 92vh !important;
+  height: 880px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  border-radius: 16px !important;
+  box-shadow: 0 25px 60px -15px rgba(15, 23, 42, 0.35) !important;
+  background: #ffffff !important;
+  overflow: hidden !important;
+  margin: auto !important;
+}
+
+/* Channel Header Badges */
+.ops-tpl-channel-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+}
+
+.ops-tpl-channel-badge.wa-badge {
+  background: #dcfce7;
+  color: #15803d;
+  border: 1px solid #bbf7d0;
+}
+
+.ops-tpl-channel-badge.email-badge {
+  background: #dbeafe;
+  color: #1d4ed8;
+  border: 1px solid #bfdbfe;
+}
+
+/* Editor Modal Subtitle */
+.ops-modal-sub-details {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 2px;
+  font-size: 12px;
+  color: #64748b;
+}
+
+.ops-modal-sub-dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #cbd5e1;
+}
+
+/* Config Items */
+.ops-config-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.ops-config-label {
+  font-size: 10.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  color: #64748b;
+}
+
+/* Visual Segmented Selectors */
+.ops-segmented-selector {
+  display: inline-flex;
+  background: #e2e8f0;
+  padding: 3px;
+  border-radius: 8px;
+  gap: 2px;
+}
+
+.ops-seg-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  border: none;
+  background: transparent;
+  color: #475569;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.ops-seg-btn:hover {
+  color: #0f172a;
+}
+
+.ops-seg-btn.active {
+  background: #ffffff;
+  color: #0f172a;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.ops-seg-btn.seg-wa.active {
+  background: #25d366;
+  color: #ffffff;
+}
+
+.ops-seg-btn.seg-email.active {
+  background: #2563eb;
+  color: #ffffff;
+}
+
+/* Template Name Input */
+.ops-tpl-name-input {
+  font-size: 13px;
+  font-weight: 600;
+  color: #0f172a;
+  background: #f8fafc;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 7px 12px;
+  width: 100%;
+  box-sizing: border-box;
+  transition: border-color 0.15s ease;
+}
+
+.ops-tpl-name-input:focus {
+  border-color: #6366f1;
+  outline: none;
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12);
+}
+
+/* Default Switch in Config Bar */
+.ops-default-toggle-box {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #f8fafc;
+  border: 1px solid #cbd5e1;
+  padding: 6px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.15s ease;
+}
+
+.ops-default-toggle-box:hover {
+  border-color: #f59e0b;
+}
+
+.ops-default-toggle-box input[type="checkbox"] {
+  cursor: pointer;
+  width: 16px;
+  height: 16px;
+  accent-color: #f59e0b;
+}
+
+.ops-default-toggle-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #334155;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.ops-default-toggle-label i {
+  color: #f59e0b;
+}
+
+/* Workstation Body: 2 Columns (LEFT = PREVIEW, RIGHT = CUSTOMIZATION & EDITOR) */
+.ops-tpl-workstation-body {
+  display: grid;
+  grid-template-columns: 430px 1fr;
+  gap: 20px;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  padding: 16px 22px;
+  background: #f1f5f9;
+}
+
+/* Left Column: Live Recipient Preview */
+.ops-tpl-left-preview-col {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* Right Column: Customization Options & Composer */
+.ops-tpl-right-editor-col {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-height: 0;
+  overflow-y: auto;
+  padding-right: 6px;
+}
+
+/* Customization Options Card inside Right Column */
+.ops-tpl-customization-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.ops-tpl-custom-grid {
+  display: grid;
+  grid-template-columns: auto auto auto;
+  gap: 12px;
+  align-items: flex-end;
+}
+
+.ops-tpl-name-row {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 100%;
+}
+
+/* Email Subject Banner */
+.ops-tpl-subject-row {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 8px 12px;
+}
+
+.ops-tpl-subject-input {
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #0f172a;
+  outline: none;
+  width: 100%;
+  box-sizing: border-box;
+  background: #ffffff;
+}
+
+.ops-tpl-subject-input:focus {
+  border-color: #2563eb;
+}
+
+.ops-tpl-subject-input::placeholder {
+  color: #94a3b8;
+  font-weight: 400;
+}
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 10px 14px;
+}
+
+.ops-tpl-subject-input {
+  border: none;
+  font-size: 13px;
+  font-weight: 600;
+  color: #0f172a;
+  outline: none;
+  width: 100%;
+}
+
+.ops-tpl-subject-input::placeholder {
+  color: #94a3b8;
+  font-weight: 400;
+}
+
+/* Categorized Merge Variables Box */
+.ops-tpl-vars-accordion {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.ops-tpl-vars-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  background: #f8fafc;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.ops-tpl-vars-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: #334155;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.ops-tpl-vars-title i {
+  color: #6366f1;
+}
+
+.ops-tpl-var-search-wrap {
+  position: relative;
+  width: 220px;
+}
+
+.ops-tpl-var-search-wrap i {
+  position: absolute;
+  left: 9px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 11px;
+  color: #94a3b8;
+}
+
+.ops-tpl-var-search {
+  width: 100%;
+  padding: 4px 8px 4px 28px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  font-size: 11px;
+  color: #0f172a;
+  outline: none;
+  background: #ffffff;
+}
+
+.ops-tpl-var-search:focus {
+  border-color: #6366f1;
+}
+
+.ops-tpl-vars-content {
+  padding: 12px 14px;
+  max-height: 160px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.ops-var-cat-section {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.ops-var-cat-title {
+  font-size: 10.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #64748b;
+  letter-spacing: 0.3px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.ops-var-cat-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+/* Template Body Composer Container */
+.ops-tpl-composer-box {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 260px;
+  overflow: hidden;
+}
+
+/* Formatting & Emoji Toolbar */
+.ops-tpl-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 7px 12px;
+  background: #f8fafc;
+  border-bottom: 1px solid #e2e8f0;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.ops-tpl-tools-left {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.ops-tool-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: 1px solid transparent;
+  background: transparent;
+  border-radius: 6px;
+  color: #475569;
+  font-size: 12px;
+  font-weight: 700;
   cursor: pointer;
   transition: all 0.12s ease;
 }
 
-.ops-tag-pill:hover {
-  background: var(--ops-brand);
+.ops-tool-btn:hover {
+  background: #e2e8f0;
+  color: #0f172a;
+}
+
+.ops-tool-btn.code-font {
+  font-family: monospace;
+}
+
+.ops-tool-divider {
+  width: 1px;
+  height: 18px;
+  background: #cbd5e1;
+  margin: 0 4px;
+}
+
+.ops-emoji-pills {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.ops-emoji-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border: none;
+  background: transparent;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.12s ease;
+}
+
+.ops-emoji-btn:hover {
+  background: #e2e8f0;
+  transform: scale(1.15);
+}
+
+.ops-tpl-tools-right {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.ops-btn-tool-action {
+  font-size: 11px;
+  font-weight: 600;
+  color: #4f46e5;
+  background: #eef2ff;
+  border: 1px solid #c7d2fe;
+  padding: 4px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  transition: all 0.12s ease;
+}
+
+.ops-btn-tool-action:hover {
+  background: #4f46e5;
   color: #ffffff;
+}
+
+/* Template Textarea */
+.ops-tpl-textarea {
+  flex: 1;
+  width: 100%;
+  border: none;
+  padding: 14px 16px;
+  font-family: var(--font-mono, "SFMono-Regular", Consolas, monospace);
+  font-size: 13px;
+  line-height: 1.6;
+  color: #1e293b;
+  resize: none;
+  outline: none;
+  background: #ffffff;
+  min-height: 200px;
+}
+
+.ops-tpl-textarea::placeholder {
+  color: #94a3b8;
+  font-family: inherit;
+}
+
+/* Textarea Stats Bar */
+.ops-tpl-composer-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 14px;
+  background: #f8fafc;
+  border-top: 1px solid #e2e8f0;
+  font-size: 11.5px;
+  color: #64748b;
+}
+
+.ops-tpl-stats {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.ops-tpl-stat-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.ops-tpl-stat-item strong {
+  color: #0f172a;
+}
+
+.ops-tpl-tip {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  color: #64748b;
+}
+
+/* =========================================================================
+   LEFT COLUMN: REAL-TIME INTERACTIVE DEVICE SIMULATOR
+   ========================================================================= */
+.ops-preview-header-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 8px 14px;
+}
+
+.ops-preview-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: #1e293b;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.ops-preview-mode-switch {
+  display: inline-flex;
+  background: #e2e8f0;
+  padding: 2px;
+  border-radius: 6px;
+  gap: 2px;
+}
+
+.ops-prev-mode-btn {
+  font-size: 11px;
+  font-weight: 600;
+  color: #64748b;
+  padding: 3px 8px;
+  border-radius: 4px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.12s ease;
+}
+
+.ops-prev-mode-btn.active {
+  background: #ffffff;
+  color: #0f172a;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+}
+
+.ops-btn-copy-preview {
+  font-size: 11px;
+  font-weight: 600;
+  color: #475569;
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  padding: 4px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  transition: all 0.12s ease;
+}
+
+.ops-btn-copy-preview:hover {
+  background: #e2e8f0;
+  color: #0f172a;
+}
+
+/* WhatsApp Phone Mockup */
+.ops-wa-device-frame {
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.12);
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+
+/* WhatsApp Green App Bar */
+.ops-wa-app-bar {
+  background: #075e54;
+  color: #ffffff;
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+
+.ops-wa-contact-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.ops-wa-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #ffffff;
+  color: #075e54;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 700;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+.ops-wa-contact-meta {
+  display: flex;
+  flex-direction: column;
+}
+
+.ops-wa-contact-name {
+  font-size: 13.5px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.ops-wa-contact-status {
+  font-size: 11px;
+  color: #d1fae5;
+  line-height: 1.2;
+}
+
+.ops-wa-app-icons {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  color: #ffffff;
+  font-size: 15px;
+  opacity: 0.9;
+}
+
+/* WhatsApp Chat Wallpaper Background */
+.ops-wa-chat-canvas {
+  background-color: #efeae2;
+  background-image: radial-gradient(#d5cdc4 1px, transparent 1px);
+  background-size: 16px 16px;
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Chat Date Header */
+.ops-wa-date-banner {
+  align-self: center;
+  background: #ffffff;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+  padding: 4px 12px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #64748b;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+/* WhatsApp Message Bubble */
+.ops-wa-bubble {
+  align-self: flex-end;
+  background: #d9fdd3;
+  border-radius: 8px 0px 8px 8px;
+  box-shadow: 0 1px 1px rgba(11, 20, 26, 0.12);
+  padding: 10px 14px;
+  max-width: 90%;
+  position: relative;
+  margin-right: 4px;
+}
+
+.ops-wa-bubble::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: -6px;
+  width: 0;
+  height: 0;
+  border-left: 6px solid #d9fdd3;
+  border-top: 6px solid transparent;
+  border-bottom: 6px solid transparent;
+}
+
+.ops-wa-bubble-content {
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: #111b21;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.ops-wa-bubble-content strong {
+  font-weight: 700;
+  color: #0c1317;
+}
+
+.ops-wa-bubble-content em {
+  font-style: italic;
+}
+
+.ops-wa-bubble-content del {
+  text-decoration: line-through;
+  opacity: 0.8;
+}
+
+.ops-wa-bubble-content code {
+  font-family: monospace;
+  background: rgba(0, 0, 0, 0.06);
+  padding: 2px 4px;
+  border-radius: 3px;
+  font-size: 11.5px;
+}
+
+/* Highlighted Sample Variables in Preview */
+.ops-val-highlight {
+  background: rgba(16, 185, 129, 0.15);
+  color: #065f46;
+  font-weight: 600;
+  border-bottom: 1px dashed #10b981;
+  padding: 0 2px;
+  border-radius: 2px;
+}
+
+.ops-tag-raw-highlight {
+  background: #e0e7ff;
+  color: #3730a3;
+  font-family: monospace;
+  font-size: 11px;
+  padding: 2px 5px;
+  border-radius: 4px;
+  border: 1px solid #c7d2fe;
+}
+
+/* WhatsApp Message Meta (Time & Blue Ticks) */
+.ops-wa-bubble-meta {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 4px;
+  font-size: 10px;
+  color: #667781;
+  margin-top: 4px;
+}
+
+.ops-wa-ticks {
+  color: #53bdeb;
+  font-size: 12px;
+}
+
+/* Mock WhatsApp Bottom Bar */
+.ops-wa-mock-bottom {
+  background: #f0f2f5;
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-top: 1px solid #e2e8f0;
+  flex-shrink: 0;
+}
+
+.ops-wa-mock-input {
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 6px 14px;
+  font-size: 12px;
+  color: #94a3b8;
+  flex: 1;
+}
+
+.ops-wa-mock-mic {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #00a884;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+}
+
+/* Email Device Frame (Simulator for Email Channel) */
+.ops-email-device-frame {
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.12);
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+
+.ops-email-chrome-bar {
+  background: #f1f5f9;
+  border-bottom: 1px solid #e2e8f0;
+  padding: 8px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.ops-email-dots {
+  display: flex;
+  gap: 5px;
+}
+
+.ops-email-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.ops-email-dot.red { background: #ef4444; }
+.ops-email-dot.yellow { background: #f59e0b; }
+.ops-email-dot.green { background: #10b981; }
+
+.ops-email-chrome-title {
+  font-size: 11px;
+  font-weight: 600;
+  color: #64748b;
+}
+
+.ops-email-header-meta {
+  padding: 12px 16px;
+  border-bottom: 1px solid #e2e8f0;
+  background: #f8fafc;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 12px;
+}
+
+.ops-email-header-line {
+  display: flex;
+  gap: 8px;
+}
+
+.ops-email-header-label {
+  font-weight: 700;
+  color: #64748b;
+  width: 60px;
+  flex-shrink: 0;
+}
+
+.ops-email-header-val {
+  color: #0f172a;
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ops-email-header-subject {
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.ops-email-body-canvas {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 16px;
+  background: #ffffff;
+  font-size: 13px;
+  line-height: 1.6;
+  color: #334155;
+}
+
+/* Variable Diagnostics / Health Checker */
+.ops-tpl-diagnostics-bar {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 8px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 11.5px;
+  color: #475569;
+}
+
+.ops-diag-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.ops-diag-status.valid {
+  color: #15803d;
+  font-weight: 600;
+}
+
+.ops-diag-status.warning {
+  color: #b45309;
+  font-weight: 600;
+}
+
+/* Footer Action Buttons */
+.ops-tpl-footer-notice {
+  font-size: 12px;
+  color: #64748b;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.ops-tpl-footer-notice i {
+  color: #10b981;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .v3-modal-dialog.ops-template-editor-dialog {
+    height: 94vh !important;
+    max-height: none !important;
+  }
+
+  .ops-tpl-workstation-body {
+    grid-template-columns: 1fr;
+    overflow-y: auto;
+  }
+
+  .ops-tpl-left-preview-col,
+  .ops-tpl-right-editor-col {
+    min-height: 460px;
+  }
+
+  .ops-tpl-custom-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
 }
 
 /* Lead View Operations Actions Dropdown */

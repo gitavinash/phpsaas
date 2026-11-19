@@ -4972,9 +4972,9 @@ $(document).ready(function (e) {
 
     function updateActiveSidebar(targetUrl) {
       try {
-        const parsedTarget = new URL(targetUrl, window.location.origin);
-        const path = parsedTarget.pathname;
-        const search = parsedTarget.search;
+        const parsedTarget = new URL(targetUrl || window.location.href, window.location.origin);
+        const path = (parsedTarget.pathname.replace(/\/+$/, "") || "") + "/";
+        const search = parsedTarget.search || "";
 
         // 1. Update Sales Agent Top-Nav if present
         const topNav = document.querySelector(".v3-agent-top-nav");
@@ -4987,14 +4987,16 @@ $(document).ready(function (e) {
             const hrefAttr = link.getAttribute("href");
             if (!hrefAttr) return;
             const linkParsed = new URL(hrefAttr, window.location.origin);
-            if (linkParsed.search) {
-              if (path === linkParsed.pathname && search === linkParsed.search) {
+            const linkPath = (linkParsed.pathname.replace(/\/+$/, "") || "") + "/";
+            const linkSearch = linkParsed.search || "";
+            if (linkSearch) {
+              if (path === linkPath && search === linkSearch) {
                 matchedTopItem = link;
               }
             } else if (!matchedTopItem) {
               if (
-                path === linkParsed.pathname ||
-                (path.startsWith(linkParsed.pathname) && linkParsed.pathname !== "/dashboard/")
+                path === linkPath ||
+                (path.startsWith(linkPath) && linkPath !== "/dashboard/")
               ) {
                 matchedTopItem = link;
               }
@@ -5003,7 +5005,7 @@ $(document).ready(function (e) {
 
           if (matchedTopItem) {
             matchedTopItem.classList.add("active");
-          } else if (path === "/dashboard/" || path === "/dashboard") {
+          } else if (path === "/dashboard/") {
             const homeLink = topNav.querySelector('.v3-top-nav-item[href="/dashboard/"]');
             if (homeLink) homeLink.classList.add("active");
           }
@@ -5014,30 +5016,144 @@ $(document).ready(function (e) {
         if (!sidebar) return;
 
         sidebar
-          .querySelectorAll("li.active")
+          .querySelectorAll("li.active, a.active")
           .forEach((el) => el.classList.remove("active"));
 
+        // If on Dashboard root (/dashboard/ or /dashboard), activate ONLY Dashboard
+        if (path === "/dashboard/") {
+          sidebar.querySelectorAll("nav.side-nav > ul > li").forEach((li) => {
+            const isDashLi = li.getAttribute("data-aside-nav") === "dashboard" || !!li.querySelector(':scope > a[href="/dashboard/"]');
+            if (isDashLi) {
+              li.classList.add("active");
+              const dashLink = li.querySelector(':scope > a[href="/dashboard/"]');
+              if (dashLink) dashLink.classList.add("active");
+            } else {
+              li.classList.remove("active");
+              li.querySelectorAll("li.active, a.active").forEach((el) => el.classList.remove("active"));
+            }
+          });
+          return;
+        }
+
+        // Dedicated check for WhatsApp Device: /integration/whatsapp_web/
+        if (path.includes("/integration/whatsapp_web")) {
+          const waDeviceTopLi = sidebar.querySelector('li[data-aside-nav="integration/whatsapp_web"], li[data-aside-nav="whatsapp-device"]') ||
+                                sidebar.querySelector('a[href*="/integration/whatsapp_web/"]')?.closest("nav.side-nav > ul > li");
+          if (waDeviceTopLi) {
+            waDeviceTopLi.classList.add("active");
+            const subDeviceLinks = waDeviceTopLi.querySelectorAll('.side-menu a[href*="/integration/whatsapp_web"], .bottom-menu a[href*="/integration/whatsapp_web"]');
+            subDeviceLinks.forEach((link) => {
+              link.classList.add("active");
+              const li = link.closest("li");
+              if (li) li.classList.add("active");
+            });
+            return;
+          }
+        }
+
         const links = sidebar.querySelectorAll("a[href]");
-        let matchedLi = null;
+        let bestScore = 0;
+        let bestLinks = [];
+        let matchedTopLevelLi = null;
 
         links.forEach((link) => {
           const hrefAttr = link.getAttribute("href");
-          if (!hrefAttr) return;
-          const linkPath = new URL(hrefAttr, window.location.origin).pathname;
-          if (
-            linkPath === path ||
-            (path.startsWith(linkPath) && linkPath !== "/dashboard/")
+          if (!hrefAttr || hrefAttr.startsWith("javascript:")) return;
+          const linkParsed = new URL(hrefAttr, window.location.origin);
+          const linkPath = (linkParsed.pathname.replace(/\/+$/, "") || "") + "/";
+          const linkSearch = linkParsed.search || "";
+
+          let score = 0;
+          if (linkSearch) {
+            if (path === linkPath && search === linkSearch) {
+              score = 1000 + linkPath.length + linkSearch.length;
+            }
+          } else if (linkPath === path && !search) {
+            score = 800 + linkPath.length;
+          } else if (linkPath === path) {
+            score = 500 + linkPath.length;
+          } else if (
+            linkPath !== "/dashboard/" &&
+            linkPath !== "/" &&
+            path.startsWith(linkPath)
           ) {
-            const li = link.closest("li");
-            if (li) matchedLi = li;
+            if (linkPath.includes("/integration/") && path.includes("/integration/whatsapp_web")) {
+              score = 0;
+            } else {
+              score = 100 + linkPath.length;
+            }
+          }
+
+          if (score > 0) {
+            if (score > bestScore) {
+              bestScore = score;
+              bestLinks = [link];
+            } else if (score === bestScore) {
+              bestLinks.push(link);
+            }
           }
         });
 
-        if (matchedLi) {
-          matchedLi.classList.add("active");
-        } else if (path === "/dashboard/" || path === "/dashboard") {
+        if (bestLinks.length > 0) {
+          bestLinks.forEach((link) => {
+            link.classList.add("active");
+            const li = link.closest("li");
+            if (li) li.classList.add("active");
+            const topLi = link.closest("nav.side-nav > ul > li");
+            if (topLi) {
+              topLi.classList.add("active");
+              matchedTopLevelLi = topLi;
+            }
+          });
+        }
+
+        // Also check if URL contains section keywords for top-level menu items (like /operations, /leads, etc.)
+        if (!matchedTopLevelLi) {
+          const topLevelLis = sidebar.querySelectorAll("nav.side-nav > ul > li");
+          topLevelLis.forEach((topLi) => {
+            const asideNav = topLi.getAttribute("data-aside-nav");
+            if (asideNav && asideNav === "integration" && path.includes("/integration/whatsapp_web")) {
+              return;
+            }
+            if (asideNav && (path.includes("/" + asideNav) || path.includes("/" + asideNav.replace("-", "/")))) {
+              matchedTopLevelLi = topLi;
+              return;
+            }
+            const mainLink = topLi.querySelector(":scope > a[href]");
+            if (!mainLink) return;
+            const mainHref = mainLink.getAttribute("href");
+            if (!mainHref || mainHref.startsWith("javascript:")) return;
+            const mainPath = new URL(mainHref, window.location.origin).pathname.replace(/\/+$/, "");
+            if (mainPath !== "" && mainPath !== "/dashboard") {
+              const seg = mainPath.split("/").pop();
+              if (seg && path.includes("/" + seg)) {
+                matchedTopLevelLi = topLi;
+              }
+            }
+          });
+        }
+
+        if (matchedTopLevelLi) {
+          matchedTopLevelLi.classList.add("active");
+          // If no child was marked active, activate matching sub-links inside this topLi
+          if (bestLinks.length === 0 || !matchedTopLevelLi.querySelector(".side-menu li.active, .bottom-menu li.active")) {
+            const subLinks = matchedTopLevelLi.querySelectorAll(".side-menu a[href], .bottom-menu a[href]");
+            subLinks.forEach((subLink) => {
+              const subHref = subLink.getAttribute("href");
+              if (!subHref) return;
+              const subParsed = new URL(subHref, window.location.origin);
+              const subPath = (subParsed.pathname.replace(/\/+$/, "") || "") + "/";
+              if (subPath === path) {
+                subLink.classList.add("active");
+                const subLi = subLink.closest("li");
+                if (subLi) subLi.classList.add("active");
+              }
+            });
+          }
+        } else if (path === "/dashboard/") {
           const homeLink = sidebar.querySelector('a[href="/dashboard/"]');
           if (homeLink) {
+            homeLink.classList.add("active");
             const homeLi = homeLink.closest("li");
             if (homeLi) homeLi.classList.add("active");
           }
@@ -5167,6 +5283,24 @@ $(document).ready(function (e) {
 
     window.addEventListener("popstate", function () {
       loadPage(window.location.href, false);
+    });
+
+    // Sync sidebar state on initial page load and whenever SPA content is loaded
+    try {
+      updateActiveSidebar(window.location.href);
+    } catch (e) {}
+
+    if (window.jQuery) {
+      window.jQuery(document).on("spa:loaded", function () {
+        try {
+          updateActiveSidebar(window.location.href);
+        } catch (e) {}
+      });
+    }
+    document.addEventListener("spa:loaded", function () {
+      try {
+        updateActiveSidebar(window.location.href);
+      } catch (e) {}
     });
 
     // Dynamic Right-side Flyout Submenus Positioning & Auto-close Handler
