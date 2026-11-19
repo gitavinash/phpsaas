@@ -108,13 +108,13 @@ if (!empty($daterange)) {
             </div>
         </a>
 
-        <!-- Payments Recorded -->
-        <a href="/dashboard/operations/list/?status=12" class="pkg-mini-kpi emerald text-inherit" title="Advance or full payments verified">
-            <div class="kpi-icon"><i class="fi fi-rr-wallet"></i></div>
+        <!-- Confirmed Queue -->
+        <a href="/dashboard/operations/list/?status=1" class="pkg-mini-kpi emerald text-inherit" title="Confirmed bookings in queue">
+            <div class="kpi-icon"><i class="fi fi-rr-badge-check"></i></div>
             <div class="kpi-meta">
-                <p>Payments Recorded</p>
+                <p>Confirmed Queue</p>
                 <h3 id="statPaidBookings">0</h3>
-                <small>Advance payment verified</small>
+                <small>Ready for booking &amp; vouchers</small>
             </div>
         </a>
 
@@ -252,11 +252,8 @@ if (!empty($daterange)) {
                 <button type="button" class="btn-ops-pill" data-status="10">
                     <span class="pill-dot approved"></span> Approved (10)
                 </button>
-                <button type="button" class="btn-ops-pill" data-status="6">
-                    <span class="pill-dot payment-sent"></span> Payment Sent (6)
-                </button>
-                <button type="button" class="btn-ops-pill" data-status="12">
-                    <span class="pill-dot paid"></span> Paid (12)
+                <button type="button" class="btn-ops-pill" data-status="1">
+                    <span class="pill-dot confirmed"></span> Confirmed (1)
                 </button>
                 <button type="button" class="btn-ops-pill" data-status="11">
                     <span class="pill-dot voucher"></span> Vouchers (11)
@@ -278,7 +275,7 @@ if (!empty($daterange)) {
                         <th class="th-lead">Traveler &amp; Lead</th>
                         <th class="th-tour">Tour &amp; Dates</th>
                         <th class="th-financials">Payment</th>
-                        <th class="th-status">Ops Status</th>
+                        <th class="th-status">Status</th>
                         <th class="th-actions text-right">Actions</th>
                     </tr>
                 </thead>

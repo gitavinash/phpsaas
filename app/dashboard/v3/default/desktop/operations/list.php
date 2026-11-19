@@ -95,12 +95,12 @@ if (!$canAccessOps) {
             </div>
         </div>
 
-        <div class="pkg-mini-kpi emerald" data-filter-status="12" title="Click to filter Payments Recorded">
-            <div class="kpi-icon"><i class="fi fi-rr-wallet"></i></div>
+        <div class="pkg-mini-kpi emerald" data-filter-status="1" title="Click to filter Confirmed Bookings">
+            <div class="kpi-icon"><i class="fi fi-rr-badge-check"></i></div>
             <div class="kpi-meta">
-                <p>Payments Recorded</p>
+                <p>Confirmed Queue</p>
                 <h3 id="statPaidBookings">0</h3>
-                <small>Advance / Full paid</small>
+                <small>Ready for booking</small>
             </div>
         </div>
 
@@ -135,11 +135,8 @@ if (!$canAccessOps) {
                     <button type="button" class="btn-ops-pill" data-status="10">
                         <span class="pill-dot approved"></span> Approved (10)
                     </button>
-                    <button type="button" class="btn-ops-pill" data-status="6">
-                        <span class="pill-dot payment-sent"></span> Payment Sent (6)
-                    </button>
-                    <button type="button" class="btn-ops-pill" data-status="12">
-                        <span class="pill-dot paid"></span> Paid (12)
+                    <button type="button" class="btn-ops-pill" data-status="1">
+                        <span class="pill-dot confirmed"></span> Confirmed (1)
                     </button>
                     <button type="button" class="btn-ops-pill" data-status="11">
                         <span class="pill-dot voucher"></span> Vouchers (11)
@@ -171,7 +168,7 @@ if (!$canAccessOps) {
                             <th class="th-lead">Traveler &amp; Lead</th>
                             <th class="th-tour">Tour &amp; Dates</th>
                             <th class="th-financials">Payment</th>
-                            <th class="th-status">Ops Status</th>
+                            <th class="th-status">Status</th>
                             <th class="th-actions text-right">Actions</th>
                         </tr>
                     </thead>

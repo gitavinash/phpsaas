@@ -47,25 +47,25 @@ if (!in_array($userRole, ['administrator', 'operations', 'super_administrator'])
 $action = isset($_GET['action']) ? trim($_GET['action']) : 'list';
 $siteFilter = ($siteId > 0) ? " AND e.enquiry_site_id = {$siteId}" : "";
 
-// Status definition dictionary
+// Operational status definition dictionary (pure operational status, no payment-related wording)
 $statusDictionary = [
-    0  => ['label' => 'Initiate (Unassigned)', 'badge' => 'badge-initiate', 'color' => '#64748b'],
-    1  => ['label' => 'Paid & Confirmed', 'badge' => 'badge-paid', 'color' => '#10b981'],
-    2  => ['label' => 'Pending (Assigned)', 'badge' => 'badge-pending', 'color' => '#f59e0b'],
+    0  => ['label' => 'Unassigned', 'badge' => 'badge-initiate', 'color' => '#64748b'],
+    1  => ['label' => 'Confirmed', 'badge' => 'badge-approved', 'color' => '#10b981'],
+    2  => ['label' => 'Assigned', 'badge' => 'badge-pending', 'color' => '#f59e0b'],
     3  => ['label' => 'Follow-up', 'badge' => 'badge-followup', 'color' => '#3b82f6'],
-    6  => ['label' => 'Payment Initiated', 'badge' => 'badge-payment-init', 'color' => '#8b5cf6'],
+    6  => ['label' => 'Confirmed', 'badge' => 'badge-approved', 'color' => '#10b981'],
     7  => ['label' => 'Sales Request', 'badge' => 'badge-sales-req', 'color' => '#ec4899'],
-    8  => ['label' => 'Upay Done', 'badge' => 'badge-upay', 'color' => '#14b8a6'],
+    8  => ['label' => 'Confirmed', 'badge' => 'badge-approved', 'color' => '#10b981'],
     9  => ['label' => 'Itinerary Sent', 'badge' => 'badge-itinerary', 'color' => '#06b6d4'],
     10 => ['label' => 'Quotation Approved', 'badge' => 'badge-approved', 'color' => '#10b981'],
     11 => ['label' => 'Voucher Issued', 'badge' => 'badge-voucher', 'color' => '#059669'],
-    12 => ['label' => 'Payment Received', 'badge' => 'badge-paid', 'color' => '#16a34a'],
+    12 => ['label' => 'Confirmed', 'badge' => 'badge-approved', 'color' => '#10b981'],
     13 => ['label' => 'Trip in Progress', 'badge' => 'badge-in-progress', 'color' => '#2563eb'],
-    14 => ['label' => 'Trip Completed', 'badge' => 'badge-completed', 'color' => '#475569'],
+    14 => ['label' => 'Completed', 'badge' => 'badge-completed', 'color' => '#475569'],
     15 => ['label' => 'Closed', 'badge' => 'badge-closed', 'color' => '#64748b'],
     16 => ['label' => 'Cancelled', 'badge' => 'badge-cancelled', 'color' => '#ef4444'],
     17 => ['label' => 'Lost', 'badge' => 'badge-lost', 'color' => '#94a3b8'],
-    18 => ['label' => 'Payment Refund', 'badge' => 'badge-refund', 'color' => '#f97316']
+    18 => ['label' => 'Cancelled', 'badge' => 'badge-cancelled', 'color' => '#ef4444']
 ];
 
 // --------------------------------------------------------------------------
@@ -133,7 +133,10 @@ if ($type === 'unassigned') {
     $whereClauses[] = "(e.enquiry_status = 0 OR e.enquiry_agent = 0 OR e.enquiry_agent IS NULL)";
 } else {
     // Default: Confirmed Operations Queue (Quotation Approved onwards)
-    if ($statusCode !== '' && is_numeric($statusCode)) {
+    if ($statusCode === '1' || $statusCode === 'confirmed') {
+        // Group all operational confirmed states
+        $whereClauses[] = "e.enquiry_status IN (1, 12, 6, 8)";
+    } elseif ($statusCode !== '' && is_numeric($statusCode)) {
         $stNum = (int)$statusCode;
         $whereClauses[] = "e.enquiry_status = {$stNum}";
     } else {
@@ -308,7 +311,14 @@ if (!empty($leadIds)) {
         while ($bRow = mysqli_fetch_assoc($bkgRes)) {
             $bRef = (int)$bRow['booking_enquiry_id'];
             if (isset($leads[$bRef])) {
-                $leads[$bRef]['bookings_count'] = (int)$bRow['bkg_cnt'];
+                $bCount = (int)$bRow['bkg_cnt'];
+                $leads[$bRef]['bookings_count'] = $bCount;
+
+                // If vendor booking requests have been dispatched and vouchers not yet issued, show Vendor Requested
+                if ($bCount > 0 && in_array((int)$leads[$bRef]['status'], [1, 6, 8, 10, 12])) {
+                    $leads[$bRef]['status_label'] = 'Vendor Requested';
+                    $leads[$bRef]['status_badge'] = 'badge-in-progress';
+                }
             }
         }
     }

@@ -412,6 +412,7 @@
 
 .pill-dot.all          { background: #64748b; }
 .pill-dot.approved     { background: #16a34a; }
+.pill-dot.confirmed    { background: #10b981; }
 .pill-dot.payment-sent { background: #d97706; }
 .pill-dot.upay         { background: #0d9488; }
 .pill-dot.paid         { background: #059669; }
@@ -807,7 +808,7 @@
 }
 
 .badge-paid, .badge-success { background: #dcfce7; color: #15803d; border: 1px solid #bbf7d0; }
-.badge-approved             { background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; }
+.badge-confirmed, .badge-approved { background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; }
 .badge-payment-init         { background: #ede9fe; color: #6d28d9; border: 1px solid #ddd6fe; }
 .badge-upay                 { background: #ccfbf1; color: #0f766e; border: 1px solid #99f6e4; }
 .badge-voucher              { background: #dbeafe; color: #1d4ed8; border: 1px solid #bfdbfe; }

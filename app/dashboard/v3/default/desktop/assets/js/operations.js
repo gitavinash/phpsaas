@@ -831,6 +831,20 @@
             '<span class="ops-pay-pill pending">Awaiting Quote</span>';
         }
 
+        // Pure operational fulfillment status (never show payment-related terms in Status column)
+        let opStatusLabel = ld.status_label || "Active";
+        let opStatusBadge = ld.status_badge || "badge-default";
+
+        if (/paid|payment|upay|success/i.test(opStatusLabel)) {
+          if (ld.bookings_count > 0) {
+            opStatusLabel = "Vendor Requested";
+            opStatusBadge = "badge-in-progress";
+          } else {
+            opStatusLabel = "Confirmed";
+            opStatusBadge = "badge-approved";
+          }
+        }
+
         html += '<tr>' +
           '<td class="td-lead">' +
             '<div class="ops-lead-meta">' +
@@ -864,7 +878,7 @@
             '</div>' +
           '</td>' +
           '<td class="td-status">' +
-            '<span class="ops-status-badge ' + (ld.status_badge || "badge-default") + '"><span class="badge-dot"></span> ' + (ld.status_label || "Active") + '</span>' +
+            '<span class="ops-status-badge ' + opStatusBadge + '"><span class="badge-dot"></span> ' + opStatusLabel + '</span>' +
           '</td>' +
           '<td class="td-actions text-right">' +
             '<div class="ops-action-grid">' +
