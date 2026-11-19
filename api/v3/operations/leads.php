@@ -50,7 +50,7 @@ $siteFilter = ($siteId > 0) ? " AND e.enquiry_site_id = {$siteId}" : "";
 // Status definition dictionary
 $statusDictionary = [
     0  => ['label' => 'Initiate (Unassigned)', 'badge' => 'badge-initiate', 'color' => '#64748b'],
-    1  => ['label' => 'Success (Paid)', 'badge' => 'badge-success', 'color' => '#10b981'],
+    1  => ['label' => 'Paid & Confirmed', 'badge' => 'badge-paid', 'color' => '#10b981'],
     2  => ['label' => 'Pending (Assigned)', 'badge' => 'badge-pending', 'color' => '#f59e0b'],
     3  => ['label' => 'Follow-up', 'badge' => 'badge-followup', 'color' => '#3b82f6'],
     6  => ['label' => 'Payment Initiated', 'badge' => 'badge-payment-init', 'color' => '#8b5cf6'],
@@ -225,6 +225,15 @@ if ($res = mysqli_query($connection, $leadsSql)) {
         $st = (int)$row['enquiry_status'];
         $stMeta = $statusDictionary[$st] ?? ['label' => 'Status ' . $st, 'badge' => 'badge-default', 'color' => '#64748b'];
 
+        $initPrice = (float)($row['enquiry_expected_value'] ?? 0);
+        if ($initPrice <= 0 && !empty($extra)) {
+            if (!empty($extra['package_cost'])) $initPrice = (float)$extra['package_cost'];
+            elseif (!empty($extra['package_price'])) $initPrice = (float)$extra['package_price'];
+            elseif (!empty($extra['price'])) $initPrice = (float)$extra['price'];
+            elseif (!empty($extra['total_amount'])) $initPrice = (float)$extra['total_amount'];
+            elseif (!empty($extra['amount'])) $initPrice = (float)$extra['amount'];
+        }
+
         $leads[$lId] = [
             'id'            => $lId,
             'encoded_id'    => base64_encode((string)$lId),
@@ -242,9 +251,9 @@ if ($res = mysqli_query($connection, $leadsSql)) {
             'status_color'  => $stMeta['color'],
             'agent_id'      => (int)$row['enquiry_agent'],
             'agent_name'    => !empty($row['agent_name']) ? trim($row['agent_name']) : 'Unassigned',
-            'quotation_price' => (float)($row['enquiry_expected_value'] ?? 0),
+            'quotation_price' => $initPrice,
             'total_paid'    => 0.0,
-            'balance_due'   => (float)($row['enquiry_expected_value'] ?? 0),
+            'balance_due'   => $initPrice,
             'bookings_count'=> 0,
             'created_at'    => $row['enquiry_time']
         ];
@@ -255,7 +264,23 @@ if ($res = mysqli_query($connection, $leadsSql)) {
 if (!empty($leadIds)) {
     $idsIn = implode(',', $leadIds);
 
-    // 1. Fetch verified payments from enquiry notes or payments
+    // 1. Fetch quotation prices from isw_quotation if not already populated
+    $qSql = "SELECT quotation_ref_id, CAST(quotation_price AS DECIMAL(15,2)) as q_price 
+             FROM {$tblPrefix}quotation 
+             WHERE quotation_ref_id IN ({$idsIn}) 
+             ORDER BY quotation_id DESC";
+    if ($qRes = mysqli_query($connection, $qSql)) {
+        while ($qRow = mysqli_fetch_assoc($qRes)) {
+            $qRef = (int)$qRow['quotation_ref_id'];
+            $qPrice = (float)($qRow['q_price'] ?? 0);
+            if (isset($leads[$qRef]) && $leads[$qRef]['quotation_price'] <= 0 && $qPrice > 0) {
+                $leads[$qRef]['quotation_price'] = $qPrice;
+                $leads[$qRef]['balance_due'] = $qPrice;
+            }
+        }
+    }
+
+    // 2. Fetch verified payments from enquiry notes or payments
     $paySql = "SELECT enquiry_notes_ref_id, enquiry_notes_meta_value 
                FROM {$tblPrefix}enquiry_notes 
                WHERE enquiry_notes_ref_id IN ({$idsIn}) 
@@ -274,7 +299,7 @@ if (!empty($leadIds)) {
         }
     }
 
-    // 2. Fetch booking count from isw_booking
+    // 3. Fetch booking count from isw_booking
     $bkgSql = "SELECT booking_enquiry_id, COUNT(*) as bkg_cnt 
                FROM {$tblPrefix}booking 
                WHERE booking_enquiry_id IN ({$idsIn}) 

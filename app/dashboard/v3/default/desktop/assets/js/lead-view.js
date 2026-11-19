@@ -5142,7 +5142,7 @@
         const origHtml = $btn.html();
         $btn.prop("disabled", true).html('<i class="fi fi-rr-spinner fi-spin"></i> Dispatching...');
 
-        $.post("/api/v3/operations/feedback.php", { lead_id: leadId }, function (res) {
+        $.post("/api/v3/operations/feedback/", { lead_id: leadId }, function (res) {
           $btn.prop("disabled", false).html(origHtml);
           if (res && res.status === "success") {
             if (res.whatsapp_link) {
@@ -10131,7 +10131,7 @@
               });
             }
 
-            // If get.php returned an enriched itinerary, use it as baseline
+            // If get returned an enriched itinerary, use it as baseline
             if (getRes && getRes.status === "success" && getRes.package) {
               if (
                 Array.isArray(getRes.package.itinerary) &&

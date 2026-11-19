@@ -244,7 +244,7 @@ if (!empty($forwardUrl)) {
             </a>
         </div>
 
-        <!-- CTA 4: Chauffeur Dispatch -->
+        <!-- CTA 4: Assign Cab / Driver -->
         <div class="widget box-2-5">
             <a href="operations/dispatch/">
                 <div class="widget-setting-info">
@@ -252,8 +252,8 @@ if (!empty($forwardUrl)) {
                         <i class="fi-rr-car"></i>
                     </div>
                     <div class="about-feature">
-                        <h3>Chauffeur Dispatch</h3>
-                        <p>Assign driver and send 24-hr pre-trip WhatsApp update</p>
+                        <h3>Assign Cab / Driver</h3>
+                        <p>Save driver details and send vehicle info to guest on WhatsApp</p>
                     </div>
                 </div>
             </a>

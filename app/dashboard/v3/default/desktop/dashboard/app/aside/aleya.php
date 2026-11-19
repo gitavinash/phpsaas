@@ -89,29 +89,29 @@ $isDashboardActive = ($currentUrl === '/dashboard/' || $currentUrl === '/dashboa
         </div>
     </li>
 
-<?php if ($site_access_type == 'administrator' || $site_access_type == 'operations' || $site_access_type == 'admin' || $site_access_type == 'superadmin' || $site_access_type == 'super_administrator') { ?>
-    <li class="ops-aside-item <?php echo (strpos($currentUrl, '/operations') !== false ? 'active' : ''); ?>" data-aside-nav="operations">
-        <a href="/dashboard/operations/"><i class="fi fi-rr-compass-alt"></i> Operations Hub</a>
-        <div class="side-menu">
-            <ul>
-                <li <?php echo (strpos($currentUrl, '/operations/list') !== false ? 'class="active"' : ''); ?>><a href="/dashboard/operations/list/" <?php echo (strpos($currentUrl, '/operations/list') !== false ? 'class="active"' : ''); ?>><i class="fi-rr-badge-check"></i> Confirmed Leads</a></li>
-                <li <?php echo (strpos($currentUrl, '/operations/trips') !== false ? 'class="active"' : ''); ?>><a href="/dashboard/operations/trips/" <?php echo (strpos($currentUrl, '/operations/trips') !== false ? 'class="active"' : ''); ?>><i class="fi-rr-plane-departure"></i> Trip Planner</a></li>
-                <li <?php echo (strpos($currentUrl, '/operations/requests') !== false ? 'class="active"' : ''); ?>><a href="/dashboard/operations/requests/" <?php echo (strpos($currentUrl, '/operations/requests') !== false ? 'class="active"' : ''); ?>><i class="fi-rr-paper-plane"></i> Booking Requests</a></li>
-                <li <?php echo (strpos($currentUrl, '/operations/unassigned') !== false ? 'class="active"' : ''); ?>><a href="/dashboard/operations/unassigned/" <?php echo (strpos($currentUrl, '/operations/unassigned') !== false ? 'class="active"' : ''); ?>><i class="fi-rr-user-add"></i> Assign Leads</a></li>
-                <li <?php echo (strpos($currentUrl, '/operations/templates') !== false ? 'class="active"' : ''); ?>><a href="/dashboard/operations/templates/" <?php echo (strpos($currentUrl, '/operations/templates') !== false ? 'class="active"' : ''); ?>><i class="fi-rr-file-edit"></i> Request Templates</a></li>
-            </ul>
-        </div>
-        <div class="bottom-menu">
-            <ul>
-                <li <?php echo (strpos($currentUrl, '/operations/list') !== false ? 'class="active"' : ''); ?>><a href="/dashboard/operations/list/" <?php echo (strpos($currentUrl, '/operations/list') !== false ? 'class="active"' : ''); ?>><i class="fi-rr-badge-check"></i> Confirmed Leads</a></li>
-                <li <?php echo (strpos($currentUrl, '/operations/trips') !== false ? 'class="active"' : ''); ?>><a href="/dashboard/operations/trips/" <?php echo (strpos($currentUrl, '/operations/trips') !== false ? 'class="active"' : ''); ?>><i class="fi-rr-plane-departure"></i> Trip Planner</a></li>
-                <li <?php echo (strpos($currentUrl, '/operations/requests') !== false ? 'class="active"' : ''); ?>><a href="/dashboard/operations/requests/" <?php echo (strpos($currentUrl, '/operations/requests') !== false ? 'class="active"' : ''); ?>><i class="fi-rr-paper-plane"></i> Booking Requests</a></li>
-                <li <?php echo (strpos($currentUrl, '/operations/unassigned') !== false ? 'class="active"' : ''); ?>><a href="/dashboard/operations/unassigned/" <?php echo (strpos($currentUrl, '/operations/unassigned') !== false ? 'class="active"' : ''); ?>><i class="fi-rr-user-add"></i> Assign Leads</a></li>
-                <li <?php echo (strpos($currentUrl, '/operations/templates') !== false ? 'class="active"' : ''); ?>><a href="/dashboard/operations/templates/" <?php echo (strpos($currentUrl, '/operations/templates') !== false ? 'class="active"' : ''); ?>><i class="fi-rr-file-edit"></i> Request Templates</a></li>
-            </ul>
-        </div>
-    </li>
-<?php } ?>
+    <?php if ($site_access_type == 'administrator' || $site_access_type == 'operations' || $site_access_type == 'admin' || $site_access_type == 'superadmin' || $site_access_type == 'super_administrator') { ?>
+        <li class="ops-aside-item <?php echo (strpos($currentUrl, '/operations/') !== false ? 'active' : ''); ?>" data-aside-nav="operations">
+            <a href="/dashboard/operations/"><i class="fi fi-rr-compass-alt"></i> Operations Hub</a>
+            <div class="side-menu">
+                <ul>
+                    <li <?php echo (strpos($currentUrl, '/operations/list') !== false ? 'class="active"' : ''); ?>><a href="/dashboard/operations/list/" <?php echo (strpos($currentUrl, '/operations/list') !== false ? 'class="active"' : ''); ?>><i class="fi-rr-badge-check"></i> Confirmed Leads</a></li>
+                    <li <?php echo (strpos($currentUrl, '/operations/trips') !== false ? 'class="active"' : ''); ?>><a href="/dashboard/operations/trips/" <?php echo (strpos($currentUrl, '/operations/trips') !== false ? 'class="active"' : ''); ?>><i class="fi-rr-plane-departure"></i> Trip Planner</a></li>
+                    <li <?php echo (strpos($currentUrl, '/operations/requests') !== false ? 'class="active"' : ''); ?>><a href="/dashboard/operations/requests/" <?php echo (strpos($currentUrl, '/operations/requests') !== false ? 'class="active"' : ''); ?>><i class="fi-rr-paper-plane"></i> Booking Requests</a></li>
+                    <li <?php echo (strpos($currentUrl, '/operations/unassigned') !== false ? 'class="active"' : ''); ?>><a href="/dashboard/operations/unassigned/" <?php echo (strpos($currentUrl, '/operations/unassigned') !== false ? 'class="active"' : ''); ?>><i class="fi-rr-user-add"></i> Assign Leads</a></li>
+                    <li <?php echo (strpos($currentUrl, '/operations/templates') !== false ? 'class="active"' : ''); ?>><a href="/dashboard/operations/templates/" <?php echo (strpos($currentUrl, '/operations/templates') !== false ? 'class="active"' : ''); ?>><i class="fi-rr-file-edit"></i> Request Templates</a></li>
+                </ul>
+            </div>
+            <div class="bottom-menu">
+                <ul>
+                    <li <?php echo (strpos($currentUrl, '/operations/list') !== false ? 'class="active"' : ''); ?>><a href="/dashboard/operations/list/" <?php echo (strpos($currentUrl, '/operations/list') !== false ? 'class="active"' : ''); ?>><i class="fi-rr-badge-check"></i> Confirmed Leads</a></li>
+                    <li <?php echo (strpos($currentUrl, '/operations/trips') !== false ? 'class="active"' : ''); ?>><a href="/dashboard/operations/trips/" <?php echo (strpos($currentUrl, '/operations/trips') !== false ? 'class="active"' : ''); ?>><i class="fi-rr-plane-departure"></i> Trip Planner</a></li>
+                    <li <?php echo (strpos($currentUrl, '/operations/requests') !== false ? 'class="active"' : ''); ?>><a href="/dashboard/operations/requests/" <?php echo (strpos($currentUrl, '/operations/requests') !== false ? 'class="active"' : ''); ?>><i class="fi-rr-paper-plane"></i> Booking Requests</a></li>
+                    <li <?php echo (strpos($currentUrl, '/operations/unassigned') !== false ? 'class="active"' : ''); ?>><a href="/dashboard/operations/unassigned/" <?php echo (strpos($currentUrl, '/operations/unassigned') !== false ? 'class="active"' : ''); ?>><i class="fi-rr-user-add"></i> Assign Leads</a></li>
+                    <li <?php echo (strpos($currentUrl, '/operations/templates') !== false ? 'class="active"' : ''); ?>><a href="/dashboard/operations/templates/" <?php echo (strpos($currentUrl, '/operations/templates') !== false ? 'class="active"' : ''); ?>><i class="fi-rr-file-edit"></i> Request Templates</a></li>
+                </ul>
+            </div>
+        </li>
+    <?php } ?>
 <?php } ?>
 
 <?php
@@ -156,119 +156,119 @@ if (!$isDigitalMarketingPackage && ($site_access_type == 'administrator' || $sit
 ?>
 
     <?php if ($showTourPackages) { ?>
-    <li class="header-section-name" data-aside-group="packages">
-        <p>Tour Packages<span>Smart Itineraries &amp; Catalog</span></p>
-    </li>
+        <li class="header-section-name" data-aside-group="packages">
+            <p>Tour Packages<span>Smart Itineraries &amp; Catalog</span></p>
+        </li>
 
-    <li data-aside-group="packages" <?php echo (strpos($currentUrl, '/packages/domestic/') !== false ? 'class="active"' : ''); ?>>
-        <a href="/dashboard/packages/domestic/"><i class="fi fi-rr-suitcase-alt"></i> Domestic Packages</a>
-        <div class="side-menu">
-            <ul>
-                <li><a href="/dashboard/packages/domestic/list/"><i class="fi-rr-apps-sort"></i> All Packages</a></li>
-                <li><a href="/dashboard/packages/domestic/add/"><i class="fi fi-rr-add"></i> Add New Package</a></li>
-                <li><a href="/dashboard/packages/domestic/location/"><i class="fi fi-rr-marker"></i> Destinations</a></li>
-            </ul>
-        </div>
-        <div class="bottom-menu">
-            <ul>
-                <li><a href="/dashboard/packages/domestic/list/"><i class="fi-rr-apps-sort"></i> All Packages</a></li>
-                <li><a href="/dashboard/packages/domestic/add/"><i class="fi fi-rr-add"></i> Add New Package</a></li>
-                <li><a href="/dashboard/packages/domestic/location/"><i class="fi fi-rr-marker"></i> Destinations</a></li>
-            </ul>
-        </div>
-    </li>
+        <li data-aside-group="packages" <?php echo (strpos($currentUrl, '/packages/domestic/') !== false ? 'class="active"' : ''); ?>>
+            <a href="/dashboard/packages/domestic/"><i class="fi fi-rr-suitcase-alt"></i> Domestic Packages</a>
+            <div class="side-menu">
+                <ul>
+                    <li><a href="/dashboard/packages/domestic/list/"><i class="fi-rr-apps-sort"></i> All Packages</a></li>
+                    <li><a href="/dashboard/packages/domestic/add/"><i class="fi fi-rr-add"></i> Add New Package</a></li>
+                    <li><a href="/dashboard/packages/domestic/location/"><i class="fi fi-rr-marker"></i> Destinations</a></li>
+                </ul>
+            </div>
+            <div class="bottom-menu">
+                <ul>
+                    <li><a href="/dashboard/packages/domestic/list/"><i class="fi-rr-apps-sort"></i> All Packages</a></li>
+                    <li><a href="/dashboard/packages/domestic/add/"><i class="fi fi-rr-add"></i> Add New Package</a></li>
+                    <li><a href="/dashboard/packages/domestic/location/"><i class="fi fi-rr-marker"></i> Destinations</a></li>
+                </ul>
+            </div>
+        </li>
 
-    <li data-aside-group="packages" <?php echo (strpos($currentUrl, '/packages/international/') !== false || (strpos($currentUrl, '/international/') !== false && strpos($currentUrl, '/packages/') !== false) ? 'class="active"' : ''); ?>>
-        <a href="/dashboard/packages/international/"><i class="fi fi-rr-globe"></i> International Packages</a>
-        <div class="side-menu">
-            <ul>
-                <li><a href="/dashboard/packages/international/list/"><i class="fi-rr-apps-sort"></i> All Packages</a></li>
-                <li><a href="/dashboard/packages/international/add/"><i class="fi fi-rr-add"></i> Add New Package</a></li>
-                <li><a href="/dashboard/packages/international/location/"><i class="fi fi-rr-marker"></i> Destinations</a></li>
-            </ul>
-        </div>
-        <div class="bottom-menu">
-            <ul>
-                <li><a href="/dashboard/packages/international/list/"><i class="fi-rr-apps-sort"></i> All Packages</a></li>
-                <li><a href="/dashboard/packages/international/add/"><i class="fi fi-rr-add"></i> Add New Package</a></li>
-                <li><a href="/dashboard/packages/international/location/"><i class="fi fi-rr-marker"></i> Destinations</a></li>
-            </ul>
-        </div>
-    </li>
+        <li data-aside-group="packages" <?php echo (strpos($currentUrl, '/packages/international/') !== false || (strpos($currentUrl, '/international/') !== false && strpos($currentUrl, '/packages/') !== false) ? 'class="active"' : ''); ?>>
+            <a href="/dashboard/packages/international/"><i class="fi fi-rr-globe"></i> International Packages</a>
+            <div class="side-menu">
+                <ul>
+                    <li><a href="/dashboard/packages/international/list/"><i class="fi-rr-apps-sort"></i> All Packages</a></li>
+                    <li><a href="/dashboard/packages/international/add/"><i class="fi fi-rr-add"></i> Add New Package</a></li>
+                    <li><a href="/dashboard/packages/international/location/"><i class="fi fi-rr-marker"></i> Destinations</a></li>
+                </ul>
+            </div>
+            <div class="bottom-menu">
+                <ul>
+                    <li><a href="/dashboard/packages/international/list/"><i class="fi-rr-apps-sort"></i> All Packages</a></li>
+                    <li><a href="/dashboard/packages/international/add/"><i class="fi fi-rr-add"></i> Add New Package</a></li>
+                    <li><a href="/dashboard/packages/international/location/"><i class="fi fi-rr-marker"></i> Destinations</a></li>
+                </ul>
+            </div>
+        </li>
     <?php } ?>
 
     <?php if ($showSupplyVendors) { ?>
-    <!-- 3. SUPPLY & VENDORS -->
-    <li class="header-section-name" data-aside-group="vendors">
-        <p>Supply &amp; Vendors<span>Inventory, Hotels &amp; Logistics</span></p>
-    </li>
+        <!-- 3. SUPPLY & VENDORS -->
+        <li class="header-section-name" data-aside-group="vendors">
+            <p>Supply &amp; Vendors<span>Inventory, Hotels &amp; Logistics</span></p>
+        </li>
 
-    <li data-aside-group="vendors" <?php echo (strpos($currentUrl, '/vendors/property/') !== false ? 'class="active"' : ''); ?>>
-        <a href="/dashboard/vendors/property/"><i class="fi fi-rr-city"></i> Properties &amp; Hotels</a>
-        <div class="side-menu">
-            <ul>
-                <li><a href="/dashboard/vendors/property/list/"><i class="fi-rr-apps-sort"></i> All Properties</a></li>
-                <li><a href="/dashboard/vendors/property/add/"><i class="fi fi-rr-add"></i> Add New Property</a></li>
-                <li><a href="/dashboard/vendors/property/room/"><i class="fi fi-rr-door-open"></i> Manage Room Types</a></li>
-                <li><a href="/dashboard/vendors/property/amenities/"><i class="fi fi-rr-star"></i> Manage Amenities</a></li>
-                <li><a href="/dashboard/vendors/property/upload/"><i class="fi fi-rr-file-import"></i> Import Properties CSV</a></li>
-            </ul>
-        </div>
-        <div class="bottom-menu">
-            <ul>
-                <li><a href="/dashboard/vendors/property/list/"><i class="fi-rr-apps-sort"></i> All Properties</a></li>
-                <li><a href="/dashboard/vendors/property/add/"><i class="fi fi-rr-add"></i> Add New Property</a></li>
-                <li><a href="/dashboard/vendors/property/room/"><i class="fi fi-rr-door-open"></i> Manage Room Types</a></li>
-                <li><a href="/dashboard/vendors/property/amenities/"><i class="fi fi-rr-star"></i> Manage Amenities</a></li>
-                <li><a href="/dashboard/vendors/property/upload/"><i class="fi fi-rr-file-import"></i> Import Properties CSV</a></li>
-            </ul>
-        </div>
-    </li>
+        <li data-aside-group="vendors" <?php echo (strpos($currentUrl, '/vendors/property/') !== false ? 'class="active"' : ''); ?>>
+            <a href="/dashboard/vendors/property/"><i class="fi fi-rr-city"></i> Properties &amp; Hotels</a>
+            <div class="side-menu">
+                <ul>
+                    <li><a href="/dashboard/vendors/property/list/"><i class="fi-rr-apps-sort"></i> All Properties</a></li>
+                    <li><a href="/dashboard/vendors/property/add/"><i class="fi fi-rr-add"></i> Add New Property</a></li>
+                    <li><a href="/dashboard/vendors/property/room/"><i class="fi fi-rr-door-open"></i> Manage Room Types</a></li>
+                    <li><a href="/dashboard/vendors/property/amenities/"><i class="fi fi-rr-star"></i> Manage Amenities</a></li>
+                    <li><a href="/dashboard/vendors/property/upload/"><i class="fi fi-rr-file-import"></i> Import Properties CSV</a></li>
+                </ul>
+            </div>
+            <div class="bottom-menu">
+                <ul>
+                    <li><a href="/dashboard/vendors/property/list/"><i class="fi-rr-apps-sort"></i> All Properties</a></li>
+                    <li><a href="/dashboard/vendors/property/add/"><i class="fi fi-rr-add"></i> Add New Property</a></li>
+                    <li><a href="/dashboard/vendors/property/room/"><i class="fi fi-rr-door-open"></i> Manage Room Types</a></li>
+                    <li><a href="/dashboard/vendors/property/amenities/"><i class="fi fi-rr-star"></i> Manage Amenities</a></li>
+                    <li><a href="/dashboard/vendors/property/upload/"><i class="fi fi-rr-file-import"></i> Import Properties CSV</a></li>
+                </ul>
+            </div>
+        </li>
 
-    <li data-aside-group="vendors" <?php echo (strpos($currentUrl, '/vendors/transporter/') !== false ? 'class="active"' : ''); ?>>
-        <a href="/dashboard/vendors/transporter/"><i class="fi fi-rr-bus"></i> Transporters &amp; Fleet</a>
-        <div class="side-menu">
-            <ul>
-                <li><a href="/dashboard/vendors/transporter/list/"><i class="fi-rr-apps-sort"></i> All Transporters</a></li>
-                <li><a href="/dashboard/vendors/transporter/add/"><i class="fi fi-rr-add"></i> Add New Transporter</a></li>
-                <li><a href="/dashboard/vendors/transporter/vehicle/"><i class="fi fi-rr-car-bus"></i> Manage Fleet Vehicles</a></li>
-            </ul>
-        </div>
-        <div class="bottom-menu">
-            <ul>
-                <li><a href="/dashboard/vendors/transporter/list/"><i class="fi-rr-apps-sort"></i> All Transporters</a></li>
-                <li><a href="/dashboard/vendors/transporter/add/"><i class="fi fi-rr-add"></i> Add New Transporter</a></li>
-                <li><a href="/dashboard/vendors/transporter/vehicle/"><i class="fi fi-rr-car-bus"></i> Manage Fleet Vehicles</a></li>
-            </ul>
-        </div>
-    </li>
+        <li data-aside-group="vendors" <?php echo (strpos($currentUrl, '/vendors/transporter/') !== false ? 'class="active"' : ''); ?>>
+            <a href="/dashboard/vendors/transporter/"><i class="fi fi-rr-bus"></i> Transporters &amp; Fleet</a>
+            <div class="side-menu">
+                <ul>
+                    <li><a href="/dashboard/vendors/transporter/list/"><i class="fi-rr-apps-sort"></i> All Transporters</a></li>
+                    <li><a href="/dashboard/vendors/transporter/add/"><i class="fi fi-rr-add"></i> Add New Transporter</a></li>
+                    <li><a href="/dashboard/vendors/transporter/vehicle/"><i class="fi fi-rr-car-bus"></i> Manage Fleet Vehicles</a></li>
+                </ul>
+            </div>
+            <div class="bottom-menu">
+                <ul>
+                    <li><a href="/dashboard/vendors/transporter/list/"><i class="fi-rr-apps-sort"></i> All Transporters</a></li>
+                    <li><a href="/dashboard/vendors/transporter/add/"><i class="fi fi-rr-add"></i> Add New Transporter</a></li>
+                    <li><a href="/dashboard/vendors/transporter/vehicle/"><i class="fi fi-rr-car-bus"></i> Manage Fleet Vehicles</a></li>
+                </ul>
+            </div>
+        </li>
 
-    <li data-aside-group="vendors" class="aside-menu-disabled">
-        <a href="javascript:void(0)"><i class="fi fi-rr-building"></i> DMC Partners <span class="aside-badge-soon">Soon</span></a>
-    </li>
+        <li data-aside-group="vendors" class="aside-menu-disabled">
+            <a href="javascript:void(0)"><i class="fi fi-rr-building"></i> DMC Partners <span class="aside-badge-soon">Soon</span></a>
+        </li>
     <?php } ?>
 
     <?php if ($showMarketingCms) { ?>
-    <!-- 4. MARKETING & CONTENT (CMS) -->
-    <li class="header-section-name" data-aside-group="cms">
-        <p>Marketing &amp; CMS<span>Blogs, Reviews &amp; Website</span></p>
-    </li>
+        <!-- 4. MARKETING & CONTENT (CMS) -->
+        <li class="header-section-name" data-aside-group="cms">
+            <p>Marketing &amp; CMS<span>Blogs, Reviews &amp; Website</span></p>
+        </li>
 
-    <li data-aside-group="cms" class="aside-menu-disabled">
-        <a href="javascript:void(0)"><i class="fi fi-rr-document-signed"></i> Travel Blogs <span class="aside-badge-soon">Soon</span></a>
-    </li>
+        <li data-aside-group="cms" class="aside-menu-disabled">
+            <a href="javascript:void(0)"><i class="fi fi-rr-document-signed"></i> Travel Blogs <span class="aside-badge-soon">Soon</span></a>
+        </li>
 
-    <li data-aside-group="cms" class="aside-menu-disabled">
-        <a href="javascript:void(0)"><i class="fi fi-rr-comment-quote"></i> Client Testimonials <span class="aside-badge-soon">Soon</span></a>
-    </li>
+        <li data-aside-group="cms" class="aside-menu-disabled">
+            <a href="javascript:void(0)"><i class="fi fi-rr-comment-quote"></i> Client Testimonials <span class="aside-badge-soon">Soon</span></a>
+        </li>
 
-    <li data-aside-group="cms" class="aside-menu-disabled">
-        <a href="javascript:void(0)"><i class="fi fi-rr-picture"></i> Hero Sliders <span class="aside-badge-soon">Soon</span></a>
-    </li>
+        <li data-aside-group="cms" class="aside-menu-disabled">
+            <a href="javascript:void(0)"><i class="fi fi-rr-picture"></i> Hero Sliders <span class="aside-badge-soon">Soon</span></a>
+        </li>
 
-    <li data-aside-group="cms" class="aside-menu-disabled">
-        <a href="javascript:void(0)"><i class="fi fi-rr-interrogation"></i> FAQs <span class="aside-badge-soon">Soon</span></a>
-    </li>
+        <li data-aside-group="cms" class="aside-menu-disabled">
+            <a href="javascript:void(0)"><i class="fi fi-rr-interrogation"></i> FAQs <span class="aside-badge-soon">Soon</span></a>
+        </li>
     <?php } ?>
 
 <?php
@@ -349,8 +349,8 @@ if ($site_access_type == 'administrator' || $site_access_type == 'digital_market
 
     <li class="aside-item-plugins<?php echo (strpos($currentUrl, '/integration/') !== false && strpos($currentUrl, '/integration/whatsapp_web') === false ? ' active' : ''); ?>">
         <a href="/dashboard/integration/" class="aside-plugins-main-link">
-            <i class="fi fi-rr-plug-connection"></i> 
-            <span class="aside-menu-text">Plugins &amp; Integrations</span> 
+            <i class="fi fi-rr-plug-connection"></i>
+            <span class="aside-menu-text">Plugins &amp; Integrations</span>
             <span class="aside-badge-plugin-count" id="asideActivePluginBadge"><?php echo $activePluginCount; ?> Active</span>
         </a>
         <div class="side-menu aside-menu-plugins">

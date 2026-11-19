@@ -39,8 +39,8 @@ $prefilledLeadId = isset($_GET['lead_id']) ? htmlspecialchars(trim($_GET['lead_i
                 <i class="fi fi-rr-car"></i>
             </div>
             <div class="package-header-titles">
-                <h2>Chauffeur &amp; Vehicle Allocation</h2>
-                <p>Assign on-ground drivers, record vehicle plate registration, and dispatch 24-hr pre-trip logistics details directly to traveler WhatsApp.</p>
+                <h2>Assign Driver &amp; Cab Details</h2>
+                <p>Assign driver name, mobile number, vehicle number, and send pickup details directly to guest WhatsApp.</p>
             </div>
         </div>
 
@@ -74,8 +74,8 @@ $prefilledLeadId = isset($_GET['lead_id']) ? htmlspecialchars(trim($_GET['lead_i
 
         <div class="ops-form-row">
             <div class="v3-form-group">
-                <label class="v3-form-label">Driver / Chauffeur Name *</label>
-                <input type="text" id="dispatchDriverName" class="v3-form-input" placeholder="e.g. Tariq Ahmad">
+                <label class="v3-form-label">Driver Name *</label>
+                <input type="text" id="dispatchDriverName" class="v3-form-input" placeholder="e.g. Ramesh Kumar">
             </div>
             <div class="v3-form-group">
                 <label class="v3-form-label">Driver Mobile / WhatsApp *</label>
@@ -85,30 +85,30 @@ $prefilledLeadId = isset($_GET['lead_id']) ? htmlspecialchars(trim($_GET['lead_i
 
         <div class="ops-form-row">
             <div class="v3-form-group">
-                <label class="v3-form-label">Vehicle Model / Category</label>
-                <input type="text" id="dispatchVehicleType" class="v3-form-input" placeholder="e.g. Innova Crysta">
+                <label class="v3-form-label">Car / Cab Model</label>
+                <input type="text" id="dispatchVehicleType" class="v3-form-input" placeholder="e.g. Innova Crysta / Dzire / Tempo">
             </div>
             <div class="v3-form-group">
-                <label class="v3-form-label">Vehicle Registration Number *</label>
+                <label class="v3-form-label">Vehicle / Cab Number *</label>
                 <input type="text" id="dispatchVehicleNo" class="v3-form-input" placeholder="e.g. JK-01-AB-1234">
             </div>
         </div>
 
         <div class="ops-form-row">
             <div class="v3-form-group">
-                <label class="v3-form-label">Scheduled Pickup Time</label>
-                <input type="text" id="dispatchPickupTime" class="v3-form-input" placeholder="e.g. 08:30 AM">
+                <label class="v3-form-label">Pickup Time</label>
+                <input type="text" id="dispatchPickupTime" class="v3-form-input" placeholder="e.g. 09:30 AM">
             </div>
             <div class="v3-form-group">
-                <label class="v3-form-label">Pickup Point / Airport / Hotel</label>
-                <input type="text" id="dispatchPickupLoc" class="v3-form-input" placeholder="e.g. Srinagar Airport Gate 2">
+                <label class="v3-form-label">Pickup Location / Airport / Hotel</label>
+                <input type="text" id="dispatchPickupLoc" class="v3-form-input" placeholder="e.g. Airport Gate 2 / Hotel Lobby">
             </div>
         </div>
 
         <div class="d-flex justify-content-between align-items-center pt-20 border-top mt-16">
             <a href="/dashboard/operations/trips/" class="btn-v3-action btn-outline">Back to Trip Planner</a>
             <button type="button" class="btn-v3-action btn-blue font-14 py-10 px-20" id="btnConfirmDriverDispatch">
-                <i class="fi fi-brands-whatsapp"></i> Dispatch Driver to Traveler WhatsApp
+                <i class="fi fi-brands-whatsapp"></i> Send Driver Details on WhatsApp
             </button>
         </div>
     </div>

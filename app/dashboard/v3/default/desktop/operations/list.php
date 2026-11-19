@@ -138,9 +138,6 @@ if (!$canAccessOps) {
                     <button type="button" class="btn-ops-pill" data-status="6">
                         <span class="pill-dot payment-sent"></span> Payment Sent (6)
                     </button>
-                    <button type="button" class="btn-ops-pill" data-status="8">
-                        <span class="pill-dot upay"></span> Upay (8)
-                    </button>
                     <button type="button" class="btn-ops-pill" data-status="12">
                         <span class="pill-dot paid"></span> Paid (12)
                     </button>
@@ -171,19 +168,16 @@ if (!$canAccessOps) {
                 <table class="package-table ops-table" id="opsConfirmedTable">
                     <thead>
                         <tr>
-                            <th class="th-lead">Lead &amp; Traveler</th>
-                            <th class="th-dest">Destination</th>
-                            <th class="th-dates">Travel Dates</th>
-                            <th class="th-pax">Pax</th>
-                            <th class="th-financials">Package &amp; Payments</th>
-                            <th class="th-agent">Sales Agent</th>
+                            <th class="th-lead">Traveler &amp; Lead</th>
+                            <th class="th-tour">Tour &amp; Dates</th>
+                            <th class="th-financials">Payment</th>
                             <th class="th-status">Ops Status</th>
-                            <th class="th-actions text-right">Operational Actions</th>
+                            <th class="th-actions text-right">Actions</th>
                         </tr>
                     </thead>
                     <tbody id="opsConfirmedTableBody">
                         <tr>
-                            <td colspan="8" class="text-center p-30 text-muted">
+                            <td colspan="5" class="text-center p-30 text-muted">
                                 <i class="fi fi-rr-spinner fi-spin"></i> Loading confirmed leads...
                             </td>
                         </tr>
@@ -223,6 +217,20 @@ if (!$canAccessOps) {
         <div class="v3-modal-body">
             <input type="hidden" id="bkgModalLeadId" value="">
             
+            <!-- Lead Traveler Context Ribbon -->
+            <div class="ops-bkg-traveler-ribbon">
+                <div class="ops-bkg-traveler-left">
+                    <i class="fi fi-rr-user text-blue"></i>
+                    <span class="traveler-label">Traveler:</span>
+                    <span id="bkgLeadGuestName" class="ops-bkg-traveler-name">Guest Traveler</span>
+                    <span id="bkgLeadIdBadge" class="ops-bkg-tag id-tag">#--</span>
+                </div>
+                <div class="ops-bkg-traveler-tags">
+                    <span id="bkgLeadDestBadge" class="ops-bkg-tag"><i class="fi fi-rr-map-marker"></i> Package</span>
+                    <span id="bkgLeadPaxBadge" class="ops-bkg-tag"><i class="fi fi-rr-users"></i> Pax</span>
+                </div>
+            </div>
+
             <div class="ops-modal-grid">
                 <!-- Left Column: Logistics Configuration -->
                 <div class="ops-modal-col-left">
@@ -230,8 +238,8 @@ if (!$canAccessOps) {
 
                     <div class="v3-form-group">
                         <label class="v3-form-label">Vendor Service Type *</label>
-                        <select id="bkgVendorType" class="v3-form-input">
-                            <option value="hotel">Hotel / Property</option>
+                        <select id="bkgVendorType" class="v3-form-input selectJS2" data-placeholder="Choose Service Type">
+                            <option value="hotel" selected>Hotel / Property</option>
                             <option value="transport">Transporter / Cab</option>
                             <option value="activity">Activity / Tour Guide</option>
                         </select>
@@ -239,7 +247,7 @@ if (!$canAccessOps) {
 
                     <div class="v3-form-group" id="bkgSelectVendorWrap">
                         <label class="v3-form-label">Select Vendor / Property *</label>
-                        <select id="bkgVendorSelect" class="v3-form-input">
+                        <select id="bkgVendorSelect" class="v3-form-input selectJS2" data-placeholder="-- Choose Vendor / Property --">
                             <option value="">-- Choose Vendor --</option>
                         </select>
                     </div>
@@ -247,34 +255,49 @@ if (!$canAccessOps) {
                     <div class="ops-form-row">
                         <div class="v3-form-group">
                             <label class="v3-form-label">Vendor Phone / WhatsApp *</label>
-                            <input type="text" id="bkgVendorPhone" class="v3-form-input" placeholder="e.g. 9876543210">
+                            <div class="ops-input-icon-wrap">
+                                <span class="ops-input-prefix"><i class="fi fi-brands-whatsapp text-emerald"></i></span>
+                                <input type="text" id="bkgVendorPhone" class="v3-form-input" placeholder="e.g. 9876543210">
+                            </div>
                         </div>
                         <div class="v3-form-group">
                             <label class="v3-form-label">Vendor Email</label>
-                            <input type="email" id="bkgVendorEmail" class="v3-form-input" placeholder="e.g. booking@hotel.com">
+                            <div class="ops-input-icon-wrap">
+                                <span class="ops-input-prefix"><i class="fi fi-rr-envelope text-blue"></i></span>
+                                <input type="email" id="bkgVendorEmail" class="v3-form-input" placeholder="e.g. booking@hotel.com">
+                            </div>
                         </div>
                     </div>
 
                     <div class="ops-form-row">
                         <div class="v3-form-group">
                             <label class="v3-form-label">Check-In / Pickup Date *</label>
-                            <input type="date" id="bkgCheckIn" class="v3-form-input">
+                            <div class="ops-input-icon-wrap">
+                                <span class="ops-input-prefix"><i class="fi fi-rr-calendar"></i></span>
+                                <input type="date" id="bkgCheckIn" class="v3-form-input">
+                            </div>
                         </div>
                         <div class="v3-form-group">
                             <label class="v3-form-label">Check-Out / End Date *</label>
-                            <input type="date" id="bkgCheckOut" class="v3-form-input">
+                            <div class="ops-input-icon-wrap">
+                                <span class="ops-input-prefix"><i class="fi fi-rr-calendar"></i></span>
+                                <input type="date" id="bkgCheckOut" class="v3-form-input">
+                            </div>
                         </div>
                     </div>
 
                     <div class="ops-form-row">
                         <div class="v3-form-group">
                             <label class="v3-form-label">Room / Vehicle Type</label>
-                            <input type="text" id="bkgRoomCategory" class="v3-form-input" placeholder="e.g. Deluxe Room / Innova">
+                            <div class="ops-input-icon-wrap">
+                                <span class="ops-input-prefix"><i class="fi fi-rr-bed"></i></span>
+                                <input type="text" id="bkgRoomCategory" class="v3-form-input" placeholder="e.g. Deluxe Room / Innova">
+                            </div>
                         </div>
                         <div class="v3-form-group">
                             <label class="v3-form-label">Meal Plan</label>
-                            <select id="bkgMealPlan" class="v3-form-input">
-                                <option value="CP">CP (Breakfast only)</option>
+                            <select id="bkgMealPlan" class="v3-form-input selectJS2" data-placeholder="Select Meal Plan">
+                                <option value="CP" selected>CP (Breakfast only)</option>
                                 <option value="MAP">MAP (Breakfast + Dinner)</option>
                                 <option value="AP">AP (All Meals)</option>
                                 <option value="EP">EP (Room only)</option>
@@ -284,25 +307,71 @@ if (!$canAccessOps) {
 
                     <div class="v3-form-group">
                         <label class="v3-form-label">Special Remarks / Instructions</label>
-                        <input type="text" id="bkgSpecialNotes" class="v3-form-input" placeholder="e.g. Early check-in requested, high floor">
+                        <div class="ops-input-icon-wrap">
+                            <span class="ops-input-prefix"><i class="fi fi-rr-comment-alt"></i></span>
+                            <input type="text" id="bkgSpecialNotes" class="v3-form-input" placeholder="e.g. Early check-in requested, high floor">
+                        </div>
                     </div>
 
                     <div class="v3-form-group">
                         <label class="v3-form-label">Dispatch Channel *</label>
-                        <div class="ops-radio-group">
-                            <label class="ops-radio-label">
+                        <div class="ops-segmented-channel-toggle">
+                            <label class="ops-channel-chip">
                                 <input type="radio" name="bkgChannel" value="both" checked>
-                                <span><i class="fi fi-rr-shuffle"></i> Both (WhatsApp &amp; Email)</span>
+                                <div class="ops-chip-card">
+                                    <span class="chip-icon"><i class="fi fi-rr-shuffle"></i></span>
+                                    <div class="chip-text">
+                                        <span class="chip-title">Both Channels</span>
+                                        <span class="chip-subtitle">WhatsApp &amp; Email</span>
+                                    </div>
+                                    <span class="chip-badge">Best</span>
+                                </div>
                             </label>
-                            <label class="ops-radio-label">
+                            <label class="ops-channel-chip">
                                 <input type="radio" name="bkgChannel" value="whatsapp">
-                                <span><i class="fi fi-brands-whatsapp"></i> WhatsApp Only</span>
+                                <div class="ops-chip-card">
+                                    <span class="chip-icon text-emerald"><i class="fi fi-brands-whatsapp"></i></span>
+                                    <div class="chip-text">
+                                        <span class="chip-title">WhatsApp</span>
+                                        <span class="chip-subtitle">Direct Message</span>
+                                    </div>
+                                </div>
                             </label>
-                            <label class="ops-radio-label">
+                            <label class="ops-channel-chip">
                                 <input type="radio" name="bkgChannel" value="email">
-                                <span><i class="fi fi-rr-envelope"></i> Email Only</span>
+                                <div class="ops-chip-card">
+                                    <span class="chip-icon text-blue"><i class="fi fi-rr-envelope"></i></span>
+                                    <div class="chip-text">
+                                        <span class="chip-title">Email</span>
+                                        <span class="chip-subtitle">Reservation Email</span>
+                                    </div>
+                                </div>
                             </label>
                         </div>
+                    </div>
+
+                    <!-- Fulfillments & Delivery Toggles -->
+                    <div class="ops-form-toggles-box">
+                        <label class="ops-switch-item">
+                            <div class="ops-switch-content">
+                                <span class="ops-switch-title"><i class="fi fi-rr-document-signed"></i> Auto-Attach Itinerary Details</span>
+                                <span class="ops-switch-desc">Includes stay duration, meal plan &amp; guest count</span>
+                            </div>
+                            <div class="ops-toggle-switch">
+                                <input type="checkbox" id="bkgOptAttachGuest" checked>
+                                <span class="ops-toggle-slider"></span>
+                            </div>
+                        </label>
+                        <label class="ops-switch-item">
+                            <div class="ops-switch-content">
+                                <span class="ops-switch-title"><i class="fi fi-rr-bell-ring"></i> Operations Team Notification</span>
+                                <span class="ops-switch-desc">Log dispatch alert in internal operations history</span>
+                            </div>
+                            <div class="ops-toggle-switch">
+                                <input type="checkbox" id="bkgOptNotifyOps" checked>
+                                <span class="ops-toggle-slider"></span>
+                            </div>
+                        </label>
                     </div>
                 </div>
 
@@ -320,7 +389,7 @@ if (!$canAccessOps) {
 
                         <div class="ops-template-picker">
                             <label><i class="fi fi-rr-file-edit"></i> Template:</label>
-                            <select id="bkgTemplatePicker" class="v3-form-input-sm">
+                            <select id="bkgTemplatePicker" class="v3-form-input-sm selectJS2" data-placeholder="Choose Template">
                                 <option value="">Default Template</option>
                             </select>
                         </div>
@@ -328,23 +397,86 @@ if (!$canAccessOps) {
 
                     <!-- WhatsApp Preview Box -->
                     <div class="ops-preview-box active" id="previewBoxWhatsApp">
-                        <div class="ops-wa-bubble-wrap">
-                            <div class="ops-wa-bubble-header">
-                                <i class="fi fi-brands-whatsapp"></i> Message Content (You can modify this text before sending):
+                        <div class="ops-wa-preview-card">
+                            <div class="ops-wa-top-bar">
+                                <div class="ops-wa-profile">
+                                    <div class="ops-wa-avatar">
+                                        <i class="fi fi-rr-building" id="bkgWaVendorAvatarIcon"></i>
+                                    </div>
+                                    <div class="ops-wa-meta">
+                                        <span class="ops-wa-vendor-name" id="bkgWaLiveVendorName">Vendor Partner</span>
+                                        <span class="ops-wa-vendor-status"><span class="ops-wa-status-dot"></span> WhatsApp Business &bull; Verified</span>
+                                    </div>
+                                </div>
+                                <div class="ops-wa-badge-pill">
+                                    <i class="fi fi-brands-whatsapp"></i> Live Chat Preview
+                                </div>
                             </div>
-                            <textarea id="bkgWhatsAppContent" class="ops-wa-textarea" rows="12"></textarea>
+                            
+                            <div class="ops-wa-chat-canvas">
+                                <div class="ops-wa-bubble">
+                                    <div class="ops-wa-bubble-prompt">
+                                        <span><i class="fi fi-rr-edit text-emerald"></i> Message Content (You can modify this text before sending):</span>
+                                    </div>
+                                    <textarea id="bkgWhatsAppContent" class="ops-wa-textarea" rows="11" placeholder="Type WhatsApp message here..."></textarea>
+                                    <div class="ops-wa-bubble-footer">
+                                        <span class="ops-wa-char-count" id="bkgWaCharCount">0 characters</span>
+                                        <span class="ops-wa-time-meta">Live &bull; Ready <span class="ops-wa-ticks">&#10003;&#10003;</span></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="ops-preview-actions-bar">
+                            <button type="button" class="btn-ops-mini" id="btnResetWaPreview"><i class="fi fi-rr-refresh"></i> Reset Text</button>
+                            <button type="button" class="btn-ops-mini" id="btnCopyWaPreview"><i class="fi fi-rr-copy"></i> Copy Text</button>
                         </div>
                     </div>
 
                     <!-- Email Preview Box -->
                     <div class="ops-preview-box" id="previewBoxEmail">
-                        <div class="v3-form-group mb-10">
-                            <label class="v3-form-label">Email Subject</label>
-                            <input type="text" id="bkgEmailSubject" class="v3-form-input" placeholder="Subject...">
+                        <div class="ops-email-preview-card">
+                            <div class="ops-email-client-header">
+                                <div class="ops-email-meta-row">
+                                    <span class="ops-email-meta-label">To:</span>
+                                    <span class="ops-email-recipient-chip" id="bkgEmailRecipientPreview">vendor@hotel.com</span>
+                                </div>
+                                <div class="ops-email-meta-row">
+                                    <span class="ops-email-meta-label">Subject:</span>
+                                    <input type="text" id="bkgEmailSubject" class="v3-form-input ops-email-subject-input" placeholder="Subject...">
+                                </div>
+                            </div>
+
+                            <!-- Rich Text Toolbar -->
+                            <div class="ops-email-editor-toolbar">
+                                <div class="editor-tool-group">
+                                    <button type="button" class="btn-editor-tool" data-cmd="bold" title="Bold"><i class="fi fi-rr-bold"></i></button>
+                                    <button type="button" class="btn-editor-tool" data-cmd="italic" title="Italic"><i class="fi fi-rr-italic"></i></button>
+                                    <button type="button" class="btn-editor-tool" data-cmd="underline" title="Underline"><i class="fi fi-rr-underline"></i></button>
+                                </div>
+                                <div class="editor-tool-separator"></div>
+                                <div class="editor-tool-group">
+                                    <button type="button" class="btn-editor-tool" data-cmd="insertUnorderedList" title="Bullet List"><i class="fi fi-rr-list"></i></button>
+                                    <button type="button" class="btn-editor-tool" data-cmd="insertOrderedList" title="Numbered List"><i class="fi fi-rr-list-number"></i></button>
+                                </div>
+                                <div class="editor-mode-toggle">
+                                    <button type="button" class="btn-mode-tab active" data-mode="visual" id="btnEmailModeVisual"><i class="fi fi-rr-eye"></i> Visual Preview</button>
+                                    <button type="button" class="btn-mode-tab" data-mode="code" id="btnEmailModeCode"><i class="fi fi-rr-code-simple"></i> HTML Source</button>
+                                </div>
+                            </div>
+
+                            <!-- Visual Rich HTML Viewport -->
+                            <div class="ops-email-visual-viewport" id="bkgEmailVisualEditor" contenteditable="true">
+                                <p>Loading preview...</p>
+                            </div>
+
+                            <!-- Raw HTML Code Editor (toggled via button) -->
+                            <div class="ops-email-code-wrap" id="bkgEmailCodeWrap">
+                                <textarea id="bkgEmailContent" class="ops-email-textarea" rows="10"></textarea>
+                            </div>
                         </div>
-                        <div class="ops-email-body-wrap">
-                            <label class="v3-form-label">Email HTML Body (Editable)</label>
-                            <textarea id="bkgEmailContent" class="ops-email-textarea" rows="10"></textarea>
+                        <div class="ops-preview-actions-bar">
+                            <button type="button" class="btn-ops-mini" id="btnResetEmailPreview"><i class="fi fi-rr-refresh"></i> Reset Content</button>
                         </div>
                     </div>
                 </div>
@@ -352,10 +484,16 @@ if (!$canAccessOps) {
         </div>
 
         <div class="v3-modal-footer">
-            <button type="button" class="btn-v3-action btn-outline v3-modal-close-trigger">Cancel</button>
-            <button type="button" class="btn-v3-action btn-blue" id="btnConfirmSendBookingRequest">
-                <i class="fi fi-rr-paper-plane"></i> Send Booking Request Now
-            </button>
+            <div class="ops-modal-footer-info">
+                <i class="fi fi-rr-shield-check text-emerald"></i>
+                <span>Direct Dispatch via Integrated WhatsApp &amp; Email Gateway</span>
+            </div>
+            <div class="ops-modal-footer-actions">
+                <button type="button" class="btn-v3-action btn-outline v3-modal-close-trigger">Cancel</button>
+                <button type="button" class="btn-v3-action btn-blue" id="btnConfirmSendBookingRequest">
+                    <i class="fi fi-rr-paper-plane"></i> Send Booking Request Now
+                </button>
+            </div>
         </div>
     </div>
 </div>
@@ -392,6 +530,54 @@ if (!$canAccessOps) {
             <div class="ops-voucher-items-list" id="voucherItemsList">
                 <!-- Booking rows with confirmation ref inputs -->
             </div>
+
+            <!-- Direct Supplementary / Manual Reference Numbers -->
+            <div class="ops-voucher-direct-section" id="voucherDirectSection">
+                <div class="ops-voucher-direct-header">
+                    <span class="direct-title"><i class="fi fi-rr-edit text-emerald"></i> Quick / Direct Confirmation Details</span>
+                    <span class="direct-subtitle">Enter property confirmation numbers or driver details directly for the voucher</span>
+                </div>
+                <div class="ops-form-row">
+                    <div class="v3-form-group">
+                        <label class="v3-form-label">Hotel / Resort Confirmation Ref</label>
+                        <div class="ops-input-icon-wrap">
+                            <span class="ops-input-prefix"><i class="fi fi-rr-building text-blue"></i></span>
+                            <input type="text" id="voucherDirectHotelRef" class="v3-form-input" placeholder="e.g. HTL-2026-9812">
+                        </div>
+                    </div>
+                    <div class="v3-form-group">
+                        <label class="v3-form-label">Cab / Driver Contact &amp; Cab No.</label>
+                        <div class="ops-input-icon-wrap">
+                            <span class="ops-input-prefix"><i class="fi fi-rr-car text-emerald"></i></span>
+                            <input type="text" id="voucherDirectDriverRef" class="v3-form-input" placeholder="e.g. Innova (Tariq - 9876543210)">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dispatch Options Toggles -->
+            <div class="ops-form-toggles-box">
+                <label class="ops-switch-item">
+                    <div class="ops-switch-content">
+                        <span class="ops-switch-title"><i class="fi fi-brands-whatsapp text-emerald"></i> WhatsApp Voucher Alert to Traveler</span>
+                        <span class="ops-switch-desc">Send official confirmation voucher link directly to traveler</span>
+                    </div>
+                    <div class="ops-toggle-switch">
+                        <input type="checkbox" id="voucherOptSendWa" checked>
+                        <span class="ops-toggle-slider"></span>
+                    </div>
+                </label>
+                <label class="ops-switch-item">
+                    <div class="ops-switch-content">
+                        <span class="ops-switch-title"><i class="fi fi-rr-shield-check text-blue"></i> Allow Voucher Issuance Override</span>
+                        <span class="ops-switch-desc">Manager authorization for post-trip or corporate payment terms</span>
+                    </div>
+                    <div class="ops-toggle-switch">
+                        <input type="checkbox" id="voucherOptManagerOverride">
+                        <span class="ops-toggle-slider"></span>
+                    </div>
+                </label>
+            </div>
         </div>
 
         <div class="v3-modal-footer">
@@ -423,17 +609,24 @@ if (!$canAccessOps) {
             <input type="hidden" id="invModalLeadId" value="">
             <input type="hidden" id="invGuestPhone" value="">
             <input type="hidden" id="invGuestName" value="">
+            <input type="hidden" id="invRawPackageTotal" value="0">
 
             <div class="v3-form-group">
                 <label class="v3-form-label">Document Type *</label>
-                <div class="ops-radio-group">
-                    <label class="ops-radio-label">
+                <div class="ops-segmented-invoice-toggle">
+                    <label class="ops-doctype-chip">
                         <input type="radio" name="invDocType" value="proforma" checked>
-                        <span>Proforma Invoice (Pre-trip)</span>
+                        <div class="ops-doctype-card">
+                            <i class="fi fi-rr-document text-amber"></i>
+                            <span>Proforma Invoice (Pre-trip)</span>
+                        </div>
                     </label>
-                    <label class="ops-radio-label">
+                    <label class="ops-doctype-chip">
                         <input type="radio" name="invDocType" value="tax_invoice">
-                        <span>Tax Invoice (Settled)</span>
+                        <div class="ops-doctype-card">
+                            <i class="fi fi-rr-receipt text-emerald"></i>
+                            <span>Tax Invoice (Settled)</span>
+                        </div>
                     </label>
                 </div>
             </div>
@@ -455,13 +648,19 @@ if (!$canAccessOps) {
                     <span>Package Itinerary Total:</span>
                     <strong id="invPkgTotal">₹ 0</strong>
                 </div>
-                <div class="ops-inv-row">
+                <div class="ops-inv-row text-muted">
                     <span>GST (5% Included):</span>
                     <span id="invGstAmount">₹ 0</span>
                 </div>
-                <div class="ops-inv-row text-emerald">
-                    <span>Advance / Payments Verified:</span>
-                    <strong id="invAdvancePaid">- ₹ 0</strong>
+                <!-- Editable Advance Payment Input -->
+                <div class="ops-inv-row ops-inv-advance-input-row">
+                    <label for="invAdvanceInput" class="ops-inv-advance-label">
+                        <i class="fi fi-rr-wallet text-emerald"></i> Advance / Received Payment (₹):
+                    </label>
+                    <div class="ops-inv-advance-field-wrap">
+                        <span class="currency-tag">₹</span>
+                        <input type="number" id="invAdvanceInput" class="v3-form-input inv-editable-advance" placeholder="0" min="0" step="100">
+                    </div>
                 </div>
                 <div class="ops-inv-row highlight">
                     <span>Outstanding Balance Due:</span>

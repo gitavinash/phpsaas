@@ -171,13 +171,25 @@ if ($method === 'POST') {
         $isPaidOrAdvance = true;
     }
 
-    if (!$isPaidOrAdvance) {
+    $forceOverride = !empty($input['force_override']);
+    if (!$isPaidOrAdvance && !$forceOverride) {
         echo json_encode([
             'status'  => 'error',
             'code'    => 'PAYMENT_REQUIRED',
-            'message' => 'Business Rule Enforcement: Travel Vouchers cannot be issued until an advance payment is verified (Status 8 Upay, 12 Payment Received, or 1 Success).'
+            'message' => 'Business Rule Enforcement: Travel Vouchers cannot be issued until an advance payment is verified or Manager Override is authorized.'
         ]);
         exit();
+    }
+
+    // Process direct supplementary references if provided
+    $directHotel = isset($input['direct_hotel_ref']) ? trim($input['direct_hotel_ref']) : '';
+    $directDriver = isset($input['direct_driver_ref']) ? trim($input['direct_driver_ref']) : '';
+    if (!empty($directHotel) || !empty($directDriver)) {
+        $directNote = "Direct Voucher References: " . (!empty($directHotel) ? "Hotel Ref: {$directHotel}; " : "") . (!empty($directDriver) ? "Driver: {$directDriver}; " : "");
+        $directNoteEsc = mysqli_real_escape_string($connection, $directNote);
+        mysqli_query($connection, "INSERT INTO {$tblPrefix}enquiry_notes 
+            (enquiry_notes_ref_id, enquiry_notes_user_id, enquiry_notes_meta_type, enquiry_notes_meta_value, enquiry_notes_update)
+            VALUES ({$leadId}, {$currentUserId}, 'voucher_direct_ref', '{$directNoteEsc}', CURRENT_TIMESTAMP)");
     }
 
     // Process voucher items

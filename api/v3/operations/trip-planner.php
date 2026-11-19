@@ -100,6 +100,8 @@ if ($method === 'GET') {
                 ? $row['profile_travel_date']
                 : (!empty($extra['travel_date']) ? $extra['travel_date'] : (!empty($extra['departure_date']) ? $extra['departure_date'] : ''));
 
+            $rawCheckOut = (!empty($extra['return_date']) ? $extra['return_date'] : (!empty($extra['end_date']) ? $extra['end_date'] : (!empty($extra['check_out']) ? $extra['check_out'] : '')));
+
             $durationDays = !empty($row['profile_duration_days']) ? (int)$row['profile_duration_days'] : (!empty($extra['duration_days']) ? (int)$extra['duration_days'] : 3);
             if ($durationDays < 1) $durationDays = 3;
 
@@ -109,7 +111,7 @@ if ($method === 'GET') {
             if (empty($startDate)) {
                 $startDate = date('Y-m-d', strtotime($row['enquiry_time']));
             }
-            if (empty($endDate)) {
+            if (empty($endDate) || strtotime($endDate) < strtotime($startDate)) {
                 $endDate = date('Y-m-d', strtotime($startDate . ' + ' . $durationDays . ' days'));
             }
 
@@ -143,24 +145,25 @@ if ($method === 'GET') {
                 $item['pickup_time']  = $trDetails['pickup_time'] ?? '';
             }
 
+            // Categorize into daily logistics columns
             if ($st === 14) {
+                // Explicitly marked completed
                 $completedTrips[] = $item;
             } elseif ($startDate === $tomorrowStr) {
+                // Departing tomorrow
                 $tomorrowTrips[] = $item;
-            } elseif ($startDate === $todayStr) {
+            } elseif ($startDate === $todayStr && $st !== 13) {
+                // Starting today (pending departure action)
                 $departingToday[] = $item;
             } elseif ($endDate === $todayStr) {
+                // Returning today
                 $returningToday[] = $item;
-            } elseif ($startDate < $todayStr && $endDate > $todayStr) {
+            } elseif ($startDate <= $todayStr && $endDate >= $todayStr) {
+                // ACTIVE ON TOUR: Current date lies strictly between travel start and end date
                 $activeOnTour[] = $item;
-            } elseif ($st === 13) {
-                // Marked as trip in progress
-                $activeOnTour[] = $item;
-            } elseif ($startDate > $todayStr && ($st === 11 || $st === 12 || $st === 10)) {
-                // Tomorrow or upcoming departures
-                $tomorrowTrips[] = $item;
-            } else {
-                $activeOnTour[] = $item;
+            } elseif ($endDate < $todayStr) {
+                // Tour ended in the past
+                $completedTrips[] = $item;
             }
         }
     }

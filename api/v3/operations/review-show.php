@@ -49,6 +49,7 @@ $destination = !empty($lead['enquiry_subject']) ? $lead['enquiry_subject'] : 'Yo
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -67,7 +68,9 @@ $destination = !empty($lead['enquiry_subject']) ? $lead['enquiry_subject'] : 'Yo
             --slate-800: #1e293b;
         }
 
-        *, *::before, *::after {
+        *,
+        *::before,
+        *::after {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
@@ -258,6 +261,7 @@ $destination = !empty($lead['enquiry_subject']) ? $lead['enquiry_subject'] : 'Yo
         }
     </style>
 </head>
+
 <body>
 
     <div class="review-card">
@@ -392,7 +396,7 @@ $destination = !empty($lead['enquiry_subject']) ? $lead['enquiry_subject'] : 'Yo
                 $(this).prop('disabled', true).text('Submitting...');
 
                 $.ajax({
-                    url: '/api/v3/operations/feedback.php?action=submit_review',
+                    url: '/api/v3/operations/feedback.phpaction=submit_review',
                     type: 'POST',
                     contentType: 'application/json',
                     data: JSON.stringify(payload),
@@ -414,4 +418,5 @@ $destination = !empty($lead['enquiry_subject']) ? $lead['enquiry_subject'] : 'Yo
         });
     </script>
 </body>
+
 </html>

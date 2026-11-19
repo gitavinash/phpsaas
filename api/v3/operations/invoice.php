@@ -156,20 +156,22 @@ if ($method === 'POST') {
     $docType = isset($input['type']) ? trim($input['type']) : 'proforma'; // proforma or tax_invoice
     $invNum  = isset($input['invoice_number']) ? trim($input['invoice_number']) : 'INV-' . $leadId;
     $amount  = isset($input['total_amount']) ? (float)$input['total_amount'] : 0.0;
-    $balance = isset($input['balance_due']) ? (float)$input['balance_due'] : 0.0;
+    $advance = isset($input['advance_amount']) ? (float)$input['advance_amount'] : max(0, $amount - (float)($input['balance_due'] ?? 0));
+    $balance = isset($input['balance_due']) ? (float)$input['balance_due'] : max(0, $amount - $advance);
     $guestMobile = isset($input['guest_phone']) ? trim($input['guest_phone']) : '';
     $guestName   = isset($input['guest_name']) ? trim($input['guest_name']) : 'Traveler';
 
     // Build WhatsApp invoice summary message
     $docTitle = ($docType === 'tax_invoice') ? 'Tax Invoice' : 'Proforma Invoice';
-    $waText = "Dear *{$guestName}*,\n\nPlease find your *{$docTitle}* (*{$invNum}*) from *{$siteName}*:\n\n💰 *Total Package Value:* ₹ " . number_format($amount, 2) . "\n💳 *Balance Due:* ₹ " . number_format($balance, 2) . "\n\n📄 You can view and download your invoice copy from your traveler dashboard.\n\nThank you for choosing *{$siteName}*!\nOperations Team";
+    $advanceLine = ($advance > 0) ? "\n💵 *Advance / Paid:* ₹ " . number_format($advance, 2) : "";
+    $waText = "Dear *{$guestName}*,\n\nPlease find your *{$docTitle}* (*{$invNum}*) from *{$siteName}*:\n\n💰 *Total Package Value:* ₹ " . number_format($amount, 2) . "{$advanceLine}\n💳 *Balance Due:* ₹ " . number_format($balance, 2) . "\n\n📄 You can view and download your invoice copy from your traveler dashboard.\n\nThank you for choosing *{$siteName}*!\nOperations Team";
 
     $cleanPhone = preg_replace('/[^0-9]/', '', $guestMobile);
     $targetWa = (strlen($cleanPhone) === 10) ? '91' . $cleanPhone : $cleanPhone;
     $waLink = !empty($targetWa) ? "https://wa.me/{$targetWa}?text=" . rawurlencode($waText) : '';
 
     // Log note in lead timeline
-    $noteMsg = "{$docTitle} ({$invNum}) for ₹ " . number_format($amount, 2) . " generated and dispatched by Operations.";
+    $noteMsg = "{$docTitle} ({$invNum}) for ₹ " . number_format($amount, 2) . " (Advance: ₹ " . number_format($advance, 2) . ", Balance Due: ₹ " . number_format($balance, 2) . ") generated and dispatched by Operations.";
     $noteMsgEsc = mysqli_real_escape_string($connection, $noteMsg);
     mysqli_query($connection, "INSERT INTO {$tblPrefix}enquiry_notes 
         (enquiry_notes_ref_id, enquiry_notes_user_id, enquiry_notes_meta_type, enquiry_notes_meta_value, enquiry_notes_update)
