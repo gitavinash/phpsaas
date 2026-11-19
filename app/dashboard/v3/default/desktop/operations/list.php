@@ -130,22 +130,22 @@ if (!$canAccessOps) {
                 <span class="ops-filter-label"><i class="fi fi-rr-filter"></i> Stage:</span>
                 <div class="ops-status-pills" id="confirmedStatusFilter">
                     <button type="button" class="btn-ops-pill active" data-status="">
-                        <span class="pill-dot all"></span> All Confirmed
+                        <span class="pill-dot all"></span> All Confirmed (<span class="ops-pill-count pill-count-all" id="pillCountAll">0</span>)
                     </button>
                     <button type="button" class="btn-ops-pill" data-status="10">
-                        <span class="pill-dot approved"></span> Approved (10)
+                        <span class="pill-dot approved"></span> Approved (<span class="ops-pill-count pill-count-approved" id="pillCountApproved">0</span>)
                     </button>
                     <button type="button" class="btn-ops-pill" data-status="1">
-                        <span class="pill-dot confirmed"></span> Confirmed (1)
+                        <span class="pill-dot confirmed"></span> Confirmed (<span class="ops-pill-count pill-count-confirmed" id="pillCountConfirmed">0</span>)
                     </button>
                     <button type="button" class="btn-ops-pill" data-status="11">
-                        <span class="pill-dot voucher"></span> Vouchers (11)
+                        <span class="pill-dot voucher"></span> Vouchers (<span class="ops-pill-count pill-count-voucher" id="pillCountVoucher">0</span>)
                     </button>
                     <button type="button" class="btn-ops-pill" data-status="13">
-                        <span class="pill-dot progress"></span> In Progress (13)
+                        <span class="pill-dot progress"></span> In Progress (<span class="ops-pill-count pill-count-progress" id="pillCountProgress">0</span>)
                     </button>
                     <button type="button" class="btn-ops-pill" data-status="14">
-                        <span class="pill-dot completed"></span> Completed (14)
+                        <span class="pill-dot completed"></span> Completed (<span class="ops-pill-count pill-count-completed" id="pillCountCompleted">0</span>)
                     </button>
                 </div>
             </div>

@@ -754,13 +754,21 @@
           const m = res.metrics;
           $("#statConfirmedTotal").text(m.confirmed_total || 0);
           $("#statQuoteApproved").text(m.quotation_approved || 0);
-          $("#statPaidBookings").text(m.payments_recorded || 0);
+          $("#statPaidBookings").text(m.confirmed_queue !== undefined ? m.confirmed_queue : (m.payments_recorded || 0));
           $("#statVouchersIssued").text(m.vouchers_issued || 0);
           $("#statTripsInProgress").text(m.trips_in_progress || 0);
 
           $("#badgeConfirmedCount").text(m.confirmed_total || 0);
           $("#badgeTripsCount").text(m.trips_in_progress || 0);
           $("#badgeUnassignedCount").text(m.unassigned_count || 0);
+
+          // Update filter pill counts dynamically
+          $(".pill-count-all, #pillCountAll").text(m.confirmed_total || 0);
+          $(".pill-count-approved, #pillCountApproved").text(m.quotation_approved || 0);
+          $(".pill-count-confirmed, #pillCountConfirmed").text(m.confirmed_queue !== undefined ? m.confirmed_queue : (m.payments_recorded || 0));
+          $(".pill-count-voucher, #pillCountVoucher").text(m.vouchers_issued || 0);
+          $(".pill-count-progress, #pillCountProgress").text(m.trips_in_progress || 0);
+          $(".pill-count-completed, #pillCountCompleted").text(m.trips_completed || 0);
         }
       });
     },

@@ -35,7 +35,7 @@ if (!empty($site_access_type)) {
     $userRole = strtolower(trim(base64_decode($_COOKIE['user_type'])));
 }
 
-if (!in_array($userRole, ['administrator', 'operations', 'super_administrator'])) {
+if (!in_array($userRole, ['administrator', 'operations', 'super_administrator', 'admin', 'superadmin'])) {
     echo json_encode([
         'status' => 'error',
         'code'   => 403,
@@ -75,6 +75,7 @@ if ($action === 'metrics') {
     $metrics = [
         'confirmed_total'   => 0,
         'quotation_approved'=> 0,
+        'confirmed_queue'   => 0,
         'payments_recorded' => 0,
         'vouchers_issued'   => 0,
         'trips_in_progress' => 0,
@@ -93,11 +94,14 @@ if ($action === 'metrics') {
             $st = (int)$row['enquiry_status'];
             $c  = (int)$row['cnt'];
 
-            if (in_array($st, [10, 6, 8, 12, 1, 11, 13])) {
+            if (in_array($st, [10, 6, 8, 12, 1, 11, 13, 14])) {
                 $metrics['confirmed_total'] += $c;
             }
             if ($st === 10) $metrics['quotation_approved'] += $c;
-            if (in_array($st, [8, 12, 1])) $metrics['payments_recorded'] += $c;
+            if (in_array($st, [1, 12, 6, 8])) {
+                $metrics['confirmed_queue'] += $c;
+                $metrics['payments_recorded'] += $c;
+            }
             if ($st === 11) $metrics['vouchers_issued'] += $c;
             if ($st === 13) $metrics['trips_in_progress'] += $c;
             if ($st === 14) $metrics['trips_completed'] += $c;
