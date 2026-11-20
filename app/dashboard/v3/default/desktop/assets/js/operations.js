@@ -89,6 +89,8 @@
         if (templateId && parseInt(templateId, 10) > 0) {
           this.loadSingleTemplate(parseInt(templateId, 10));
         } else {
+          this.tplEditorViewMode = "rich";
+          this.loadBodyIntoRichEditor($("#tplEditorBody").val(), $("#tplEditorChannel").val() || "whatsapp");
           this.syncTemplateEditorUI();
           this.updateTemplateLivePreview();
         }
@@ -610,8 +612,41 @@
 
       $(document).on("click", ".btn-delete-template", function () {
         const tId = $(this).data("id") || $(this).attr("data-id");
-        if (confirm("Are you sure you want to delete this template?")) {
-          self.deleteTemplate(tId);
+        const swalObj = typeof window.Swal !== "undefined" ? window.Swal : (typeof Swal !== "undefined" ? Swal : null);
+        if (swalObj && typeof swalObj.fire === "function") {
+          swalObj.fire({
+            title: "Delete Template?",
+            text: "Are you sure you want to delete this template? This action cannot be undone.",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#e11d48",
+            cancelButtonColor: "#64748b",
+            confirmButtonText: "Yes, delete it",
+            cancelButtonText: "Cancel"
+          }).then(function (result) {
+            if (result.isConfirmed) {
+              self.deleteTemplate(tId);
+            }
+          });
+        } else if (typeof window.swal === "function" || typeof swal === "function") {
+          const swalFn = typeof window.swal === "function" ? window.swal : swal;
+          swalFn({
+            title: "Delete Template?",
+            text: "Are you sure you want to delete this template? This action cannot be undone.",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#e11d48",
+            confirmButtonText: "Yes, delete it",
+            closeOnConfirm: true
+          }, function (isConfirm) {
+            if (isConfirm) {
+              self.deleteTemplate(tId);
+            }
+          });
+        } else {
+          if (confirm("Are you sure you want to delete this template?")) {
+            self.deleteTemplate(tId);
+          }
         }
       });
 
@@ -627,15 +662,7 @@
       // 23. Inserter pills for Merge Tags in Template Editor
       $(document).on("click", "#tplMergeTagsWrap .ops-tag-pill", function () {
         const tag = $(this).data("tag");
-        const textarea = document.getElementById("tplEditorBody");
-        if (!textarea) return;
-        const start = textarea.selectionStart;
-        const end = textarea.selectionEnd;
-        const text = textarea.value;
-        textarea.value = text.substring(0, start) + tag + text.substring(end);
-        textarea.focus();
-        textarea.selectionStart = textarea.selectionEnd = start + tag.length;
-        $("#tplEditorBody").trigger("input");
+        self.insertIntoEditor(tag);
       });
 
       // Template variable live search filter
@@ -665,6 +692,7 @@
         $(this).addClass("active");
         $("#tplEditorChannel").val(channel);
         self.syncTemplateEditorUI();
+        self.loadBodyIntoRichEditor($("#tplEditorBody").val(), channel);
         self.updateTemplateLivePreview();
       });
 
@@ -678,13 +706,33 @@
         self.updateTemplateLivePreview();
       });
 
-      // Live update on typing template body or subject
+      // Live update on typing in Rich Editor (Active by Default)
+      $(document).on("input", "#tplEditorRichBody", function () {
+        const channel = $("#tplEditorChannel").val() || "whatsapp";
+        if (channel === "email") {
+          $("#tplEditorBody").val($(this).html());
+        } else {
+          $("#tplEditorBody").val(self.richHtmlToWaText(this));
+        }
+        self.updateTemplateLivePreview();
+      });
+
+      // Live update on typing in Raw Source Textarea
       $(document).on("input", "#tplEditorBody", function () {
         self.updateTemplateLivePreview();
       });
 
       $(document).on("input", "#tplEditorSubject", function () {
         self.updateTemplateLivePreview();
+      });
+
+      // View Switcher: Visual Rich Text vs Source Code
+      $(document).on("click", "#btnTplViewRich", function () {
+        self.switchTemplateEditorView("rich");
+      });
+
+      $(document).on("click", "#btnTplViewSource", function () {
+        self.switchTemplateEditorView("source");
       });
 
       // Preview Mode switcher: Sample Data vs Raw Tags
@@ -714,61 +762,30 @@
         }
       });
 
-      // Formatting Toolbar Buttons
-      function wrapTextareaSelection(prefix, suffix, defaultPlaceholder) {
-        const textarea = document.getElementById("tplEditorBody");
-        if (!textarea) return;
-        const start = textarea.selectionStart;
-        const end = textarea.selectionEnd;
-        const selText = textarea.value.substring(start, end) || defaultPlaceholder;
-        const replacement = prefix + selText + suffix;
-        textarea.value = textarea.value.substring(0, start) + replacement + textarea.value.substring(end);
-        textarea.focus();
-        textarea.selectionStart = start + prefix.length;
-        textarea.selectionEnd = start + prefix.length + selText.length;
-        $("#tplEditorBody").trigger("input");
-      }
-
+      // Formatting Toolbar Buttons (supports both Visual Rich Editor & Source mode)
       $(document).on("click", "#btnTplFormatBold", function () {
-        wrapTextareaSelection("*", "*", "bold text");
+        self.formatEditorSelection("bold", "*", "*", "bold text");
       });
 
       $(document).on("click", "#btnTplFormatItalic", function () {
-        wrapTextareaSelection("_", "_", "italic text");
+        self.formatEditorSelection("italic", "_", "_", "italic text");
       });
 
       $(document).on("click", "#btnTplFormatStrike", function () {
-        wrapTextareaSelection("~", "~", "strike text");
+        self.formatEditorSelection("strike", "~", "~", "strike text");
       });
 
       $(document).on("click", "#btnTplFormatCode", function () {
-        wrapTextareaSelection("```", "```", "code");
+        self.formatEditorSelection("code", "```", "```", "code");
       });
 
       $(document).on("click", "#btnTplFormatBullet", function () {
-        const textarea = document.getElementById("tplEditorBody");
-        if (!textarea) return;
-        const start = textarea.selectionStart;
-        const end = textarea.selectionEnd;
-        const text = textarea.value;
-        const bullet = "\n• ";
-        textarea.value = text.substring(0, start) + bullet + text.substring(end);
-        textarea.focus();
-        textarea.selectionStart = textarea.selectionEnd = start + bullet.length;
-        $("#tplEditorBody").trigger("input");
+        self.formatEditorSelection("bullet", "\n• ", "", "");
       });
 
       $(document).on("click", ".ops-emoji-btn", function () {
         const emoji = $(this).data("emoji");
-        const textarea = document.getElementById("tplEditorBody");
-        if (!textarea) return;
-        const start = textarea.selectionStart;
-        const end = textarea.selectionEnd;
-        const text = textarea.value;
-        textarea.value = text.substring(0, start) + emoji + text.substring(end);
-        textarea.focus();
-        textarea.selectionStart = textarea.selectionEnd = start + emoji.length;
-        $("#tplEditorBody").trigger("input");
+        self.insertIntoEditor(emoji);
       });
 
       // Reset to Standard Preset button
@@ -1920,24 +1937,45 @@
         const tagMatches = (t.body || "").match(/\{[a-zA-Z0-9_]+\}/g) || [];
         const tagCount = Array.from(new Set(tagMatches)).length;
 
+        // Clean, readable preview excerpt without raw broken table tags
+        let previewExcerpt = t.body || "";
+        if (t.channel === "email") {
+          previewExcerpt = previewExcerpt
+            .replace(/<\/(p|div|tr|h[1-6])>/gi, "\n")
+            .replace(/<td[^>]*>/gi, " • ")
+            .replace(/<[^>]+>/g, "")
+            .replace(/\n\s*\n/g, "\n")
+            .trim();
+        }
+        let highlightedPreview = $("<div>").text(previewExcerpt).html();
+        highlightedPreview = highlightedPreview.replace(/\{([a-zA-Z0-9_]+)\}/g, '<span class="ops-card-var-tag">{$1}</span>');
+
         html += '<div class="ops-template-card" data-channel="' + t.channel + '" data-vendor="' + t.vendor_type + '">' +
           '<div class="ops-tpl-card-header">' +
             '<div>' +
-              '<div class="ops-tpl-title">' + t.title + '</div>' +
-              '<div class="ops-lead-sub mt-4">' +
-                '<span class="' + (t.channel === "whatsapp" ? "text-emerald font-weight-bold" : "text-blue font-weight-bold") + '"><i class="' + (t.channel === "whatsapp" ? "fi fi-brands-whatsapp" : "fi fi-rr-envelope") + '"></i> ' + t.channel.toUpperCase() + '</span>' +
-                '<span><i class="fi ' + vendorIcon + '"></i> ' + t.vendor_type.toUpperCase() + '</span>' +
-                '<span class="text-muted"><i class="fi fi-rr-magic-wand"></i> ' + tagCount + ' vars</span>' +
+              '<div class="ops-tpl-title">' + (t.title || "Untitled Template") + '</div>' +
+              '<div class="ops-card-badges">' +
+                '<span class="ops-card-badge ' + (t.channel === "whatsapp" ? "badge-wa" : "badge-email") + '">' +
+                  '<i class="' + (t.channel === "whatsapp" ? "fi fi-brands-whatsapp" : "fi fi-rr-envelope") + '"></i> ' + t.channel.toUpperCase() +
+                '</span>' +
+                '<span class="ops-card-badge badge-vendor">' +
+                  '<i class="fi ' + vendorIcon + '"></i> ' + t.vendor_type.toUpperCase() +
+                '</span>' +
+                '<span class="ops-card-badge badge-vars">' +
+                  '<i class="fi fi-rr-magic-wand"></i> ' + tagCount + ' vars' +
+                '</span>' +
               '</div>' +
             '</div>' +
-            (t.is_default ? '<span class="ops-status-badge badge-approved"><i class="fi fi-rr-star"></i> Default</span>' : '<button type="button" class="btn-ops-action btn-set-default-template" data-id="' + t.id + '" title="Make default for this channel and vendor">Set Default</button>') +
+            (t.is_default
+              ? '<span class="ops-card-badge badge-default"><i class="fi fi-rr-star"></i> Default</span>'
+              : '<button type="button" class="btn-ops-action btn-set-default-template" data-id="' + t.id + '" title="Set as default template for this channel and vendor"><i class="fi fi-rr-star"></i> Set Default</button>') +
           '</div>' +
-          '<div class="ops-tpl-body-preview">' + (t.body || "") + '</div>' +
+          '<div class="ops-tpl-body-preview">' + (highlightedPreview || '<em class="text-muted">No content</em>') + '</div>' +
           '<div class="ops-tpl-footer">' +
-            '<span class="text-muted font-11"><i class="fi fi-rr-clock"></i> ' + (t.updated_at || "Recent") + '</span>' +
+            '<span class="ops-tpl-footer-time"><i class="fi fi-rr-clock"></i> ' + (t.updated_at || "Recent") + '</span>' +
             '<div class="ops-action-btn-group">' +
               '<button type="button" class="btn-ops-action btn-edit-template" data-id="' + t.id + '"><i class="fi fi-rr-edit"></i> Edit</button>' +
-              '<button type="button" class="btn-ops-action text-rose btn-delete-template" data-id="' + t.id + '" title="Delete template"><i class="fi fi-rr-trash"></i></button>' +
+              '<button type="button" class="btn-ops-action btn-delete-template" data-id="' + t.id + '" title="Delete this template"><i class="fi fi-rr-trash"></i></button>' +
             '</div>' +
           '</div>' +
         '</div>';
@@ -1960,18 +1998,23 @@
     openTemplateEditorModal: function (tpl) {
       this.closeAllModals();
       this.templatePreviewMode = "sample";
+      this.tplEditorViewMode = "rich";
       $("#btnTplModeSample").addClass("active");
       $("#btnTplModeRaw").removeClass("active");
+
+      const channel = tpl ? (tpl.channel || "whatsapp") : "whatsapp";
+      const vendor = tpl ? (tpl.vendor_type || "hotel") : "hotel";
+      const body = tpl ? (tpl.body || "") : "";
 
       if (tpl) {
         $("#tplEditorModalTitle").text("Edit Template: " + tpl.title);
         $("#tplEditorId").val(tpl.id);
-        $("#tplEditorChannel").val(tpl.channel || "whatsapp");
-        $("#tplEditorVendorType").val(tpl.vendor_type || "hotel");
+        $("#tplEditorChannel").val(channel);
+        $("#tplEditorVendorType").val(vendor);
         $("#tplEditorTitle").val(tpl.title || "");
         $("#tplEditorSubject").val(tpl.subject || "");
-        $("#tplEditorBody").val(tpl.body || "");
-        $("#tplEditorIsDefault").prop("checked", tpl.is_default);
+        $("#tplEditorBody").val(body);
+        $("#tplEditorIsDefault").prop("checked", tpl.is_default == 1 || tpl.is_default === true);
       } else {
         $("#tplEditorModalTitle").text("Create Request Template");
         $("#tplEditorId").val(0);
@@ -1982,6 +2025,17 @@
         $("#tplEditorBody").val("");
         $("#tplEditorIsDefault").prop("checked", false);
       }
+
+      this.loadBodyIntoRichEditor(body, channel);
+      $("#tplEditorRichBody").removeClass("d-none");
+      $("#tplEditorBody").addClass("d-none");
+      $("#btnTplViewRich").addClass("active");
+      $("#btnTplViewSource").removeClass("active");
+
+      // Reset merge variable search and ensure all categories and pills are visible
+      $("#tplSearchMergeTags").val("");
+      $("#tplMergeTagsWrap .ops-tag-pill").show();
+      $("#tplMergeTagsWrap .ops-var-cat-section").show();
 
       this.syncTemplateEditorUI();
       this.updateTemplateLivePreview();
@@ -2262,12 +2316,195 @@
         $("#tplEditorTitle").val("Activity & Guide Slot Booking");
         $("#tplEditorBody").val("Dear *{vendor_name}*,\n\nPlease block the following excursion slot for our guests:\n\n🎯 *Activity/Tour:* {room_category}\n👤 *Guest:* {guest_name} ({pax_adults} Adults, {pax_children} Kids)\n📅 *Date:* {check_in}\n⏰ *Slot Time:* {pickup_date_time}\n\nKindly confirm slot availability.\n\n*{agency_name}* Operations Desk");
       }
+      this.tplEditorViewMode = "rich";
+      this.loadBodyIntoRichEditor($("#tplEditorBody").val(), channel);
+      $("#tplEditorRichBody").removeClass("d-none");
+      $("#tplEditorBody").addClass("d-none");
+      $("#btnTplViewRich").addClass("active");
+      $("#btnTplViewSource").removeClass("active");
+
       this.syncTemplateEditorUI();
       this.updateTemplateLivePreview();
     },
 
+    switchTemplateEditorView: function (mode) {
+      this.tplEditorViewMode = mode;
+      const channel = $("#tplEditorChannel").val() || "whatsapp";
+      const $rich = $("#tplEditorRichBody");
+      const $source = $("#tplEditorBody");
+
+      if (mode === "rich") {
+        $("#btnTplViewRich").addClass("active");
+        $("#btnTplViewSource").removeClass("active");
+        this.loadBodyIntoRichEditor($source.val(), channel);
+        $rich.removeClass("d-none");
+        $source.addClass("d-none");
+      } else {
+        $("#btnTplViewSource").addClass("active");
+        $("#btnTplViewRich").removeClass("active");
+        if (channel === "email") {
+          $source.val($rich.html());
+        } else {
+          $source.val(this.richHtmlToWaText($rich[0]));
+        }
+        $source.removeClass("d-none");
+        $rich.addClass("d-none");
+      }
+    },
+
+    loadBodyIntoRichEditor: function (body, channel) {
+      const $rich = $("#tplEditorRichBody");
+      if (channel === "email") {
+        $rich.removeClass("wa-mode");
+        if (/<[a-z][\s\S]*>/i.test(body || "")) {
+          $rich.html(body || "");
+        } else if (body) {
+          $rich.html((body || "").split("\n\n").map(function (p) {
+            return "<p>" + p.replace(/\n/g, "<br>") + "</p>";
+          }).join(""));
+        } else {
+          $rich.html("");
+        }
+      } else {
+        $rich.addClass("wa-mode");
+        $rich.html(this.waTextToRichHtml(body || ""));
+      }
+    },
+
+    waTextToRichHtml: function (text) {
+      if (!text) return "";
+      let escaped = $("<div>").text(text).html();
+      // *bold* -> <strong>$1</strong>
+      escaped = escaped.replace(/\*([^*\n\r]+)\*/g, "<strong>$1</strong>");
+      // _italic_ -> <em>$1</em>
+      escaped = escaped.replace(/_([^_\n\r]+)_/g, "<em>$1</em>");
+      // ~strike~ -> <del>$1</del>
+      escaped = escaped.replace(/~([^~\n\r]+)~/g, "<del>$1</del>");
+      // Newlines -> <br>
+      escaped = escaped.replace(/\r?\n/g, "<br>");
+      return escaped;
+    },
+
+    richHtmlToWaText: function (element) {
+      if (!element) return "";
+      const clone = element.cloneNode(true);
+      const $clone = $(clone);
+
+      $clone.find("br").replaceWith("\n");
+      $clone.find("p, div, li, tr").each(function () {
+        $(this).append("\n");
+      });
+
+      $clone.find("strong, b").each(function () {
+        const t = $(this).text();
+        $(this).replaceWith("*" + t + "*");
+      });
+      $clone.find("em, i").each(function () {
+        const t = $(this).text();
+        $(this).replaceWith("_" + t + "_");
+      });
+      $clone.find("del, s").each(function () {
+        const t = $(this).text();
+        $(this).replaceWith("~" + t + "~");
+      });
+
+      let raw = clone.textContent || "";
+      raw = raw.replace(/\r\n/g, "\n");
+      return raw;
+    },
+
+    insertIntoEditor: function (text, htmlIfRich) {
+      if (this.tplEditorViewMode === "rich") {
+        const editor = document.getElementById("tplEditorRichBody");
+        if (!editor) return;
+        editor.focus();
+        const sel = window.getSelection();
+        const content = htmlIfRich !== undefined ? htmlIfRich : text;
+        if (sel && sel.rangeCount > 0) {
+          const range = sel.getRangeAt(0);
+          if (editor.contains(range.commonAncestorContainer)) {
+            range.deleteContents();
+            const el = document.createElement("div");
+            el.innerHTML = content;
+            const frag = document.createDocumentFragment();
+            let node, lastNode;
+            while ((node = el.firstChild)) {
+              lastNode = frag.appendChild(node);
+            }
+            range.insertNode(frag);
+            if (lastNode) {
+              range.setStartAfter(lastNode);
+              range.collapse(true);
+              sel.removeAllRanges();
+              sel.addRange(range);
+            }
+            $("#tplEditorRichBody").trigger("input");
+            return;
+          }
+        }
+        editor.innerHTML += content;
+        $("#tplEditorRichBody").trigger("input");
+      } else {
+        const textarea = document.getElementById("tplEditorBody");
+        if (!textarea) return;
+        const start = textarea.selectionStart;
+        const end = textarea.selectionEnd;
+        const val = textarea.value;
+        textarea.value = val.substring(0, start) + text + val.substring(end);
+        textarea.focus();
+        textarea.selectionStart = textarea.selectionEnd = start + text.length;
+        $("#tplEditorBody").trigger("input");
+      }
+    },
+
+    formatEditorSelection: function (cmd, prefix, suffix, placeholder) {
+      if (this.tplEditorViewMode === "rich") {
+        const editor = document.getElementById("tplEditorRichBody");
+        if (!editor) return;
+        editor.focus();
+        if (cmd === "bold") {
+          document.execCommand("bold", false, null);
+        } else if (cmd === "italic") {
+          document.execCommand("italic", false, null);
+        } else if (cmd === "strike") {
+          document.execCommand("strikeThrough", false, null);
+        } else if (cmd === "code") {
+          document.execCommand("fontName", false, "monospace");
+        } else if (cmd === "bullet") {
+          const channel = $("#tplEditorChannel").val() || "whatsapp";
+          if (channel === "email") {
+            document.execCommand("insertUnorderedList", false, null);
+          } else {
+            this.insertIntoEditor("\n• ", "<br>• ");
+          }
+        }
+        $("#tplEditorRichBody").trigger("input");
+      } else {
+        const textarea = document.getElementById("tplEditorBody");
+        if (!textarea) return;
+        const start = textarea.selectionStart;
+        const end = textarea.selectionEnd;
+        const selText = textarea.value.substring(start, end) || placeholder;
+        const replacement = prefix + selText + suffix;
+        textarea.value = textarea.value.substring(0, start) + replacement + textarea.value.substring(end);
+        textarea.focus();
+        textarea.selectionStart = start + prefix.length;
+        textarea.selectionEnd = start + prefix.length + selText.length;
+        $("#tplEditorBody").trigger("input");
+      }
+    },
+
     saveTemplate: function () {
       const self = this;
+      if (this.tplEditorViewMode === "rich") {
+        const channel = $("#tplEditorChannel").val() || "whatsapp";
+        const $rich = $("#tplEditorRichBody");
+        if (channel === "email") {
+          $("#tplEditorBody").val($rich.html());
+        } else {
+          $("#tplEditorBody").val(this.richHtmlToWaText($rich[0]));
+        }
+      }
       const payload = {
         action: "save",
         id: $("#tplEditorId").val(),
@@ -2313,14 +2550,42 @@
         data: JSON.stringify({ action: "delete", id: Number(templateId) }),
         success: function (res) {
           if (res && res.status === "success") {
-            alert(res.message || "Template removed successfully.");
+            const swalObj = typeof window.Swal !== "undefined" ? window.Swal : (typeof Swal !== "undefined" ? Swal : null);
+            if (swalObj && typeof swalObj.fire === "function") {
+              swalObj.fire({
+                title: "Deleted!",
+                text: res.message || "Template deleted successfully.",
+                icon: "success",
+                timer: 1600,
+                showConfirmButton: false
+              });
+            } else if (typeof window.swal === "function" || typeof swal === "function") {
+              const swalFn = typeof window.swal === "function" ? window.swal : swal;
+              swalFn("Deleted!", res.message || "Template deleted successfully.", "success");
+            } else {
+              alert(res.message || "Template removed successfully.");
+            }
             self.loadTemplates();
           } else {
-            alert(res.message || "Failed to delete template.");
+            const msg = res && res.message ? res.message : "Failed to delete template.";
+            const swalObj = typeof window.Swal !== "undefined" ? window.Swal : (typeof Swal !== "undefined" ? Swal : null);
+            if (swalObj && typeof swalObj.fire === "function") {
+              swalObj.fire("Error", msg, "error");
+            } else if (typeof window.swal === "function" || typeof swal === "function") {
+              const swalFn = typeof window.swal === "function" ? window.swal : swal;
+              swalFn("Error", msg, "error");
+            } else {
+              alert(msg);
+            }
           }
         },
         error: function () {
-          alert("Error communicating with server while deleting template.");
+          const swalObj = typeof window.Swal !== "undefined" ? window.Swal : (typeof Swal !== "undefined" ? Swal : null);
+          if (swalObj && typeof swalObj.fire === "function") {
+            swalObj.fire("Error", "Error communicating with server while deleting template.", "error");
+          } else {
+            alert("Error communicating with server while deleting template.");
+          }
         }
       });
     },

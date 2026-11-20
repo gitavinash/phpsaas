@@ -173,7 +173,7 @@ $templateId = isset($_GET['id']) ? intval($_GET['id']) : 0;
                 <div class="ops-tpl-customization-card">
                     <div class="ops-tpl-custom-grid">
                         <!-- Channel Switcher -->
-                        <div class="ops-config-item">
+                        <div class="ops-config-item ops-channel-item">
                             <span class="ops-config-label">Communication Channel</span>
                             <div class="ops-segmented-selector" id="tplChannelSegmented">
                                 <button type="button" class="ops-seg-btn seg-wa active" data-channel="whatsapp">
@@ -190,7 +190,7 @@ $templateId = isset($_GET['id']) ? intval($_GET['id']) : 0;
                         </div>
 
                         <!-- Service / Vendor Switcher -->
-                        <div class="ops-config-item">
+                        <div class="ops-config-item ops-vendor-item">
                             <span class="ops-config-label">Vendor Service Type</span>
                             <div class="ops-segmented-selector" id="tplVendorSegmented">
                                 <button type="button" class="ops-seg-btn active" data-vendor="hotel">
@@ -210,12 +210,17 @@ $templateId = isset($_GET['id']) ? intval($_GET['id']) : 0;
                             </select>
                         </div>
 
-                        <!-- Default Template Switch -->
-                        <div class="ops-config-item">
+                        <!-- Modern Default Template Switch -->
+                        <div class="ops-config-item ops-status-item">
                             <span class="ops-config-label">Status</span>
-                            <label class="ops-default-toggle-box" title="When checked, this template is automatically used when dispatching requests">
+                            <label class="ops-switch-toggle" for="tplEditorIsDefault" title="When enabled, this template is automatically used when dispatching requests">
                                 <input type="checkbox" id="tplEditorIsDefault" value="1">
-                                <span class="ops-default-toggle-label"><i class="fi fi-rr-star"></i> Default Template</span>
+                                <span class="ops-switch-track">
+                                    <span class="ops-switch-thumb"></span>
+                                </span>
+                                <span class="ops-switch-label">
+                                    <i class="fi fi-rr-star" id="tplDefaultStarIcon"></i> Default Template
+                                </span>
                             </label>
                         </div>
                     </div>
@@ -364,14 +369,25 @@ $templateId = isset($_GET['id']) ? intval($_GET['id']) : 0;
                         </div>
 
                         <div class="ops-tpl-tools-right">
+                            <div class="ops-view-switch-grp">
+                                <button type="button" class="ops-view-btn active" id="btnTplViewRich" title="Visual Rich Text Editor">
+                                    <i class="fi fi-rr-text"></i> Rich Text
+                                </button>
+                                <button type="button" class="ops-view-btn" id="btnTplViewSource" title="Source Code View">
+                                    <i class="fi fi-rr-code-simple"></i> Source
+                                </button>
+                            </div>
                             <button type="button" class="ops-btn-tool-action" id="btnTplRestorePreset" title="Restore recommended standard preset for this category">
                                 <i class="fi fi-rr-refresh"></i> <span>Reset to Standard Preset</span>
                             </button>
                         </div>
                     </div>
 
-                    <!-- Main Textarea -->
-                    <textarea id="tplEditorBody" class="ops-tpl-textarea" rows="12" placeholder="Write message body with dynamic variables..."></textarea>
+                    <!-- Visual Rich Text Editor (Default View) -->
+                    <div id="tplEditorRichBody" class="ops-tpl-rich-editor" contenteditable="true" spellcheck="false"></div>
+
+                    <!-- Raw Source Textarea (Hidden by Default) -->
+                    <textarea id="tplEditorBody" class="ops-tpl-textarea d-none" rows="12" placeholder="Write message body with dynamic variables..."></textarea>
 
                     <!-- Textarea Footer Stats -->
                     <div class="ops-tpl-composer-footer">
