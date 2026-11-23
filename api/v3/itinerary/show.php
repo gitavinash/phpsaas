@@ -428,9 +428,17 @@ if (!empty($quotationData)) {
         $itineraries = json_decode($itineraries, true) ?: [];
     }
 
-    $tour_package_city = !empty($parsedDescription['city'])
-        ? $parsedDescription['city']
-        : (!empty($parsedDescription['destination']) ? $parsedDescription['destination'] : (!empty($parsedDescription['tour_package_city']) ? $parsedDescription['tour_package_city'] : ($quotationData['tour_package_city'] ?? '')));
+    $tour_package_city = !empty($parsedDescription['location'])
+        ? $parsedDescription['location']
+        : (!empty($parsedDescription['city'])
+            ? $parsedDescription['city']
+            : (!empty($parsedDescription['destination'])
+                ? $parsedDescription['destination']
+                : (!empty($parsedDescription['itinerary_city'])
+                    ? $parsedDescription['itinerary_city']
+                    : (!empty($parsedDescription['tour_package_city'])
+                        ? $parsedDescription['tour_package_city']
+                        : ($quotationData['tour_package_city'] ?? '')))));
 
     // Auto-discover stay city from itineraries if missing
     if ((empty($tour_package_city) || strtolower($tour_package_city) === 'destination' || strtolower($tour_package_city) === 'tour destination') && !empty($itineraries) && is_array($itineraries)) {
@@ -526,7 +534,7 @@ if (!empty($quotationData)) {
         $itineraries = json_decode($itineraries, true) ?: [];
     }
 
-    $tour_package_city = trim((string)($postData['city'] ?? ($postData['destination'] ?? ($postData['tour_package_city'] ?? ''))));
+    $tour_package_city = trim((string)($postData['location'] ?? ($postData['city'] ?? ($postData['destination'] ?? ($postData['itinerary_city'] ?? ($postData['tour_package_city'] ?? ''))))));
 
     // Auto-discover stay city from itineraries if missing or default
     if ((empty($tour_package_city) || strtolower($tour_package_city) === 'destination' || strtolower($tour_package_city) === 'tour destination') && !empty($itineraries) && is_array($itineraries)) {

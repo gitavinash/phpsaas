@@ -4140,6 +4140,32 @@
       self.initCitySelect2($drop, $("#modalSendItinerary"), "Select or type drop location...");
     },
 
+    setupItineraryCitySelect: function (cityVal) {
+      const self = this;
+      const $city = $("#itineraryCustomCity");
+      if (!$city.length) return;
+
+      if ($city.hasClass("select2-hidden-accessible")) {
+        try {
+          $city.select2("destroy");
+        } catch (e) {}
+      }
+
+      $city.empty();
+      if (cityVal && cityVal.trim()) {
+        const val = cityVal.trim();
+        $city.append(new Option(val, val, true, true));
+      }
+
+      self.initCitySelect2($city, $("#modalSendItinerary"), "Select or type itinerary city...");
+
+      $city.off("change.v3ItinCity select2:select.v3ItinCity").on("change.v3ItinCity select2:select.v3ItinCity", function () {
+        if (typeof self.checkItineraryChanges === "function") {
+          self.checkItineraryChanges();
+        }
+      });
+    },
+
     getPropertyCategoryOptionsHtml: function (selectedCategory) {
       const cats = [
         { id: "all", label: "All Categories" },
@@ -5047,6 +5073,10 @@
 
     resolvePrimaryCity: function (structuredItin) {
       const self = this;
+      const customCity = ($("#itineraryCustomCity").val() || "").trim();
+      if (customCity) {
+        return customCity;
+      }
       if (
         self.selectedPackage &&
         (self.selectedPackage.tour_package_city || self.selectedPackage.city)
@@ -6525,6 +6555,10 @@
           $("#itineraryPackageSelect").html(
             '<option value="">-- Choose an Itinerary Package --</option>',
           );
+          $("#itineraryCustomCity").val("");
+          if ($("#itineraryCustomCity").hasClass("select2-hidden-accessible")) {
+            $("#itineraryCustomCity").val("").trigger("change.select2");
+          }
           $("#itineraryCustomOverview").val("");
           self.selectedPackage = null;
 
@@ -7229,6 +7263,7 @@
       self.getItineraryStateSnapshot = function () {
         const fields = [
           $("#itineraryCustomTitle").val() || "",
+          $("#itineraryCustomCity").val() || "",
           $("#itineraryCustomAdultPrice").val() || "",
           $("#itineraryCustomChildPrice").val() || "",
           $("#itineraryCustomInfantPrice").val() || "",
@@ -7592,7 +7627,9 @@
             new_package_title: resolvedPkgTitle,
             city: primaryCity,
             destination: primaryCity,
+            location: primaryCity,
             tour_package_city: primaryCity,
+            itinerary_city: primaryCity,
             travel_date: travelDate,
             pickup_location: pickupLocation,
             drop_location: dropLocation,
@@ -7977,7 +8014,9 @@
             assigned_agent: currentAgentId,
             city: primaryCity,
             destination: primaryCity,
+            location: primaryCity,
             tour_package_city: primaryCity,
+            itinerary_city: primaryCity,
             state: pkgState,
             country: pkgCountry,
             theme: travelTheme,
@@ -10059,7 +10098,7 @@
         travelerParts.join(", ") || "Auto-calculates per traveler",
       );
 
-      const packageCity = (pkg.tour_package_city || "").trim();
+      const packageCity = (pkg.tour_package_city || pkg.city || "").trim();
       const leadDest = (
         self.leadData &&
         self.leadData.travel_details &&
@@ -10067,7 +10106,8 @@
           ? self.leadData.travel_details.destination
           : ""
       ).trim();
-      const defaultCity = packageCity || leadDest;
+      const defaultCity = packageCity || leadDest || ($("#itineraryDestinationInput").val() || "").trim();
+      self.setupItineraryCitySelect(defaultCity);
 
       // Smart city extractor from day title or overview text
       const detectCityFromText = (txt) => {
@@ -10643,13 +10683,16 @@
           "mit";
 
         const itinDest =
-          content.destination ||
+          content.location ||
           content.city ||
+          content.destination ||
+          content.itinerary_city ||
           content.tour_package_city ||
           data.destination ||
           data.tour_package_city ||
           "";
         self.activeItineraryDestination = itinDest;
+        self.setupItineraryCitySelect(itinDest);
 
         self.selectedPackage = {
           tour_package_id: pkgId,

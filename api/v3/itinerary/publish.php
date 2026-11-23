@@ -242,7 +242,7 @@ if (mysqli_query($connection, $insertQuery)) {
         $pkgStartFrom = mysqli_real_escape_string($connection, trim((string)($content['pickup_location'] ?? '')));
         $pkgEndTo = mysqli_real_escape_string($connection, trim((string)($content['drop_location'] ?? '')));
 
-        $destRaw = trim((string)($content['city'] ?? ($content['destination'] ?? '')));
+        $destRaw = trim((string)($content['location'] ?? ($content['city'] ?? ($content['destination'] ?? ($content['itinerary_city'] ?? ($content['tour_package_city'] ?? ''))))));
         $destParts = array_filter(array_map('trim', explode(',', $destRaw)));
         $destParts = array_values($destParts);
         $cityName = $destParts[0] ?? '';

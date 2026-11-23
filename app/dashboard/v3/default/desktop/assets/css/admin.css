@@ -33834,6 +33834,25 @@ body.v3-editor-fs-locked {
   gap: 18px !important;
 }
 
+.v3-itin-pricing-config-wrap .v3-form-grid-4 {
+  margin-bottom: 24px !important;
+  gap: 18px !important;
+  display: grid !important;
+  grid-template-columns: repeat(4, 1fr) !important;
+}
+
+@media (max-width: 1200px) {
+  .v3-itin-pricing-config-wrap .v3-form-grid-4 {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .v3-itin-pricing-config-wrap .v3-form-grid-4 {
+    grid-template-columns: 1fr !important;
+  }
+}
+
 .v3-modal-input-lg {
   font-size: 14.5px !important;
   font-weight: 700 !important;

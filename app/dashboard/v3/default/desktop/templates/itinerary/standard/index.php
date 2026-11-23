@@ -1861,7 +1861,7 @@ $checkTransitOrTripEnd = function ($d, $idx, $total, $title, $overview) {
                     <?php endif; ?>
 
                     <div class="box">
-                        <p>Destination</p>
+                        <p>Location</p>
                         <p><strong><?php echo htmlspecialchars(cleanProposalLabel($pkgCity)); ?></strong></p>
                     </div>
 

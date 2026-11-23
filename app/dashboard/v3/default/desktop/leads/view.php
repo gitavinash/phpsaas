@@ -438,8 +438,12 @@ $isOperationsUser = in_array($currentUserRole, ['operations', 'operational', 'op
                                 </div>
                             </div>
 
-                            <!-- Pickup, Drop & Travel Theme Row -->
-                            <div class="v3-form-grid-3 v3-mb-20">
+                            <!-- City, Pickup, Drop & Travel Theme Row -->
+                            <div class="v3-form-grid-4 v3-mb-20">
+                                <div class="v3-modal-form-group">
+                                    <label class="v3-modal-label"><i class="fi fi-rr-marker"></i> Itinerary City / Location *</label>
+                                    <select id="itineraryCustomCity" class="leads-filter-select v3-select-full"></select>
+                                </div>
                                 <div class="v3-modal-form-group">
                                     <label class="v3-modal-label"><i class="fi fi-rr-map-marker"></i> Pickup Location</label>
                                     <select id="itineraryCustomPickup" class="leads-filter-select v3-select-full"></select>
