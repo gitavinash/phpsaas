@@ -35,7 +35,7 @@ if (!empty($site_access_type)) {
     $userRole = strtolower(trim(base64_decode($_COOKIE['user_type'])));
 }
 
-if (!in_array($userRole, ['administrator', 'operations', 'super_administrator'])) {
+if (!in_array($userRole, ['administrator', 'operations', 'super_administrator', 'admin', 'superadmin', 'operational', 'operations_manager', 'operations manager'])) {
     echo json_encode([
         'status' => 'error',
         'code'   => 403,
@@ -48,9 +48,48 @@ $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 $siteClause = ($siteId > 0) ? " AND e.enquiry_site_id = {$siteId}" : "";
 
 // --------------------------------------------------------------------------
-// 1. GET: Fetch Trips Board
+// 1. GET: Fetch Single Lead Dispatch Details or Full Trips Board
 // --------------------------------------------------------------------------
 if ($method === 'GET') {
+    if (isset($_GET['lead_id']) && !empty($_GET['lead_id'])) {
+        $rawLeadId = trim($_GET['lead_id']);
+        $decodedLead = base64_decode($rawLeadId, true);
+        $leadId = ($decodedLead !== false && is_numeric($decodedLead)) ? (int)$decodedLead : (int)$rawLeadId;
+
+        $lRes = mysqli_query($connection, "SELECT enquiry_id, enquiry_first_name, enquiry_last_name, enquiry_mobile, enquiry_subject, enquiry_status FROM {$tblPrefix}enquiry WHERE enquiry_id = {$leadId} LIMIT 1");
+        $lData = $lRes ? mysqli_fetch_assoc($lRes) : null;
+
+        $dispatch = [
+            'driver_name' => '',
+            'driver_phone' => '',
+            'vehicle_type' => '',
+            'vehicle_no' => '',
+            'pickup_time' => '',
+            'pickup_location' => ''
+        ];
+
+        $trRes = mysqli_query($connection, "SELECT booking_details FROM {$tblPrefix}booking WHERE booking_enquiry_id = {$leadId} AND booking_service = 'transport' LIMIT 1");
+        if ($trRes && $trRow = mysqli_fetch_assoc($trRes)) {
+            $trDetails = json_decode($trRow['booking_details'], true) ?: [];
+            $dispatch['driver_name'] = $trDetails['driver_name'] ?? '';
+            $dispatch['driver_phone'] = $trDetails['driver_phone'] ?? '';
+            $dispatch['vehicle_type'] = $trDetails['vehicle_type'] ?? '';
+            $dispatch['vehicle_no'] = $trDetails['vehicle_no'] ?? '';
+            $dispatch['pickup_time'] = $trDetails['pickup_time'] ?? '';
+            $dispatch['pickup_location'] = $trDetails['pickup_location'] ?? '';
+        }
+
+        echo json_encode([
+            'status' => 'success',
+            'lead_id' => $leadId,
+            'guest_name' => $lData ? trim(($lData['enquiry_first_name'] ?? '') . ' ' . ($lData['enquiry_last_name'] ?? '')) : '',
+            'guest_mobile' => $lData['enquiry_mobile'] ?? '',
+            'destination' => $lData['enquiry_subject'] ?? '',
+            'status' => $lData['enquiry_status'] ?? 0,
+            'dispatch' => $dispatch
+        ]);
+        exit();
+    }
     $targetDate = isset($_GET['date']) ? trim($_GET['date']) : date('Y-m-d');
     $todayStr = date('Y-m-d', strtotime($targetDate));
     $tomorrowStr = date('Y-m-d', strtotime($todayStr . ' + 1 day'));
@@ -223,7 +262,7 @@ if ($method === 'POST') {
         $gName = trim(($lData['enquiry_first_name'] ?? '') . ' ' . ($lData['enquiry_last_name'] ?? '')) ?: 'Valued Guest';
         $dest  = $lData['enquiry_subject'] ?? 'Tour';
 
-        // Update transport booking if exists
+        // Update or insert transport booking
         $trRes = mysqli_query($connection, "SELECT booking_id, booking_details FROM {$tblPrefix}booking WHERE booking_enquiry_id = {$leadId} AND booking_service = 'transport' LIMIT 1");
         if ($trRes && $trRow = mysqli_fetch_assoc($trRes)) {
             $bId = (int)$trRow['booking_id'];
@@ -236,6 +275,18 @@ if ($method === 'POST') {
             $bDetails['pickup_location'] = $pickupLoc;
             $bDetailsJson = mysqli_real_escape_string($connection, json_encode($bDetails));
             mysqli_query($connection, "UPDATE {$tblPrefix}booking SET booking_details = '{$bDetailsJson}', booking_update = CURRENT_TIMESTAMP WHERE booking_id = {$bId}");
+        } else {
+            $bDetails = [
+                'driver_name'     => $driverName,
+                'driver_phone'    => $driverPhone,
+                'vehicle_no'      => $vehicleNo,
+                'vehicle_type'    => $vehicleType,
+                'pickup_time'     => $pickupTime,
+                'pickup_location' => $pickupLoc
+            ];
+            $bDetailsJson = mysqli_real_escape_string($connection, json_encode($bDetails));
+            $sId = $siteId > 0 ? $siteId : 1;
+            mysqli_query($connection, "INSERT INTO {$tblPrefix}booking (booking_enquiry_id, booking_service, booking_details, booking_status, booking_site_id, booking_time) VALUES ({$leadId}, 'transport', '{$bDetailsJson}', 1, {$sId}, CURRENT_TIMESTAMP)");
         }
 
         // WhatsApp message dispatch

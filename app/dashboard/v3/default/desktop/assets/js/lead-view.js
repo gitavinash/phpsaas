@@ -298,6 +298,10 @@
         this.eventsBound = true;
       }
 
+      if (window.V3OperationsHub && typeof window.V3OperationsHub.bindEvents === "function") {
+        window.V3OperationsHub.bindEvents();
+      }
+
       this.loadLeadDetails();
     },
 
@@ -2869,6 +2873,22 @@
         $("#leadViewApp").data("is-calling-agent") === "1" ||
         $("#leadViewApp").hasClass("is-calling-agent");
 
+      const isOperationsUser =
+        lead.is_operations === true ||
+        lead.is_operations === 1 ||
+        lead.is_operations === "1" ||
+        userRole === "operations" ||
+        userRole === "operational" ||
+        userRole === "operations_manager" ||
+        userRole === "operations manager" ||
+        userRole === "admin" ||
+        userRole === "administrator" ||
+        userRole === "superadmin" ||
+        userRole === "super_administrator" ||
+        $("#leadViewApp").data("is-operations") === 1 ||
+        $("#leadViewApp").data("is-operations") === "1" ||
+        $("#leadViewApp").hasClass("is-operations-user");
+
       const canManageAgent =
         !isCallingAgent &&
         (userRole === "admin" ||
@@ -2922,6 +2942,17 @@
             </div>
           </div>
           <div class="v3-cb-right">
+            ${isOperationsUser ? `
+              <button type="button" class="btn-v3-action btn-blue btn-xs btn-open-booking-modal" data-id="${lead.id}" title="Send Vendor Booking Request">
+                <i class="fi fi-rr-paper-plane"></i> Booking Request
+              </button>
+              <button type="button" class="btn-v3-action btn-gold btn-xs btn-open-voucher-modal" data-id="${lead.id}" title="Issue Confirmation Voucher">
+                <i class="fi fi-rr-ticket"></i> Issue Voucher
+              </button>
+              <button type="button" class="btn-v3-action btn-indigo btn-xs btn-open-driver-dispatch" data-id="${lead.id}" title="Chauffeur &amp; Vehicle Dispatch">
+                <i class="fi fi-rr-car"></i> Dispatch
+              </button>
+            ` : ""}
             <a href="/dashboard/booking/view/?id=${bInfo.id}" class="btn-v3-action btn-green btn-xs" target="_blank">
               <i class="fi fi-rr-arrow-up-right-from-square"></i> View Booking
             </a>
@@ -3238,7 +3269,7 @@
                   : ""
               }
               ${
-                isAssigned
+                (isAssigned || isOperationsUser)
                   ? `
                 ${
                   !self.isPackageSix
@@ -3280,7 +3311,7 @@
                   <i class="fi fi-rr-alarm-clock"></i> <span>Follow-Up</span>
                 </button>
                 ${
-                  !self.isPackageSix && hasItinerarySent
+                  !self.isPackageSix && (hasItinerarySent || isOperationsUser)
                     ? `
                   ${
                     self.leadViewOptions.show_payment_link !== false
@@ -3304,28 +3335,37 @@
                     : ""
                 }
                 ${
-                  (userRole === "operations" || userRole === "administrator" || userRole === "admin" || userRole === "superadmin")
+                  isOperationsUser
                     ? `
+                  <button type="button" class="btn-v3-action btn-blue btn-open-booking-modal" id="btnHeroBookingRequest" data-id="${lead.id}" data-tooltip="Send Vendor / Hotel / Cab Booking Request">
+                    <i class="fi fi-rr-paper-plane"></i> <span>Booking Request</span>
+                  </button>
+                  <button type="button" class="btn-v3-action btn-gold btn-open-voucher-modal" id="btnHeroIssueVoucher" data-id="${lead.id}" data-tooltip="Issue Confirmation Voucher for Guest">
+                    <i class="fi fi-rr-ticket"></i> <span>Issue Voucher</span>
+                  </button>
                   <div class="v3-ops-dropdown-wrap">
-                    <button type="button" class="btn-v3-action btn-blue" id="btnOpsLeadActionsToggle" data-tooltip="Operations Management Suite">
+                    <button type="button" class="btn-v3-action btn-outline" id="btnOpsLeadActionsToggle" data-tooltip="Operations Management Suite">
                       <i class="fi fi-rr-settings-sliders"></i> <span>Operations</span> <i class="fi fi-rr-angle-small-down"></i>
                     </button>
                     <div class="v3-ops-dropdown-menu" id="opsLeadActionsMenu">
-                      <a href="/dashboard/operations/?tab=requests&lead_id=${lead.id}&action=booking" class="v3-ops-dropdown-item">
+                      <button type="button" class="v3-ops-dropdown-item btn-open-booking-modal" data-id="${lead.id}">
                         <i class="fi fi-rr-paper-plane"></i> <span>Send Booking Request</span>
-                      </a>
-                      <a href="/dashboard/operations/?tab=confirmed&lead_id=${lead.id}&action=voucher" class="v3-ops-dropdown-item">
+                      </button>
+                      <button type="button" class="v3-ops-dropdown-item btn-open-voucher-modal" data-id="${lead.id}">
                         <i class="fi fi-rr-ticket"></i> <span>Issue Confirmation Voucher</span>
-                      </a>
-                      <a href="/dashboard/operations/?tab=confirmed&lead_id=${lead.id}&action=invoice" class="v3-ops-dropdown-item">
+                      </button>
+                      <button type="button" class="v3-ops-dropdown-item btn-open-invoice-modal" data-id="${lead.id}">
                         <i class="fi fi-rr-document-signed"></i> <span>Generate Proforma / Invoice</span>
-                      </a>
+                      </button>
                       <div class="v3-ops-dropdown-divider"></div>
                       <button type="button" class="v3-ops-dropdown-item btn-lead-trigger-feedback" data-lead-id="${lead.id}">
                         <i class="fi fi-rr-star"></i> <span>Send Feedback Request</span>
                       </button>
-                      <a href="/dashboard/operations/#trips" class="v3-ops-dropdown-item">
-                        <i class="fi fi-rr-route"></i> <span>Trip Planner &amp; Dispatch</span>
+                      <button type="button" class="v3-ops-dropdown-item btn-open-driver-dispatch" data-id="${lead.id}">
+                        <i class="fi fi-rr-car"></i> <span>Trip Planner &amp; Dispatch</span>
+                      </button>
+                      <a href="/dashboard/operations/" class="v3-ops-dropdown-item">
+                        <i class="fi fi-rr-dashboard"></i> <span>Operations Hub Desk</span>
                       </a>
                     </div>
                   </div>
@@ -3410,8 +3450,8 @@
                 <button type="button" class="v3-tab-link" data-tab="tab-activity">
                   <i class="fi fi-rr-time-past"></i> Activity & Notes (${lead.timeline ? lead.timeline.length : 0})
                 </button>
-                <button type="button" class="v3-tab-link ${!isAssigned ? "v3-tab-disabled" : ""}" data-tab="tab-payments" ${!isAssigned ? 'disabled title="Lead must be assigned to an agent to access payments"' : ""}>
-                  <i class="fi fi-rr-money-check"></i> Payments (${lead.payments ? lead.payments.length : 0}) ${!isAssigned ? '<i class="fi fi-rr-lock v3-tab-lock-icon"></i>' : ""}
+                <button type="button" class="v3-tab-link ${(!isAssigned && !isOperationsUser) ? "v3-tab-disabled" : ""}" data-tab="tab-payments" ${(!isAssigned && !isOperationsUser) ? 'disabled title="Lead must be assigned to an agent to access payments"' : ""}>
+                  <i class="fi fi-rr-money-check"></i> Payments (${lead.payments ? lead.payments.length : 0}) ${(!isAssigned && !isOperationsUser) ? '<i class="fi fi-rr-lock v3-tab-lock-icon"></i>' : ""}
                 </button>
               </div>
 
@@ -3489,7 +3529,7 @@
                 <div class="v3-lead-tab-pane" id="tab-activity">
                   <!-- Quick Composer Box -->
                   ${
-                    isAssigned
+                    (isAssigned || isOperationsUser)
                       ? `
                   <div class="v3-note-composer-card">
                     <div class="v3-composer-type-nav">
@@ -3549,7 +3589,7 @@
                 <!-- Tab 3: Payment History -->
                 <div class="v3-lead-tab-pane" id="tab-payments">
                   ${
-                    isAssigned
+                    (isAssigned || isOperationsUser)
                       ? `
                     ${paymentsHtml}
                   `
@@ -3584,7 +3624,7 @@
                 </div>
 
                 ${
-                  isAssigned
+                  (isAssigned || isOperationsUser)
                     ? `
                   <!-- Communication Bar -->
                   <div class="v3-fa-contact-bar">
@@ -3683,7 +3723,7 @@
                       }
 
                       ${
-                        !self.isPackageSix && hasItinerarySent
+                        !self.isPackageSix && (hasItinerarySent || isOperationsUser)
                           ? `
                         <div class="v3-fa-split-row">
                           ${
@@ -3730,6 +3770,68 @@
                       }
                     </div>
                   </div>
+
+                  ${
+                    isOperationsUser
+                      ? `
+                  <!-- Operations & Fulfillment Section -->
+                  <div class="v3-fa-section">
+                    <div class="v3-fa-section-label">Operations Fulfillment</div>
+                    <div class="v3-fa-deal-actions">
+                      <button type="button" class="v3-fa-row-action action-booking btn-open-booking-modal" id="btnSideBookingRequest" data-id="${lead.id}" data-tooltip="Dispatch Vendor / Hotel / Cab Booking Request">
+                        <div class="v3-fa-row-left">
+                          <span class="v3-fa-row-icon icon-blue"><i class="fi fi-rr-paper-plane"></i></span>
+                          <div class="v3-fa-row-text">
+                            <span class="v3-fa-row-title">Send Booking Request</span>
+                            <span class="v3-fa-row-sub">Dispatch vendor, hotel or cab reservation</span>
+                          </div>
+                        </div>
+                        <i class="fi fi-rr-angle-right v3-fa-row-arrow"></i>
+                      </button>
+
+                      <button type="button" class="v3-fa-row-action action-voucher btn-open-voucher-modal" id="btnSideIssueVoucher" data-id="${lead.id}" data-tooltip="Issue Confirmation Voucher for Guest">
+                        <div class="v3-fa-row-left">
+                          <span class="v3-fa-row-icon icon-gold"><i class="fi fi-rr-ticket"></i></span>
+                          <div class="v3-fa-row-text">
+                            <span class="v3-fa-row-title">Issue Voucher</span>
+                            <span class="v3-fa-row-sub">Hotel ref numbers, driver &amp; guest voucher</span>
+                          </div>
+                        </div>
+                        <i class="fi fi-rr-angle-right v3-fa-row-arrow"></i>
+                      </button>
+
+                      <button type="button" class="v3-fa-row-action action-dispatch btn-open-driver-dispatch" id="btnSideDriverDispatch" data-id="${lead.id}" data-tooltip="Assign Chauffeur &amp; Pre-Trip WhatsApp Dispatch">
+                        <div class="v3-fa-row-left">
+                          <span class="v3-fa-row-icon icon-teal"><i class="fi fi-rr-car"></i></span>
+                          <div class="v3-fa-row-text">
+                            <span class="v3-fa-row-title">Trip Planner &amp; Dispatch</span>
+                            <span class="v3-fa-row-sub">Assign chauffeur, vehicle &amp; pre-trip info</span>
+                          </div>
+                        </div>
+                        <i class="fi fi-rr-angle-right v3-fa-row-arrow"></i>
+                      </button>
+
+                      <div class="v3-fa-split-row">
+                        <button type="button" class="v3-fa-compact-action action-invoice btn-open-invoice-modal" id="btnSideInvoice" data-id="${lead.id}" data-tooltip="Generate Proforma / Invoice">
+                          <span class="v3-fa-compact-icon icon-purple"><i class="fi fi-rr-document-signed"></i></span>
+                          <div class="v3-fa-compact-text">
+                            <span class="v3-fa-compact-label">Invoice</span>
+                            <span class="v3-fa-compact-sub">Proforma / Bill</span>
+                          </div>
+                        </button>
+                        <button type="button" class="v3-fa-compact-action action-feedback btn-lead-trigger-feedback" data-lead-id="${lead.id}" data-tooltip="Send Review / Feedback via WhatsApp">
+                          <span class="v3-fa-compact-icon icon-amber"><i class="fi fi-rr-star"></i></span>
+                          <div class="v3-fa-compact-text">
+                            <span class="v3-fa-compact-label">Feedback</span>
+                            <span class="v3-fa-compact-sub">Post-Trip Review</span>
+                          </div>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  `
+                      : ""
+                  }
 
                   <!-- Management / Secondary Actions -->
                   <div class="v3-fa-footer-row">
@@ -5130,6 +5232,10 @@
       $(document).on("click", "#btnOpsLeadActionsToggle", function (e) {
         e.stopPropagation();
         $("#opsLeadActionsMenu").toggleClass("is-open");
+      });
+
+      $(document).on("click", "#opsLeadActionsMenu .v3-ops-dropdown-item", function () {
+        $("#opsLeadActionsMenu").removeClass("is-open");
       });
 
       // Feedback Request Trigger (for both Sales & Operations)

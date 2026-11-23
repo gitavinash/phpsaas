@@ -40,7 +40,7 @@ if (!empty($site_access_type)) {
     $userRole = strtolower(trim(base64_decode($_COOKIE['user_type'])));
 }
 
-if (!in_array($userRole, ['administrator', 'operations', 'super_administrator'])) {
+if (!in_array($userRole, ['administrator', 'operations', 'super_administrator', 'admin', 'superadmin', 'operational', 'operations_manager', 'operations manager'])) {
     echo json_encode([
         'status' => 'error',
         'code'   => 403,

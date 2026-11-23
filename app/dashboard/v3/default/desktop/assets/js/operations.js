@@ -29,10 +29,10 @@
     currentLeadBookingData: null,
 
     init: function () {
+      this.bindEvents();
       if (!$("#operationsApp").length) return;
 
       this.syncAsideNav();
-      this.bindEvents();
 
       // Reset filters to clean default state on navigation
       this.confirmedPage = 1;
@@ -191,6 +191,7 @@
           if (action === "booking") self.openBookingRequestModal(leadId);
           else if (action === "voucher") self.openVoucherModal(leadId);
           else if (action === "invoice") self.openInvoiceModal(leadId);
+          else if (action === "dispatch") self.openDriverDispatchModal(leadId);
           else if (action === "feedback") self.triggerFeedbackRequest(leadId);
         }, 500);
       }
@@ -562,13 +563,12 @@
 
       // 20.5 Driver Dispatch Modal
       $(document).on("click", ".btn-open-driver-dispatch", function () {
-        const leadId = $(this).data("id");
-        self.closeAllModals();
-        $("#dispatchLeadId").val(leadId);
-        $("#dispatchDriverName").val($(this).data("driver") || "");
-        $("#dispatchDriverPhone").val($(this).data("phone") || "");
-        $("#dispatchVehicleNo").val($(this).data("veh") || "");
-        $("#modalOpsDriverDispatch").addClass("active");
+        const $btn = $(this);
+        const leadId = $btn.data("id") || $btn.attr("data-id") || $("#dispatchLeadId").val();
+        self.setBtnLoading($btn);
+        self.openDriverDispatchModal(leadId, function () {
+          self.resetBtnLoading($btn);
+        });
       });
 
       $(document).on("click", "#btnConfirmDriverDispatch", function () {
@@ -1210,18 +1210,47 @@
       }, "json");
     },
 
+    openDriverDispatchModal: function (encodedLeadId, cb) {
+      const self = this;
+      this.closeAllModals();
+      $("#dispatchLeadId").val(encodedLeadId);
+
+      // Pre-clear form fields
+      $("#dispatchDriverName").val("");
+      $("#dispatchDriverPhone").val("");
+      $("#dispatchVehicleType").val("");
+      $("#dispatchVehicleNo").val("");
+      $("#dispatchPickupTime").val("");
+      $("#dispatchPickupLoc").val("");
+
+      $.getJSON("/api/v3/operations/trip-planner/?lead_id=" + encodedLeadId, function (res) {
+        if (res && res.status === "success" && res.dispatch) {
+          const d = res.dispatch;
+          if (d.driver_name) $("#dispatchDriverName").val(d.driver_name);
+          if (d.driver_phone) $("#dispatchDriverPhone").val(d.driver_phone);
+          if (d.vehicle_type) $("#dispatchVehicleType").val(d.vehicle_type);
+          if (d.vehicle_no) $("#dispatchVehicleNo").val(d.vehicle_no);
+          if (d.pickup_time) $("#dispatchPickupTime").val(d.pickup_time);
+          if (d.pickup_location) $("#dispatchPickupLoc").val(d.pickup_location);
+        }
+      }).always(function () {
+        $("#modalOpsDriverDispatch").addClass("active");
+        if (typeof cb === "function") cb();
+      });
+    },
+
     submitDriverDispatch: function () {
       const self = this;
       const leadId = $("#dispatchLeadId").val();
       const payload = {
         lead_id: leadId,
         milestone: "dispatch_driver",
-        driver_name: $("#dispatchDriverName").val(),
-        driver_phone: $("#dispatchDriverPhone").val(),
-        vehicle_type: $("#dispatchVehicleType").val(),
-        vehicle_no: $("#dispatchVehicleNo").val(),
-        pickup_time: $("#dispatchPickupTime").val(),
-        pickup_location: $("#dispatchPickupLoc").val()
+        driver_name: $("#dispatchDriverName").val().trim(),
+        driver_phone: $("#dispatchDriverPhone").val().trim(),
+        vehicle_type: $("#dispatchVehicleType").val().trim(),
+        vehicle_no: $("#dispatchVehicleNo").val().trim(),
+        pickup_time: $("#dispatchPickupTime").val().trim(),
+        pickup_location: $("#dispatchPickupLoc").val().trim()
       };
 
       if (!payload.driver_name || !payload.driver_phone) {
@@ -1229,21 +1258,42 @@
         return;
       }
 
-      $.post("/api/v3/operations/trip-planner/", payload, function (res) {
-        if (res && res.status === "success") {
-          alert(res.message);
-          $("#modalOpsDriverDispatch").removeClass("active");
-          if (res.whatsapp_link) {
-            window.open(res.whatsapp_link, "_blank");
+      const $btn = $("#btnConfirmDriverDispatch");
+      const origHtml = $btn.html();
+      $btn.prop("disabled", true).html('<i class="fi fi-rr-spinner fi-spin"></i> Dispatching Driver...');
+
+      $.ajax({
+        url: "/api/v3/operations/trip-planner/",
+        type: "POST",
+        contentType: "application/json",
+        data: JSON.stringify(payload),
+        success: function (res) {
+          if (res && res.status === "success") {
+            alert(res.message);
+            $("#modalOpsDriverDispatch").removeClass("active");
+            if (res.whatsapp_link) {
+              window.open(res.whatsapp_link, "_blank");
+            }
+            if ($("#operationsApp").data("page") === "dispatch") {
+              window.location.href = "/dashboard/operations/trips/";
+            }
+            if ($("#operationsApp").length && typeof self.loadTripsBoard === "function") {
+              self.loadTripsBoard();
+            }
+            if (window.V3LeadView && typeof window.V3LeadView.loadLeadDetails === "function") {
+              window.V3LeadView.loadLeadDetails();
+            }
+          } else {
+            alert(res.message || "Failed to dispatch driver.");
           }
-          if ($("#operationsApp").data("page") === "dispatch") {
-            window.location.href = "/dashboard/operations/trips/";
-          }
-          self.loadTripsBoard();
-        } else {
-          alert(res.message || "Failed to dispatch driver.");
+        },
+        error: function () {
+          alert("Network error while dispatching driver details.");
+        },
+        complete: function () {
+          $btn.prop("disabled", false).html(origHtml);
         }
-      }, "json");
+      });
     },
 
     triggerFeedbackRequest: function (leadId) {
@@ -1650,6 +1700,9 @@
             if ($("#operationsApp").data("page") === "booking-request") {
               window.location.href = "/dashboard/operations/requests/";
             }
+            if (window.V3LeadView && typeof window.V3LeadView.loadLeadDetails === "function") {
+              window.V3LeadView.loadLeadDetails();
+            }
           } else {
             alert(res.message || "Failed to dispatch booking request.");
           }
@@ -1804,8 +1857,13 @@
             if ($("#operationsApp").data("page") === "voucher") {
               window.location.href = "/dashboard/operations/list/";
             }
-            self.loadConfirmedLeads();
-            self.loadMetrics();
+            if ($("#operationsApp").length && typeof self.loadConfirmedLeads === "function") {
+              self.loadConfirmedLeads();
+              self.loadMetrics();
+            }
+            if (window.V3LeadView && typeof window.V3LeadView.loadLeadDetails === "function") {
+              window.V3LeadView.loadLeadDetails();
+            }
           } else {
             alert(res.message || "Failed to issue vouchers.");
           }
@@ -1889,6 +1947,9 @@
             }
             if ($("#operationsApp").data("page") === "invoice") {
               window.location.href = "/dashboard/operations/list/";
+            }
+            if (window.V3LeadView && typeof window.V3LeadView.loadLeadDetails === "function") {
+              window.V3LeadView.loadLeadDetails();
             }
           } else {
             alert(res.message || "Failed to dispatch invoice.");
@@ -2756,6 +2817,8 @@
   $(document).ready(function () {
     if ($("#operationsApp").length) {
       OperationsHub.init();
+    } else if ($("#leadViewApp").length) {
+      OperationsHub.bindEvents();
     }
   });
 
@@ -2763,12 +2826,16 @@
   $(document).off("spa:loaded.v3Operations").on("spa:loaded.v3Operations", function () {
     if ($("#operationsApp").length) {
       OperationsHub.init();
+    } else if ($("#leadViewApp").length) {
+      OperationsHub.bindEvents();
     }
   });
 
   document.addEventListener("spa:loaded", function () {
     if ($("#operationsApp").length) {
       OperationsHub.init();
+    } else if ($("#leadViewApp").length) {
+      OperationsHub.bindEvents();
     }
   });
 
@@ -2777,6 +2844,10 @@
     if ($("#operationsApp").length) {
       setTimeout(function () {
         OperationsHub.init();
+      }, 80);
+    } else if ($("#leadViewApp").length) {
+      setTimeout(function () {
+        OperationsHub.bindEvents();
       }, 80);
     }
   });

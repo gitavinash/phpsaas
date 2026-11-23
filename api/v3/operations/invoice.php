@@ -38,7 +38,7 @@ if (!empty($site_access_type)) {
 }
 
 // Restriction: Sales agent cannot generate invoices/proformas; Operations & Admin only
-if (!in_array($userRole, ['administrator', 'operations', 'super_administrator'])) {
+if (!in_array($userRole, ['administrator', 'operations', 'super_administrator', 'admin', 'superadmin', 'operational', 'operations_manager', 'operations manager'])) {
     echo json_encode([
         'status' => 'error',
         'code'   => 403,

@@ -86,13 +86,15 @@ if (empty($currentUserRole)) {
     $currentUserRole = 'administrator';
 }
 $isCallingAgentUser = in_array($currentUserRole, ['agent', 'calling_agent', 'crm_calling_agent', 'crm calling agent', 'sales_executive']);
+$isOperationsUser = in_array($currentUserRole, ['operations', 'operational', 'operations_manager', 'operations manager', 'admin', 'administrator', 'superadmin', 'super_administrator']);
 ?>
-<div id="leadViewApp" class="lead-view-wrapper<?php echo $isPackageSix ? ' is-package-six' : ''; ?><?php echo $isCallingAgentUser ? ' is-calling-agent' : ''; ?>"
+<div id="leadViewApp" class="lead-view-wrapper<?php echo $isPackageSix ? ' is-package-six' : ''; ?><?php echo $isCallingAgentUser ? ' is-calling-agent' : ''; ?><?php echo $isOperationsUser ? ' is-operations-user' : ''; ?>"
     data-lead-id="<?php echo htmlspecialchars($rawLeadId); ?>"
     data-user-id="<?php echo htmlspecialchars(defined('USER_ID') ? USER_ID : 0); ?>"
     data-user-name="<?php echo htmlspecialchars($loggedInUsername); ?>"
     data-user-role="<?php echo htmlspecialchars($currentUserRole); ?>"
     data-is-calling-agent="<?php echo $isCallingAgentUser ? '1' : '0'; ?>"
+    data-is-operations="<?php echo $isOperationsUser ? '1' : '0'; ?>"
     data-package-id="<?php echo $packageId; ?>"
     data-is-package-six="<?php echo $isPackageSix ? '1' : '0'; ?>"
     data-company-nature="<?php echo htmlspecialchars($companyNature); ?>"
@@ -1819,3 +1821,4 @@ $isCallingAgentUser = in_array($currentUserRole, ['agent', 'calling_agent', 'crm
     </div>
 </div>
 <?php require_once dirname(__DIR__) . '/templates/whatsapp/device_connect_modal.php'; ?>
+<?php require_once dirname(__DIR__) . '/operations/modals-partial.php'; ?>

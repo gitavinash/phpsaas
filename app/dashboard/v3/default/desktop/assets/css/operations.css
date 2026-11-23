@@ -4352,6 +4352,147 @@ nav.side-nav ul li .bottom-menu ul li a.active i {
   transform: scale(1.12) !important;
 }
 
+/* =========================================================================
+   Operations Lead View CTAs & Actions (Hero & Sidebar)
+   ========================================================================= */
+
+.btn-v3-action.btn-blue {
+  background: #2563eb !important;
+  border-color: #2563eb !important;
+  color: #ffffff !important;
+}
+.btn-v3-action.btn-blue:hover {
+  background: #1d4ed8 !important;
+  border-color: #1d4ed8 !important;
+  color: #ffffff !important;
+}
+
+.btn-v3-action.btn-gold {
+  background: #f59e0b !important;
+  border-color: #f59e0b !important;
+  color: #ffffff !important;
+}
+.btn-v3-action.btn-gold:hover {
+  background: #d97706 !important;
+  border-color: #d97706 !important;
+  color: #ffffff !important;
+}
+
+.btn-v3-action.btn-indigo {
+  background: #4f46e5 !important;
+  border-color: #4f46e5 !important;
+  color: #ffffff !important;
+}
+.btn-v3-action.btn-indigo:hover {
+  background: #4338ca !important;
+  border-color: #4338ca !important;
+  color: #ffffff !important;
+}
+
+/* Sidebar Row Action: Booking Request */
+.v3-fa-row-action.action-booking {
+  background: #eff6ff !important;
+  border: 1.5px solid #bfdbfe !important;
+}
+.v3-fa-row-action.action-booking:hover {
+  border-color: #3b82f6 !important;
+  background: #dbeafe !important;
+  transform: translateY(-1.5px) !important;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15) !important;
+}
+.v3-fa-row-action.action-booking .v3-fa-row-title {
+  color: #1d4ed8 !important;
+}
+.v3-fa-row-action.action-booking .v3-fa-row-sub {
+  color: #2563eb !important;
+}
+
+/* Sidebar Row Action: Voucher */
+.v3-fa-row-action.action-voucher {
+  background: #fffbeb !important;
+  border: 1.5px solid #fde68a !important;
+}
+.v3-fa-row-action.action-voucher:hover {
+  border-color: #f59e0b !important;
+  background: #fef3c7 !important;
+  transform: translateY(-1.5px) !important;
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.15) !important;
+}
+.v3-fa-row-action.action-voucher .v3-fa-row-title {
+  color: #b45309 !important;
+}
+.v3-fa-row-action.action-voucher .v3-fa-row-sub {
+  color: #d97706 !important;
+}
+
+/* Sidebar Row Icons */
+.v3-fa-row-icon.icon-blue {
+  background: #dbeafe !important;
+  color: #2563eb !important;
+}
+.v3-fa-row-icon.icon-gold {
+  background: #fef3c7 !important;
+  color: #d97706 !important;
+}
+.v3-fa-row-icon.icon-teal {
+  background: #ccfbf1 !important;
+  color: #0d9488 !important;
+}
+
+/* Sidebar Row Action: Driver Dispatch */
+.v3-fa-row-action.action-dispatch {
+  background: #f0fdfa !important;
+  border: 1.5px solid #99f6e4 !important;
+}
+.v3-fa-row-action.action-dispatch:hover {
+  border-color: #0d9488 !important;
+  background: #ccfbf1 !important;
+  transform: translateY(-1.5px) !important;
+  box-shadow: 0 4px 12px rgba(13, 148, 136, 0.15) !important;
+}
+.v3-fa-row-action.action-dispatch .v3-fa-row-title {
+  color: #0f766e !important;
+}
+.v3-fa-row-action.action-dispatch .v3-fa-row-sub {
+  color: #14b8a6 !important;
+}
+
+/* Sidebar Compact Actions: Invoice & Feedback */
+.v3-fa-compact-action.action-invoice {
+  background: #f5f3ff !important;
+  border: 1.5px solid #ddd6fe !important;
+}
+.v3-fa-compact-action.action-invoice .v3-fa-compact-label {
+  color: #6d28d9 !important;
+}
+.v3-fa-compact-action.action-invoice .v3-fa-compact-sub {
+  color: #7c3aed !important;
+}
+.v3-fa-compact-action.action-invoice:hover {
+  border-color: #a78bfa !important;
+  background: #ede9fe !important;
+  transform: translateY(-1.5px) !important;
+  box-shadow: 0 4px 12px rgba(124, 58, 237, 0.15) !important;
+}
+
+.v3-fa-compact-action.action-feedback {
+  background: #fffbeb !important;
+  border: 1.5px solid #fde68a !important;
+}
+.v3-fa-compact-action.action-feedback .v3-fa-compact-label {
+  color: #92400e !important;
+}
+.v3-fa-compact-action.action-feedback .v3-fa-compact-sub {
+  color: #b45309 !important;
+}
+.v3-fa-compact-action.action-feedback:hover {
+  border-color: #f59e0b !important;
+  background: #fef3c7 !important;
+  transform: translateY(-1.5px) !important;
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.15) !important;
+}
+
+
 
 
 
